@@ -395,6 +395,8 @@ export function ForceGraph({
       const liftStroke = 1.6 * strokeBoost * inv;
       const ringStroke = 2 * strokeBoost * inv;
       const haloStroke = 2.6 * strokeBoost * inv;
+      const labelSize = 11.5 * strokeBoost * inv;
+      const platformLabelSize = 9.5 * strokeBoost * inv;
       const pairGap = Math.max(4.2, 2.6 * strokeBoost + 1.6) * inv;
 
       // Parallel line edge offsets
@@ -561,10 +563,10 @@ export function ForceGraph({
             s.view.k > 1.2 ||
             ((n.lineCount ?? 0) >= 4 && s.view.k > 0.55);
           if (showLabel) {
-            ctx.font = `${isSel ? 600 : 500} ${11.5 * inv}px Inter, system-ui, sans-serif`;
+            ctx.font = `${isSel ? 700 : 600} ${labelSize}px Inter, system-ui, sans-serif`;
             ctx.fillStyle = isSel ? "#1a1d23" : "#3d4450";
             ctx.textBaseline = "middle";
-            ctx.fillText(n.label, n.x + r + 8 * inv, n.y);
+            ctx.fillText(n.label, n.x + r + 8 * strokeBoost * inv, n.y);
           }
         } else if (n.kind === "platform") {
           const st = platformStatus(n.id, s.network, s.disruptions);
@@ -587,11 +589,11 @@ export function ForceGraph({
           ctx.stroke();
           ctx.setLineDash([]);
           if (s.view.k > 0.95) {
-            ctx.font = `500 ${9.5 * inv}px Inter, system-ui, sans-serif`;
+            ctx.font = `600 ${platformLabelSize}px Inter, system-ui, sans-serif`;
             ctx.fillStyle =
               st === "bad" || st === "none" ? colors.disrupted : "#5c626c";
             ctx.textBaseline = "middle";
-            ctx.fillText(n.label, n.x + r + 5 * inv, n.y);
+            ctx.fillText(n.label, n.x + r + 5 * strokeBoost * inv, n.y);
           }
         } else {
           const liftId = n.id.split("::").pop() ?? "";
