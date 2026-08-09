@@ -25,7 +25,36 @@ import { clamp } from "@/lib/utils";
 const REF_LAT = 51.5074;
 const DEG_SCALE = 14000;
 const COS_REF = Math.cos((REF_LAT * Math.PI) / 180);
-const PLATFORM_ORBIT = 52;
+
+/** Expanded station disc — platforms/lifts nest inside. */
+const EXPANDED_STATION_RADIUS = 52;
+/** Platform ring on the circumference of the expanded disc. */
+const PLATFORM_ORBIT_FRAC = 1.22;
+/** Lift ring — half the expanded radius. */
+const LIFT_ORBIT_FRAC = 0.5;
+const RADIUS_TWEEN_MS = 320;
+
+type RadiusTween = { from: number; to: number; startMs: number };
+
+function collapsedStationRadius(lineCount = 1) {
+  return Math.min(13, 6 + lineCount * 1.4);
+}
+
+function expandedStationRadius() {
+  return EXPANDED_STATION_RADIUS;
+}
+
+function platformOrbit() {
+  return EXPANDED_STATION_RADIUS * PLATFORM_ORBIT_FRAC;
+}
+
+function liftOrbit() {
+  return EXPANDED_STATION_RADIUS * LIFT_ORBIT_FRAC;
+}
+
+function easeOutCubic(t: number) {
+  return 1 - (1 - t) ** 3;
+}
 
 type GraphNode = SimulationNodeDatum & {
   id: string;
@@ -139,6 +168,12 @@ function createGeoSimulation(
       n.fy = n.y ?? null;
       n.vx = 0;
       n.vy = 0;
+    } else if (n.kind === "lift") {
+      // Pin lifts on the r/2 ring so collide/charge cannot shove them out.
+      n.fx = n.x ?? null;
+      n.fy = n.y ?? null;
+      n.vx = 0;
+      n.vy = 0;
     } else {
       n.fx = null;
       n.fy = null;
@@ -146,6 +181,9 @@ function createGeoSimulation(
   }
 
   const hasDetail = nodes.some((n) => n.kind !== "station");
+  const orbit = platformOrbit();
+  const liftR = liftOrbit();
+  const platformLiftGap = Math.max(orbit - liftR, 8);
   const sim = forceSimulation(nodes)
     .force(
       "link",
@@ -153,26 +191,45 @@ function createGeoSimulation(
         .id((d) => d.id)
         .distance((l) => {
           if (l.kind === "line") return 0;
-          if (l.kind === "ghost") return PLATFORM_ORBIT;
-          return 24;
+          if (l.kind === "ghost") return orbit;
+          const source =
+            typeof l.source === "object"
+              ? l.source
+              : byId.get(String(l.source));
+          const target =
+            typeof l.target === "object"
+              ? l.target
+              : byId.get(String(l.target));
+          // Keep lifts on the r/2 ring: station↔lift ≈ r/2, platform↔lift ≈ gap.
+          if (source?.kind === "station" || target?.kind === "station") {
+            return liftR;
+          }
+          if (source?.kind === "platform" || target?.kind === "platform") {
+            return platformLiftGap;
+          }
+          return 10;
         })
-        .strength((l) => (l.kind === "line" ? 0 : 0.65)),
+        .strength((l) => (l.kind === "line" ? 0 : 0.75)),
     )
     .force(
       "charge",
       forceManyBody().strength((d) => {
         const n = d as GraphNode;
         if (n.kind === "station") return 0;
-        if (n.kind === "platform") return -70;
-        return -36;
+        if (n.kind === "platform") return -40;
+        return 0; // lifts are pinned on the r/2 ring
       }),
     )
     .force(
       "collide",
       forceCollide<GraphNode>()
-        .radius((d) =>
-          d.kind === "station" ? 14 : d.kind === "platform" ? 18 : 8,
-        )
+        .radius((d) => {
+          // Expanded stations must NOT collide at full disc radius — that
+          // shoves nested platforms/lifts outside the circle.
+          if (d.kind === "station") return 8;
+          if (d.kind === "platform") return 8;
+          return 5;
+        })
         .strength(0.85),
     )
     .force(
@@ -182,7 +239,7 @@ function createGeoSimulation(
           if (d.kind === "station") return d.x ?? 0;
           return byId.get(d.parentId ?? "")?.x ?? 0;
         })
-        .strength((d) => (d.kind === "station" ? 0 : 0.06)),
+        .strength((d) => (d.kind === "platform" ? 0.09 : 0)),
     )
     .force(
       "y",
@@ -191,7 +248,7 @@ function createGeoSimulation(
           if (d.kind === "station") return d.y ?? 0;
           return byId.get(d.parentId ?? "")?.y ?? 0;
         })
-        .strength((d) => (d.kind === "station" ? 0 : 0.06)),
+        .strength((d) => (d.kind === "platform" ? 0.09 : 0)),
     )
     .alpha(hasDetail ? 0.55 : 0)
     .alphaDecay(reducedMotion ? 0.25 : 0.06);
@@ -243,6 +300,9 @@ export function ForceGraph({
     reducedMotion,
     onSelectStation,
     onToggleExpand,
+    /** Animated visual radius per station (survives collapse until tween ends). */
+    radiusNow: new Map<string, number>(),
+    radiusTweens: new Map<string, RadiusTween>(),
   });
 
   // Keep latest props in ref for rAF loop
@@ -302,6 +362,8 @@ export function ForceGraph({
           (p) => p.stationId === stationId,
         );
         const parent = byId.get(stationId);
+        const orbit = platformOrbit();
+        const liftR = liftOrbit();
         platforms.forEach((p, i) => {
           const angle = (i / Math.max(platforms.length, 1)) * Math.PI * 2;
           const old = prev.get(p.id);
@@ -312,12 +374,8 @@ export function ForceGraph({
             stationId,
             lineId: p.lineId,
             parentId: stationId,
-            x:
-              old?.x ??
-              (parent?.x ?? 0) + Math.cos(angle) * PLATFORM_ORBIT,
-            y:
-              old?.y ??
-              (parent?.y ?? 0) + Math.sin(angle) * PLATFORM_ORBIT,
+            x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * orbit,
+            y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * orbit,
           };
           nodes.push(pn);
           byId.set(pn.id, pn);
@@ -339,20 +397,20 @@ export function ForceGraph({
           liftIds.forEach((lid, li) => {
             const lift = s.network.lifts.find((l) => l.id === lid);
             const nodeId = `${p.id}::${lid}`;
-            const t = (li + 1) / (liftIds.length + 1);
-            const oldL = prev.get(nodeId);
+            // Place lifts on the r/2 ring; fan slightly if several share a ray.
+            const fan =
+              liftIds.length <= 1
+                ? 0
+                : ((li - (liftIds.length - 1) / 2) * 0.22) / liftIds.length;
+            const a = angle + fan;
             const ln: GraphNode = {
               id: nodeId,
               kind: "lift",
               label: lift?.name ?? lid,
               stationId,
               parentId: stationId,
-              x:
-                oldL?.x ??
-                (pn.x ?? 0) * (1 - t) + (parent?.x ?? 0) * t,
-              y:
-                oldL?.y ??
-                (pn.y ?? 0) * (1 - t) + (parent?.y ?? 0) * t,
+              x: (parent?.x ?? 0) + Math.cos(a) * liftR,
+              y: (parent?.y ?? 0) + Math.sin(a) * liftR,
             };
             if (!byId.has(nodeId)) {
               nodes.push(ln);
@@ -379,7 +437,12 @@ export function ForceGraph({
       s.links = links;
 
       if (s.sim) s.sim.stop();
-      s.sim = createGeoSimulation(nodes, links, byId, s.reducedMotion);
+      s.sim = createGeoSimulation(
+        nodes,
+        links,
+        byId,
+        s.reducedMotion,
+      );
     }
 
     function fitView() {
@@ -429,6 +492,78 @@ export function ForceGraph({
       };
     }
 
+    function syncRadiusTweens(now: number) {
+      const expandedSet = new Set(s.expanded);
+      for (const n of s.nodes) {
+        if (n.kind !== "station") continue;
+        const collapsed = collapsedStationRadius(n.lineCount ?? 1);
+        const target = expandedSet.has(n.id)
+          ? expandedStationRadius()
+          : collapsed;
+        const tween = s.radiusTweens.get(n.id);
+        let current = s.radiusNow.get(n.id);
+        if (current == null) {
+          current = collapsed;
+          s.radiusNow.set(n.id, current);
+        }
+
+        if (tween) {
+          if (tween.to !== target) {
+            const t = Math.min(1, (now - tween.startMs) / RADIUS_TWEEN_MS);
+            const visual =
+              tween.from + (tween.to - tween.from) * easeOutCubic(t);
+            if (s.reducedMotion) {
+              s.radiusTweens.delete(n.id);
+              s.radiusNow.set(n.id, target);
+            } else {
+              s.radiusTweens.set(n.id, {
+                from: visual,
+                to: target,
+                startMs: now,
+              });
+            }
+          }
+          continue;
+        }
+
+        if (Math.abs(current - target) < 0.05) {
+          s.radiusNow.set(n.id, target);
+          continue;
+        }
+
+        if (s.reducedMotion) {
+          s.radiusNow.set(n.id, target);
+        } else {
+          s.radiusTweens.set(n.id, {
+            from: current,
+            to: target,
+            startMs: now,
+          });
+        }
+      }
+    }
+
+    function visualStationRadius(n: GraphNode, now: number) {
+      const collapsed = collapsedStationRadius(n.lineCount ?? 1);
+      const tween = s.radiusTweens.get(n.id);
+      if (!tween) {
+        return (
+          s.radiusNow.get(n.id) ??
+          (s.expanded.includes(n.id) ? expandedStationRadius() : collapsed)
+        );
+      }
+      if (s.reducedMotion) {
+        s.radiusTweens.delete(n.id);
+        s.radiusNow.set(n.id, tween.to);
+        return tween.to;
+      }
+      const t = Math.min(1, (now - tween.startMs) / RADIUS_TWEEN_MS);
+      const r = tween.from + (tween.to - tween.from) * easeOutCubic(t);
+      s.radiusNow.set(n.id, r);
+      if (t >= 1) s.radiusTweens.delete(n.id);
+      return r;
+    }
+
     function hitTest(sx: number, sy: number): GraphNode | null {
       const { x, y } = screenToWorld(sx, sy);
       let best: GraphNode | null = null;
@@ -437,7 +572,10 @@ export function ForceGraph({
         if (n.x == null || n.y == null) continue;
         const r =
           n.kind === "station"
-            ? Math.min(13, 6 + (n.lineCount ?? 1) * 1.4) / s.view.k + 4
+            ? (s.radiusNow.get(n.id) ??
+                collapsedStationRadius(n.lineCount ?? 1)) /
+                s.view.k +
+              4
             : n.kind === "platform"
               ? 8 / s.view.k
               : 6 / s.view.k;
@@ -451,6 +589,9 @@ export function ForceGraph({
     }
 
     function draw() {
+      const now = performance.now();
+      syncRadiusTweens(now);
+
       const { w, h, dpr } = s.size;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
@@ -484,8 +625,9 @@ export function ForceGraph({
         pairCount.set(key, idx + 1);
       }
 
+      // Line edges first (lift links drawn after station discs so they nest).
       for (const l of s.links) {
-        if (l.kind === "ghost") continue;
+        if (l.kind !== "line") continue;
         const source = l.source as GraphNode;
         const target = l.target as GraphNode;
         if (source.x == null || target.x == null) continue;
@@ -494,54 +636,42 @@ export function ForceGraph({
         let x2 = target.x;
         let y2 = target.y!;
 
-        if (l.kind === "line") {
-          const a = source.id;
-          const b = target.id;
-          const key = a < b ? `${a}|${b}` : `${b}|${a}`;
-          const total = pairCount.get(key) ?? 1;
-          const idx = pairIndex.get(l) ?? 0;
-          const dx = x2 - x1;
-          const dy = y2 - y1;
-          const len = Math.hypot(dx, dy) || 1;
-          const ox = (-dy / len) * (idx - (total - 1) / 2) * pairGap;
-          const oy = (dx / len) * (idx - (total - 1) / 2) * pairGap;
-          x1 += ox;
-          y1 += oy;
-          x2 += ox;
-          y2 += oy;
-          ctx.strokeStyle = lineColorForCanvas(l.lineId ?? "");
-          ctx.globalAlpha = 0.88;
-          ctx.lineWidth = lineStroke;
-          ctx.lineCap = "round";
-          ctx.setLineDash([]);
-        } else {
-          const st = l.status === "bad" ? colors.disrupted : colors.ok;
-          ctx.strokeStyle = st;
-          ctx.globalAlpha = 0.9;
-          ctx.lineWidth = liftStroke;
-          ctx.setLineDash(
-            l.status === "unknown" ? [4 * inv, 3 * inv] : [],
-          );
-        }
+        const a = source.id;
+        const b = target.id;
+        const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+        const total = pairCount.get(key) ?? 1;
+        const idx = pairIndex.get(l) ?? 0;
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const len = Math.hypot(dx, dy) || 1;
+        const ox = (-dy / len) * (idx - (total - 1) / 2) * pairGap;
+        const oy = (dx / len) * (idx - (total - 1) / 2) * pairGap;
+        x1 += ox;
+        y1 += oy;
+        x2 += ox;
+        y2 += oy;
+        ctx.strokeStyle = lineColorForCanvas(l.lineId ?? "");
+        ctx.globalAlpha = 0.88;
+        ctx.lineWidth = lineStroke;
+        ctx.lineCap = "round";
+        ctx.setLineDash([]);
 
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.stroke();
         ctx.globalAlpha = 1;
-        ctx.setLineDash([]);
       }
 
-      const stationRadius = (n: GraphNode) =>
-        Math.min(13, 6 + (n.lineCount ?? 1) * 1.4);
-      const stationMaskR = (n: GraphNode) =>
-        stationRadius(n) + 5 + Math.max(2.5 * inv, lineStroke * 0.55, ringStroke * 0.55);
+      const stationMaskR = (n: GraphNode, r: number) =>
+        r + 5 + Math.max(2.5 * inv, lineStroke * 0.55, ringStroke * 0.55);
 
       // Hide lines under every station first…
       for (const n of s.nodes) {
         if (n.kind !== "station" || n.x == null || n.y == null) continue;
+        const r = visualStationRadius(n, now);
         ctx.beginPath();
-        ctx.arc(n.x, n.y, stationMaskR(n), 0, Math.PI * 2);
+        ctx.arc(n.x, n.y, stationMaskR(n, r), 0, Math.PI * 2);
         ctx.fillStyle = colors.canvas;
         ctx.fill();
       }
@@ -580,8 +710,15 @@ export function ForceGraph({
         ctx.lineCap = "round";
         ctx.setLineDash([]);
 
-        const stubFrom = (sx: number, sy: number, dirX: number, dirY: number, node: GraphNode) => {
-          const stubLen = Math.min(len * 0.5, stationMaskR(node) + 2 * inv);
+        const stubFrom = (
+          sx: number,
+          sy: number,
+          dirX: number,
+          dirY: number,
+          node: GraphNode,
+        ) => {
+          const r = visualStationRadius(node, now);
+          const stubLen = Math.min(len * 0.5, stationMaskR(node, r) + 2 * inv);
           ctx.beginPath();
           ctx.moveTo(sx, sy);
           ctx.lineTo(sx + dirX * stubLen, sy + dirY * stubLen);
@@ -594,81 +731,104 @@ export function ForceGraph({
 
       const pendingLabels: GraphLabel[] = [];
       const nodesById = new Map(s.nodes.map((n) => [n.id, n]));
+      const expandedSet = new Set(s.expanded);
 
+      // Station discs (grown when expanded) under detail nodes.
+      for (const n of s.nodes) {
+        if (n.kind !== "station" || n.x == null || n.y == null) continue;
+        const r = visualStationRadius(n, now);
+        const agg = stationAggregateStatus(n.id, s.network, s.disruptions);
+        const isExpanded = expandedSet.has(n.id);
+        const isGrowing = r > collapsedStationRadius(n.lineCount ?? 1) + 0.5;
+        const isSel =
+          s.selected === n.id || isExpanded || isGrowing;
+
+        // Halo
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+        if (agg === "none") {
+          ctx.strokeStyle = colors.noInfra;
+          ctx.globalAlpha = 0.5;
+          ctx.setLineDash([3.5 * strokeBoost * inv, 3 * strokeBoost * inv]);
+          ctx.lineWidth = ringStroke;
+        } else {
+          ctx.strokeStyle = statusColor(agg);
+          ctx.globalAlpha = 0.8;
+          ctx.setLineDash([]);
+          ctx.lineWidth = agg === "bad" ? haloStroke : ringStroke;
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = colors.white;
+        ctx.fill();
+        ctx.strokeStyle = isSel ? "#1a1d23" : colors.nodeStroke;
+        ctx.lineWidth = ringStroke;
+        ctx.stroke();
+
+        const showLabel =
+          isSel ||
+          s.view.k > 1.2 ||
+          ((n.lineCount ?? 0) >= 4 && s.view.k > 0.55);
+        if (showLabel) {
+          const font = `${isSel ? 700 : 600} ${labelSize}px Inter, system-ui, sans-serif`;
+          ctx.font = font;
+          const color = isSel ? "#1a1d23" : "#3d4450";
+          if (isSel) {
+            const tw = ctx.measureText(n.label).width;
+            const th = labelSize;
+            const gap = r + 8 * strokeBoost * inv;
+            const ix = n.x + gap;
+            const iy = n.y - (r + 10 * strokeBoost * inv);
+            pendingLabels.push({
+              text: n.label,
+              color,
+              font,
+              nx: n.x,
+              ny: n.y,
+              x: ix,
+              y: iy,
+              ix,
+              iy,
+              w: tw,
+              h: th,
+              align: "left",
+            });
+          } else {
+            ctx.fillStyle = color;
+            ctx.textAlign = "left";
+            ctx.textBaseline = "middle";
+            ctx.fillText(n.label, n.x + r + 8 * strokeBoost * inv, n.y);
+          }
+        }
+      }
+
+      // Lift links on top of station discs.
+      for (const l of s.links) {
+        if (l.kind !== "lift") continue;
+        const source = l.source as GraphNode;
+        const target = l.target as GraphNode;
+        if (source.x == null || target.x == null) continue;
+        const st = l.status === "bad" ? colors.disrupted : colors.ok;
+        ctx.strokeStyle = st;
+        ctx.globalAlpha = 0.9;
+        ctx.lineWidth = liftStroke;
+        ctx.setLineDash(l.status === "unknown" ? [4 * inv, 3 * inv] : []);
+        ctx.beginPath();
+        ctx.moveTo(source.x, source.y!);
+        ctx.lineTo(target.x, target.y!);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.setLineDash([]);
+      }
+
+      // Platforms and lifts inside the expanded disc.
       for (const n of s.nodes) {
         if (n.x == null || n.y == null) continue;
-        if (n.kind === "station") {
-          const r = stationRadius(n);
-          const agg = stationAggregateStatus(
-            n.id,
-            s.network,
-            s.disruptions,
-          );
-          const isSel =
-            s.selected === n.id || s.expanded.includes(n.id);
-
-          // Halo
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
-          if (agg === "none") {
-            ctx.strokeStyle = colors.noInfra;
-            ctx.globalAlpha = 0.5;
-            ctx.setLineDash([3.5 * strokeBoost * inv, 3 * strokeBoost * inv]);
-            ctx.lineWidth = ringStroke;
-          } else {
-            ctx.strokeStyle = statusColor(agg);
-            ctx.globalAlpha = 0.8;
-            ctx.setLineDash([]);
-            ctx.lineWidth = agg === "bad" ? haloStroke : ringStroke;
-          }
-          ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.globalAlpha = 1;
-
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = isSel ? "#1a1d23" : colors.white;
-          ctx.fill();
-          ctx.strokeStyle = isSel ? "#1a1d23" : colors.nodeStroke;
-          ctx.lineWidth = ringStroke;
-          ctx.stroke();
-
-          const showLabel =
-            isSel ||
-            s.view.k > 1.2 ||
-            ((n.lineCount ?? 0) >= 4 && s.view.k > 0.55);
-          if (showLabel) {
-            const font = `${isSel ? 700 : 600} ${labelSize}px Inter, system-ui, sans-serif`;
-            ctx.font = font;
-            const color = isSel ? "#1a1d23" : "#3d4450";
-            if (isSel) {
-              const tw = ctx.measureText(n.label).width;
-              const th = labelSize;
-              const gap = r + 8 * strokeBoost * inv;
-              const ix = n.x + gap;
-              const iy = n.y - (r + 10 * strokeBoost * inv);
-              pendingLabels.push({
-                text: n.label,
-                color,
-                font,
-                nx: n.x,
-                ny: n.y,
-                x: ix,
-                y: iy,
-                ix,
-                iy,
-                w: tw,
-                h: th,
-                align: "left",
-              });
-            } else {
-              ctx.fillStyle = color;
-              ctx.textAlign = "left";
-              ctx.textBaseline = "middle";
-              ctx.fillText(n.label, n.x + r + 8 * strokeBoost * inv, n.y);
-            }
-          }
-        } else if (n.kind === "platform") {
+        if (n.kind === "platform") {
           const st = platformStatus(n.id, s.network, s.disruptions);
           const r = 5.2;
           ctx.beginPath();
@@ -718,7 +878,7 @@ export function ForceGraph({
               align,
             });
           }
-        } else {
+        } else if (n.kind === "lift") {
           const liftId = n.id.split("::").pop() ?? "";
           const bad = !!s.disruptions?.byLiftId[liftId];
           const unknown = !s.disruptions?.ok;
@@ -741,7 +901,8 @@ export function ForceGraph({
         const dy = l.y - l.ny;
         if (Math.hypot(dx, dy) > 14) {
           const bx = labelBounds(l);
-          const tipX = l.align === "left" ? bx.left - 2 * inv : bx.right + 2 * inv;
+          const tipX =
+            l.align === "left" ? bx.left - 2 * inv : bx.right + 2 * inv;
           ctx.strokeStyle = "rgba(92,98,108,0.35)";
           ctx.lineWidth = 1 * inv;
           ctx.beginPath();
@@ -1005,6 +1166,8 @@ export function ForceGraph({
     for (const stationId of expanded) {
       const platforms = network.platforms.filter((p) => p.stationId === stationId);
       const parent = byId.get(stationId);
+      const orbit = platformOrbit();
+      const liftR = liftOrbit();
       platforms.forEach((p, i) => {
         const angle = (i / Math.max(platforms.length, 1)) * Math.PI * 2;
         const old = prev.get(p.id);
@@ -1015,8 +1178,8 @@ export function ForceGraph({
           stationId,
           lineId: p.lineId,
           parentId: stationId,
-          x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * PLATFORM_ORBIT,
-          y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * PLATFORM_ORBIT,
+          x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * orbit,
+          y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * orbit,
         };
         nodes.push(pn);
         byId.set(pn.id, pn);
@@ -1030,20 +1193,19 @@ export function ForceGraph({
         liftIds.forEach((lid, li) => {
           const lift = network.lifts.find((l) => l.id === lid);
           const nodeId = `${p.id}::${lid}`;
-          const t = (li + 1) / (liftIds.length + 1);
-          const oldL = prev.get(nodeId);
+          const fan =
+            liftIds.length <= 1
+              ? 0
+              : ((li - (liftIds.length - 1) / 2) * 0.22) / liftIds.length;
+          const a = angle + fan;
           const ln: GraphNode = {
             id: nodeId,
             kind: "lift",
             label: lift?.name ?? lid,
             stationId,
             parentId: stationId,
-            x:
-              oldL?.x ??
-              (pn.x ?? 0) * (1 - t) + (parent?.x ?? 0) * t,
-            y:
-              oldL?.y ??
-              (pn.y ?? 0) * (1 - t) + (parent?.y ?? 0) * t,
+            x: (parent?.x ?? 0) + Math.cos(a) * liftR,
+            y: (parent?.y ?? 0) + Math.sin(a) * liftR,
           };
           if (!byId.has(nodeId)) {
             nodes.push(ln);
