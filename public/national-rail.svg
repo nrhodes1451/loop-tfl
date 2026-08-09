@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="23.62 16.53 179.5 108.7" role="img" aria-label="National Rail">
+  <!-- British Rail / National Rail double arrow (Flame Red). Trademark of the Secretary of State for Transport. -->
+  <g transform="translate(0,-247)">
+    <path
+      fill="#FF4200"
+      d="m203.1 289.5v16.54h-48.42l-47.24 23.62h95.67v16.54h-95.67l62.6 25.98h-42.52l-55.51-25.98h-48.42v-16.54h48.42l47.24-23.62h-95.67v-16.54h95.67l-62.6-25.98h42.52l55.51 25.98 48.42-1e-3z"
+    />
+  </g>
+</svg>
