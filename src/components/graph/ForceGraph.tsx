@@ -822,21 +822,43 @@ export function ForceGraph({
       const { x, y } = screenToWorld(sx, sy);
       let best: GraphNode | null = null;
       let bestD = Infinity;
+      let bestPri = -1; // prefer platform/lift over station
       for (const n of s.nodes) {
         if (n.x == null || n.y == null) continue;
-        const r =
-          n.kind === "station"
-            ? (s.radiusNow.get(n.id) ??
-                collapsedStationRadius(n.lineCount ?? 1)) /
-                s.view.k +
-              4
-            : n.kind === "platform"
-              ? 8 / s.view.k
-              : 6 / s.view.k;
+        let r: number;
+        if (n.kind === "station") {
+          r =
+            (s.radiusNow.get(n.id) ??
+              collapsedStationRadius(n.lineCount ?? 1)) + 4;
+        } else if (n.kind === "platform") {
+          const lineIds =
+            n.lineIds && n.lineIds.length > 0
+              ? n.lineIds
+              : n.lineId
+                ? [n.lineId]
+                : [];
+          const otherLineIds = lineIds.filter((id) => id !== "national-rail");
+          const hasNationalRail = lineIds.includes("national-rail");
+          const ringGap = 2.2;
+          r =
+            otherLineIds.length > 0
+              ? 5.2 +
+                (otherLineIds.length - 1) * ringGap +
+                (hasNationalRail ? 1.5 : 0)
+              : hasNationalRail
+                ? 7
+                : 5.2;
+          r += 4; // padding so the visible disc is easy to hover
+        } else {
+          r = 7;
+        }
         const d = Math.hypot(n.x - x, n.y - y);
-        if (d <= r && d < bestD) {
+        if (d > r) continue;
+        const pri = n.kind === "station" ? 0 : 1;
+        if (pri > bestPri || (pri === bestPri && d < bestD)) {
           best = n;
           bestD = d;
+          bestPri = pri;
         }
       }
       return best;
