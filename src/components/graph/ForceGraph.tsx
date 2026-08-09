@@ -29,7 +29,7 @@ const COS_REF = Math.cos((REF_LAT * Math.PI) / 180);
 /** Expanded station disc — platforms/lifts nest inside. */
 const EXPANDED_STATION_RADIUS = 52;
 /** Platform ring on the circumference of the expanded disc. */
-const PLATFORM_ORBIT_FRAC = 1.10;
+const PLATFORM_ORBIT_FRAC = 1.05;
 /** Lift ring — half the expanded radius. */
 const LIFT_ORBIT_FRAC = 0.5;
 const RADIUS_TWEEN_MS = 320;
@@ -863,7 +863,6 @@ export function ForceGraph({
       const ringStroke = 2 * strokeBoost * inv;
       const haloStroke = 2.6 * strokeBoost * inv;
       const labelSize = 11.5 * strokeBoost * inv;
-      const platformLabelSize = 9.5 * strokeBoost * inv;
       const pairGap = Math.max(4.2, 2.6 * strokeBoost + 1.6) * inv;
 
       // Parallel line edge offsets
@@ -984,7 +983,6 @@ export function ForceGraph({
       }
 
       const pendingLabels: GraphLabel[] = [];
-      const nodesById = new Map(s.nodes.map((n) => [n.id, n]));
       const expandedSet = new Set(s.expanded);
 
       // Station discs (grown when expanded) under detail nodes.
@@ -1128,10 +1126,7 @@ export function ForceGraph({
             ctx.beginPath();
             ctx.arc(n.x, n.y, ri, 0, Math.PI * 2);
             if (st === "none") {
-              ctx.strokeStyle =
-                strokeLines.length === 1
-                  ? colors.disrupted
-                  : lineColorForCanvas(strokeLines[i] ?? "");
+              ctx.strokeStyle = lineColorForCanvas(strokeLines[i] ?? "");
               ctx.setLineDash([
                 3 * strokeBoost * inv,
                 2.5 * strokeBoost * inv,
@@ -1167,7 +1162,7 @@ export function ForceGraph({
               ctx.beginPath();
               ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
               if (st === "none") {
-                ctx.strokeStyle = colors.disrupted;
+                ctx.strokeStyle = lineColorForCanvas("national-rail");
                 ctx.setLineDash([
                   3 * strokeBoost * inv,
                   2.5 * strokeBoost * inv,
@@ -1180,37 +1175,6 @@ export function ForceGraph({
               ctx.stroke();
               ctx.setLineDash([]);
             }
-          }
-
-          if (s.view.k > 0.95) {
-            const font = `600 ${platformLabelSize}px Inter, system-ui, sans-serif`;
-            ctx.font = font;
-            const tw = ctx.measureText(n.label).width;
-            const th = platformLabelSize;
-            const parent = nodesById.get(n.parentId ?? "");
-            const pdx = n.x - (parent?.x ?? n.x - 1);
-            const pdy = n.y - (parent?.y ?? n.y);
-            const ang = Math.atan2(pdy, pdx);
-            const align: "left" | "right" =
-              Math.cos(ang) >= -0.2 ? "left" : "right";
-            const gap = r + 7 * strokeBoost * inv;
-            const ix = n.x + Math.cos(ang) * gap;
-            const iy = n.y + Math.sin(ang) * gap;
-            pendingLabels.push({
-              text: n.label,
-              color:
-                st === "bad" || st === "none" ? colors.disrupted : "#5c626c",
-              font,
-              nx: n.x,
-              ny: n.y,
-              x: ix,
-              y: iy,
-              ix,
-              iy,
-              w: tw,
-              h: th,
-              align,
-            });
           }
         } else if (n.kind === "lift") {
           const bad = !!s.disruptions?.byLiftId[n.id];
