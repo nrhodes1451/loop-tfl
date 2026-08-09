@@ -25,7 +25,7 @@ import { clamp } from "@/lib/utils";
 const REF_LAT = 51.5074;
 const DEG_SCALE = 14000;
 const COS_REF = Math.cos((REF_LAT * Math.PI) / 180);
-const PLATFORM_ORBIT = 36;
+const PLATFORM_ORBIT = 52;
 
 type GraphNode = SimulationNodeDatum & {
   id: string;
@@ -42,6 +42,73 @@ type GraphLink = SimulationLinkDatum<GraphNode> & {
   kind: "line" | "lift" | "ghost";
   status?: string;
 };
+
+type GraphLabel = {
+  text: string;
+  color: string;
+  font: string;
+  nx: number;
+  ny: number;
+  x: number;
+  y: number;
+  ix: number;
+  iy: number;
+  w: number;
+  h: number;
+  align: "left" | "right";
+};
+
+function labelBounds(l: GraphLabel) {
+  const left = l.align === "left" ? l.x : l.x - l.w;
+  return {
+    left,
+    right: left + l.w,
+    top: l.y - l.h / 2,
+    bottom: l.y + l.h / 2,
+  };
+}
+
+/** Soft spring to preferred spot + pairwise box repulsion. */
+function resolveGraphLabels(labels: GraphLabel[], iterations = 18) {
+  if (labels.length < 2) return;
+  for (let iter = 0; iter < iterations; iter++) {
+    for (const l of labels) {
+      l.x += (l.ix - l.x) * 0.14;
+      l.y += (l.iy - l.y) * 0.14;
+    }
+    for (let i = 0; i < labels.length; i++) {
+      for (let j = i + 1; j < labels.length; j++) {
+        const a = labels[i]!;
+        const b = labels[j]!;
+        const A = labelBounds(a);
+        const B = labelBounds(b);
+        const gap = 3;
+        const ox = Math.min(A.right, B.right) - Math.max(A.left, B.left);
+        const oy = Math.min(A.bottom, B.bottom) - Math.max(A.top, B.top);
+        if (ox <= 0 || oy <= 0) continue;
+        if (oy <= ox) {
+          const push = oy / 2 + gap * 0.5;
+          if (a.y <= b.y) {
+            a.y -= push;
+            b.y += push;
+          } else {
+            a.y += push;
+            b.y -= push;
+          }
+        } else {
+          const push = ox / 2 + gap * 0.5;
+          if (a.x <= b.x) {
+            a.x -= push;
+            b.x += push;
+          } else {
+            a.x += push;
+            b.x -= push;
+          }
+        }
+      }
+    }
+  }
+}
 
 function projectLatLon(lat: number, lon: number) {
   return {
@@ -93,15 +160,20 @@ function createGeoSimulation(
     )
     .force(
       "charge",
-      forceManyBody().strength((d) =>
-        (d as GraphNode).kind === "station" ? 0 : -28,
-      ),
+      forceManyBody().strength((d) => {
+        const n = d as GraphNode;
+        if (n.kind === "station") return 0;
+        if (n.kind === "platform") return -70;
+        return -36;
+      }),
     )
     .force(
       "collide",
-      forceCollide<GraphNode>().radius((d) =>
-        d.kind === "station" ? 12 : d.kind === "platform" ? 8 : 5,
-      ),
+      forceCollide<GraphNode>()
+        .radius((d) =>
+          d.kind === "station" ? 14 : d.kind === "platform" ? 18 : 8,
+        )
+        .strength(0.85),
     )
     .force(
       "x",
@@ -110,7 +182,7 @@ function createGeoSimulation(
           if (d.kind === "station") return d.x ?? 0;
           return byId.get(d.parentId ?? "")?.x ?? 0;
         })
-        .strength((d) => (d.kind === "station" ? 0 : 0.15)),
+        .strength((d) => (d.kind === "station" ? 0 : 0.06)),
     )
     .force(
       "y",
@@ -119,7 +191,7 @@ function createGeoSimulation(
           if (d.kind === "station") return d.y ?? 0;
           return byId.get(d.parentId ?? "")?.y ?? 0;
         })
-        .strength((d) => (d.kind === "station" ? 0 : 0.15)),
+        .strength((d) => (d.kind === "station" ? 0 : 0.06)),
     )
     .alpha(hasDetail ? 0.55 : 0)
     .alphaDecay(reducedMotion ? 0.25 : 0.06);
@@ -520,6 +592,9 @@ export function ForceGraph({
         ctx.globalAlpha = 1;
       }
 
+      const pendingLabels: GraphLabel[] = [];
+      const nodesById = new Map(s.nodes.map((n) => [n.id, n]));
+
       for (const n of s.nodes) {
         if (n.x == null || n.y == null) continue;
         if (n.kind === "station") {
@@ -563,10 +638,35 @@ export function ForceGraph({
             s.view.k > 1.2 ||
             ((n.lineCount ?? 0) >= 4 && s.view.k > 0.55);
           if (showLabel) {
-            ctx.font = `${isSel ? 700 : 600} ${labelSize}px Inter, system-ui, sans-serif`;
-            ctx.fillStyle = isSel ? "#1a1d23" : "#3d4450";
-            ctx.textBaseline = "middle";
-            ctx.fillText(n.label, n.x + r + 8 * strokeBoost * inv, n.y);
+            const font = `${isSel ? 700 : 600} ${labelSize}px Inter, system-ui, sans-serif`;
+            ctx.font = font;
+            const color = isSel ? "#1a1d23" : "#3d4450";
+            if (isSel) {
+              const tw = ctx.measureText(n.label).width;
+              const th = labelSize;
+              const gap = r + 8 * strokeBoost * inv;
+              const ix = n.x + gap;
+              const iy = n.y - (r + 10 * strokeBoost * inv);
+              pendingLabels.push({
+                text: n.label,
+                color,
+                font,
+                nx: n.x,
+                ny: n.y,
+                x: ix,
+                y: iy,
+                ix,
+                iy,
+                w: tw,
+                h: th,
+                align: "left",
+              });
+            } else {
+              ctx.fillStyle = color;
+              ctx.textAlign = "left";
+              ctx.textBaseline = "middle";
+              ctx.fillText(n.label, n.x + r + 8 * strokeBoost * inv, n.y);
+            }
           }
         } else if (n.kind === "platform") {
           const st = platformStatus(n.id, s.network, s.disruptions);
@@ -589,11 +689,34 @@ export function ForceGraph({
           ctx.stroke();
           ctx.setLineDash([]);
           if (s.view.k > 0.95) {
-            ctx.font = `600 ${platformLabelSize}px Inter, system-ui, sans-serif`;
-            ctx.fillStyle =
-              st === "bad" || st === "none" ? colors.disrupted : "#5c626c";
-            ctx.textBaseline = "middle";
-            ctx.fillText(n.label, n.x + r + 5 * strokeBoost * inv, n.y);
+            const font = `600 ${platformLabelSize}px Inter, system-ui, sans-serif`;
+            ctx.font = font;
+            const tw = ctx.measureText(n.label).width;
+            const th = platformLabelSize;
+            const parent = nodesById.get(n.parentId ?? "");
+            const pdx = n.x - (parent?.x ?? n.x - 1);
+            const pdy = n.y - (parent?.y ?? n.y);
+            const ang = Math.atan2(pdy, pdx);
+            const align: "left" | "right" =
+              Math.cos(ang) >= -0.2 ? "left" : "right";
+            const gap = r + 7 * strokeBoost * inv;
+            const ix = n.x + Math.cos(ang) * gap;
+            const iy = n.y + Math.sin(ang) * gap;
+            pendingLabels.push({
+              text: n.label,
+              color:
+                st === "bad" || st === "none" ? colors.disrupted : "#5c626c",
+              font,
+              nx: n.x,
+              ny: n.y,
+              x: ix,
+              y: iy,
+              ix,
+              iy,
+              w: tw,
+              h: th,
+              align,
+            });
           }
         } else {
           const liftId = n.id.split("::").pop() ?? "";
@@ -610,6 +733,29 @@ export function ForceGraph({
           ctx.fill();
         }
       }
+
+      resolveGraphLabels(pendingLabels);
+
+      for (const l of pendingLabels) {
+        const dx = l.x - l.nx;
+        const dy = l.y - l.ny;
+        if (Math.hypot(dx, dy) > 14) {
+          const bx = labelBounds(l);
+          const tipX = l.align === "left" ? bx.left - 2 * inv : bx.right + 2 * inv;
+          ctx.strokeStyle = "rgba(92,98,108,0.35)";
+          ctx.lineWidth = 1 * inv;
+          ctx.beginPath();
+          ctx.moveTo(l.nx, l.ny);
+          ctx.lineTo(tipX, l.y);
+          ctx.stroke();
+        }
+        ctx.font = l.font;
+        ctx.fillStyle = l.color;
+        ctx.textAlign = l.align;
+        ctx.textBaseline = "middle";
+        ctx.fillText(l.text, l.x, l.y);
+      }
+      ctx.textAlign = "left";
 
       // Tooltip
       if (s.hover) {
