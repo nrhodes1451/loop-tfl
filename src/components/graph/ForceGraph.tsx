@@ -393,6 +393,8 @@ export function ForceGraph({
       const strokeBoost = s.view.k <= 1 ? 1 : 1 + (s.view.k - 1) * 0.55;
       const lineStroke = 2.6 * strokeBoost * inv;
       const liftStroke = 1.6 * strokeBoost * inv;
+      const ringStroke = 2 * strokeBoost * inv;
+      const haloStroke = 2.6 * strokeBoost * inv;
       const pairGap = Math.max(4.2, 2.6 * strokeBoost + 1.6) * inv;
 
       // Parallel line edge offsets
@@ -456,10 +458,70 @@ export function ForceGraph({
         ctx.setLineDash([]);
       }
 
+      const stationRadius = (n: GraphNode) =>
+        Math.min(13, 6 + (n.lineCount ?? 1) * 1.4);
+      const stationMaskR = (n: GraphNode) =>
+        stationRadius(n) + 5 + Math.max(2.5 * inv, lineStroke * 0.55, ringStroke * 0.55);
+
+      // Hide lines under every station first…
+      for (const n of s.nodes) {
+        if (n.kind !== "station" || n.x == null || n.y == null) continue;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, stationMaskR(n), 0, Math.PI * 2);
+        ctx.fillStyle = colors.canvas;
+        ctx.fill();
+      }
+
+      // …then restore stubs only for lines that actually stop here, so
+      // pass-throughs stay behind while stopping lines meet the station.
+      for (const l of s.links) {
+        if (l.kind !== "line") continue;
+        const source = l.source as GraphNode;
+        const target = l.target as GraphNode;
+        if (source.x == null || target.x == null) continue;
+        let x1 = source.x;
+        let y1 = source.y!;
+        let x2 = target.x;
+        let y2 = target.y!;
+        const a = source.id;
+        const b = target.id;
+        const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+        const total = pairCount.get(key) ?? 1;
+        const idx = pairIndex.get(l) ?? 0;
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const len = Math.hypot(dx, dy) || 1;
+        const ox = (-dy / len) * (idx - (total - 1) / 2) * pairGap;
+        const oy = (dx / len) * (idx - (total - 1) / 2) * pairGap;
+        x1 += ox;
+        y1 += oy;
+        x2 += ox;
+        y2 += oy;
+        const ux = (x2 - x1) / len;
+        const uy = (y2 - y1) / len;
+
+        ctx.strokeStyle = lineColorForCanvas(l.lineId ?? "");
+        ctx.globalAlpha = 0.88;
+        ctx.lineWidth = lineStroke;
+        ctx.lineCap = "round";
+        ctx.setLineDash([]);
+
+        const stubFrom = (sx: number, sy: number, dirX: number, dirY: number, node: GraphNode) => {
+          const stubLen = Math.min(len * 0.5, stationMaskR(node) + 2 * inv);
+          ctx.beginPath();
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(sx + dirX * stubLen, sy + dirY * stubLen);
+          ctx.stroke();
+        };
+        stubFrom(x1, y1, ux, uy, source);
+        stubFrom(x2, y2, -ux, -uy, target);
+        ctx.globalAlpha = 1;
+      }
+
       for (const n of s.nodes) {
         if (n.x == null || n.y == null) continue;
         if (n.kind === "station") {
-          const r = Math.min(13, 6 + (n.lineCount ?? 1) * 1.4);
+          const r = stationRadius(n);
           const agg = stationAggregateStatus(
             n.id,
             s.network,
@@ -474,13 +536,13 @@ export function ForceGraph({
           if (agg === "none") {
             ctx.strokeStyle = colors.noInfra;
             ctx.globalAlpha = 0.5;
-            ctx.setLineDash([3.5 * inv, 3 * inv]);
-            ctx.lineWidth = 2 * inv;
+            ctx.setLineDash([3.5 * strokeBoost * inv, 3 * strokeBoost * inv]);
+            ctx.lineWidth = ringStroke;
           } else {
             ctx.strokeStyle = statusColor(agg);
             ctx.globalAlpha = 0.8;
             ctx.setLineDash([]);
-            ctx.lineWidth = (agg === "bad" ? 2.6 : 2) * inv;
+            ctx.lineWidth = agg === "bad" ? haloStroke : ringStroke;
           }
           ctx.stroke();
           ctx.setLineDash([]);
@@ -491,7 +553,7 @@ export function ForceGraph({
           ctx.fillStyle = isSel ? "#1a1d23" : colors.white;
           ctx.fill();
           ctx.strokeStyle = isSel ? "#1a1d23" : colors.nodeStroke;
-          ctx.lineWidth = 2 * inv;
+          ctx.lineWidth = ringStroke;
           ctx.stroke();
 
           const showLabel =
@@ -513,7 +575,7 @@ export function ForceGraph({
           ctx.fill();
           if (st === "none") {
             ctx.strokeStyle = colors.disrupted;
-            ctx.setLineDash([3 * inv, 2.5 * inv]);
+            ctx.setLineDash([3 * strokeBoost * inv, 2.5 * strokeBoost * inv]);
           } else if (st === "ok") {
             ctx.strokeStyle = lineColorForCanvas(n.lineId ?? "");
             ctx.setLineDash([]);
@@ -521,7 +583,7 @@ export function ForceGraph({
             ctx.strokeStyle = statusColor(st);
             ctx.setLineDash([]);
           }
-          ctx.lineWidth = 2 * inv;
+          ctx.lineWidth = ringStroke;
           ctx.stroke();
           ctx.setLineDash([]);
           if (s.view.k > 0.95) {
