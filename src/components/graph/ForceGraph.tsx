@@ -389,6 +389,11 @@ export function ForceGraph({
       ctx.translate(s.view.tx, s.view.ty);
       ctx.scale(s.view.k, s.view.k);
       const inv = 1 / s.view.k;
+      // Above zoom 1, grow screen-space stroke so lines don't look hairline.
+      const strokeBoost = s.view.k <= 1 ? 1 : 1 + (s.view.k - 1) * 0.55;
+      const lineStroke = 2.6 * strokeBoost * inv;
+      const liftStroke = 1.6 * strokeBoost * inv;
+      const pairGap = Math.max(4.2, 2.6 * strokeBoost + 1.6) * inv;
 
       // Parallel line edge offsets
       const pairCount = new Map<string, number>();
@@ -422,22 +427,22 @@ export function ForceGraph({
           const dx = x2 - x1;
           const dy = y2 - y1;
           const len = Math.hypot(dx, dy) || 1;
-          const ox = (-dy / len) * (idx - (total - 1) / 2) * 4.2 * inv;
-          const oy = (dx / len) * (idx - (total - 1) / 2) * 4.2 * inv;
+          const ox = (-dy / len) * (idx - (total - 1) / 2) * pairGap;
+          const oy = (dx / len) * (idx - (total - 1) / 2) * pairGap;
           x1 += ox;
           y1 += oy;
           x2 += ox;
           y2 += oy;
           ctx.strokeStyle = lineColorForCanvas(l.lineId ?? "");
           ctx.globalAlpha = 0.88;
-          ctx.lineWidth = 2.6 * inv;
+          ctx.lineWidth = lineStroke;
           ctx.lineCap = "round";
           ctx.setLineDash([]);
         } else {
           const st = l.status === "bad" ? colors.disrupted : colors.ok;
           ctx.strokeStyle = st;
           ctx.globalAlpha = 0.9;
-          ctx.lineWidth = 1.6 * inv;
+          ctx.lineWidth = liftStroke;
           ctx.setLineDash(
             l.status === "unknown" ? [4 * inv, 3 * inv] : [],
           );
