@@ -433,6 +433,7 @@ export function ForceGraph({
     /** Animated visual radius per station (survives collapse until tween ends). */
     radiusNow: new Map<string, number>(),
     radiusTweens: new Map<string, RadiusTween>(),
+    nationalRailLogo: null as HTMLImageElement | null,
   });
 
   // Keep latest props in ref for rAF loop
@@ -457,6 +458,13 @@ export function ForceGraph({
     const wrap = wrapEl;
     const ctx = ctx2d;
     const s = stateRef.current;
+
+    const nrImg = new Image();
+    nrImg.decoding = "async";
+    nrImg.src = "/national-rail.svg";
+    nrImg.onload = () => {
+      s.nationalRailLogo = nrImg;
+    };
 
     function buildGraph() {
       const nodes: GraphNode[] = [];
@@ -903,43 +911,96 @@ export function ForceGraph({
               : n.lineId
                 ? [n.lineId]
                 : [];
-          const nLines = Math.max(lineIds.length, 1);
+          const otherLineIds = lineIds.filter((id) => id !== "national-rail");
+          const hasNationalRail = lineIds.includes("national-rail");
+          const logo = s.nationalRailLogo;
+          const logoReady = !!(logo && logo.complete && logo.naturalWidth > 0);
+
           const ringGap = 2.2;
-          const r = 5.2 + (nLines - 1) * ringGap;
+          // Size: concentric rings for tube/etc lines; NR logo sits in/as the node.
+          const r =
+            otherLineIds.length > 0
+              ? 5.2 +
+                (otherLineIds.length - 1) * ringGap +
+                (hasNationalRail ? 1.5 : 0)
+              : hasNationalRail
+                ? 7
+                : 5.2;
 
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
           ctx.fillStyle = colors.white;
           ctx.fill();
 
-          for (let i = 0; i < nLines; i++) {
+          const strokeLines =
+            otherLineIds.length > 0
+              ? otherLineIds
+              : hasNationalRail && !logoReady
+                ? ["national-rail"]
+                : !hasNationalRail
+                  ? lineIds.length
+                    ? lineIds
+                    : [""]
+                  : [];
+
+          for (let i = 0; i < strokeLines.length; i++) {
             const ri = r - i * ringGap;
             ctx.beginPath();
             ctx.arc(n.x, n.y, ri, 0, Math.PI * 2);
             if (st === "none") {
               ctx.strokeStyle =
-                nLines === 1
+                strokeLines.length === 1
                   ? colors.disrupted
-                  : lineColorForCanvas(lineIds[i] ?? "");
+                  : lineColorForCanvas(strokeLines[i] ?? "");
               ctx.setLineDash([
                 3 * strokeBoost * inv,
                 2.5 * strokeBoost * inv,
               ]);
             } else if (st === "ok") {
-              ctx.strokeStyle = lineColorForCanvas(lineIds[i] ?? "");
+              ctx.strokeStyle = lineColorForCanvas(strokeLines[i] ?? "");
               ctx.setLineDash([]);
             } else {
-              // bad / unknown: outermost ring shows status, inners keep line colors
               ctx.strokeStyle =
                 i === 0
                   ? statusColor(st)
-                  : lineColorForCanvas(lineIds[i] ?? "");
+                  : lineColorForCanvas(strokeLines[i] ?? "");
               ctx.setLineDash([]);
             }
             ctx.lineWidth = ringStroke;
             ctx.stroke();
           }
           ctx.setLineDash([]);
+
+          if (hasNationalRail && logoReady && logo) {
+            const logoW =
+              otherLineIds.length > 0 ? Math.max(6, r * 0.7) : r * 1.35;
+            const logoH = logoW * (logo.naturalHeight / logo.naturalWidth);
+            ctx.drawImage(
+              logo,
+              n.x - logoW / 2,
+              n.y - logoH / 2,
+              logoW,
+              logoH,
+            );
+            // Status ring when NR-only (no coloured concentric strokes).
+            if (otherLineIds.length === 0 && st !== "ok") {
+              ctx.beginPath();
+              ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+              if (st === "none") {
+                ctx.strokeStyle = colors.disrupted;
+                ctx.setLineDash([
+                  3 * strokeBoost * inv,
+                  2.5 * strokeBoost * inv,
+                ]);
+              } else {
+                ctx.strokeStyle = statusColor(st);
+                ctx.setLineDash([]);
+              }
+              ctx.lineWidth = ringStroke;
+              ctx.stroke();
+              ctx.setLineDash([]);
+            }
+          }
 
           if (s.view.k > 0.95) {
             const font = `600 ${platformLabelSize}px Inter, system-ui, sans-serif`;
