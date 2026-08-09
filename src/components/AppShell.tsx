@@ -14,6 +14,7 @@ export function AppShell({ network }: { network: NetworkData }) {
   const [disruptions, setDisruptions] = useState<DisruptionPayload | null>(null);
   const [resetToken, setResetToken] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [showNationalRail, setShowNationalRail] = useState(true);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -74,6 +75,7 @@ export function AppShell({ network }: { network: NetworkData }) {
         onToggleExpand={onToggleExpand}
         resetToken={resetToken}
         reducedMotion={reducedMotion}
+        showNationalRail={showNationalRail}
       />
 
       <header className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-5 px-6 pt-[18px] pb-3.5">
@@ -116,7 +118,10 @@ export function AppShell({ network }: { network: NetworkData }) {
         </div>
       </header>
 
-      <Legend />
+      <Legend
+        showNationalRail={showNationalRail}
+        onShowNationalRailChange={setShowNationalRail}
+      />
     </div>
   );
 }

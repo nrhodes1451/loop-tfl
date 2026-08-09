@@ -1,4 +1,14 @@
-export function Legend() {
+import { NATIONAL_RAIL_RED } from "@/lib/tokens";
+
+type Props = {
+  showNationalRail: boolean;
+  onShowNationalRailChange: (show: boolean) => void;
+};
+
+export function Legend({
+  showNationalRail,
+  onShowNationalRailChange,
+}: Props) {
   return (
     <div
       className="absolute bottom-[22px] left-6 z-10 flex max-w-[340px] flex-col gap-3 rounded-[10px] border px-4 py-3.5"
@@ -57,6 +67,13 @@ export function Legend() {
           </span>
           Street level
         </div>
+        <div className="flex items-center gap-[7px] text-xs" style={{ color: "#3d4450" }}>
+          <span
+            className="inline-block h-[13px] w-[13px] rounded-full border-2"
+            style={{ borderColor: NATIONAL_RAIL_RED, background: "#ffffff" }}
+          />
+          National Rail
+        </div>
       </div>
       <div
         className="max-w-[300px] text-[11.5px] leading-normal text-pretty"
@@ -67,6 +84,18 @@ export function Legend() {
         the point.
       </div>
       <div className="h-px" style={{ background: "#e4e7ec" }} />
+      <label
+        className="flex cursor-pointer items-center gap-2 text-xs select-none"
+        style={{ color: "#3d4450" }}
+      >
+        <input
+          type="checkbox"
+          checked={showNationalRail}
+          onChange={(e) => onShowNationalRailChange(e.target.checked)}
+          className="h-3.5 w-3.5 cursor-pointer accent-[#FF4200]"
+        />
+        Show National Rail platforms
+      </label>
       <div
         className="max-w-[300px] font-[family-name:var(--font-ibm-plex-mono)] text-[11px] leading-relaxed"
         style={{ color: "#6f7681" }}

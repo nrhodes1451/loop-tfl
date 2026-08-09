@@ -9,7 +9,11 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import AdmZip from "adm-zip";
 import { parse } from "csv-parse/sync";
-import { buildNetworkFromSources, MODES } from "../src/lib/tfl/build-network";
+import {
+  buildNetworkFromSources,
+  MODES,
+  routeSequenceFromStopPoints,
+} from "../src/lib/tfl/build-network";
 import {
   tflFetch,
   tflUrl,
@@ -55,6 +59,16 @@ async function fetchLines(): Promise<TflLine[]> {
   return all;
 }
 
+type TflStopPointRaw = {
+  id: string;
+  commonName: string;
+  lat: number;
+  lon: number;
+  stationNaptan?: string;
+  parentId?: string;
+  topMostParentId?: string;
+};
+
 async function fetchSequences(lines: TflLine[]): Promise<TflRouteSequence[]> {
   const out: TflRouteSequence[] = [];
   for (const line of lines) {
@@ -62,8 +76,27 @@ async function fetchSequences(lines: TflLine[]): Promise<TflRouteSequence[]> {
       const seq = await tflFetch<TflRouteSequence>(
         `/Line/${line.id}/Route/Sequence/all`,
       );
-      out.push(seq);
-      process.stdout.write(`  sequence ${line.id}\n`);
+      const hasStops = (seq.stopPointSequences ?? []).some(
+        (b) => (b.stopPoint?.length ?? 0) > 0,
+      );
+      if (hasStops) {
+        out.push(seq);
+        process.stdout.write(`  sequence ${line.id}\n`);
+      } else {
+        // TfL sometimes returns an empty Route/Sequence during part closures
+        // (Bakerloo, Aug 2026). Fall back to StopPoints + nearest-neighbour order.
+        const stops = await tflFetch<TflStopPointRaw[]>(
+          `/Line/${line.id}/StopPoints`,
+        );
+        if (stops.length === 0) {
+          console.warn(`  skip ${line.id}: empty sequence and no stop points`);
+        } else {
+          out.push(routeSequenceFromStopPoints(line, stops));
+          process.stdout.write(
+            `  sequence ${line.id} (stop-points fallback, ${stops.length} stops)\n`,
+          );
+        }
+      }
     } catch (err) {
       console.warn(`  skip ${line.id}:`, (err as Error).message);
     }

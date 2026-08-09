@@ -18,7 +18,7 @@ import {
   stationAggregateStatus,
   statusColor,
 } from "@/lib/status";
-import { colors, lineColorForCanvas } from "@/lib/tokens";
+import { colors, lineColorForCanvas, NATIONAL_RAIL_RED } from "@/lib/tokens";
 import type {
   DisruptionPayload,
   NetworkData,
@@ -228,8 +228,13 @@ function appendExpandedStationDetail(
   links: GraphLink[],
   byId: Map<string, GraphNode>,
   _prev: Map<string, GraphNode>,
+  showNationalRail: boolean,
 ) {
-  const platforms = network.platforms.filter((p) => p.stationId === stationId);
+  const platforms = network.platforms.filter((p) => {
+    if (p.stationId !== stationId) return false;
+    if (!showNationalRail && p.lineId === "national-rail") return false;
+    return true;
+  });
   const parent = byId.get(stationId);
   const orbit = platformOrbit();
   const liftR = liftOrbit();
@@ -619,6 +624,7 @@ type Props = {
   onToggleExpand: (id: string) => void;
   resetToken: number;
   reducedMotion: boolean;
+  showNationalRail: boolean;
 };
 
 export function ForceGraph({
@@ -630,6 +636,7 @@ export function ForceGraph({
   onToggleExpand,
   resetToken,
   reducedMotion,
+  showNationalRail,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -648,6 +655,7 @@ export function ForceGraph({
     selected,
     expanded,
     reducedMotion,
+    showNationalRail,
     onSelectStation,
     onToggleExpand,
     /** Animated visual radius per station (survives collapse until tween ends). */
@@ -664,6 +672,7 @@ export function ForceGraph({
     s.selected = selected;
     s.expanded = expanded;
     s.reducedMotion = reducedMotion;
+    s.showNationalRail = showNationalRail;
     s.onSelectStation = onSelectStation;
     s.onToggleExpand = onToggleExpand;
   });
@@ -724,6 +733,7 @@ export function ForceGraph({
           links,
           byId,
           prev,
+          s.showNationalRail,
         );
       }
 
@@ -1232,21 +1242,16 @@ export function ForceGraph({
               logoW,
               logoH,
             );
-            // Status ring when NR-only (no coloured concentric strokes).
-            if (otherLineIds.length === 0 && st !== "ok") {
-              ctx.beginPath();
-              ctx.arc(nx, ny, rs, 0, Math.PI * 2);
-              if (st === "none") {
-                ctx.strokeStyle = lineColorForCanvas("national-rail");
-                ctx.setLineDash([3 * strokeBoost, 2.5 * strokeBoost]);
-              } else {
-                ctx.strokeStyle = statusColor(st);
-                ctx.setLineDash([]);
-              }
-              ctx.lineWidth = ringStroke;
-              ctx.stroke();
-              ctx.setLineDash([]);
-            }
+            // Brand ring around the National Rail double-arrow.
+            ctx.beginPath();
+            ctx.arc(nx, ny, rs, 0, Math.PI * 2);
+            ctx.strokeStyle = NATIONAL_RAIL_RED;
+            ctx.setLineDash(
+              st === "none" ? [3 * strokeBoost, 2.5 * strokeBoost] : [],
+            );
+            ctx.lineWidth = ringStroke;
+            ctx.stroke();
+            ctx.setLineDash([]);
           }
         } else if (n.kind === "lift") {
           const bad = !!s.disruptions?.byLiftId[n.id];
@@ -1572,6 +1577,7 @@ export function ForceGraph({
         links,
         byId,
         prev,
+        showNationalRail,
       );
     }
 
@@ -1579,7 +1585,7 @@ export function ForceGraph({
     s.links = links;
     s.sim?.stop();
     s.sim = createGeoSimulation(nodes, links, byId, reducedMotion);
-  }, [expanded, network, disruptions, reducedMotion]);
+  }, [expanded, network, disruptions, reducedMotion, showNationalRail]);
 
   return (
     <div ref={wrapRef} className="absolute inset-0">

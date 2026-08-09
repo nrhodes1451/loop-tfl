@@ -59,7 +59,10 @@ export const LINE_COLORS: Record<string, string> = {
   tram: "#84B817",
 };
 
+export const NATIONAL_RAIL_RED = "#FF4200";
+
 export function lineColorForCanvas(lineId: string): string {
+  if (lineId === "national-rail") return NATIONAL_RAIL_RED;
   return LINE_COLORS[lineId] ?? "#A0A5A9";
 }
 
