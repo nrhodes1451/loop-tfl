@@ -21,6 +21,12 @@ import { colors, lineColorForCanvas } from "@/lib/tokens";
 import type { DisruptionPayload, NetworkData } from "@/lib/types";
 import { clamp } from "@/lib/utils";
 
+/** London-centred equirectangular projection into world units. */
+const REF_LAT = 51.5074;
+const DEG_SCALE = 14000;
+const COS_REF = Math.cos((REF_LAT * Math.PI) / 180);
+const PLATFORM_ORBIT = 36;
+
 type GraphNode = SimulationNodeDatum & {
   id: string;
   kind: "station" | "platform" | "lift";
@@ -36,6 +42,94 @@ type GraphLink = SimulationLinkDatum<GraphNode> & {
   kind: "line" | "lift" | "ghost";
   status?: string;
 };
+
+function projectLatLon(lat: number, lon: number) {
+  return {
+    x: lon * DEG_SCALE * COS_REF,
+    y: -lat * DEG_SCALE,
+  };
+}
+
+function pinStationNode(n: GraphNode, lat: number, lon: number) {
+  const pos = projectLatLon(lat, lon);
+  n.x = pos.x;
+  n.y = pos.y;
+  n.fx = pos.x;
+  n.fy = pos.y;
+  n.vx = 0;
+  n.vy = 0;
+}
+
+function createGeoSimulation(
+  nodes: GraphNode[],
+  links: GraphLink[],
+  byId: Map<string, GraphNode>,
+  reducedMotion: boolean,
+) {
+  for (const n of nodes) {
+    if (n.kind === "station") {
+      n.fx = n.x ?? null;
+      n.fy = n.y ?? null;
+      n.vx = 0;
+      n.vy = 0;
+    } else {
+      n.fx = null;
+      n.fy = null;
+    }
+  }
+
+  const hasDetail = nodes.some((n) => n.kind !== "station");
+  const sim = forceSimulation(nodes)
+    .force(
+      "link",
+      forceLink<GraphNode, GraphLink>(links)
+        .id((d) => d.id)
+        .distance((l) => {
+          if (l.kind === "line") return 0;
+          if (l.kind === "ghost") return PLATFORM_ORBIT;
+          return 24;
+        })
+        .strength((l) => (l.kind === "line" ? 0 : 0.65)),
+    )
+    .force(
+      "charge",
+      forceManyBody().strength((d) =>
+        (d as GraphNode).kind === "station" ? 0 : -28,
+      ),
+    )
+    .force(
+      "collide",
+      forceCollide<GraphNode>().radius((d) =>
+        d.kind === "station" ? 12 : d.kind === "platform" ? 8 : 5,
+      ),
+    )
+    .force(
+      "x",
+      forceX<GraphNode>()
+        .x((d) => {
+          if (d.kind === "station") return d.x ?? 0;
+          return byId.get(d.parentId ?? "")?.x ?? 0;
+        })
+        .strength((d) => (d.kind === "station" ? 0 : 0.15)),
+    )
+    .force(
+      "y",
+      forceY<GraphNode>()
+        .y((d) => {
+          if (d.kind === "station") return d.y ?? 0;
+          return byId.get(d.parentId ?? "")?.y ?? 0;
+        })
+        .strength((d) => (d.kind === "station" ? 0 : 0.15)),
+    )
+    .alpha(hasDetail ? 0.55 : 0)
+    .alphaDecay(reducedMotion ? 0.25 : 0.06);
+
+  if (reducedMotion || !hasDetail) {
+    for (let i = 0; i < 80; i++) sim.tick();
+    sim.stop();
+  }
+  return sim;
+}
 
 type Props = {
   network: NetworkData;
@@ -67,7 +161,6 @@ export function ForceGraph({
     view: { k: 1, tx: 0, ty: 0 },
     userMoved: false,
     hover: null as GraphNode | null,
-    drag: null as { node: GraphNode; pointerId: number } | null,
     pan: null as { x: number; y: number; tx: number; ty: number } | null,
     pointer: { x: 0, y: 0 },
     size: { w: 0, h: 0, dpr: 1 },
@@ -103,20 +196,11 @@ export function ForceGraph({
     const ctx = ctx2d;
     const s = stateRef.current;
 
-    function seedPositions(nodes: GraphNode[]) {
-      for (const n of nodes) {
-        if (n.kind !== "station") continue;
-        const st = s.network.stations.find((x) => x.id === n.id);
-        if (!st) continue;
-        n.x = st.lon * 15;
-        n.y = -st.lat * 10.5;
-      }
-    }
-
     function buildGraph() {
       const nodes: GraphNode[] = [];
       const links: GraphLink[] = [];
       const byId = new Map<string, GraphNode>();
+      const prev = new Map(s.nodes.map((n) => [n.id, n]));
 
       for (const st of s.network.stations) {
         const n: GraphNode = {
@@ -126,6 +210,7 @@ export function ForceGraph({
           stationId: st.id,
           lineCount: st.lineIds.length,
         };
+        pinStationNode(n, st.lat, st.lon);
         nodes.push(n);
         byId.set(n.id, n);
       }
@@ -147,6 +232,7 @@ export function ForceGraph({
         const parent = byId.get(stationId);
         platforms.forEach((p, i) => {
           const angle = (i / Math.max(platforms.length, 1)) * Math.PI * 2;
+          const old = prev.get(p.id);
           const pn: GraphNode = {
             id: p.id,
             kind: "platform",
@@ -154,8 +240,12 @@ export function ForceGraph({
             stationId,
             lineId: p.lineId,
             parentId: stationId,
-            x: (parent?.x ?? 0) + Math.cos(angle) * 60,
-            y: (parent?.y ?? 0) + Math.sin(angle) * 60,
+            x:
+              old?.x ??
+              (parent?.x ?? 0) + Math.cos(angle) * PLATFORM_ORBIT,
+            y:
+              old?.y ??
+              (parent?.y ?? 0) + Math.sin(angle) * PLATFORM_ORBIT,
           };
           nodes.push(pn);
           byId.set(pn.id, pn);
@@ -173,11 +263,12 @@ export function ForceGraph({
             return;
           }
 
-          let prev = p.id;
+          let prevId = p.id;
           liftIds.forEach((lid, li) => {
             const lift = s.network.lifts.find((l) => l.id === lid);
             const nodeId = `${p.id}::${lid}`;
             const t = (li + 1) / (liftIds.length + 1);
+            const oldL = prev.get(nodeId);
             const ln: GraphNode = {
               id: nodeId,
               kind: "lift",
@@ -185,28 +276,26 @@ export function ForceGraph({
               stationId,
               parentId: stationId,
               x:
-                (pn.x ?? 0) * (1 - t) +
-                (parent?.x ?? 0) * t +
-                (Math.random() - 0.5) * 4,
+                oldL?.x ??
+                (pn.x ?? 0) * (1 - t) + (parent?.x ?? 0) * t,
               y:
-                (pn.y ?? 0) * (1 - t) +
-                (parent?.y ?? 0) * t +
-                (Math.random() - 0.5) * 4,
+                oldL?.y ??
+                (pn.y ?? 0) * (1 - t) + (parent?.y ?? 0) * t,
             };
             if (!byId.has(nodeId)) {
               nodes.push(ln);
               byId.set(nodeId, ln);
             }
             links.push({
-              source: prev,
+              source: prevId,
               target: nodeId,
               kind: "lift",
               status: s.disruptions?.byLiftId[lid] ? "bad" : "ok",
             });
-            prev = nodeId;
+            prevId = nodeId;
           });
           links.push({
-            source: prev,
+            source: prevId,
             target: stationId,
             kind: "lift",
             status: "ok",
@@ -214,80 +303,11 @@ export function ForceGraph({
         });
       }
 
-      // Preserve positions across rebuilds
-      const prev = new Map(s.nodes.map((n) => [n.id, n]));
-      for (const n of nodes) {
-        const old = prev.get(n.id);
-        if (old && old.x != null && old.y != null) {
-          n.x = old.x;
-          n.y = old.y;
-          n.vx = old.vx;
-          n.vy = old.vy;
-        }
-      }
-      if (s.nodes.length === 0) seedPositions(nodes);
-
       s.nodes = nodes;
       s.links = links;
 
       if (s.sim) s.sim.stop();
-      s.sim = forceSimulation(nodes)
-        .force(
-          "link",
-          forceLink<GraphNode, GraphLink>(links)
-            .id((d) => d.id)
-            .distance((l) => {
-              if (l.kind === "line") return 104;
-              if (l.kind === "ghost") return 62;
-              return 36;
-            })
-            .strength((l) => (l.kind === "line" ? 0.12 : 0.45)),
-        )
-        .force(
-          "charge",
-          forceManyBody().strength((d) =>
-            (d as GraphNode).kind === "station" ? -190 : -40,
-          ),
-        )
-        .force(
-          "collide",
-          forceCollide<GraphNode>().radius((d) =>
-            d.kind === "station" ? 14 : d.kind === "platform" ? 8 : 5,
-          ),
-        )
-        .force(
-          "x",
-          forceX<GraphNode>()
-            .x((d) => {
-              if (d.kind === "station") {
-                const st = s.network.stations.find((x) => x.id === d.id);
-                return st ? st.lon * 15 : 0;
-              }
-              const parent = byId.get(d.parentId ?? "");
-              return parent?.x ?? 0;
-            })
-            .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
-        )
-        .force(
-          "y",
-          forceY<GraphNode>()
-            .y((d) => {
-              if (d.kind === "station") {
-                const st = s.network.stations.find((x) => x.id === d.id);
-                return st ? -st.lat * 10.5 : 0;
-              }
-              const parent = byId.get(d.parentId ?? "");
-              return parent?.y ?? 0;
-            })
-            .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
-        )
-        .alpha(0.9)
-        .alphaDecay(reducedMotion ? 0.2 : 0.02);
-
-      if (reducedMotion) {
-        for (let i = 0; i < 120; i++) s.sim.tick();
-        s.sim.stop();
-      }
+      s.sim = createGeoSimulation(nodes, links, byId, s.reducedMotion);
     }
 
     function fitView() {
@@ -308,11 +328,11 @@ export function ForceGraph({
       const bh = Math.max(maxY - minY, 1);
       const { w, h } = s.size;
       const padX = clamp(w * 0.06, 24, 80);
-      const padY = clamp(h * 0.06, 20, 60);
+      const padY = clamp(h * 0.08, 48, 100);
       const k = clamp(
         Math.min((w - padX * 2) / bw, (h - padY * 2) / bh),
-        0.35,
-        3,
+        0.02,
+        8,
       );
       s.view.k = k;
       s.view.tx = w / 2 - ((minX + maxX) / 2) * k;
@@ -463,9 +483,9 @@ export function ForceGraph({
 
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = isSel ? colors.white : colors.controlAlt;
+          ctx.fillStyle = isSel ? "#1a1d23" : colors.white;
           ctx.fill();
-          ctx.strokeStyle = isSel ? colors.white : colors.nodeStroke;
+          ctx.strokeStyle = isSel ? "#1a1d23" : colors.nodeStroke;
           ctx.lineWidth = 2 * inv;
           ctx.stroke();
 
@@ -475,7 +495,7 @@ export function ForceGraph({
             ((n.lineCount ?? 0) >= 4 && s.view.k > 0.55);
           if (showLabel) {
             ctx.font = `${isSel ? 600 : 500} ${11.5 * inv}px Inter, system-ui, sans-serif`;
-            ctx.fillStyle = isSel ? colors.white : colors.label;
+            ctx.fillStyle = isSel ? "#1a1d23" : "#3d4450";
             ctx.textBaseline = "middle";
             ctx.fillText(n.label, n.x + r + 8 * inv, n.y);
           }
@@ -484,7 +504,7 @@ export function ForceGraph({
           const r = 5.2;
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = colors.platformFill;
+          ctx.fillStyle = colors.white;
           ctx.fill();
           if (st === "none") {
             ctx.strokeStyle = colors.disrupted;
@@ -502,7 +522,7 @@ export function ForceGraph({
           if (s.view.k > 0.95) {
             ctx.font = `500 ${9.5 * inv}px Inter, system-ui, sans-serif`;
             ctx.fillStyle =
-              st === "bad" || st === "none" ? colors.disrupted : "#9aa2ae";
+              st === "bad" || st === "none" ? colors.disrupted : "#5c626c";
             ctx.textBaseline = "middle";
             ctx.fillText(n.label, n.x + r + 5 * inv, n.y);
           }
@@ -598,10 +618,6 @@ export function ForceGraph({
 
     let raf = 0;
     function loop() {
-      if (s.sim && !s.reducedMotion) {
-        // keep faint drift
-        if ((s.sim.alpha() ?? 0) < 0.03) s.sim.alpha(0.03);
-      }
       draw();
       raf = requestAnimationFrame(loop);
     }
@@ -612,31 +628,21 @@ export function ForceGraph({
     ro.observe(wrap);
     const fitTimer = window.setTimeout(() => {
       if (!s.userMoved) fitView();
-    }, 1400);
+    }, 50);
     raf = requestAnimationFrame(loop);
 
     const onPointerDown = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
-      const hit = hitTest(sx, sy);
-      if (hit) {
-        s.drag = { node: hit, pointerId: e.pointerId };
-        hit.fx = hit.x;
-        hit.fy = hit.y;
-        canvas.setPointerCapture(e.pointerId);
-        s.sim?.alphaTarget(0.4).restart();
-        canvas.style.cursor = "grabbing";
-      } else {
-        s.pan = {
-          x: sx,
-          y: sy,
-          tx: s.view.tx,
-          ty: s.view.ty,
-        };
-        canvas.setPointerCapture(e.pointerId);
-        canvas.style.cursor = "grabbing";
-      }
+      s.pan = {
+        x: sx,
+        y: sy,
+        tx: s.view.tx,
+        ty: s.view.ty,
+      };
+      canvas.setPointerCapture(e.pointerId);
+      canvas.style.cursor = "grabbing";
     };
 
     const onPointerMove = (e: PointerEvent) => {
@@ -645,14 +651,6 @@ export function ForceGraph({
       const sy = e.clientY - rect.top;
       s.pointer = { x: sx, y: sy };
 
-      if (s.drag) {
-        const w = screenToWorld(sx, sy);
-        s.drag.node.fx = w.x;
-        s.drag.node.fy = w.y;
-        s.drag.node.x = w.x;
-        s.drag.node.y = w.y;
-        return;
-      }
       if (s.pan) {
         s.userMoved = true;
         s.view.tx = s.pan.tx + (sx - s.pan.x);
@@ -664,13 +662,6 @@ export function ForceGraph({
     };
 
     const onPointerUp = (e: PointerEvent) => {
-      if (s.drag) {
-        const node = s.drag.node;
-        node.fx = null;
-        node.fy = null;
-        s.drag = null;
-        s.sim?.alphaTarget(0);
-      }
       s.pan = null;
       canvas.style.cursor = s.hover ? "pointer" : "grab";
       try {
@@ -704,7 +695,7 @@ export function ForceGraph({
       const sy = e.clientY - rect.top;
       const wx = (sx - s.view.tx) / s.view.k;
       const wy = (sy - s.view.ty) / s.view.k;
-      const next = clamp(s.view.k * Math.exp(-e.deltaY * 0.0016), 0.28, 4);
+      const next = clamp(s.view.k * Math.exp(-e.deltaY * 0.0016), 0.05, 12);
       s.view.k = next;
       s.view.tx = sx - wx * next;
       s.view.ty = sy - wy * next;
@@ -754,11 +745,11 @@ export function ForceGraph({
     const { w, h } = s.size;
     if (!w || !h) return;
     const padX = clamp(w * 0.06, 24, 80);
-    const padY = clamp(h * 0.06, 20, 60);
+    const padY = clamp(h * 0.08, 48, 100);
     const k = clamp(
       Math.min((w - padX * 2) / bw, (h - padY * 2) / bh),
-      0.35,
-      3,
+      0.02,
+      8,
     );
     s.view.k = k;
     s.view.tx = w / 2 - ((minX + maxX) / 2) * k;
@@ -776,18 +767,14 @@ export function ForceGraph({
     const prev = new Map(s.nodes.map((n) => [n.id, n]));
 
     for (const st of network.stations) {
-      const old = prev.get(st.id);
       const n: GraphNode = {
         id: st.id,
         kind: "station",
         label: st.name,
         stationId: st.id,
         lineCount: st.lineIds.length,
-        x: old?.x ?? st.lon * 15,
-        y: old?.y ?? -st.lat * 10.5,
-        vx: old?.vx,
-        vy: old?.vy,
       };
+      pinStationNode(n, st.lat, st.lon);
       nodes.push(n);
       byId.set(n.id, n);
     }
@@ -813,8 +800,8 @@ export function ForceGraph({
           stationId,
           lineId: p.lineId,
           parentId: stationId,
-          x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * 60,
-          y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * 60,
+          x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * PLATFORM_ORBIT,
+          y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * PLATFORM_ORBIT,
         };
         nodes.push(pn);
         byId.set(pn.id, pn);
@@ -862,61 +849,11 @@ export function ForceGraph({
     s.nodes = nodes;
     s.links = links;
     s.sim?.stop();
-    s.sim = forceSimulation(nodes)
-      .force(
-        "link",
-        forceLink<GraphNode, GraphLink>(links)
-          .id((d) => d.id)
-          .distance((l) => (l.kind === "line" ? 104 : l.kind === "ghost" ? 62 : 36))
-          .strength((l) => (l.kind === "line" ? 0.12 : 0.45)),
-      )
-      .force(
-        "charge",
-        forceManyBody().strength((d) =>
-          (d as GraphNode).kind === "station" ? -190 : -40,
-        ),
-      )
-      .force(
-        "collide",
-        forceCollide<GraphNode>().radius((d) =>
-          d.kind === "station" ? 14 : d.kind === "platform" ? 8 : 5,
-        ),
-      )
-      .force(
-        "x",
-        forceX<GraphNode>()
-          .x((d) => {
-            if (d.kind === "station") {
-              const st = network.stations.find((x) => x.id === d.id);
-              return st ? st.lon * 15 : 0;
-            }
-            return byId.get(d.parentId ?? "")?.x ?? 0;
-          })
-          .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
-      )
-      .force(
-        "y",
-        forceY<GraphNode>()
-          .y((d) => {
-            if (d.kind === "station") {
-              const st = network.stations.find((x) => x.id === d.id);
-              return st ? -st.lat * 10.5 : 0;
-            }
-            return byId.get(d.parentId ?? "")?.y ?? 0;
-          })
-          .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
-      )
-      .alpha(0.85)
-      .alphaDecay(reducedMotion ? 0.2 : 0.02);
-
-    if (reducedMotion) {
-      for (let i = 0; i < 120; i++) s.sim.tick();
-      s.sim.stop();
-    }
+    s.sim = createGeoSimulation(nodes, links, byId, reducedMotion);
   }, [expanded, network, disruptions, reducedMotion]);
 
   return (
-    <div ref={wrapRef} className="relative min-h-0 flex-1">
+    <div ref={wrapRef} className="absolute inset-0">
       <canvas
         ref={canvasRef}
         className="block h-full w-full cursor-grab"

@@ -11,15 +11,15 @@ export default async function Home() {
     return (
       <main
         className="flex h-full items-center justify-center p-8"
-        style={{ background: "#0b0d10", color: "#e9ecf1" }}
+        style={{ background: "#ffffff", color: "#1a1d23" }}
       >
         <div className="max-w-md text-center">
           <h1 className="text-[21px] font-bold tracking-[-0.02em]">Stepfree</h1>
-          <p className="mt-3 text-[13px] leading-relaxed" style={{ color: "#838a95" }}>
+          <p className="mt-3 text-[13px] leading-relaxed" style={{ color: "#5c626c" }}>
             Network data is missing. Run{" "}
             <code
               className="rounded px-1.5 py-0.5 font-[family-name:var(--font-ibm-plex-mono)] text-[12px]"
-              style={{ background: "#16191f", color: "#cfd5de" }}
+              style={{ background: "#f0f2f5", color: "#2a2f37" }}
             >
               npm run refresh-network
             </code>{" "}

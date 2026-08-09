@@ -1,7 +1,7 @@
 /** Design tokens from the Stepfree handoff. */
 
 export const colors = {
-  canvas: "#0b0d10",
+  canvas: "#ffffff",
   sidebar: "#101318",
   panel: "#13161b",
   row: "#14171d",
@@ -60,8 +60,7 @@ export const LINE_COLORS: Record<string, string> = {
 };
 
 export function lineColorForCanvas(lineId: string): string {
-  const c = LINE_COLORS[lineId] ?? "#A0A5A9";
-  return c === "#000000" ? "#1c1f25" : c;
+  return LINE_COLORS[lineId] ?? "#A0A5A9";
 }
 
 export const MODES = [
