@@ -29,7 +29,7 @@ const COS_REF = Math.cos((REF_LAT * Math.PI) / 180);
 /** Expanded station disc — platforms/lifts nest inside. */
 const EXPANDED_STATION_RADIUS = 52;
 /** Platform ring on the circumference of the expanded disc. */
-const PLATFORM_ORBIT_FRAC = 1.22;
+const PLATFORM_ORBIT_FRAC = 1.24;
 /** Lift ring — half the expanded radius. */
 const LIFT_ORBIT_FRAC = 0.5;
 const RADIUS_TWEEN_MS = 320;
@@ -56,12 +56,142 @@ function easeOutCubic(t: number) {
   return 1 - (1 - t) ** 3;
 }
 
+/** TfL physical platform id (before `::line::direction` service suffix). */
+function physicalPlatformId(platformId: string) {
+  return platformId.split("::")[0] ?? platformId;
+}
+
+/** Platforms on the outer ring; one node per lift, linked to every platform it serves. */
+function appendExpandedStationDetail(
+  stationId: string,
+  network: NetworkData,
+  disruptions: DisruptionPayload | null,
+  nodes: GraphNode[],
+  links: GraphLink[],
+  byId: Map<string, GraphNode>,
+  prev: Map<string, GraphNode>,
+) {
+  const platforms = network.platforms.filter((p) => p.stationId === stationId);
+  const parent = byId.get(stationId);
+  const orbit = platformOrbit();
+  const liftR = liftOrbit();
+  const px = parent?.x ?? 0;
+  const py = parent?.y ?? 0;
+
+  // Merge multi-line services on the same physical platform.
+  const groups = new Map<string, typeof platforms>();
+  for (const p of platforms) {
+    const phys = physicalPlatformId(p.id);
+    const list = groups.get(phys) ?? [];
+    list.push(p);
+    groups.set(phys, list);
+  }
+  const merged = [...groups.entries()];
+
+  const platformAngle = new Map<string, number>();
+  merged.forEach(([physId, members], i) => {
+    const angle = (i / Math.max(merged.length, 1)) * Math.PI * 2;
+    platformAngle.set(physId, angle);
+    const lineIds = [...new Set(members.map((m) => m.lineId))];
+    const first = members[0]!;
+    const old = prev.get(physId);
+    const pn: GraphNode = {
+      id: physId,
+      kind: "platform",
+      label: first.label,
+      stationId,
+      lineId: lineIds[0],
+      lineIds,
+      statusPlatformId: first.id,
+      parentId: stationId,
+      x: old?.x ?? px + Math.cos(angle) * orbit,
+      y: old?.y ?? py + Math.sin(angle) * orbit,
+    };
+    nodes.push(pn);
+    byId.set(pn.id, pn);
+  });
+
+  const liftPlatforms = new Map<string, string[]>();
+  const chains: { platformId: string; liftIds: string[] }[] = [];
+  for (const [physId, members] of merged) {
+    const first = members[0]!;
+    const chain = network.platformLiftChains.find(
+      (c) => c.platformId === first.id,
+    );
+    const liftIds = chain?.liftIds ?? [];
+    chains.push({ platformId: physId, liftIds });
+    if (liftIds.length === 0) {
+      links.push({ source: physId, target: stationId, kind: "ghost" });
+      continue;
+    }
+    for (const lid of liftIds) {
+      const list = liftPlatforms.get(lid) ?? [];
+      if (!list.includes(physId)) list.push(physId);
+      liftPlatforms.set(lid, list);
+    }
+  }
+
+  for (const [lid, platformIds] of liftPlatforms) {
+    const lift = network.lifts.find((l) => l.id === lid);
+    const angle =
+      platformIds.reduce((sum, pid) => sum + (platformAngle.get(pid) ?? 0), 0) /
+      Math.max(platformIds.length, 1);
+    if (byId.has(lid)) continue;
+    const ln: GraphNode = {
+      id: lid,
+      kind: "lift",
+      label: lift?.name ?? lid,
+      stationId,
+      parentId: stationId,
+      x: px + Math.cos(angle) * liftR,
+      y: py + Math.sin(angle) * liftR,
+    };
+    nodes.push(ln);
+    byId.set(lid, ln);
+  }
+
+  const seenLinks = new Set<string>();
+  const addLiftLink = (
+    source: string,
+    target: string,
+    status: string,
+  ) => {
+    const key = `${source}|${target}`;
+    if (seenLinks.has(key)) return;
+    seenLinks.add(key);
+    links.push({ source, target, kind: "lift", status });
+  };
+
+  for (const { platformId, liftIds } of chains) {
+    if (liftIds.length === 0) continue;
+    const first = liftIds[0]!;
+    addLiftLink(
+      platformId,
+      first,
+      disruptions?.byLiftId[first] ? "bad" : "ok",
+    );
+    for (let i = 0; i < liftIds.length - 1; i++) {
+      const next = liftIds[i + 1]!;
+      addLiftLink(
+        liftIds[i]!,
+        next,
+        disruptions?.byLiftId[next] ? "bad" : "ok",
+      );
+    }
+    addLiftLink(liftIds[liftIds.length - 1]!, stationId, "ok");
+  }
+}
+
 type GraphNode = SimulationNodeDatum & {
   id: string;
   kind: "station" | "platform" | "lift";
   label: string;
   stationId: string;
   lineId?: string;
+  /** Lines sharing this physical platform (concentric rings). */
+  lineIds?: string[];
+  /** Composite NetworkPlatform id for status/chain lookup. */
+  statusPlatformId?: string;
   lineCount?: number;
   parentId?: string;
 };
@@ -358,79 +488,15 @@ export function ForceGraph({
       }
 
       for (const stationId of s.expanded) {
-        const platforms = s.network.platforms.filter(
-          (p) => p.stationId === stationId,
+        appendExpandedStationDetail(
+          stationId,
+          s.network,
+          s.disruptions,
+          nodes,
+          links,
+          byId,
+          prev,
         );
-        const parent = byId.get(stationId);
-        const orbit = platformOrbit();
-        const liftR = liftOrbit();
-        platforms.forEach((p, i) => {
-          const angle = (i / Math.max(platforms.length, 1)) * Math.PI * 2;
-          const old = prev.get(p.id);
-          const pn: GraphNode = {
-            id: p.id,
-            kind: "platform",
-            label: p.label,
-            stationId,
-            lineId: p.lineId,
-            parentId: stationId,
-            x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * orbit,
-            y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * orbit,
-          };
-          nodes.push(pn);
-          byId.set(pn.id, pn);
-
-          const chain = s.network.platformLiftChains.find(
-            (c) => c.platformId === p.id,
-          );
-          const liftIds = chain?.liftIds ?? [];
-          if (liftIds.length === 0) {
-            links.push({
-              source: p.id,
-              target: stationId,
-              kind: "ghost",
-            });
-            return;
-          }
-
-          let prevId = p.id;
-          liftIds.forEach((lid, li) => {
-            const lift = s.network.lifts.find((l) => l.id === lid);
-            const nodeId = `${p.id}::${lid}`;
-            // Place lifts on the r/2 ring; fan slightly if several share a ray.
-            const fan =
-              liftIds.length <= 1
-                ? 0
-                : ((li - (liftIds.length - 1) / 2) * 0.22) / liftIds.length;
-            const a = angle + fan;
-            const ln: GraphNode = {
-              id: nodeId,
-              kind: "lift",
-              label: lift?.name ?? lid,
-              stationId,
-              parentId: stationId,
-              x: (parent?.x ?? 0) + Math.cos(a) * liftR,
-              y: (parent?.y ?? 0) + Math.sin(a) * liftR,
-            };
-            if (!byId.has(nodeId)) {
-              nodes.push(ln);
-              byId.set(nodeId, ln);
-            }
-            links.push({
-              source: prevId,
-              target: nodeId,
-              kind: "lift",
-              status: s.disruptions?.byLiftId[lid] ? "bad" : "ok",
-            });
-            prevId = nodeId;
-          });
-          links.push({
-            source: prevId,
-            target: stationId,
-            kind: "lift",
-            status: "ok",
-          });
-        });
       }
 
       s.nodes = nodes;
@@ -829,25 +895,52 @@ export function ForceGraph({
       for (const n of s.nodes) {
         if (n.x == null || n.y == null) continue;
         if (n.kind === "platform") {
-          const st = platformStatus(n.id, s.network, s.disruptions);
-          const r = 5.2;
+          const statusId = n.statusPlatformId ?? n.id;
+          const st = platformStatus(statusId, s.network, s.disruptions);
+          const lineIds =
+            n.lineIds && n.lineIds.length > 0
+              ? n.lineIds
+              : n.lineId
+                ? [n.lineId]
+                : [];
+          const nLines = Math.max(lineIds.length, 1);
+          const ringGap = 2.2;
+          const r = 5.2 + (nLines - 1) * ringGap;
+
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
           ctx.fillStyle = colors.white;
           ctx.fill();
-          if (st === "none") {
-            ctx.strokeStyle = colors.disrupted;
-            ctx.setLineDash([3 * strokeBoost * inv, 2.5 * strokeBoost * inv]);
-          } else if (st === "ok") {
-            ctx.strokeStyle = lineColorForCanvas(n.lineId ?? "");
-            ctx.setLineDash([]);
-          } else {
-            ctx.strokeStyle = statusColor(st);
-            ctx.setLineDash([]);
+
+          for (let i = 0; i < nLines; i++) {
+            const ri = r - i * ringGap;
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, ri, 0, Math.PI * 2);
+            if (st === "none") {
+              ctx.strokeStyle =
+                nLines === 1
+                  ? colors.disrupted
+                  : lineColorForCanvas(lineIds[i] ?? "");
+              ctx.setLineDash([
+                3 * strokeBoost * inv,
+                2.5 * strokeBoost * inv,
+              ]);
+            } else if (st === "ok") {
+              ctx.strokeStyle = lineColorForCanvas(lineIds[i] ?? "");
+              ctx.setLineDash([]);
+            } else {
+              // bad / unknown: outermost ring shows status, inners keep line colors
+              ctx.strokeStyle =
+                i === 0
+                  ? statusColor(st)
+                  : lineColorForCanvas(lineIds[i] ?? "");
+              ctx.setLineDash([]);
+            }
+            ctx.lineWidth = ringStroke;
+            ctx.stroke();
           }
-          ctx.lineWidth = ringStroke;
-          ctx.stroke();
           ctx.setLineDash([]);
+
           if (s.view.k > 0.95) {
             const font = `600 ${platformLabelSize}px Inter, system-ui, sans-serif`;
             ctx.font = font;
@@ -879,8 +972,7 @@ export function ForceGraph({
             });
           }
         } else if (n.kind === "lift") {
-          const liftId = n.id.split("::").pop() ?? "";
-          const bad = !!s.disruptions?.byLiftId[liftId];
+          const bad = !!s.disruptions?.byLiftId[n.id];
           const unknown = !s.disruptions?.ok;
           const r = 3.4;
           ctx.beginPath();
@@ -949,15 +1041,24 @@ export function ForceGraph({
                   : "no live data";
           line2 = `${word}${lines ? ` · ${lines}` : ""}`;
         } else if (n.kind === "platform") {
-          const st = platformStatus(n.id, s.network, s.disruptions);
-          line2 =
+          const statusId = n.statusPlatformId ?? n.id;
+          const st = platformStatus(statusId, s.network, s.disruptions);
+          const word =
             st === "none"
-              ? "Platform · no step-free route"
+              ? "no step-free route"
               : st === "bad"
-                ? "Platform · disrupted"
-                : "Platform · step-free";
+                ? "disrupted"
+                : st === "unknown"
+                  ? "no live data"
+                  : "step-free";
+          const lineNames = (n.lineIds ?? (n.lineId ? [n.lineId] : []))
+            .map(
+              (id) => s.network.lines.find((l) => l.id === id)?.name ?? id,
+            )
+            .join(" · ");
+          line2 = `Platform · ${word}${lineNames ? ` · ${lineNames}` : ""}`;
         } else {
-          line2 = s.disruptions?.byLiftId[n.id.split("::").pop() ?? ""]
+          line2 = s.disruptions?.byLiftId[n.id]
             ? "Lift · disrupted"
             : "Lift · operational";
         }
@@ -1164,63 +1265,15 @@ export function ForceGraph({
       });
     }
     for (const stationId of expanded) {
-      const platforms = network.platforms.filter((p) => p.stationId === stationId);
-      const parent = byId.get(stationId);
-      const orbit = platformOrbit();
-      const liftR = liftOrbit();
-      platforms.forEach((p, i) => {
-        const angle = (i / Math.max(platforms.length, 1)) * Math.PI * 2;
-        const old = prev.get(p.id);
-        const pn: GraphNode = {
-          id: p.id,
-          kind: "platform",
-          label: p.label,
-          stationId,
-          lineId: p.lineId,
-          parentId: stationId,
-          x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * orbit,
-          y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * orbit,
-        };
-        nodes.push(pn);
-        byId.set(pn.id, pn);
-        const chain = network.platformLiftChains.find((c) => c.platformId === p.id);
-        const liftIds = chain?.liftIds ?? [];
-        if (liftIds.length === 0) {
-          links.push({ source: p.id, target: stationId, kind: "ghost" });
-          return;
-        }
-        let prevId = p.id;
-        liftIds.forEach((lid, li) => {
-          const lift = network.lifts.find((l) => l.id === lid);
-          const nodeId = `${p.id}::${lid}`;
-          const fan =
-            liftIds.length <= 1
-              ? 0
-              : ((li - (liftIds.length - 1) / 2) * 0.22) / liftIds.length;
-          const a = angle + fan;
-          const ln: GraphNode = {
-            id: nodeId,
-            kind: "lift",
-            label: lift?.name ?? lid,
-            stationId,
-            parentId: stationId,
-            x: (parent?.x ?? 0) + Math.cos(a) * liftR,
-            y: (parent?.y ?? 0) + Math.sin(a) * liftR,
-          };
-          if (!byId.has(nodeId)) {
-            nodes.push(ln);
-            byId.set(nodeId, ln);
-          }
-          links.push({
-            source: prevId,
-            target: nodeId,
-            kind: "lift",
-            status: disruptions?.byLiftId[lid] ? "bad" : "ok",
-          });
-          prevId = nodeId;
-        });
-        links.push({ source: prevId, target: stationId, kind: "lift", status: "ok" });
-      });
+      appendExpandedStationDetail(
+        stationId,
+        network,
+        disruptions,
+        nodes,
+        links,
+        byId,
+        prev,
+      );
     }
 
     s.nodes = nodes;
