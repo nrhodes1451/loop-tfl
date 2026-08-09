@@ -29,7 +29,7 @@ const COS_REF = Math.cos((REF_LAT * Math.PI) / 180);
 /** Expanded station disc — platforms/lifts nest inside. */
 const EXPANDED_STATION_RADIUS = 52;
 /** Platform ring on the circumference of the expanded disc. */
-const PLATFORM_ORBIT_FRAC = 1.24;
+const PLATFORM_ORBIT_FRAC = 1.10;
 /** Lift ring — half the expanded radius. */
 const LIFT_ORBIT_FRAC = 0.5;
 const RADIUS_TWEEN_MS = 320;
@@ -61,6 +61,153 @@ function physicalPlatformId(platformId: string) {
   return platformId.split("::")[0] ?? platformId;
 }
 
+function normalizeAngle(a: number) {
+  let x = a;
+  while (x <= -Math.PI) x += Math.PI * 2;
+  while (x > Math.PI) x -= Math.PI * 2;
+  return x;
+}
+
+function angleDiff(a: number, b: number) {
+  return Math.abs(normalizeAngle(a - b));
+}
+
+function angleTo02Pi(a: number) {
+  const n = normalizeAngle(a);
+  return n < 0 ? n + Math.PI * 2 : n;
+}
+
+/** World-space cardinal targets (y = -lat, so north is -π/2). */
+function cardinalTargetAngle(direction: string): number | null {
+  const d = direction.trim().toLowerCase();
+  if (d === "northbound") return -Math.PI / 2;
+  if (d === "southbound") return Math.PI / 2;
+  if (d === "eastbound") return 0;
+  if (d === "westbound") return Math.PI;
+  return null;
+}
+
+function findStationByDirectionName(
+  direction: string,
+  network: NetworkData,
+) {
+  const d = direction.trim().toLowerCase();
+  if (!d || d === "service") return null;
+  const exact = network.stations.find((s) => s.name.toLowerCase() === d);
+  if (exact) return exact;
+  const prefix = network.stations.find((s) => {
+    const n = s.name.toLowerCase();
+    return d.startsWith(n) || n.startsWith(d);
+  });
+  if (prefix) return prefix;
+  const contained = network.stations
+    .filter((s) => d.includes(s.name.toLowerCase()))
+    .sort((a, b) => b.name.length - a.name.length);
+  return contained[0] ?? null;
+}
+
+function directionTargetAngle(
+  direction: string,
+  fromX: number,
+  fromY: number,
+  network: NetworkData,
+): number | null {
+  const cardinal = cardinalTargetAngle(direction);
+  if (cardinal != null) return cardinal;
+  const dest = findStationByDirectionName(direction, network);
+  if (!dest) return null;
+  const pos = projectLatLon(dest.lat, dest.lon);
+  return Math.atan2(pos.y - fromY, pos.x - fromX);
+}
+
+function lineNeighborIds(
+  stationId: string,
+  lineIds: string[],
+  network: NetworkData,
+): string[] {
+  const lineSet = new Set(lineIds);
+  const out: string[] = [];
+  for (const e of network.edges) {
+    if (!lineSet.has(e.lineId)) continue;
+    if (e.from === stationId) out.push(e.to);
+    else if (e.to === stationId) out.push(e.from);
+  }
+  return [...new Set(out)];
+}
+
+function bearingToStation(
+  fromX: number,
+  fromY: number,
+  stationId: string,
+  network: NetworkData,
+  byId: Map<string, GraphNode>,
+): number | null {
+  const node = byId.get(stationId);
+  if (node?.x != null && node.y != null) {
+    return Math.atan2(node.y - fromY, node.x - fromX);
+  }
+  const st = network.stations.find((s) => s.id === stationId);
+  if (!st) return null;
+  const pos = projectLatLon(st.lat, st.lon);
+  return Math.atan2(pos.y - fromY, pos.x - fromX);
+}
+
+/** Fan platforms that share nearly the same angle so they don't stack. */
+function fanCollidingAngles(
+  angles: Map<string, number>,
+  eps = 0.15,
+  step = 0.2,
+) {
+  const ids = [...angles.keys()];
+  const used = new Set<string>();
+  for (const id of ids) {
+    if (used.has(id)) continue;
+    const base = angles.get(id)!;
+    const cluster = ids.filter(
+      (other) =>
+        !used.has(other) && angleDiff(angles.get(other)!, base) <= eps,
+    );
+    cluster.forEach((cid) => used.add(cid));
+    if (cluster.length <= 1) continue;
+    cluster.forEach((cid, i) => {
+      const offset = (i - (cluster.length - 1) / 2) * step;
+      angles.set(cid, base + offset);
+    });
+  }
+}
+
+function packAnglesInGaps(
+  unassigned: string[],
+  taken: number[],
+): Map<string, number> {
+  const result = new Map<string, number>();
+  if (unassigned.length === 0) return result;
+  if (taken.length === 0) {
+    unassigned.forEach((id, i) => {
+      result.set(id, (i / Math.max(unassigned.length, 1)) * Math.PI * 2);
+    });
+    return result;
+  }
+  const sorted = [...taken.map(angleTo02Pi)].sort((a, b) => a - b);
+  let bestStart = 0;
+  let bestSize = -1;
+  for (let i = 0; i < sorted.length; i++) {
+    const a = sorted[i]!;
+    const b = sorted[(i + 1) % sorted.length]!;
+    const size =
+      i === sorted.length - 1 ? b + Math.PI * 2 - a : b - a;
+    if (size > bestSize) {
+      bestSize = size;
+      bestStart = a;
+    }
+  }
+  unassigned.forEach((id, i) => {
+    const t = (i + 1) / (unassigned.length + 1);
+    result.set(id, bestStart + bestSize * t);
+  });
+  return result;
+}
+
 /** Platforms on the outer ring; one node per lift, linked to every platform it serves. */
 function appendExpandedStationDetail(
   stationId: string,
@@ -69,7 +216,7 @@ function appendExpandedStationDetail(
   nodes: GraphNode[],
   links: GraphLink[],
   byId: Map<string, GraphNode>,
-  prev: Map<string, GraphNode>,
+  _prev: Map<string, GraphNode>,
 ) {
   const platforms = network.platforms.filter((p) => p.stationId === stationId);
   const parent = byId.get(stationId);
@@ -88,13 +235,51 @@ function appendExpandedStationDetail(
   }
   const merged = [...groups.entries()];
 
+  // Place platforms toward matching line stubs / cardinal destinations.
   const platformAngle = new Map<string, number>();
-  merged.forEach(([physId, members], i) => {
-    const angle = (i / Math.max(merged.length, 1)) * Math.PI * 2;
-    platformAngle.set(physId, angle);
+  const unresolved: string[] = [];
+
+  for (const [physId, members] of merged) {
+    const lineIds = [...new Set(members.map((m) => m.lineId))];
+    const direction = members[0]?.direction ?? "";
+    const target = directionTargetAngle(direction, px, py, network);
+    const neighbors = lineNeighborIds(stationId, lineIds, network);
+
+    let angle: number | null = null;
+    if (neighbors.length === 1) {
+      angle = bearingToStation(px, py, neighbors[0]!, network, byId);
+    } else if (neighbors.length > 1) {
+      const scored = neighbors
+        .map((nid) => {
+          const b = bearingToStation(px, py, nid, network, byId);
+          if (b == null) return null;
+          const score = target != null ? angleDiff(b, target) : 0;
+          return { b, score };
+        })
+        .filter((x): x is { b: number; score: number } => x != null);
+      if (target != null && scored.length > 0) {
+        scored.sort((a, b) => a.score - b.score);
+        angle = scored[0]!.b;
+      }
+      // Without a direction target and multiple neighbors, leave unresolved.
+    } else if (target != null) {
+      // No graph edge (e.g. national-rail) — sit on cardinal/destination bearing.
+      angle = target;
+    }
+
+    if (angle != null) platformAngle.set(physId, angle);
+    else unresolved.push(physId);
+  }
+
+  fanCollidingAngles(platformAngle);
+
+  const packed = packAnglesInGaps(unresolved, [...platformAngle.values()]);
+  for (const [id, ang] of packed) platformAngle.set(id, ang);
+
+  for (const [physId, members] of merged) {
+    const angle = platformAngle.get(physId) ?? 0;
     const lineIds = [...new Set(members.map((m) => m.lineId))];
     const first = members[0]!;
-    const old = prev.get(physId);
     const pn: GraphNode = {
       id: physId,
       kind: "platform",
@@ -104,12 +289,12 @@ function appendExpandedStationDetail(
       lineIds,
       statusPlatformId: first.id,
       parentId: stationId,
-      x: old?.x ?? px + Math.cos(angle) * orbit,
-      y: old?.y ?? py + Math.sin(angle) * orbit,
+      x: px + Math.cos(angle) * orbit,
+      y: py + Math.sin(angle) * orbit,
     };
     nodes.push(pn);
     byId.set(pn.id, pn);
-  });
+  }
 
   const liftPlatforms = new Map<string, string[]>();
   const chains: { platformId: string; liftIds: string[] }[] = [];
@@ -133,9 +318,15 @@ function appendExpandedStationDetail(
 
   for (const [lid, platformIds] of liftPlatforms) {
     const lift = network.lifts.find((l) => l.id === lid);
-    const angle =
-      platformIds.reduce((sum, pid) => sum + (platformAngle.get(pid) ?? 0), 0) /
-      Math.max(platformIds.length, 1);
+    // Circular mean of served platform angles (directional placement).
+    let sinSum = 0;
+    let cosSum = 0;
+    for (const pid of platformIds) {
+      const a = platformAngle.get(pid) ?? 0;
+      sinSum += Math.sin(a);
+      cosSum += Math.cos(a);
+    }
+    const angle = Math.atan2(sinSum, cosSum);
     if (byId.has(lid)) continue;
     const ln: GraphNode = {
       id: lid,
@@ -298,8 +489,10 @@ function createGeoSimulation(
       n.fy = n.y ?? null;
       n.vx = 0;
       n.vy = 0;
-    } else if (n.kind === "lift") {
-      // Pin lifts on the r/2 ring so collide/charge cannot shove them out.
+    } else if (n.kind === "lift" || n.kind === "platform") {
+      // Pin platforms on the outer ring and lifts on r/2. Free platforms
+      // linked only to a lift can otherwise settle anywhere around that lift
+      // — including inside the disc (seen at Tottenham Hale).
       n.fx = n.x ?? null;
       n.fy = n.y ?? null;
       n.vx = 0;
@@ -339,49 +532,36 @@ function createGeoSimulation(
           }
           return 10;
         })
-        .strength((l) => (l.kind === "line" ? 0 : 0.75)),
+        .strength((l) => (l.kind === "line" ? 0 : 0.2)),
     )
     .force(
       "charge",
-      forceManyBody().strength((d) => {
-        const n = d as GraphNode;
-        if (n.kind === "station") return 0;
-        if (n.kind === "platform") return -40;
-        return 0; // lifts are pinned on the r/2 ring
-      }),
+      forceManyBody().strength(0),
     )
     .force(
       "collide",
       forceCollide<GraphNode>()
         .radius((d) => {
-          // Expanded stations must NOT collide at full disc radius — that
-          // shoves nested platforms/lifts outside the circle.
           if (d.kind === "station") return 8;
           if (d.kind === "platform") return 8;
           return 5;
         })
-        .strength(0.85),
+        .strength(0.5),
     )
     .force(
       "x",
       forceX<GraphNode>()
-        .x((d) => {
-          if (d.kind === "station") return d.x ?? 0;
-          return byId.get(d.parentId ?? "")?.x ?? 0;
-        })
-        .strength((d) => (d.kind === "platform" ? 0.09 : 0)),
+        .x((d) => d.x ?? 0)
+        .strength(0),
     )
     .force(
       "y",
       forceY<GraphNode>()
-        .y((d) => {
-          if (d.kind === "station") return d.y ?? 0;
-          return byId.get(d.parentId ?? "")?.y ?? 0;
-        })
-        .strength((d) => (d.kind === "platform" ? 0.09 : 0)),
+        .y((d) => d.y ?? 0)
+        .strength(0),
     )
-    .alpha(hasDetail ? 0.55 : 0)
-    .alphaDecay(reducedMotion ? 0.25 : 0.06);
+    .alpha(hasDetail ? 0.25 : 0)
+    .alphaDecay(reducedMotion ? 0.25 : 0.12);
 
   if (reducedMotion || !hasDetail) {
     for (let i = 0; i < 80; i++) sim.tick();
