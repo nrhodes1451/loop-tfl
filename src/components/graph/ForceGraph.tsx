@@ -32,7 +32,13 @@ const EXPANDED_STATION_RADIUS = 52;
 const PLATFORM_ORBIT_FRAC = 1.05;
 /** Lift ring — half the expanded radius. */
 const LIFT_ORBIT_FRAC = 0.5;
+/** Street-level hub at the expanded station centre. */
+const STREET_RADIUS = 6.5;
 const RADIUS_TWEEN_MS = 320;
+
+function streetNodeId(stationId: string) {
+  return `${stationId}::street`;
+}
 
 type RadiusTween = { from: number; to: number; startMs: number };
 
@@ -225,6 +231,19 @@ function appendExpandedStationDetail(
   const px = parent?.x ?? 0;
   const py = parent?.y ?? 0;
 
+  const streetId = streetNodeId(stationId);
+  const street: GraphNode = {
+    id: streetId,
+    kind: "street",
+    label: "Street level",
+    stationId,
+    parentId: stationId,
+    x: px,
+    y: py,
+  };
+  nodes.push(street);
+  byId.set(streetId, street);
+
   // Merge multi-line services on the same physical platform.
   const groups = new Map<string, typeof platforms>();
   for (const p of platforms) {
@@ -306,7 +325,7 @@ function appendExpandedStationDetail(
     const liftIds = chain?.liftIds ?? [];
     chains.push({ platformId: physId, liftIds });
     if (liftIds.length === 0) {
-      links.push({ source: physId, target: stationId, kind: "ghost" });
+      links.push({ source: physId, target: streetId, kind: "ghost" });
       continue;
     }
     for (const lid of liftIds) {
@@ -369,13 +388,13 @@ function appendExpandedStationDetail(
         disruptions?.byLiftId[next] ? "bad" : "ok",
       );
     }
-    addLiftLink(liftIds[liftIds.length - 1]!, stationId, "ok");
+    addLiftLink(liftIds[liftIds.length - 1]!, streetId, "ok");
   }
 }
 
 type GraphNode = SimulationNodeDatum & {
   id: string;
-  kind: "station" | "platform" | "lift";
+  kind: "station" | "platform" | "lift" | "street";
   label: string;
   stationId: string;
   lineId?: string;
@@ -489,10 +508,14 @@ function createGeoSimulation(
       n.fy = n.y ?? null;
       n.vx = 0;
       n.vy = 0;
-    } else if (n.kind === "lift" || n.kind === "platform") {
-      // Pin platforms on the outer ring and lifts on r/2. Free platforms
-      // linked only to a lift can otherwise settle anywhere around that lift
-      // — including inside the disc (seen at Tottenham Hale).
+    } else if (
+      n.kind === "lift" ||
+      n.kind === "platform" ||
+      n.kind === "street"
+    ) {
+      // Pin platforms on the outer ring, lifts on r/2, street at centre.
+      // Free platforms linked only to a lift can otherwise settle anywhere
+      // around that lift — including inside the disc (seen at Tottenham Hale).
       n.fx = n.x ?? null;
       n.fy = n.y ?? null;
       n.vx = 0;
@@ -523,8 +546,13 @@ function createGeoSimulation(
             typeof l.target === "object"
               ? l.target
               : byId.get(String(l.target));
-          // Keep lifts on the r/2 ring: station↔lift ≈ r/2, platform↔lift ≈ gap.
-          if (source?.kind === "station" || target?.kind === "station") {
+          // Keep lifts on the r/2 ring: street↔lift ≈ r/2, platform↔lift ≈ gap.
+          if (
+            source?.kind === "station" ||
+            target?.kind === "station" ||
+            source?.kind === "street" ||
+            target?.kind === "street"
+          ) {
             return liftR;
           }
           if (source?.kind === "platform" || target?.kind === "platform") {
@@ -544,6 +572,7 @@ function createGeoSimulation(
         .radius((d) => {
           if (d.kind === "station") return 8;
           if (d.kind === "platform") return 8;
+          if (d.kind === "street") return STREET_RADIUS + 1;
           return 5;
         })
         .strength(0.5),
@@ -849,6 +878,8 @@ export function ForceGraph({
                 ? 7
                 : 5.2;
           r += 4; // padding so the visible disc is easy to hover
+        } else if (n.kind === "street") {
+          r = STREET_RADIUS + 4;
         } else {
           r = 7;
         }
@@ -874,18 +905,24 @@ export function ForceGraph({
       ctx.fillStyle = colors.canvas;
       ctx.fillRect(0, 0, w, h);
 
-      ctx.save();
-      ctx.translate(s.view.tx, s.view.ty);
-      ctx.scale(s.view.k, s.view.k);
-      const inv = 1 / s.view.k;
+      // Draw in screen space (no ctx.scale) so arcs tessellate at device
+      // resolution and stay round when zoomed in.
+      const k = s.view.k;
+      const tx = s.view.tx;
+      const ty = s.view.ty;
+      const sx = (x: number) => x * k + tx;
+      const sy = (y: number) => y * k + ty;
+      const sr = (r: number) => r * k;
+
       // Above zoom 1, grow screen-space stroke so lines don't look hairline.
-      const strokeBoost = s.view.k <= 1 ? 1 : 1 + (s.view.k - 1) * 0.55;
-      const lineStroke = 2.6 * strokeBoost * inv;
-      const liftStroke = 1.6 * strokeBoost * inv;
-      const ringStroke = 2 * strokeBoost * inv;
-      const haloStroke = 2.6 * strokeBoost * inv;
-      const labelSize = 11.5 * strokeBoost * inv;
-      const pairGap = Math.max(4.2, 2.6 * strokeBoost + 1.6) * inv;
+      const strokeBoost = k <= 1 ? 1 : 1 + (k - 1) * 0.55;
+      const lineStroke = 2.6 * strokeBoost;
+      const liftStroke = 1.6 * strokeBoost;
+      const ringStroke = 2 * strokeBoost;
+      const haloStroke = 2.6 * strokeBoost;
+      const labelSize = 11.5 * strokeBoost;
+      const pairGap = Math.max(4.2, 2.6 * strokeBoost + 1.6) / k;
+      const pad = (n: number) => n * strokeBoost;
 
       // Parallel line edge offsets
       const pairCount = new Map<string, number>();
@@ -932,21 +969,22 @@ export function ForceGraph({
         ctx.setLineDash([]);
 
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
+        ctx.moveTo(sx(x1), sy(y1));
+        ctx.lineTo(sx(x2), sy(y2));
         ctx.stroke();
         ctx.globalAlpha = 1;
       }
 
+      // Mask radius in world units (pad terms are screen → world).
       const stationMaskR = (n: GraphNode, r: number) =>
-        r + 5 + Math.max(2.5 * inv, lineStroke * 0.55, ringStroke * 0.55);
+        r + 5 + Math.max(2.5, lineStroke * 0.55, ringStroke * 0.55) / k;
 
       // Hide lines under every station first…
       for (const n of s.nodes) {
         if (n.kind !== "station" || n.x == null || n.y == null) continue;
         const r = visualStationRadius(n, now);
         ctx.beginPath();
-        ctx.arc(n.x, n.y, stationMaskR(n, r), 0, Math.PI * 2);
+        ctx.arc(sx(n.x), sy(n.y), sr(stationMaskR(n, r)), 0, Math.PI * 2);
         ctx.fillStyle = colors.canvas;
         ctx.fill();
       }
@@ -986,17 +1024,17 @@ export function ForceGraph({
         ctx.setLineDash([]);
 
         const stubFrom = (
-          sx: number,
-          sy: number,
+          wx: number,
+          wy: number,
           dirX: number,
           dirY: number,
           node: GraphNode,
         ) => {
           const r = visualStationRadius(node, now);
-          const stubLen = Math.min(len * 0.5, stationMaskR(node, r) + 2 * inv);
+          const stubLen = Math.min(len * 0.5, stationMaskR(node, r) + 2 / k);
           ctx.beginPath();
-          ctx.moveTo(sx, sy);
-          ctx.lineTo(sx + dirX * stubLen, sy + dirY * stubLen);
+          ctx.moveTo(sx(wx), sy(wy));
+          ctx.lineTo(sx(wx + dirX * stubLen), sy(wy + dirY * stubLen));
           ctx.stroke();
         };
         stubFrom(x1, y1, ux, uy, source);
@@ -1011,6 +1049,9 @@ export function ForceGraph({
       for (const n of s.nodes) {
         if (n.kind !== "station" || n.x == null || n.y == null) continue;
         const r = visualStationRadius(n, now);
+        const nx = sx(n.x);
+        const ny = sy(n.y);
+        const rs = sr(r);
         const agg = stationAggregateStatus(n.id, s.network, s.disruptions);
         const isExpanded = expandedSet.has(n.id);
         const isGrowing = r > collapsedStationRadius(n.lineCount ?? 1) + 0.5;
@@ -1019,11 +1060,11 @@ export function ForceGraph({
 
         // Halo
         ctx.beginPath();
-        ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+        ctx.arc(nx, ny, rs + 5 * k, 0, Math.PI * 2);
         if (agg === "none") {
           ctx.strokeStyle = colors.noInfra;
           ctx.globalAlpha = 0.5;
-          ctx.setLineDash([3.5 * strokeBoost * inv, 3 * strokeBoost * inv]);
+          ctx.setLineDash([3.5 * strokeBoost, 3 * strokeBoost]);
           ctx.lineWidth = ringStroke;
         } else {
           ctx.strokeStyle = statusColor(agg);
@@ -1036,7 +1077,7 @@ export function ForceGraph({
         ctx.globalAlpha = 1;
 
         ctx.beginPath();
-        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.arc(nx, ny, rs, 0, Math.PI * 2);
         ctx.fillStyle = colors.white;
         ctx.fill();
         ctx.strokeStyle = isSel ? "#1a1d23" : colors.nodeStroke;
@@ -1045,8 +1086,8 @@ export function ForceGraph({
 
         const showLabel =
           isSel ||
-          s.view.k > 1.2 ||
-          ((n.lineCount ?? 0) >= 4 && s.view.k > 0.55);
+          k > 1.2 ||
+          ((n.lineCount ?? 0) >= 4 && k > 0.55);
         if (showLabel) {
           const font = `${isSel ? 700 : 600} ${labelSize}px Inter, system-ui, sans-serif`;
           ctx.font = font;
@@ -1054,15 +1095,14 @@ export function ForceGraph({
           if (isSel) {
             const tw = ctx.measureText(n.label).width;
             const th = labelSize;
-            const gap = r + 8 * strokeBoost * inv;
-            const ix = n.x + gap;
-            const iy = n.y - (r + 10 * strokeBoost * inv);
+            const ix = nx + rs + pad(8);
+            const iy = ny - (rs + pad(10));
             pendingLabels.push({
               text: n.label,
               color,
               font,
-              nx: n.x,
-              ny: n.y,
+              nx,
+              ny,
               x: ix,
               y: iy,
               ix,
@@ -1075,7 +1115,7 @@ export function ForceGraph({
             ctx.fillStyle = color;
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
-            ctx.fillText(n.label, n.x + r + 8 * strokeBoost * inv, n.y);
+            ctx.fillText(n.label, nx + rs + pad(8), ny);
           }
         }
       }
@@ -1090,10 +1130,10 @@ export function ForceGraph({
         ctx.strokeStyle = st;
         ctx.globalAlpha = 0.9;
         ctx.lineWidth = liftStroke;
-        ctx.setLineDash(l.status === "unknown" ? [4 * inv, 3 * inv] : []);
+        ctx.setLineDash(l.status === "unknown" ? [4, 3] : []);
         ctx.beginPath();
-        ctx.moveTo(source.x, source.y!);
-        ctx.lineTo(target.x, target.y!);
+        ctx.moveTo(sx(source.x), sy(source.y!));
+        ctx.lineTo(sx(target.x), sy(target.y!));
         ctx.stroke();
         ctx.globalAlpha = 1;
         ctx.setLineDash([]);
@@ -1126,9 +1166,12 @@ export function ForceGraph({
               : hasNationalRail
                 ? 7
                 : 5.2;
+          const nx = sx(n.x);
+          const ny = sy(n.y);
+          const rs = sr(r);
 
           ctx.beginPath();
-          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.arc(nx, ny, rs, 0, Math.PI * 2);
           ctx.fillStyle = colors.white;
           ctx.fill();
 
@@ -1144,15 +1187,12 @@ export function ForceGraph({
                   : [];
 
           for (let i = 0; i < strokeLines.length; i++) {
-            const ri = r - i * ringGap;
+            const ri = sr(r - i * ringGap);
             ctx.beginPath();
-            ctx.arc(n.x, n.y, ri, 0, Math.PI * 2);
+            ctx.arc(nx, ny, ri, 0, Math.PI * 2);
             if (st === "none") {
               ctx.strokeStyle = lineColorForCanvas(strokeLines[i] ?? "");
-              ctx.setLineDash([
-                3 * strokeBoost * inv,
-                2.5 * strokeBoost * inv,
-              ]);
+              ctx.setLineDash([3 * strokeBoost, 2.5 * strokeBoost]);
             } else if (st === "ok") {
               ctx.strokeStyle = lineColorForCanvas(strokeLines[i] ?? "");
               ctx.setLineDash([]);
@@ -1170,25 +1210,24 @@ export function ForceGraph({
 
           if (hasNationalRail && logoReady && logo) {
             const logoW =
-              otherLineIds.length > 0 ? Math.max(6, r * 0.7) : r * 1.35;
+              otherLineIds.length > 0
+                ? Math.max(6, r * 0.7) * k
+                : r * 1.35 * k;
             const logoH = logoW * (logo.naturalHeight / logo.naturalWidth);
             ctx.drawImage(
               logo,
-              n.x - logoW / 2,
-              n.y - logoH / 2,
+              nx - logoW / 2,
+              ny - logoH / 2,
               logoW,
               logoH,
             );
             // Status ring when NR-only (no coloured concentric strokes).
             if (otherLineIds.length === 0 && st !== "ok") {
               ctx.beginPath();
-              ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+              ctx.arc(nx, ny, rs, 0, Math.PI * 2);
               if (st === "none") {
                 ctx.strokeStyle = lineColorForCanvas("national-rail");
-                ctx.setLineDash([
-                  3 * strokeBoost * inv,
-                  2.5 * strokeBoost * inv,
-                ]);
+                ctx.setLineDash([3 * strokeBoost, 2.5 * strokeBoost]);
               } else {
                 ctx.strokeStyle = statusColor(st);
                 ctx.setLineDash([]);
@@ -1203,12 +1242,38 @@ export function ForceGraph({
           const unknown = !s.disruptions?.ok;
           const r = 3.4;
           ctx.beginPath();
-          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.arc(sx(n.x), sy(n.y), sr(r), 0, Math.PI * 2);
           ctx.fillStyle = unknown
             ? colors.unknown
             : bad
               ? colors.disrupted
               : colors.ok;
+          ctx.fill();
+        } else if (n.kind === "street") {
+          const r = STREET_RADIUS;
+          const nx = sx(n.x);
+          const ny = sy(n.y);
+          const rs = sr(r);
+          ctx.beginPath();
+          ctx.arc(nx, ny, rs, 0, Math.PI * 2);
+          ctx.fillStyle = colors.ok;
+          ctx.fill();
+          // White down arrow (entrance / exit).
+          const shaftW = rs * 0.28;
+          const shaftH = rs * 0.55;
+          const headW = rs * 0.55;
+          const headH = rs * 0.42;
+          const top = ny - (shaftH + headH) / 2 + rs * 0.05;
+          ctx.fillStyle = colors.white;
+          ctx.beginPath();
+          ctx.moveTo(nx - shaftW / 2, top);
+          ctx.lineTo(nx + shaftW / 2, top);
+          ctx.lineTo(nx + shaftW / 2, top + shaftH);
+          ctx.lineTo(nx + headW / 2, top + shaftH);
+          ctx.lineTo(nx, top + shaftH + headH);
+          ctx.lineTo(nx - headW / 2, top + shaftH);
+          ctx.lineTo(nx - shaftW / 2, top + shaftH);
+          ctx.closePath();
           ctx.fill();
         }
       }
@@ -1221,9 +1286,9 @@ export function ForceGraph({
         if (Math.hypot(dx, dy) > 14) {
           const bx = labelBounds(l);
           const tipX =
-            l.align === "left" ? bx.left - 2 * inv : bx.right + 2 * inv;
+            l.align === "left" ? bx.left - 2 : bx.right + 2;
           ctx.strokeStyle = "rgba(92,98,108,0.35)";
-          ctx.lineWidth = 1 * inv;
+          ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(l.nx, l.ny);
           ctx.lineTo(tipX, l.y);
@@ -1237,13 +1302,11 @@ export function ForceGraph({
       }
       ctx.textAlign = "left";
 
-      // Tooltip
+      // Tooltip (already in screen space).
       if (s.hover) {
         const n = s.hover;
-        const sx = (n.x ?? 0) * s.view.k + s.view.tx;
-        const sy = (n.y ?? 0) * s.view.k + s.view.ty;
-        ctx.restore();
-        ctx.save();
+        const hx = sx(n.x ?? 0);
+        const hy = sy(n.y ?? 0);
         const line1 = n.label;
         let line2 = "";
         if (n.kind === "station") {
@@ -1284,6 +1347,8 @@ export function ForceGraph({
             )
             .join(" · ");
           line2 = `Platform · ${word}${lineNames ? ` · ${lineNames}` : ""}`;
+        } else if (n.kind === "street") {
+          line2 = "Entrance / exit";
         } else {
           line2 = s.disruptions?.byLiftId[n.id]
             ? "Lift · disrupted"
@@ -1295,9 +1360,9 @@ export function ForceGraph({
         const w2 = ctx.measureText(line2).width;
         const tw = Math.max(w1, w2) + 20;
         const th = 46;
-        let bx = sx + 14;
-        let by = sy - th / 2;
-        if (bx + tw > w - 8) bx = sx - tw - 14;
+        let bx = hx + 14;
+        let by = hy - th / 2;
+        if (bx + tw > w - 8) bx = hx - tw - 14;
         if (by < 8) by = 8;
         if (by + th > h - 8) by = h - th - 8;
         ctx.fillStyle = "rgba(20,23,29,0.95)";
@@ -1313,11 +1378,7 @@ export function ForceGraph({
         ctx.fillStyle = "#8b929c";
         ctx.font = `400 11.5px Inter, system-ui, sans-serif`;
         ctx.fillText(line2, bx + 10, by + 34);
-        ctx.restore();
-        return;
       }
-
-      ctx.restore();
     }
 
     let raf = 0;

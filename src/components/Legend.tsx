@@ -42,6 +42,21 @@ export function Legend() {
           />
           Lift
         </div>
+        <div className="flex items-center gap-[7px] text-xs" style={{ color: "#3d4450" }}>
+          <span
+            className="relative inline-flex h-[13px] w-[13px] items-center justify-center rounded-full"
+            style={{ background: "#35c77b" }}
+            aria-hidden
+          >
+            <svg width="7" height="8" viewBox="0 0 7 8" fill="none">
+              <path
+                d="M2.6 0h1.8v3.2h1.7L3.5 7.2 0.9 3.2h1.7V0z"
+                fill="#ffffff"
+              />
+            </svg>
+          </span>
+          Street level
+        </div>
       </div>
       <div
         className="max-w-[300px] text-[11.5px] leading-normal text-pretty"
