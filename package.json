@@ -1,26 +1,38 @@
 {
-  "name": "web",
+  "name": "stepfree",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "refresh-network": "tsx scripts/refresh-network.ts",
+    "test": "vitest run"
   },
   "dependencies": {
+    "adm-zip": "^0.6.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "csv-parse": "^7.0.2",
+    "d3-force": "^3.0.0",
     "next": "16.3.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/adm-zip": "^0.5.8",
+    "@types/d3-force": "^3.0.10",
+    "@types/node": "^20.19.43",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.23.9",
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }

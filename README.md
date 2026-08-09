@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stepfree
 
-## Getting Started
+Unofficial London public-transport accessibility graph. Visualises stations, platforms, and lifts as a force-directed network with live TfL lift disruption status.
 
-First, run the development server:
+Not affiliated with Transport for London.
+
+## Stack
+
+Next.js App Router, TypeScript, Tailwind, d3-force (canvas), Inter + IBM Plex Mono.
+
+## Data sources
+
+| Data | Source |
+|------|--------|
+| Station–station edges | `GET /Line/Mode/{mode}` + `GET /Line/{id}/Route/Sequence/all` |
+| Lift / platform topology | `https://api.tfl.gov.uk/stationdata/tfl-stationdata-detailed.zip` |
+| Live outages | `GET /Disruptions/Lifts/v2` (join on `LiftUniqueId`) |
+
+Static topology is persisted in `data/network.json` (regenerate with the script below). Live disruptions are fetched at runtime via `/api/disruptions` with a ~60s in-memory TTL. There is no fabricated fallback data — if the live feed fails, the UI shows an explicit error and statuses degrade to unknown.
+
+## Setup
 
 ```bash
+npm install
+npm run refresh-network   # writes data/network.json from TfL APIs
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Optional: set `TFL_APP_KEY` for higher rate limits.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm test                  # unit tests for topology + status derivation
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scope (v1)
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Full network for tube, Elizabeth line, DLR, Overground, tram
+- Explore mode: expand stations into platform/lift nodes (max 3)
+- Accessible sidebar list as the primary non-canvas interface
+- No route-planning mode yet

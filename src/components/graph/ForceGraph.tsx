@@ -1,0 +1,927 @@
+"use client";
+
+import {
+  forceCollide,
+  forceLink,
+  forceManyBody,
+  forceSimulation,
+  forceX,
+  forceY,
+  type Simulation,
+  type SimulationLinkDatum,
+  type SimulationNodeDatum,
+} from "d3-force";
+import { useEffect, useRef } from "react";
+import {
+  platformStatus,
+  stationAggregateStatus,
+  statusColor,
+} from "@/lib/status";
+import { colors, lineColorForCanvas } from "@/lib/tokens";
+import type { DisruptionPayload, NetworkData } from "@/lib/types";
+import { clamp } from "@/lib/utils";
+
+type GraphNode = SimulationNodeDatum & {
+  id: string;
+  kind: "station" | "platform" | "lift";
+  label: string;
+  stationId: string;
+  lineId?: string;
+  lineCount?: number;
+  parentId?: string;
+};
+
+type GraphLink = SimulationLinkDatum<GraphNode> & {
+  lineId?: string;
+  kind: "line" | "lift" | "ghost";
+  status?: string;
+};
+
+type Props = {
+  network: NetworkData;
+  disruptions: DisruptionPayload | null;
+  selected: string | null;
+  expanded: string[];
+  onSelectStation: (id: string | null) => void;
+  onToggleExpand: (id: string) => void;
+  resetToken: number;
+  reducedMotion: boolean;
+};
+
+export function ForceGraph({
+  network,
+  disruptions,
+  selected,
+  expanded,
+  onSelectStation,
+  onToggleExpand,
+  resetToken,
+  reducedMotion,
+}: Props) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const stateRef = useRef({
+    nodes: [] as GraphNode[],
+    links: [] as GraphLink[],
+    sim: null as Simulation<GraphNode, GraphLink> | null,
+    view: { k: 1, tx: 0, ty: 0 },
+    userMoved: false,
+    hover: null as GraphNode | null,
+    drag: null as { node: GraphNode; pointerId: number } | null,
+    pan: null as { x: number; y: number; tx: number; ty: number } | null,
+    pointer: { x: 0, y: 0 },
+    size: { w: 0, h: 0, dpr: 1 },
+    network,
+    disruptions,
+    selected,
+    expanded,
+    reducedMotion,
+    onSelectStation,
+    onToggleExpand,
+  });
+
+  // Keep latest props in ref for rAF loop
+  useEffect(() => {
+    const s = stateRef.current;
+    s.network = network;
+    s.disruptions = disruptions;
+    s.selected = selected;
+    s.expanded = expanded;
+    s.reducedMotion = reducedMotion;
+    s.onSelectStation = onSelectStation;
+    s.onToggleExpand = onToggleExpand;
+  });
+
+  useEffect(() => {
+    const canvasEl = canvasRef.current;
+    const wrapEl = wrapRef.current;
+    if (!canvasEl || !wrapEl) return;
+    const ctx2d = canvasEl.getContext("2d");
+    if (!ctx2d) return;
+    const canvas = canvasEl;
+    const wrap = wrapEl;
+    const ctx = ctx2d;
+    const s = stateRef.current;
+
+    function seedPositions(nodes: GraphNode[]) {
+      for (const n of nodes) {
+        if (n.kind !== "station") continue;
+        const st = s.network.stations.find((x) => x.id === n.id);
+        if (!st) continue;
+        n.x = st.lon * 15;
+        n.y = -st.lat * 10.5;
+      }
+    }
+
+    function buildGraph() {
+      const nodes: GraphNode[] = [];
+      const links: GraphLink[] = [];
+      const byId = new Map<string, GraphNode>();
+
+      for (const st of s.network.stations) {
+        const n: GraphNode = {
+          id: st.id,
+          kind: "station",
+          label: st.name,
+          stationId: st.id,
+          lineCount: st.lineIds.length,
+        };
+        nodes.push(n);
+        byId.set(n.id, n);
+      }
+
+      for (const e of s.network.edges) {
+        if (!byId.has(e.from) || !byId.has(e.to)) continue;
+        links.push({
+          source: e.from,
+          target: e.to,
+          lineId: e.lineId,
+          kind: "line",
+        });
+      }
+
+      for (const stationId of s.expanded) {
+        const platforms = s.network.platforms.filter(
+          (p) => p.stationId === stationId,
+        );
+        const parent = byId.get(stationId);
+        platforms.forEach((p, i) => {
+          const angle = (i / Math.max(platforms.length, 1)) * Math.PI * 2;
+          const pn: GraphNode = {
+            id: p.id,
+            kind: "platform",
+            label: p.label,
+            stationId,
+            lineId: p.lineId,
+            parentId: stationId,
+            x: (parent?.x ?? 0) + Math.cos(angle) * 60,
+            y: (parent?.y ?? 0) + Math.sin(angle) * 60,
+          };
+          nodes.push(pn);
+          byId.set(pn.id, pn);
+
+          const chain = s.network.platformLiftChains.find(
+            (c) => c.platformId === p.id,
+          );
+          const liftIds = chain?.liftIds ?? [];
+          if (liftIds.length === 0) {
+            links.push({
+              source: p.id,
+              target: stationId,
+              kind: "ghost",
+            });
+            return;
+          }
+
+          let prev = p.id;
+          liftIds.forEach((lid, li) => {
+            const lift = s.network.lifts.find((l) => l.id === lid);
+            const nodeId = `${p.id}::${lid}`;
+            const t = (li + 1) / (liftIds.length + 1);
+            const ln: GraphNode = {
+              id: nodeId,
+              kind: "lift",
+              label: lift?.name ?? lid,
+              stationId,
+              parentId: stationId,
+              x:
+                (pn.x ?? 0) * (1 - t) +
+                (parent?.x ?? 0) * t +
+                (Math.random() - 0.5) * 4,
+              y:
+                (pn.y ?? 0) * (1 - t) +
+                (parent?.y ?? 0) * t +
+                (Math.random() - 0.5) * 4,
+            };
+            if (!byId.has(nodeId)) {
+              nodes.push(ln);
+              byId.set(nodeId, ln);
+            }
+            links.push({
+              source: prev,
+              target: nodeId,
+              kind: "lift",
+              status: s.disruptions?.byLiftId[lid] ? "bad" : "ok",
+            });
+            prev = nodeId;
+          });
+          links.push({
+            source: prev,
+            target: stationId,
+            kind: "lift",
+            status: "ok",
+          });
+        });
+      }
+
+      // Preserve positions across rebuilds
+      const prev = new Map(s.nodes.map((n) => [n.id, n]));
+      for (const n of nodes) {
+        const old = prev.get(n.id);
+        if (old && old.x != null && old.y != null) {
+          n.x = old.x;
+          n.y = old.y;
+          n.vx = old.vx;
+          n.vy = old.vy;
+        }
+      }
+      if (s.nodes.length === 0) seedPositions(nodes);
+
+      s.nodes = nodes;
+      s.links = links;
+
+      if (s.sim) s.sim.stop();
+      s.sim = forceSimulation(nodes)
+        .force(
+          "link",
+          forceLink<GraphNode, GraphLink>(links)
+            .id((d) => d.id)
+            .distance((l) => {
+              if (l.kind === "line") return 104;
+              if (l.kind === "ghost") return 62;
+              return 36;
+            })
+            .strength((l) => (l.kind === "line" ? 0.12 : 0.45)),
+        )
+        .force(
+          "charge",
+          forceManyBody().strength((d) =>
+            (d as GraphNode).kind === "station" ? -190 : -40,
+          ),
+        )
+        .force(
+          "collide",
+          forceCollide<GraphNode>().radius((d) =>
+            d.kind === "station" ? 14 : d.kind === "platform" ? 8 : 5,
+          ),
+        )
+        .force(
+          "x",
+          forceX<GraphNode>()
+            .x((d) => {
+              if (d.kind === "station") {
+                const st = s.network.stations.find((x) => x.id === d.id);
+                return st ? st.lon * 15 : 0;
+              }
+              const parent = byId.get(d.parentId ?? "");
+              return parent?.x ?? 0;
+            })
+            .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
+        )
+        .force(
+          "y",
+          forceY<GraphNode>()
+            .y((d) => {
+              if (d.kind === "station") {
+                const st = s.network.stations.find((x) => x.id === d.id);
+                return st ? -st.lat * 10.5 : 0;
+              }
+              const parent = byId.get(d.parentId ?? "");
+              return parent?.y ?? 0;
+            })
+            .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
+        )
+        .alpha(0.9)
+        .alphaDecay(reducedMotion ? 0.2 : 0.02);
+
+      if (reducedMotion) {
+        for (let i = 0; i < 120; i++) s.sim.tick();
+        s.sim.stop();
+      }
+    }
+
+    function fitView() {
+      const stations = s.nodes.filter((n) => n.kind === "station");
+      if (stations.length === 0) return;
+      let minX = Infinity,
+        minY = Infinity,
+        maxX = -Infinity,
+        maxY = -Infinity;
+      for (const n of stations) {
+        if (n.x == null || n.y == null) continue;
+        minX = Math.min(minX, n.x);
+        minY = Math.min(minY, n.y);
+        maxX = Math.max(maxX, n.x);
+        maxY = Math.max(maxY, n.y);
+      }
+      const bw = Math.max(maxX - minX, 1);
+      const bh = Math.max(maxY - minY, 1);
+      const { w, h } = s.size;
+      const padX = clamp(w * 0.06, 24, 80);
+      const padY = clamp(h * 0.06, 20, 60);
+      const k = clamp(
+        Math.min((w - padX * 2) / bw, (h - padY * 2) / bh),
+        0.35,
+        3,
+      );
+      s.view.k = k;
+      s.view.tx = w / 2 - ((minX + maxX) / 2) * k;
+      s.view.ty = h / 2 - ((minY + maxY) / 2) * k;
+    }
+
+    function resize() {
+      const rect = wrap.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      s.size = { w: rect.width, h: rect.height, dpr };
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      if (!s.userMoved) fitView();
+    }
+
+    function screenToWorld(sx: number, sy: number) {
+      return {
+        x: (sx - s.view.tx) / s.view.k,
+        y: (sy - s.view.ty) / s.view.k,
+      };
+    }
+
+    function hitTest(sx: number, sy: number): GraphNode | null {
+      const { x, y } = screenToWorld(sx, sy);
+      let best: GraphNode | null = null;
+      let bestD = Infinity;
+      for (const n of s.nodes) {
+        if (n.x == null || n.y == null) continue;
+        const r =
+          n.kind === "station"
+            ? Math.min(13, 6 + (n.lineCount ?? 1) * 1.4) / s.view.k + 4
+            : n.kind === "platform"
+              ? 8 / s.view.k
+              : 6 / s.view.k;
+        const d = Math.hypot(n.x - x, n.y - y);
+        if (d <= r && d < bestD) {
+          best = n;
+          bestD = d;
+        }
+      }
+      return best;
+    }
+
+    function draw() {
+      const { w, h, dpr } = s.size;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = colors.canvas;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.save();
+      ctx.translate(s.view.tx, s.view.ty);
+      ctx.scale(s.view.k, s.view.k);
+      const inv = 1 / s.view.k;
+
+      // Parallel line edge offsets
+      const pairCount = new Map<string, number>();
+      const pairIndex = new Map<GraphLink, number>();
+      for (const l of s.links) {
+        if (l.kind !== "line") continue;
+        const a = typeof l.source === "object" ? l.source.id : String(l.source);
+        const b = typeof l.target === "object" ? l.target.id : String(l.target);
+        const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+        const idx = pairCount.get(key) ?? 0;
+        pairIndex.set(l, idx);
+        pairCount.set(key, idx + 1);
+      }
+
+      for (const l of s.links) {
+        if (l.kind === "ghost") continue;
+        const source = l.source as GraphNode;
+        const target = l.target as GraphNode;
+        if (source.x == null || target.x == null) continue;
+        let x1 = source.x;
+        let y1 = source.y!;
+        let x2 = target.x;
+        let y2 = target.y!;
+
+        if (l.kind === "line") {
+          const a = source.id;
+          const b = target.id;
+          const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+          const total = pairCount.get(key) ?? 1;
+          const idx = pairIndex.get(l) ?? 0;
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const len = Math.hypot(dx, dy) || 1;
+          const ox = (-dy / len) * (idx - (total - 1) / 2) * 4.2 * inv;
+          const oy = (dx / len) * (idx - (total - 1) / 2) * 4.2 * inv;
+          x1 += ox;
+          y1 += oy;
+          x2 += ox;
+          y2 += oy;
+          ctx.strokeStyle = lineColorForCanvas(l.lineId ?? "");
+          ctx.globalAlpha = 0.88;
+          ctx.lineWidth = 2.6 * inv;
+          ctx.lineCap = "round";
+          ctx.setLineDash([]);
+        } else {
+          const st = l.status === "bad" ? colors.disrupted : colors.ok;
+          ctx.strokeStyle = st;
+          ctx.globalAlpha = 0.9;
+          ctx.lineWidth = 1.6 * inv;
+          ctx.setLineDash(
+            l.status === "unknown" ? [4 * inv, 3 * inv] : [],
+          );
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.setLineDash([]);
+      }
+
+      for (const n of s.nodes) {
+        if (n.x == null || n.y == null) continue;
+        if (n.kind === "station") {
+          const r = Math.min(13, 6 + (n.lineCount ?? 1) * 1.4);
+          const agg = stationAggregateStatus(
+            n.id,
+            s.network,
+            s.disruptions,
+          );
+          const isSel =
+            s.selected === n.id || s.expanded.includes(n.id);
+
+          // Halo
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+          if (agg === "none") {
+            ctx.strokeStyle = colors.noInfra;
+            ctx.globalAlpha = 0.5;
+            ctx.setLineDash([3.5 * inv, 3 * inv]);
+            ctx.lineWidth = 2 * inv;
+          } else {
+            ctx.strokeStyle = statusColor(agg);
+            ctx.globalAlpha = 0.8;
+            ctx.setLineDash([]);
+            ctx.lineWidth = (agg === "bad" ? 2.6 : 2) * inv;
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.globalAlpha = 1;
+
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = isSel ? colors.white : colors.controlAlt;
+          ctx.fill();
+          ctx.strokeStyle = isSel ? colors.white : colors.nodeStroke;
+          ctx.lineWidth = 2 * inv;
+          ctx.stroke();
+
+          const showLabel =
+            isSel ||
+            s.view.k > 1.2 ||
+            ((n.lineCount ?? 0) >= 4 && s.view.k > 0.55);
+          if (showLabel) {
+            ctx.font = `${isSel ? 600 : 500} ${11.5 * inv}px Inter, system-ui, sans-serif`;
+            ctx.fillStyle = isSel ? colors.white : colors.label;
+            ctx.textBaseline = "middle";
+            ctx.fillText(n.label, n.x + r + 8 * inv, n.y);
+          }
+        } else if (n.kind === "platform") {
+          const st = platformStatus(n.id, s.network, s.disruptions);
+          const r = 5.2;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = colors.platformFill;
+          ctx.fill();
+          if (st === "none") {
+            ctx.strokeStyle = colors.disrupted;
+            ctx.setLineDash([3 * inv, 2.5 * inv]);
+          } else if (st === "ok") {
+            ctx.strokeStyle = lineColorForCanvas(n.lineId ?? "");
+            ctx.setLineDash([]);
+          } else {
+            ctx.strokeStyle = statusColor(st);
+            ctx.setLineDash([]);
+          }
+          ctx.lineWidth = 2 * inv;
+          ctx.stroke();
+          ctx.setLineDash([]);
+          if (s.view.k > 0.95) {
+            ctx.font = `500 ${9.5 * inv}px Inter, system-ui, sans-serif`;
+            ctx.fillStyle =
+              st === "bad" || st === "none" ? colors.disrupted : "#9aa2ae";
+            ctx.textBaseline = "middle";
+            ctx.fillText(n.label, n.x + r + 5 * inv, n.y);
+          }
+        } else {
+          const liftId = n.id.split("::").pop() ?? "";
+          const bad = !!s.disruptions?.byLiftId[liftId];
+          const unknown = !s.disruptions?.ok;
+          const r = 3.4;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = unknown
+            ? colors.unknown
+            : bad
+              ? colors.disrupted
+              : colors.ok;
+          ctx.fill();
+        }
+      }
+
+      // Tooltip
+      if (s.hover) {
+        const n = s.hover;
+        const sx = (n.x ?? 0) * s.view.k + s.view.tx;
+        const sy = (n.y ?? 0) * s.view.k + s.view.ty;
+        ctx.restore();
+        ctx.save();
+        const line1 = n.label;
+        let line2 = "";
+        if (n.kind === "station") {
+          const st = s.network.stations.find((x) => x.id === n.id);
+          const lines = (st?.lineIds ?? [])
+            .map(
+              (id) => s.network.lines.find((l) => l.id === id)?.name ?? id,
+            )
+            .join(" · ");
+          const agg = stationAggregateStatus(
+            n.id,
+            s.network,
+            s.disruptions,
+          );
+          const word =
+            agg === "ok"
+              ? "step-free"
+              : agg === "bad"
+                ? "disrupted"
+                : agg === "none"
+                  ? "no step-free route"
+                  : "no live data";
+          line2 = `${word}${lines ? ` · ${lines}` : ""}`;
+        } else if (n.kind === "platform") {
+          const st = platformStatus(n.id, s.network, s.disruptions);
+          line2 =
+            st === "none"
+              ? "Platform · no step-free route"
+              : st === "bad"
+                ? "Platform · disrupted"
+                : "Platform · step-free";
+        } else {
+          line2 = s.disruptions?.byLiftId[n.id.split("::").pop() ?? ""]
+            ? "Lift · disrupted"
+            : "Lift · operational";
+        }
+        ctx.font = `600 12.5px Inter, system-ui, sans-serif`;
+        const w1 = ctx.measureText(line1).width;
+        ctx.font = `400 11.5px Inter, system-ui, sans-serif`;
+        const w2 = ctx.measureText(line2).width;
+        const tw = Math.max(w1, w2) + 20;
+        const th = 46;
+        let bx = sx + 14;
+        let by = sy - th / 2;
+        if (bx + tw > w - 8) bx = sx - tw - 14;
+        if (by < 8) by = 8;
+        if (by + th > h - 8) by = h - th - 8;
+        ctx.fillStyle = "rgba(20,23,29,0.95)";
+        ctx.strokeStyle = "#2b3138";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(bx, by, tw, th, 8);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = colors.textPrimary;
+        ctx.font = `600 12.5px Inter, system-ui, sans-serif`;
+        ctx.fillText(line1, bx + 10, by + 18);
+        ctx.fillStyle = "#8b929c";
+        ctx.font = `400 11.5px Inter, system-ui, sans-serif`;
+        ctx.fillText(line2, bx + 10, by + 34);
+        ctx.restore();
+        return;
+      }
+
+      ctx.restore();
+    }
+
+    let raf = 0;
+    function loop() {
+      if (s.sim && !s.reducedMotion) {
+        // keep faint drift
+        if ((s.sim.alpha() ?? 0) < 0.03) s.sim.alpha(0.03);
+      }
+      draw();
+      raf = requestAnimationFrame(loop);
+    }
+
+    buildGraph();
+    resize();
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(wrap);
+    const fitTimer = window.setTimeout(() => {
+      if (!s.userMoved) fitView();
+    }, 1400);
+    raf = requestAnimationFrame(loop);
+
+    const onPointerDown = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const sx = e.clientX - rect.left;
+      const sy = e.clientY - rect.top;
+      const hit = hitTest(sx, sy);
+      if (hit) {
+        s.drag = { node: hit, pointerId: e.pointerId };
+        hit.fx = hit.x;
+        hit.fy = hit.y;
+        canvas.setPointerCapture(e.pointerId);
+        s.sim?.alphaTarget(0.4).restart();
+        canvas.style.cursor = "grabbing";
+      } else {
+        s.pan = {
+          x: sx,
+          y: sy,
+          tx: s.view.tx,
+          ty: s.view.ty,
+        };
+        canvas.setPointerCapture(e.pointerId);
+        canvas.style.cursor = "grabbing";
+      }
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const sx = e.clientX - rect.left;
+      const sy = e.clientY - rect.top;
+      s.pointer = { x: sx, y: sy };
+
+      if (s.drag) {
+        const w = screenToWorld(sx, sy);
+        s.drag.node.fx = w.x;
+        s.drag.node.fy = w.y;
+        s.drag.node.x = w.x;
+        s.drag.node.y = w.y;
+        return;
+      }
+      if (s.pan) {
+        s.userMoved = true;
+        s.view.tx = s.pan.tx + (sx - s.pan.x);
+        s.view.ty = s.pan.ty + (sy - s.pan.y);
+        return;
+      }
+      s.hover = hitTest(sx, sy);
+      canvas.style.cursor = s.hover ? "pointer" : "grab";
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      if (s.drag) {
+        const node = s.drag.node;
+        node.fx = null;
+        node.fy = null;
+        s.drag = null;
+        s.sim?.alphaTarget(0);
+      }
+      s.pan = null;
+      canvas.style.cursor = s.hover ? "pointer" : "grab";
+      try {
+        canvas.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
+    };
+
+    const onClick = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const hit = hitTest(e.clientX - rect.left, e.clientY - rect.top);
+      if (!hit) {
+        s.onSelectStation(null);
+        return;
+      }
+      if (hit.kind === "station") {
+        s.onSelectStation(hit.id);
+        s.onToggleExpand(hit.id);
+        s.sim?.alpha(0.9).restart();
+      } else {
+        s.onSelectStation(hit.stationId);
+      }
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      s.userMoved = true;
+      const rect = canvas.getBoundingClientRect();
+      const sx = e.clientX - rect.left;
+      const sy = e.clientY - rect.top;
+      const wx = (sx - s.view.tx) / s.view.k;
+      const wy = (sy - s.view.ty) / s.view.k;
+      const next = clamp(s.view.k * Math.exp(-e.deltaY * 0.0016), 0.28, 4);
+      s.view.k = next;
+      s.view.tx = sx - wx * next;
+      s.view.ty = sy - wy * next;
+    };
+
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerup", onPointerUp);
+    canvas.addEventListener("pointercancel", onPointerUp);
+    canvas.addEventListener("click", onClick);
+    canvas.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(fitTimer);
+      ro.disconnect();
+      s.sim?.stop();
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerup", onPointerUp);
+      canvas.removeEventListener("pointercancel", onPointerUp);
+      canvas.removeEventListener("click", onClick);
+      canvas.removeEventListener("wheel", onWheel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Reset view
+  useEffect(() => {
+    const s = stateRef.current;
+    s.userMoved = false;
+    const stations = s.nodes.filter((n) => n.kind === "station");
+    if (stations.length === 0) return;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
+    for (const n of stations) {
+      if (n.x == null || n.y == null) continue;
+      minX = Math.min(minX, n.x);
+      minY = Math.min(minY, n.y);
+      maxX = Math.max(maxX, n.x);
+      maxY = Math.max(maxY, n.y);
+    }
+    const bw = Math.max(maxX - minX, 1);
+    const bh = Math.max(maxY - minY, 1);
+    const { w, h } = s.size;
+    if (!w || !h) return;
+    const padX = clamp(w * 0.06, 24, 80);
+    const padY = clamp(h * 0.06, 20, 60);
+    const k = clamp(
+      Math.min((w - padX * 2) / bw, (h - padY * 2) / bh),
+      0.35,
+      3,
+    );
+    s.view.k = k;
+    s.view.tx = w / 2 - ((minX + maxX) / 2) * k;
+    s.view.ty = h / 2 - ((minY + maxY) / 2) * k;
+  }, [resetToken]);
+
+  // Rebuild graph when expanded set changes — second effect with full rebuild logic duplicated lightly
+  useEffect(() => {
+    const s = stateRef.current;
+    if (!canvasRef.current) return;
+
+    const nodes: GraphNode[] = [];
+    const links: GraphLink[] = [];
+    const byId = new Map<string, GraphNode>();
+    const prev = new Map(s.nodes.map((n) => [n.id, n]));
+
+    for (const st of network.stations) {
+      const old = prev.get(st.id);
+      const n: GraphNode = {
+        id: st.id,
+        kind: "station",
+        label: st.name,
+        stationId: st.id,
+        lineCount: st.lineIds.length,
+        x: old?.x ?? st.lon * 15,
+        y: old?.y ?? -st.lat * 10.5,
+        vx: old?.vx,
+        vy: old?.vy,
+      };
+      nodes.push(n);
+      byId.set(n.id, n);
+    }
+    for (const e of network.edges) {
+      if (!byId.has(e.from) || !byId.has(e.to)) continue;
+      links.push({
+        source: e.from,
+        target: e.to,
+        lineId: e.lineId,
+        kind: "line",
+      });
+    }
+    for (const stationId of expanded) {
+      const platforms = network.platforms.filter((p) => p.stationId === stationId);
+      const parent = byId.get(stationId);
+      platforms.forEach((p, i) => {
+        const angle = (i / Math.max(platforms.length, 1)) * Math.PI * 2;
+        const old = prev.get(p.id);
+        const pn: GraphNode = {
+          id: p.id,
+          kind: "platform",
+          label: p.label,
+          stationId,
+          lineId: p.lineId,
+          parentId: stationId,
+          x: old?.x ?? (parent?.x ?? 0) + Math.cos(angle) * 60,
+          y: old?.y ?? (parent?.y ?? 0) + Math.sin(angle) * 60,
+        };
+        nodes.push(pn);
+        byId.set(pn.id, pn);
+        const chain = network.platformLiftChains.find((c) => c.platformId === p.id);
+        const liftIds = chain?.liftIds ?? [];
+        if (liftIds.length === 0) {
+          links.push({ source: p.id, target: stationId, kind: "ghost" });
+          return;
+        }
+        let prevId = p.id;
+        liftIds.forEach((lid, li) => {
+          const lift = network.lifts.find((l) => l.id === lid);
+          const nodeId = `${p.id}::${lid}`;
+          const t = (li + 1) / (liftIds.length + 1);
+          const oldL = prev.get(nodeId);
+          const ln: GraphNode = {
+            id: nodeId,
+            kind: "lift",
+            label: lift?.name ?? lid,
+            stationId,
+            parentId: stationId,
+            x:
+              oldL?.x ??
+              (pn.x ?? 0) * (1 - t) + (parent?.x ?? 0) * t,
+            y:
+              oldL?.y ??
+              (pn.y ?? 0) * (1 - t) + (parent?.y ?? 0) * t,
+          };
+          if (!byId.has(nodeId)) {
+            nodes.push(ln);
+            byId.set(nodeId, ln);
+          }
+          links.push({
+            source: prevId,
+            target: nodeId,
+            kind: "lift",
+            status: disruptions?.byLiftId[lid] ? "bad" : "ok",
+          });
+          prevId = nodeId;
+        });
+        links.push({ source: prevId, target: stationId, kind: "lift", status: "ok" });
+      });
+    }
+
+    s.nodes = nodes;
+    s.links = links;
+    s.sim?.stop();
+    s.sim = forceSimulation(nodes)
+      .force(
+        "link",
+        forceLink<GraphNode, GraphLink>(links)
+          .id((d) => d.id)
+          .distance((l) => (l.kind === "line" ? 104 : l.kind === "ghost" ? 62 : 36))
+          .strength((l) => (l.kind === "line" ? 0.12 : 0.45)),
+      )
+      .force(
+        "charge",
+        forceManyBody().strength((d) =>
+          (d as GraphNode).kind === "station" ? -190 : -40,
+        ),
+      )
+      .force(
+        "collide",
+        forceCollide<GraphNode>().radius((d) =>
+          d.kind === "station" ? 14 : d.kind === "platform" ? 8 : 5,
+        ),
+      )
+      .force(
+        "x",
+        forceX<GraphNode>()
+          .x((d) => {
+            if (d.kind === "station") {
+              const st = network.stations.find((x) => x.id === d.id);
+              return st ? st.lon * 15 : 0;
+            }
+            return byId.get(d.parentId ?? "")?.x ?? 0;
+          })
+          .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
+      )
+      .force(
+        "y",
+        forceY<GraphNode>()
+          .y((d) => {
+            if (d.kind === "station") {
+              const st = network.stations.find((x) => x.id === d.id);
+              return st ? -st.lat * 10.5 : 0;
+            }
+            return byId.get(d.parentId ?? "")?.y ?? 0;
+          })
+          .strength((d) => (d.kind === "station" ? 0.04 : 0.08)),
+      )
+      .alpha(0.85)
+      .alphaDecay(reducedMotion ? 0.2 : 0.02);
+
+    if (reducedMotion) {
+      for (let i = 0; i < 120; i++) s.sim.tick();
+      s.sim.stop();
+    }
+  }, [expanded, network, disruptions, reducedMotion]);
+
+  return (
+    <div ref={wrapRef} className="relative min-h-0 flex-1">
+      <canvas
+        ref={canvasRef}
+        className="block h-full w-full cursor-grab"
+        aria-label="Step-free network graph"
+      />
+    </div>
+  );
+}
