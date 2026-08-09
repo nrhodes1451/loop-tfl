@@ -1,15 +1,16 @@
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import type { NetworkData } from "./types";
 
-let cache: NetworkData | null = null;
+let cache: { mtimeMs: number; data: NetworkData } | null = null;
 
 export async function loadNetwork(): Promise<NetworkData> {
-  if (cache) return cache;
   const filePath = path.join(process.cwd(), "data", "network.json");
+  const { mtimeMs } = await stat(filePath);
+  if (cache && cache.mtimeMs === mtimeMs) return cache.data;
   const raw = await readFile(filePath, "utf8");
-  cache = JSON.parse(raw) as NetworkData;
-  return cache;
+  cache = { mtimeMs, data: JSON.parse(raw) as NetworkData };
+  return cache.data;
 }
 
 export function clearNetworkCache() {

@@ -85,7 +85,7 @@ describe("buildTopology", () => {
     rampRoutes: [],
   };
 
-  it("marks platform with lift chain and orphan with empty chain", () => {
+  it("marks platform with lift chain and orphan as unreachable", () => {
     const topo = buildTopology(inputs);
     expect(topo.platforms).toHaveLength(2);
     const chain1 = topo.platformLiftChains.find(
@@ -95,7 +95,34 @@ describe("buildTopology", () => {
       (c) => c.platformId === "HUBTEST-Plat02::victoria::Brixton",
     );
     expect(chain1?.liftIds).toEqual(["HUBTEST-Lift-1"]);
+    expect(chain1?.access).toBe("lifts");
     expect(chain2?.liftIds).toEqual([]);
+    expect(chain2?.access).toBe("none");
+  });
+
+  it("marks same-level path as level access with no lifts", () => {
+    const topo = buildTopology({
+      ...inputs,
+      lifts: [],
+      sameLevelPaths: [
+        { From: "HUBTEST-Outside", To: "HUBTEST-Plat02" },
+      ],
+    });
+    const chain = topo.platformLiftChains.find(
+      (c) => c.platformId === "HUBTEST-Plat02::victoria::Brixton",
+    );
+    expect(chain?.liftIds).toEqual([]);
+    expect(chain?.access).toBe("level");
+  });
+
+  it("marks platforms as unreachable when the station has no Outside area", () => {
+    const topo = buildTopology({
+      ...inputs,
+      stations: [{ UniqueId: "HUBTEST", Name: "Test Station" }],
+    });
+    expect(
+      topo.platformLiftChains.every((c) => c.access === "none"),
+    ).toBe(true);
   });
 
   it("builds bidirectional lift adjacency", () => {

@@ -13,12 +13,17 @@ import {
 } from "d3-force";
 import { useEffect, useRef } from "react";
 import {
+  platformAccess,
   platformStatus,
   stationAggregateStatus,
   statusColor,
 } from "@/lib/status";
 import { colors, lineColorForCanvas } from "@/lib/tokens";
-import type { DisruptionPayload, NetworkData } from "@/lib/types";
+import type {
+  DisruptionPayload,
+  NetworkData,
+  PlatformAccess,
+} from "@/lib/types";
 import { clamp } from "@/lib/utils";
 
 /** London-centred equirectangular projection into world units. */
@@ -316,15 +321,17 @@ function appendExpandedStationDetail(
   }
 
   const liftPlatforms = new Map<string, string[]>();
-  const chains: { platformId: string; liftIds: string[] }[] = [];
+  const chains: { platformId: string; access: PlatformAccess; liftIds: string[] }[] =
+    [];
   for (const [physId, members] of merged) {
     const first = members[0]!;
+    const access = platformAccess(first.id, network);
     const chain = network.platformLiftChains.find(
       (c) => c.platformId === first.id,
     );
-    const liftIds = chain?.liftIds ?? [];
-    chains.push({ platformId: physId, liftIds });
-    if (liftIds.length === 0) {
+    const liftIds = access === "lifts" ? (chain?.liftIds ?? []) : [];
+    chains.push({ platformId: physId, access, liftIds });
+    if (access === "none") {
       links.push({ source: physId, target: streetId, kind: "ghost" });
       continue;
     }
@@ -372,8 +379,12 @@ function appendExpandedStationDetail(
     links.push({ source, target, kind: "lift", status });
   };
 
-  for (const { platformId, liftIds } of chains) {
-    if (liftIds.length === 0) continue;
+  for (const { platformId, access, liftIds } of chains) {
+    if (access === "none") continue;
+    if (access === "level") {
+      addLiftLink(platformId, streetId, "ok");
+      continue;
+    }
     const first = liftIds[0]!;
     addLiftLink(
       platformId,

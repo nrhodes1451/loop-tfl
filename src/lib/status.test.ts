@@ -38,8 +38,11 @@ const network: NetworkData = {
     },
   ],
   platformLiftChains: [
-    { platformId: "p1", liftIds: ["L1"] },
-    { platformId: "p2", liftIds: [] },
+    { platformId: "p1", liftIds: ["L1"], access: "lifts" },
+    { platformId: "p2", liftIds: [], access: "none" },
+    { platformId: "p3", liftIds: [], access: "level" },
+    // Legacy shape: pre-`access` data used [] for unreachable platforms.
+    { platformId: "p4", liftIds: [] },
   ],
 };
 
@@ -53,6 +56,18 @@ const okFeed: DisruptionPayload = {
 describe("status derivation", () => {
   it("marks no-route platforms as none", () => {
     expect(platformStatus("p2", network, okFeed)).toBe("none");
+  });
+
+  it("marks level/ramp platforms as ok", () => {
+    expect(platformStatus("p3", network, okFeed)).toBe("ok");
+  });
+
+  it("treats chains without an access field as no route", () => {
+    expect(platformStatus("p4", network, okFeed)).toBe("none");
+  });
+
+  it("treats unknown platforms as no route", () => {
+    expect(platformStatus("nope", network, okFeed)).toBe("none");
   });
 
   it("marks working chain as ok when feed is healthy", () => {

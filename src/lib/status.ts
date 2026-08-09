@@ -4,19 +4,32 @@ import type {
   NetworkData,
   NetworkPlatform,
   NetworkStation,
+  PlatformAccess,
 } from "./types";
+
+/** Legacy data has no `access`; anything unrecognised means no step-free route. */
+export function platformAccess(
+  platformId: string,
+  network: NetworkData,
+): PlatformAccess {
+  const chain = network.platformLiftChains.find((c) => c.platformId === platformId);
+  if (chain?.access === "level" || chain?.access === "lifts") return chain.access;
+  return "none";
+}
 
 export function platformStatus(
   platformId: string,
   network: NetworkData,
   disruptions: DisruptionPayload | null,
 ): LiftStatus {
-  const chain = network.platformLiftChains.find((c) => c.platformId === platformId);
-  if (!chain || chain.liftIds.length === 0) return "none";
+  const access = platformAccess(platformId, network);
+  if (access === "none") return "none";
+  if (access === "level") return "ok";
 
   if (!disruptions || !disruptions.ok) return "unknown";
 
-  for (const liftId of chain.liftIds) {
+  const chain = network.platformLiftChains.find((c) => c.platformId === platformId);
+  for (const liftId of chain?.liftIds ?? []) {
     if (disruptions.byLiftId[liftId]) return "bad";
   }
   return "ok";
@@ -117,8 +130,11 @@ export function platformSubLabel(
   platform: NetworkPlatform,
   network: NetworkData,
 ): string {
+  const access = platformAccess(platform.id, network);
+  if (access === "none") return "no lift route";
+  if (access === "level") return "level or ramp access";
   const chain = network.platformLiftChains.find((c) => c.platformId === platform.id);
-  if (!chain || chain.liftIds.length === 0) return "no lift route";
-  if (chain.liftIds.length === 1) return "1 lift to concourse";
-  return `${chain.liftIds.length} lifts in sequence`;
+  const count = chain?.liftIds.length ?? 0;
+  if (count === 1) return "1 lift to concourse";
+  return `${count} lifts in sequence`;
 }

@@ -37,9 +37,14 @@ export type NetworkLift = {
   toAreas: string[];
 };
 
+export type PlatformAccess = "lifts" | "level" | "none";
+
 export type PlatformLiftChain = {
   platformId: string;
+  /** Ordered lifts platform→street; empty unless `access` is `"lifts"`. */
   liftIds: string[];
+  /** Absent in legacy data — consumers must treat missing as `"none"`. */
+  access?: PlatformAccess;
 };
 
 export type NetworkData = {

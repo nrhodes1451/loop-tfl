@@ -2,6 +2,7 @@
 
 import {
   disruptedStations,
+  platformAccess,
   platformStatus,
   platformSubLabel,
   statusColor,
@@ -285,7 +286,10 @@ function StationDetail({
           const chain = network.platformLiftChains.find(
             (c) => c.platformId === p.id,
           );
-          const hasLifts = (chain?.liftIds.length ?? 0) > 0;
+          const access = platformAccess(p.id, network);
+          const liftIds = access === "lifts" ? (chain?.liftIds ?? []) : [];
+          const hasLifts = liftIds.length > 0;
+          const levelAccess = access === "level";
           const border =
             status === "bad" || status === "none" ? "#3a2226" : "#1f242b";
           const sc = statusColor(status);
@@ -326,7 +330,7 @@ function StationDetail({
                   className="mt-3 flex flex-col gap-2 border-t pt-[11px]"
                   style={{ borderColor: "#23272f" }}
                 >
-                  {chain!.liftIds.map((lid) => {
+                  {liftIds.map((lid) => {
                     const lift = network.lifts.find((l) => l.id === lid);
                     const message = disruptions?.byLiftId[lid];
                     const color = !disruptions?.ok
@@ -358,6 +362,13 @@ function StationDetail({
                     );
                   })}
                 </ul>
+              ) : levelAccess ? (
+                <div
+                  className="mt-[11px] border-t pt-[11px] text-xs leading-[1.55]"
+                  style={{ borderColor: "#23272f", color: "#838a95" }}
+                >
+                  Street access is via level path or ramp — no lifts required.
+                </div>
               ) : (
                 <div
                   className="mt-[11px] border-t pt-[11px] text-xs leading-[1.55]"

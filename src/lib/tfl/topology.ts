@@ -2,6 +2,8 @@
  * Build Outside→platform lift chains from TfL stationdata-detailed CSVs.
  */
 
+import type { PlatformLiftChain } from "../types";
+
 export type CsvRow = Record<string, string>;
 
 export type TopologyInputs = {
@@ -48,7 +50,7 @@ export type BuiltTopology = {
     fromAreas: string[];
     toAreas: string[];
   }[];
-  platformLiftChains: { platformId: string; liftIds: string[] }[];
+  platformLiftChains: PlatformLiftChain[];
   stationNameById: Map<string, string>;
   outsideByStation: Map<string, string>;
 };
@@ -57,7 +59,8 @@ type AdjEdge = { to: string; liftId?: string };
 
 /**
  * BFS from Outside to platform. Collect ordered unique lift IDs along shortest path.
- * Same-level and ramp edges are free (no lift). Empty liftIds means unreachable via step-free paths.
+ * Same-level and ramp edges are free (no lift).
+ * Returns `[]` when reachable without lifts; `null` when unreachable.
  */
 export function findLiftChain(
   outsideId: string,
@@ -200,14 +203,13 @@ export function buildTopology(inputs: TopologyInputs): BuiltTopology {
     });
 
     const outside = outsideByStation.get(meta.stationId);
-    if (!outside) {
-      platformLiftChains.push({ platformId: id, liftIds: [] });
-      continue;
-    }
-    const chain = findLiftChain(outside, platformId, adjacency);
+    const chain = outside
+      ? findLiftChain(outside, platformId, adjacency)
+      : null;
     platformLiftChains.push({
       platformId: id,
       liftIds: chain ?? [],
+      access: chain === null ? "none" : chain.length === 0 ? "level" : "lifts",
     });
   }
 

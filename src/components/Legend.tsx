@@ -62,7 +62,8 @@ export function Legend() {
         className="max-w-[300px] text-[11.5px] leading-normal text-pretty"
         style={{ color: "#6f7681" }}
       >
-        A platform with no line to its station has no step-free route at all — the gap is
+        A direct green line from street to platform means level or ramp access. A
+        platform with no line to street has no step-free route at all — the gap is
         the point.
       </div>
       <div className="h-px" style={{ background: "#e4e7ec" }} />
