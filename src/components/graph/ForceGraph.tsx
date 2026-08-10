@@ -347,17 +347,40 @@ function appendExpandedStationDetail(
     }
   }
 
+  // Include every lift at this station (not only those on a shortest chain),
+  // so ramp-served platforms don't hide bridge lifts like Harrow Lift 4.
+  const stationLifts = network.lifts.filter((l) => l.stationId === stationId);
+  for (const lift of stationLifts) {
+    for (const serviceId of lift.platformIds ?? []) {
+      const physId = physicalPlatformId(serviceId);
+      if (!byId.has(physId)) continue;
+      const list = liftPlatforms.get(lift.id) ?? [];
+      if (!list.includes(physId)) list.push(physId);
+      liftPlatforms.set(lift.id, list);
+    }
+    if (!liftPlatforms.has(lift.id)) liftPlatforms.set(lift.id, []);
+  }
+
   for (const [lid, platformIds] of liftPlatforms) {
     const lift = network.lifts.find((l) => l.id === lid);
-    // Circular mean of served platform angles (directional placement).
     let sinSum = 0;
     let cosSum = 0;
+    let nAng = 0;
     for (const pid of platformIds) {
-      const a = platformAngle.get(pid) ?? 0;
+      const a = platformAngle.get(pid);
+      if (a == null) continue;
       sinSum += Math.sin(a);
       cosSum += Math.cos(a);
+      nAng += 1;
     }
-    const angle = Math.atan2(sinSum, cosSum);
+    // Orphan / bridge-only lifts: sit on the mid ring toward street default angle 0
+    // or average of other lifts later — use a stable hash angle if no platforms.
+    const angle =
+      nAng > 0
+        ? Math.atan2(sinSum, cosSum)
+        : ((lid.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % 360) *
+            Math.PI) /
+          180;
     if (byId.has(lid)) continue;
     const ln: GraphNode = {
       id: lid,
@@ -379,7 +402,8 @@ function appendExpandedStationDetail(
     status: string,
   ) => {
     const key = `${source}|${target}`;
-    if (seenLinks.has(key)) return;
+    const rev = `${target}|${source}`;
+    if (seenLinks.has(key) || seenLinks.has(rev)) return;
     seenLinks.add(key);
     links.push({ source, target, kind: "lift", status });
   };
@@ -405,6 +429,38 @@ function appendExpandedStationDetail(
       );
     }
     addLiftLink(liftIds[liftIds.length - 1]!, streetId, "ok");
+  }
+
+  // Wire lift↔platform for served areas not already covered by a chain hop,
+  // and lift↔lift when they share an area (e.g. footbridge).
+  const platformEndLift = new Map<string, string>();
+  for (const { platformId, access, liftIds } of chains) {
+    if (access === "lifts" && liftIds[0]) {
+      platformEndLift.set(platformId, liftIds[0]);
+    }
+  }
+  for (const lift of stationLifts) {
+    const liftBad = !!disruptions?.byLiftId[lift.id];
+    for (const serviceId of lift.platformIds ?? []) {
+      const physId = physicalPlatformId(serviceId);
+      if (!byId.has(physId)) continue;
+      // Don't attach a footbridge lift to a platform that already has its own
+      // platform-end lift on the step-free path (TfL same-level noise).
+      const end = platformEndLift.get(physId);
+      if (end && end !== lift.id) continue;
+      addLiftLink(physId, lift.id, liftBad ? "bad" : "ok");
+    }
+    const areas = new Set([...lift.fromAreas, ...lift.toAreas]);
+    for (const other of stationLifts) {
+      if (other.id <= lift.id) continue;
+      const shared = other.fromAreas
+        .concat(other.toAreas)
+        .some((a) => areas.has(a));
+      if (!shared) continue;
+      const bad =
+        !!disruptions?.byLiftId[lift.id] || !!disruptions?.byLiftId[other.id];
+      addLiftLink(lift.id, other.id, bad ? "bad" : "ok");
+    }
   }
 }
 
@@ -1087,6 +1143,12 @@ export function ForceGraph({
           ctx.globalAlpha = 0.5;
           ctx.setLineDash([3.5 * strokeBoost, 3 * strokeBoost]);
           ctx.lineWidth = ringStroke;
+        } else if (agg === "partial") {
+          // Step-free on some platforms only (e.g. one direction).
+          ctx.strokeStyle = statusColor(agg);
+          ctx.globalAlpha = 0.8;
+          ctx.setLineDash([3.5 * strokeBoost, 3 * strokeBoost]);
+          ctx.lineWidth = ringStroke;
         } else {
           ctx.strokeStyle = statusColor(agg);
           ctx.globalAlpha = 0.8;
@@ -1340,11 +1402,13 @@ export function ForceGraph({
           const word =
             agg === "ok"
               ? "step-free"
-              : agg === "bad"
-                ? "disrupted"
-                : agg === "none"
-                  ? "no step-free route"
-                  : "no live data";
+              : agg === "partial"
+                ? "partial step-free"
+                : agg === "bad"
+                  ? "disrupted"
+                  : agg === "none"
+                    ? "no step-free route"
+                    : "no live data";
           line2 = `${word}${lines ? ` · ${lines}` : ""}`;
         } else if (n.kind === "platform") {
           const statusId = n.statusPlatformId ?? n.id;

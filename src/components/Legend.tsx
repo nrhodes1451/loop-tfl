@@ -40,6 +40,13 @@ export function Legend({
         </div>
         <div className="flex items-center gap-[7px] text-xs" style={{ color: "#3d4450" }}>
           <span
+            className="inline-block h-[13px] w-[13px] rounded-full border-2 border-dashed"
+            style={{ borderColor: "#35c77b" }}
+          />
+          Partial (one direction)
+        </div>
+        <div className="flex items-center gap-[7px] text-xs" style={{ color: "#3d4450" }}>
+          <span
             className="inline-block h-[9px] w-[9px] rounded-full border"
             style={{ background: "#ffffff", borderColor: "#454c57" }}
           />

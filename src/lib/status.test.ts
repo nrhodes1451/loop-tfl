@@ -35,6 +35,7 @@ const network: NetworkData = {
       name: "Lift A",
       fromAreas: [],
       toAreas: [],
+      platformIds: [],
     },
   ],
   platformLiftChains: [
@@ -100,5 +101,27 @@ describe("status derivation", () => {
       byLiftId: { L1: "x" },
     };
     expect(stationAggregateStatus("S1", network, bad)).toBe("bad");
+  });
+
+  it("marks mixed ok+none platforms as partial", () => {
+    expect(stationAggregateStatus("S1", network, okFeed)).toBe("partial");
+  });
+
+  it("marks all-ok stations as ok", () => {
+    const allOk: NetworkData = {
+      ...network,
+      platforms: [
+        network.platforms[0]!,
+        {
+          ...network.platforms[1]!,
+          id: "p2b",
+        },
+      ],
+      platformLiftChains: [
+        { platformId: "p1", liftIds: ["L1"], access: "lifts" },
+        { platformId: "p2b", liftIds: [], access: "level" },
+      ],
+    };
+    expect(stationAggregateStatus("S1", allOk, okFeed)).toBe("ok");
   });
 });

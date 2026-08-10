@@ -77,6 +77,15 @@ describe("buildTopology", () => {
         LiftName: "A",
         FriendlyName: "Lift A",
         FromAreas: "HUBTEST-Outside",
+        ToAreas: "HUBTEST-Mid",
+        IntermediateAreas: "",
+      },
+      {
+        StationUniqueId: "HUBTEST",
+        LiftUniqueId: "HUBTEST-Lift-2",
+        LiftName: "B",
+        FriendlyName: "Lift B",
+        FromAreas: "HUBTEST-Mid",
         ToAreas: "HUBTEST-Plat01",
         IntermediateAreas: "",
       },
@@ -94,7 +103,8 @@ describe("buildTopology", () => {
     const chain2 = topo.platformLiftChains.find(
       (c) => c.platformId === "HUBTEST-Plat02::victoria::Brixton",
     );
-    expect(chain1?.liftIds).toEqual(["HUBTEST-Lift-1"]);
+    // Stored platform → street: platform-end lift first.
+    expect(chain1?.liftIds).toEqual(["HUBTEST-Lift-2", "HUBTEST-Lift-1"]);
     expect(chain1?.access).toBe("lifts");
     expect(chain2?.liftIds).toEqual([]);
     expect(chain2?.access).toBe("none");
@@ -123,6 +133,14 @@ describe("buildTopology", () => {
     expect(
       topo.platformLiftChains.every((c) => c.access === "none"),
     ).toBe(true);
+  });
+
+  it("attaches platforms same-level to a lift's areas", () => {
+    const topo = buildTopology(inputs);
+    const lift2 = topo.lifts.find((l) => l.id === "HUBTEST-Lift-2");
+    expect(lift2?.platformIds).toContain(
+      "HUBTEST-Plat01::victoria::Walthamstow",
+    );
   });
 
   it("builds bidirectional lift adjacency", () => {

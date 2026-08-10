@@ -48,14 +48,16 @@ export const LINE_COLORS: Record<string, string> = {
   "elizabeth-line": "#6950A1",
   elizabeth: "#6950A1",
   dlr: "#00A4A7",
+  // Umbrella Overground orange (legacy / unspecified).
   "london-overground": "#EE7C0E",
   overground: "#EE7C0E",
-  liberty: "#EE7C0E",
-  lioness: "#EE7C0E",
-  mildmay: "#EE7C0E",
-  suffragette: "#EE7C0E",
-  windrush: "#EE7C0E",
-  weaver: "#EE7C0E",
+  // Named Overground lines (TfL Line diagram standard RGB → hex).
+  liberty: "#5D6061",
+  lioness: "#FAA61A",
+  mildmay: "#0077AD",
+  suffragette: "#5BBD72",
+  weaver: "#823A62",
+  windrush: "#ED1B00",
   tram: "#84B817",
 };
 

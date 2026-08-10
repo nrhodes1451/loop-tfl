@@ -52,6 +52,10 @@ export function stationAggregateStatus(
   const statuses = platforms.map((p) => platformStatus(p.id, network, disruptions));
   if (statuses.some((s) => s === "bad")) return "bad";
   if (statuses.every((s) => s === "none")) return "none";
+  // Some platforms step-free, others not (e.g. one direction only).
+  if (statuses.some((s) => s === "ok") && statuses.some((s) => s === "none")) {
+    return "partial";
+  }
   if (statuses.some((s) => s === "unknown")) return "unknown";
   return "ok";
 }
@@ -60,6 +64,8 @@ export function statusLabel(status: LiftStatus): string {
   switch (status) {
     case "ok":
       return "Step-free";
+    case "partial":
+      return "Partial";
     case "bad":
       return "Blocked";
     case "unknown":
@@ -72,6 +78,7 @@ export function statusLabel(status: LiftStatus): string {
 export function statusColor(status: LiftStatus): string {
   switch (status) {
     case "ok":
+    case "partial":
       return "#35c77b";
     case "bad":
       return "#f2565c";

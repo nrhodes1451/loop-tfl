@@ -1,4 +1,4 @@
-export type LiftStatus = "ok" | "bad" | "unknown" | "none";
+export type LiftStatus = "ok" | "partial" | "bad" | "unknown" | "none";
 
 export type NetworkLine = {
   id: string;
@@ -35,6 +35,8 @@ export type NetworkLift = {
   name: string;
   fromAreas: string[];
   toAreas: string[];
+  /** Physical/composite platform ids same-level adjacent to this lift's areas. */
+  platformIds: string[];
 };
 
 export type PlatformAccess = "lifts" | "level" | "none";
