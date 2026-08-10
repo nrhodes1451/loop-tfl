@@ -347,10 +347,32 @@ function appendExpandedStationDetail(
     }
   }
 
-  // Include every lift at this station (not only those on a shortest chain),
-  // so ramp-served platforms don't hide bridge lifts like Harrow Lift 4.
   const stationLifts = network.lifts.filter((l) => l.stationId === stationId);
-  for (const lift of stationLifts) {
+  const chainLiftIds = new Set(chains.flatMap((c) => c.liftIds));
+
+  const platformEndLift = new Map<string, string>();
+  for (const { platformId, access, liftIds } of chains) {
+    if (access === "lifts" && liftIds[0]) {
+      platformEndLift.set(platformId, liftIds[0]);
+    }
+  }
+
+  // Visible lifts: on a chain, or a true orphan that uniquely covers a visible
+  // platform (no other platform-end chain lift). Pure parallels of an existing
+  // chain path (e.g. Whitechapel Lift E vs C→A) are hidden.
+  const visibleLifts = stationLifts.filter((lift) => {
+    if (chainLiftIds.has(lift.id)) return true;
+    const served = (lift.platformIds ?? [])
+      .map(physicalPlatformId)
+      .filter((physId) => byId.has(physId));
+    if (served.length === 0) return false;
+    return served.some((physId) => {
+      const end = platformEndLift.get(physId);
+      return !end || end === lift.id;
+    });
+  });
+
+  for (const lift of visibleLifts) {
     for (const serviceId of lift.platformIds ?? []) {
       const physId = physicalPlatformId(serviceId);
       if (!byId.has(physId)) continue;
@@ -361,8 +383,23 @@ function appendExpandedStationDetail(
     if (!liftPlatforms.has(lift.id)) liftPlatforms.set(lift.id, []);
   }
 
-  for (const [lid, platformIds] of liftPlatforms) {
-    const lift = network.lifts.find((l) => l.id === lid);
+  // Min chain depth (0 = platform-end) and that chain's length for radius.
+  const liftDepth = new Map<string, { depth: number; chainLen: number }>();
+  for (const { liftIds } of chains) {
+    for (let i = 0; i < liftIds.length; i++) {
+      const lid = liftIds[i]!;
+      const prev = liftDepth.get(lid);
+      if (!prev || i < prev.depth) {
+        liftDepth.set(lid, { depth: i, chainLen: liftIds.length });
+      }
+    }
+  }
+
+  const liftAngle = new Map<string, number>();
+  const liftRadius = new Map<string, number>();
+  for (const lift of visibleLifts) {
+    const lid = lift.id;
+    const platformIds = liftPlatforms.get(lid) ?? [];
     let sinSum = 0;
     let cosSum = 0;
     let nAng = 0;
@@ -373,23 +410,43 @@ function appendExpandedStationDetail(
       cosSum += Math.cos(a);
       nAng += 1;
     }
-    // Orphan / bridge-only lifts: sit on the mid ring toward street default angle 0
-    // or average of other lifts later — use a stable hash angle if no platforms.
     const angle =
       nAng > 0
         ? Math.atan2(sinSum, cosSum)
         : ((lid.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % 360) *
             Math.PI) /
           180;
+    liftAngle.set(lid, angle);
+
+    const depthInfo = liftDepth.get(lid);
+    let r: number;
+    if (!depthInfo) {
+      r = orbit * 0.65;
+    } else if (depthInfo.chainLen <= 1) {
+      // Single-lift chains stay on the historic mid ring.
+      r = liftR;
+    } else {
+      const t = depthInfo.depth / (depthInfo.chainLen - 1);
+      r = orbit * (0.85 - t * (0.85 - 0.35));
+    }
+    liftRadius.set(lid, r);
+  }
+
+  fanCollidingAngles(liftAngle);
+
+  for (const lift of visibleLifts) {
+    const lid = lift.id;
     if (byId.has(lid)) continue;
+    const angle = liftAngle.get(lid) ?? 0;
+    const r = liftRadius.get(lid) ?? liftR;
     const ln: GraphNode = {
       id: lid,
       kind: "lift",
-      label: lift?.name ?? lid,
+      label: lift.name,
       stationId,
       parentId: stationId,
-      x: px + Math.cos(angle) * liftR,
-      y: py + Math.sin(angle) * liftR,
+      x: px + Math.cos(angle) * r,
+      y: py + Math.sin(angle) * r,
     };
     nodes.push(ln);
     byId.set(lid, ln);
@@ -431,36 +488,50 @@ function appendExpandedStationDetail(
     addLiftLink(liftIds[liftIds.length - 1]!, streetId, "ok");
   }
 
-  // Wire lift↔platform for served areas not already covered by a chain hop,
-  // and lift↔lift when they share an area (e.g. footbridge).
-  const platformEndLift = new Map<string, string>();
-  for (const { platformId, access, liftIds } of chains) {
-    if (access === "lifts" && liftIds[0]) {
-      platformEndLift.set(platformId, liftIds[0]);
-    }
+  const streetEndLifts = new Set<string>();
+  for (const { access, liftIds } of chains) {
+    if (access !== "lifts" || liftIds.length === 0) continue;
+    streetEndLifts.add(liftIds[liftIds.length - 1]!);
   }
-  for (const lift of stationLifts) {
+
+  // Platform↔lift only for the platform-end chain lift, or an orphan that
+  // serves the platform (no shared-area lift↔lift clique).
+  for (const lift of visibleLifts) {
     const liftBad = !!disruptions?.byLiftId[lift.id];
+    const onChain = chainLiftIds.has(lift.id);
     for (const serviceId of lift.platformIds ?? []) {
       const physId = physicalPlatformId(serviceId);
       if (!byId.has(physId)) continue;
-      // Don't attach a footbridge lift to a platform that already has its own
-      // platform-end lift on the step-free path (TfL same-level noise).
       const end = platformEndLift.get(physId);
       if (end && end !== lift.id) continue;
-      addLiftLink(physId, lift.id, liftBad ? "bad" : "ok");
+      if (end === lift.id || !onChain) {
+        addLiftLink(physId, lift.id, liftBad ? "bad" : "ok");
+      }
     }
+  }
+
+  // Orphans: one link to a shared-area chain lift (prefer street-end).
+  for (const lift of visibleLifts) {
+    if (chainLiftIds.has(lift.id)) continue;
     const areas = new Set([...lift.fromAreas, ...lift.toAreas]);
-    for (const other of stationLifts) {
-      if (other.id <= lift.id) continue;
-      const shared = other.fromAreas
-        .concat(other.toAreas)
-        .some((a) => areas.has(a));
-      if (!shared) continue;
-      const bad =
-        !!disruptions?.byLiftId[lift.id] || !!disruptions?.byLiftId[other.id];
-      addLiftLink(lift.id, other.id, bad ? "bad" : "ok");
-    }
+    const candidates = visibleLifts
+      .filter((other) => {
+        if (!chainLiftIds.has(other.id)) return false;
+        return other.fromAreas
+          .concat(other.toAreas)
+          .some((a) => areas.has(a));
+      })
+      .sort((a, b) => {
+        const aStreet = streetEndLifts.has(a.id) ? 0 : 1;
+        const bStreet = streetEndLifts.has(b.id) ? 0 : 1;
+        if (aStreet !== bStreet) return aStreet - bStreet;
+        return a.id.localeCompare(b.id);
+      });
+    const peer = candidates[0];
+    if (!peer) continue;
+    const bad =
+      !!disruptions?.byLiftId[lift.id] || !!disruptions?.byLiftId[peer.id];
+    addLiftLink(lift.id, peer.id, bad ? "bad" : "ok");
   }
 }
 
