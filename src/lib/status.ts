@@ -75,6 +75,22 @@ export function statusLabel(status: LiftStatus): string {
   }
 }
 
+/** Picker-chip labels from the Loop handoff (graph sidebar keeps `statusLabel`). */
+export function plannerStatusLabel(status: LiftStatus): string {
+  switch (status) {
+    case "ok":
+      return "Step-free";
+    case "partial":
+      return "Partial";
+    case "bad":
+      return "Lift out";
+    case "unknown":
+      return "Unknown";
+    case "none":
+      return "No step-free";
+  }
+}
+
 export function statusColor(status: LiftStatus): string {
   switch (status) {
     case "ok":

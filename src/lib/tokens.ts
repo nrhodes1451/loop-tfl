@@ -75,3 +75,32 @@ export const MODES = [
   "overground",
   "tram",
 ] as const;
+
+/** Loop planner (mobile) — do not reuse for the graph chrome. */
+export const loop = {
+  page: "#f7f8f9",
+  panel: "#ffffff",
+  raised: "#f0f2f5",
+  hover: "#e5e8ed",
+  disabled: "#e4e7eb",
+  text: "#14171c",
+  body: "#3b424c",
+  secondary: "#4b525c",
+  muted: "#5c626c",
+  label: "#6c727c",
+  faint: "#636a75",
+  placeholder: "#7b828c",
+  hairline: "rgba(0,0,0,.1)",
+  strong: "rgba(0,0,0,.18)",
+  dashed: "rgba(20,23,28,.28)",
+  ok: "#0f7a4c",
+  okBg: "rgba(15,122,76,.1)",
+  okBorder: "rgba(15,122,76,.35)",
+  brk: "#d1252e",
+  brkBg: "rgba(209,37,46,.1)",
+  brkBorder: "rgba(209,37,46,.38)",
+  unknown: "#7b828c",
+  unknownBg: "rgba(108,114,124,.16)",
+  unknownText: "#4b525c",
+  focus: "0 0 0 3px rgba(0,152,212,.35)",
+} as const;

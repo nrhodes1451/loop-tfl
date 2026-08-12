@@ -12,6 +12,7 @@ const network: NetworkData = {
     { id: "S1", name: "Alpha", lat: 51.5, lon: -0.1, lineIds: ["victoria"] },
   ],
   edges: [],
+  rides: [],
   platforms: [
     {
       id: "p1",
@@ -45,6 +46,7 @@ const network: NetworkData = {
     // Legacy shape: pre-`access` data used [] for unreachable platforms.
     { platformId: "p4", liftIds: [] },
   ],
+  interchangeChains: [],
 };
 
 const okFeed: DisruptionPayload = {

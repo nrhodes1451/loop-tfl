@@ -148,4 +148,67 @@ describe("buildTopology", () => {
     const fromOutside = adjacency.get("HUBTEST-Outside") ?? [];
     expect(fromOutside.some((e) => e.liftId === "HUBTEST-Lift-1")).toBe(true);
   });
+
+  it("records a level interchange when two lines share a physical platform", () => {
+    const topo = buildTopology({
+      ...inputs,
+      platformServices: [
+        ...inputs.platformServices,
+        {
+          PlatformUniqueId: "HUBTEST-Plat01",
+          Line: "jubilee",
+          DirectionTowards: "Stratford",
+        },
+      ],
+    });
+    const chain = topo.interchangeChains.find(
+      (c) =>
+        c.fromPlatformId === "HUBTEST-Plat01::victoria::Walthamstow" &&
+        c.toPlatformId === "HUBTEST-Plat01::jubilee::Stratford",
+    );
+    expect(chain?.access).toBe("level");
+    expect(chain?.liftIds).toEqual([]);
+  });
+
+  it("records a lift interchange between platforms on different lines", () => {
+    const topo = buildTopology({
+      ...inputs,
+      platforms: [
+        ...inputs.platforms,
+        {
+          UniqueId: "HUBTEST-Plat03",
+          StationUniqueId: "HUBTEST",
+          FriendlyName: "Northern southbound",
+          CardinalDirection: "Southbound",
+        },
+      ],
+      platformServices: [
+        ...inputs.platformServices,
+        {
+          PlatformUniqueId: "HUBTEST-Plat03",
+          Line: "northern",
+          DirectionTowards: "Morden",
+        },
+      ],
+      lifts: [
+        ...inputs.lifts,
+        {
+          StationUniqueId: "HUBTEST",
+          LiftUniqueId: "HUBTEST-Lift-3",
+          LiftName: "C",
+          FriendlyName: "Lift C",
+          FromAreas: "HUBTEST-Plat01",
+          ToAreas: "HUBTEST-Plat03",
+          IntermediateAreas: "",
+        },
+      ],
+    });
+    const chain = topo.interchangeChains.find(
+      (c) =>
+        c.fromPlatformId === "HUBTEST-Plat01::victoria::Walthamstow" &&
+        c.toPlatformId === "HUBTEST-Plat03::northern::Morden",
+    );
+    expect(chain?.access).toBe("lifts");
+    expect(chain?.liftIds).toEqual(["HUBTEST-Lift-3"]);
+  });
 });

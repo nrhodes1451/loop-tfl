@@ -49,14 +49,32 @@ export type PlatformLiftChain = {
   access?: PlatformAccess;
 };
 
+/** Directed hop from Route/Sequence order. `lineId` is normalised to match platforms. */
+export type NetworkRide = {
+  from: string;
+  to: string;
+  lineId: string;
+};
+
+/** Step-free path between two service platforms on different lines at one station. */
+export type InterchangeChain = {
+  fromPlatformId: string;
+  toPlatformId: string;
+  /** Ordered lifts from → to; empty when `access` is `"level"`. */
+  liftIds: string[];
+  access: "lifts" | "level";
+};
+
 export type NetworkData = {
   generatedAt: string;
   lines: NetworkLine[];
   stations: NetworkStation[];
   edges: NetworkEdge[];
+  rides: NetworkRide[];
   platforms: NetworkPlatform[];
   lifts: NetworkLift[];
   platformLiftChains: PlatformLiftChain[];
+  interchangeChains: InterchangeChain[];
 };
 
 export type DisruptionPayload = {

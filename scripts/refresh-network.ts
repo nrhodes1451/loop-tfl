@@ -144,7 +144,7 @@ async function main() {
   const outPath = path.join(outDir, "network.json");
   await writeFile(outPath, JSON.stringify(network));
   console.log(
-    `Wrote ${outPath}: ${network.stations.length} stations, ${network.edges.length} edges, ${network.platforms.length} platforms, ${network.lifts.length} lifts`,
+    `Wrote ${outPath}: ${network.stations.length} stations, ${network.edges.length} edges, ${network.rides.length} rides, ${network.platforms.length} platforms, ${network.lifts.length} lifts, ${network.interchangeChains.length} interchange chains`,
   );
 }
 

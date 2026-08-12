@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { ForceGraph } from "@/components/graph/ForceGraph";
 import { Legend } from "@/components/Legend";
 import type { DisruptionPayload, NetworkData } from "@/lib/types";
@@ -18,10 +19,13 @@ export function AppShell({ network }: { network: NetworkData }) {
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
     const onChange = () => setReducedMotion(mq.matches);
+    const t = window.setTimeout(onChange, 0);
     mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
+    return () => {
+      window.clearTimeout(t);
+      mq.removeEventListener("change", onChange);
+    };
   }, []);
 
   const loadDisruptions = useCallback(async () => {
@@ -41,9 +45,12 @@ export function AppShell({ network }: { network: NetworkData }) {
   }, []);
 
   useEffect(() => {
-    void loadDisruptions();
+    const kick = window.setTimeout(() => void loadDisruptions(), 0);
     const id = window.setInterval(() => void loadDisruptions(), POLL_MS);
-    return () => window.clearInterval(id);
+    return () => {
+      window.clearTimeout(kick);
+      window.clearInterval(id);
+    };
   }, [loadDisruptions]);
 
   const onToggleExpand = useCallback((id: string) => {
@@ -103,6 +110,17 @@ export function AppShell({ network }: { network: NetworkData }) {
           </div>
         </div>
         <div className="pointer-events-auto flex flex-none gap-2">
+          <Link
+            href="/"
+            className="cursor-pointer whitespace-nowrap rounded-[7px] border px-[13px] py-2 text-[12.5px] font-medium no-underline"
+            style={{
+              color: "#2a2f37",
+              background: "#ffffff",
+              borderColor: "#cfd3d9",
+            }}
+          >
+            Plan a route
+          </Link>
           <button
             type="button"
             onClick={() => setResetToken((n) => n + 1)}

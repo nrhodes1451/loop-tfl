@@ -9,7 +9,10 @@ export async function loadNetwork(): Promise<NetworkData> {
   const { mtimeMs } = await stat(filePath);
   if (cache && cache.mtimeMs === mtimeMs) return cache.data;
   const raw = await readFile(filePath, "utf8");
-  cache = { mtimeMs, data: JSON.parse(raw) as NetworkData };
+  const parsed = JSON.parse(raw) as NetworkData;
+  parsed.rides ??= [];
+  parsed.interchangeChains ??= [];
+  cache = { mtimeMs, data: parsed };
   return cache.data;
 }
 

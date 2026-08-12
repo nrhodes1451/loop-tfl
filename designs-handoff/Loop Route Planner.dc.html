@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><style>body{margin:0;background:#f0eee9;font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}a{color:#2a78d6}a:hover{color:#1b5aa8}</style></helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Loop v1 — step-free route planner, mobile (390×844)</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Route entry · empty state</div>
+<div style="width:390px;height:844px;background:#f7f8f9;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 18px 44px rgba(20,23,28,.13);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c">
+<div style="height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;flex:none"><span>9:41</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:13px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:23px;height:11px;border-radius:3px;border:1.5px solid rgba(20,23,28,.6);box-sizing:border-box;padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:1px;background:#14171c"></span></span></span></div>
+
+<div style="padding:22px 20px 0;flex:none">
+<div style="display:flex;align-items:baseline;justify-content:space-between">
+<div style="font-size:27px;font-weight:700;letter-spacing:-.03em">Loop</div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;color:#6c727c;letter-spacing:.04em">london · live lift status</div>
+</div>
+<sc-if value="{{ showDisclaimer }}" hint-placeholder-val="{{ true }}"><div style="font-size:11.5px;color:#636a75;margin-top:6px">Unofficial. Not affiliated with TfL.</div></sc-if>
+</div>
+
+<div style="padding:26px 20px 0;flex:1;display:flex;flex-direction:column;gap:14px">
+<div style="font-size:19px;font-weight:600;letter-spacing:-.02em">Plan a step-free journey</div>
+
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:16px;padding:6px 6px 6px 0;display:flex;align-items:stretch;gap:6px">
+<div style="flex:1;display:flex;flex-direction:column">
+<button style="display:flex;align-items:center;gap:14px;min-height:60px;padding:0 8px 0 18px;background:transparent;border:0;text-align:left;color:#14171c;cursor:pointer;border-radius:12px" style-hover="background:#f0f2f5">
+<span style="width:14px;height:14px;border-radius:50%;border:3px solid #6c727c;box-sizing:border-box;flex:none"></span>
+<span style="flex:1"><span style="display:block;font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">FROM</span><span style="display:block;font-size:16px;font-weight:600;letter-spacing:-.01em;margin-top:2px">King's Cross St. Pancras</span></span>
+</button>
+<div style="height:1px;background:rgba(0,0,0,.1);margin-left:46px"></div>
+<button style="display:flex;align-items:center;gap:14px;min-height:60px;padding:0 8px 0 18px;background:transparent;border:0;text-align:left;color:#14171c;cursor:pointer;border-radius:12px" style-hover="background:#f0f2f5">
+<span style="width:14px;height:14px;border-radius:3px;border:3px solid #6c727c;box-sizing:border-box;flex:none"></span>
+<span style="flex:1"><span style="display:block;font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">TO</span><span style="display:block;font-size:16px;font-weight:600;letter-spacing:-.01em;margin-top:2px;color:#636a75">Choose a station</span></span>
+</button>
+</div>
+<button aria-label="Swap start and destination" style="width:46px;flex:none;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);border-radius:12px;color:#14171c;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#e5e8ed">⇅</button>
+</div>
+
+<div style="border:1px dashed rgba(0,0,0,.13);border-radius:14px;padding:20px 18px;text-align:center">
+<div style="font-size:14px;font-weight:600">No journeys yet</div>
+<div style="font-size:12.5px;color:#6c727c;line-height:1.5;margin-top:5px">Pick a destination and Loop checks every lift and ramp on the way — street to street.</div>
+</div>
+
+<div style="margin-top:2px;display:flex;flex-direction:column;gap:8px">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">LIFT DISRUPTIONS NOW</div>
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+<span style="width:10px;height:10px;border-radius:50%;background:#d1252e;flex:none;margin-top:4px"></span>
+<div><div style="font-size:14px;font-weight:600">6 lifts out of service</div><div style="font-size:12.5px;color:#5c626c;margin-top:3px">Green Park, Bank, Finsbury Park +3</div></div>
+</div>
+</div>
+</div>
+
+<div style="padding:14px 20px 12px;flex:none;background:linear-gradient(to top,#f7f8f9 60%,rgba(247,248,249,0))">
+<div style="font-size:12px;color:#6c727c;text-align:center;margin-bottom:10px">Choose a destination to continue</div>
+<button disabled style="width:100%;min-height:54px;border-radius:15px;border:0;background:#e4e7eb;color:#6c727c;font-size:16.5px;font-weight:600;letter-spacing:-.01em">Plan step-free route</button>
+<sc-if value="{{ showExploreLink }}" hint-placeholder-val="{{ true }}"><div style="text-align:center;margin-top:12px"><a href="#1a" style="font-size:12.5px;color:#5c626c;text-decoration:none;border-bottom:1px solid rgba(0,0,0,.15);padding-bottom:2px">Explore the network graph</a></div></sc-if>
+<div style="width:120px;height:5px;border-radius:3px;background:rgba(20,23,28,.22);margin:14px auto 0"></div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Station picker · search + status chips</div>
+<div style="width:390px;height:844px;background:#f7f8f9;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 18px 44px rgba(20,23,28,.13);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c">
+<div style="height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;flex:none"><span>9:41</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:13px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:23px;height:11px;border-radius:3px;border:1.5px solid rgba(20,23,28,.6);box-sizing:border-box;padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:1px;background:#14171c"></span></span></span></div>
+
+<div style="padding:6px 20px 14px;flex:none">
+<div style="display:flex;align-items:center;gap:12px;min-height:44px">
+<button aria-label="Back" style="width:38px;height:38px;border-radius:11px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:17px;cursor:pointer">‹</button>
+<div style="font-size:17px;font-weight:600;letter-spacing:-.02em">Destination</div>
+</div>
+<div style="margin-top:12px;background:#ffffff;border:1px solid rgba(0,0,0,.18);border-radius:14px;min-height:50px;display:flex;align-items:center;gap:11px;padding:0 15px">
+<span style="width:13px;height:13px;border-radius:50%;border:2px solid #6c727c;box-sizing:border-box"></span>
+<span style="font-size:16px;font-weight:500">canary<span style="display:inline-block;width:1.5px;height:17px;background:#14171c;vertical-align:-3px;margin-left:1px"></span></span>
+<span style="flex:1"></span>
+<span style="font-size:12px;color:#6c727c">Clear</span>
+</div>
+</div>
+
+<div style="padding:0 20px;display:flex;gap:8px;flex:none;overflow:hidden">
+<span style="padding:8px 12px;border-radius:9px;background:#14171c;color:#ffffff;font-size:12.5px;font-weight:600;white-space:nowrap">All stations</span>
+<span style="padding:8px 12px;border-radius:9px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#5c626c;font-size:12.5px;font-weight:600;white-space:nowrap">Step-free only</span>
+<span style="padding:8px 12px;border-radius:9px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#5c626c;font-size:12.5px;font-weight:600;white-space:nowrap">Nearby</span>
+</div>
+
+<div style="flex:1;overflow:hidden;padding:12px 20px 0;display:flex;flex-direction:column;gap:6px">
+
+<div style="font-size:11.5px;color:#636a75;line-height:1.5;padding:0 2px 4px">Status from TfL open data, refreshed 2 min ago. “Partial” means some platforms only.</div>
+
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;min-height:74px;padding:13px 15px;display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">Canary Wharf</div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="width:22px;height:4px;border-radius:2px;background:#A0A5A9"></span><span style="font-size:11.5px;color:#6c727c">Jubilee</span></div></div>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(15,122,76,.13);color:#0f7a4c;font-size:11.5px;font-weight:600;flex:none"><span style="width:8px;height:8px;border-radius:50%;background:#0f7a4c"></span>Step-free</span>
+</div>
+
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;min-height:74px;padding:13px 15px;display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">Canary Wharf <span style="color:#6c727c;font-weight:500">(Elizabeth line)</span></div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="width:22px;height:4px;border-radius:2px;background:#6950a1"></span><span style="font-size:11.5px;color:#6c727c">Elizabeth</span></div></div>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(209,37,46,.13);color:#d1252e;font-size:11.5px;font-weight:600;flex:none"><span style="width:8px;height:8px;border-radius:2px;background:#d1252e"></span>Lift out</span>
+</div>
+
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;min-height:74px;padding:13px 15px;display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">Canada Water</div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="width:22px;height:4px;border-radius:2px;background:#A0A5A9"></span><span style="width:22px;height:4px;border-radius:2px;background:#FA7B05"></span><span style="font-size:11.5px;color:#6c727c">Jubilee · Overground</span></div></div>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(15,122,76,.13);color:#0f7a4c;font-size:11.5px;font-weight:600;flex:none"><span style="width:8px;height:8px;border-radius:50%;background:#0f7a4c"></span>Step-free</span>
+</div>
+
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;min-height:74px;padding:13px 15px;display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">Canonbury</div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="width:22px;height:4px;border-radius:2px;background:#FA7B05"></span><span style="font-size:11.5px;color:#6c727c">Overground</span></div></div>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border:1px dashed rgba(20,23,28,.28);color:#5c626c;font-size:11.5px;font-weight:600;flex:none"><span style="width:8px;height:8px;border-radius:50%;border:1.5px dashed #5c626c;box-sizing:border-box"></span>No step-free</span>
+</div>
+
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;min-height:74px;padding:13px 15px;display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div style="font-size:16px;font-weight:600;letter-spacing:-.01em">Camden Town</div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="width:22px;height:4px;border-radius:2px;background:#000000;box-shadow:0 0 0 1px rgba(0,0,0,.2)"></span><span style="font-size:11.5px;color:#6c727c">Northern</span></div></div>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border:1px solid rgba(20,23,28,.2);color:#5c626c;font-size:11.5px;font-weight:600;flex:none"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,#0f7a4c 50%,transparent 50%);box-shadow:inset 0 0 0 1px #5c626c;box-sizing:border-box"></span>Partial</span>
+</div>
+</div>
+<div style="width:120px;height:5px;border-radius:3px;background:rgba(20,23,28,.22);margin:0 auto 10px;flex:none"></div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Result · step-free throughout</div>
+<div style="width:390px;height:844px;background:#f7f8f9;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 18px 44px rgba(20,23,28,.13);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c">
+<div style="height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;flex:none"><span>9:41</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:13px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:23px;height:11px;border-radius:3px;border:1.5px solid rgba(20,23,28,.6);box-sizing:border-box;padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:1px;background:#14171c"></span></span></span></div>
+
+<div style="padding:4px 16px 12px;flex:none;background:#ffffff;border-bottom:1px solid rgba(0,0,0,.1);display:flex;align-items:center;gap:12px">
+<button aria-label="Back" style="width:38px;height:38px;border-radius:11px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:17px;cursor:pointer;flex:none">‹</button>
+<div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">King's Cross St. P. → Canary Wharf</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#6c727c;margin-top:3px;letter-spacing:.03em">checked 09:40 · 5 lifts on route</div></div>
+<button style="min-height:36px;padding:0 12px;border-radius:10px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:13px;font-weight:600;cursor:pointer;flex:none">Edit</button>
+</div>
+
+<div style="padding:16px 20px 0;flex:none">
+<div style="border-radius:16px;background:rgba(15,122,76,.1);border:1px solid rgba(15,122,76,.35);padding:16px 18px;display:flex;gap:13px;align-items:flex-start">
+<span style="width:20px;height:20px;border-radius:50%;background:#0f7a4c;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;color:#ffffff;font-size:12px;font-weight:800">✓</span>
+<div><div style="font-size:17.5px;font-weight:700;letter-spacing:-.02em;color:#0f7a4c">Step-free throughout</div>
+<div style="font-size:13px;color:#3b424c;line-height:1.5;margin-top:4px">Street to street. 1 change, 5 lifts, all in service.</div></div>
+</div>
+</div>
+
+<div style="flex:1;padding:20px 20px 0;overflow:hidden">
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Start · street level at King's Cross St. Pancras</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Lift 4 from Euston Road entrance to Victoria line southbound platform.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#0098D4;box-shadow:0 0 0 3px rgba(0,152,212,.25);margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Stay on Victoria line<sc-if value="{{ showStopCounts }}" hint-placeholder-val="{{ true }}"><span style="color:#6c727c;font-weight:500"> · 2 stops</span></sc-if></div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Through Oxford Circus. No lifts needed — you stay on board.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#A0A5A9;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Change at Green Park · to Jubilee line</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Step-free interchange: lift 2 down to eastbound Jubilee platform. Level boarding at car 4.</div>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:rgba(15,122,76,.13);color:#0f7a4c;font-size:11.5px;font-weight:600;margin-top:9px"><span style="width:8px;height:8px;border-radius:50%;background:#0f7a4c"></span>Lift in service · 09:38</span></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#A0A5A9;box-shadow:0 0 0 3px rgba(160,165,169,.25);margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:#A0A5A9;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Stay on Jubilee line<sc-if value="{{ showStopCounts }}" hint-placeholder-val="{{ true }}"><span style="color:#6c727c;font-weight:500"> · 7 stops</span></sc-if></div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Through Waterloo and London Bridge. Platform-level throughout.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div></div>
+<div style="flex:1"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Arrive · street level at Canary Wharf</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Lift 1 to Jubilee Place exit, then ramp to street.</div></div>
+</div>
+</div>
+
+<div style="padding:12px 20px 12px;flex:none;background:linear-gradient(to top,#f7f8f9 60%,rgba(247,248,249,0));display:flex;gap:10px">
+<button style="flex:1;min-height:54px;border-radius:15px;border:0;background:#14171c;color:#ffffff;font-size:16.5px;font-weight:600;letter-spacing:-.01em;cursor:pointer">Start journey</button>
+<button aria-label="Refresh lift status" style="width:54px;min-height:54px;border-radius:15px;background:#f0f2f5;border:1px solid rgba(0,0,0,.13);color:#14171c;font-size:17px;cursor:pointer">↻</button>
+</div>
+<div style="width:120px;height:5px;border-radius:3px;background:rgba(20,23,28,.22);margin:0 auto 10px;flex:none"></div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Result · route breaks (lift out)</div>
+<div style="width:390px;height:844px;background:#f7f8f9;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 18px 44px rgba(20,23,28,.13);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c">
+<div style="height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;flex:none"><span>9:41</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:13px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:23px;height:11px;border-radius:3px;border:1.5px solid rgba(20,23,28,.6);box-sizing:border-box;padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:1px;background:#14171c"></span></span></span></div>
+
+<div style="padding:4px 16px 12px;flex:none;background:#ffffff;border-bottom:1px solid rgba(0,0,0,.1);display:flex;align-items:center;gap:12px">
+<button aria-label="Back" style="width:38px;height:38px;border-radius:11px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:17px;cursor:pointer;flex:none">‹</button>
+<div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">King's Cross St. P. → Canary Wharf</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#6c727c;margin-top:3px;letter-spacing:.03em">checked 09:41 · 1 lift out of service</div></div>
+<button style="min-height:36px;padding:0 12px;border-radius:10px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:13px;font-weight:600;cursor:pointer;flex:none">Edit</button>
+</div>
+
+<div style="padding:16px 20px 0;flex:none">
+<div style="border-radius:16px;background:rgba(209,37,46,.1);border:1px solid rgba(209,37,46,.38);padding:16px 18px;display:flex;gap:13px;align-items:flex-start">
+<span style="width:20px;height:20px;border-radius:4px;background:#d1252e;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;color:#ffffff;font-size:13px;font-weight:800">!</span>
+<div><div style="font-size:17.5px;font-weight:700;letter-spacing:-.02em;color:#d1252e">Step-free route breaks at Green Park</div>
+<div style="font-size:13px;color:#3b424c;line-height:1.5;margin-top:4px">The interchange lift to the Jubilee line has been out of service since 06:12 today.</div></div>
+</div>
+</div>
+
+<div style="flex:1;padding:18px 20px 0;overflow:hidden">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em;margin-bottom:14px">ATTEMPTED ROUTE</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Start · street level at King's Cross St. Pancras</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Lift 4 to Victoria line southbound platform. In service.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#0098D4;box-shadow:0 0 0 3px rgba(0,152,212,.25);margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Stay on Victoria line<sc-if value="{{ showStopCounts }}" hint-placeholder-val="{{ true }}"><span style="color:#6c727c;font-weight:500"> · 2 stops</span></sc-if></div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Through Oxford Circus.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:4px;background:#d1252e;box-shadow:0 0 0 4px rgba(209,37,46,.2)"></div><div style="flex:1;width:5px;border-radius:3px;background:repeating-linear-gradient(to bottom,rgba(20,23,28,.28) 0 6px,transparent 6px 12px);margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px">
+<div style="background:#f0f2f5;border:1px solid rgba(209,37,46,.4);border-radius:14px;padding:14px 15px">
+<div style="font-size:15.5px;font-weight:700;letter-spacing:-.01em;color:#d1252e">Change to Jubilee · interchange lift out of service</div>
+<div style="font-size:13px;color:#3b424c;line-height:1.5;margin-top:5px">Green Park. Lift 2 (Victoria ↔ Jubilee) unavailable. No step-free alternative inside this station.</div>
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#5c626c;margin-top:9px;letter-spacing:.03em">TFL REPORT 06:12 · NO ETA</div>
+</div></div>
+</div>
+
+<div style="display:flex;gap:14px;opacity:.45">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#A0A5A9;margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:repeating-linear-gradient(to bottom,rgba(20,23,28,.28) 0 6px,transparent 6px 12px);margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Unreachable · Jubilee line to Canary Wharf</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">7 stops. Blocked by the break above.</div></div>
+</div>
+
+<div style="display:flex;gap:14px;opacity:.45">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:3px dashed rgba(20,23,28,.5);box-sizing:border-box"></div></div>
+<div style="flex:1"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Not reached · street level at Canary Wharf</div></div>
+</div>
+</div>
+
+<div style="padding:12px 20px 12px;flex:none;background:linear-gradient(to top,#f7f8f9 65%,rgba(247,248,249,0))">
+<button style="width:100%;min-height:54px;border-radius:15px;border:0;background:#14171c;color:#ffffff;font-size:16.5px;font-weight:600;letter-spacing:-.01em;cursor:pointer">Replan avoiding Green Park</button>
+<button style="width:100%;min-height:48px;margin-top:9px;border-radius:14px;background:#f0f2f5;border:1px solid rgba(0,0,0,.13);color:#14171c;font-size:15px;font-weight:600;cursor:pointer">Notify me when the lift is back</button>
+<div style="width:120px;height:5px;border-radius:3px;background:rgba(20,23,28,.22);margin:14px auto 0"></div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Result · uncertain / stale data</div>
+<div style="width:390px;height:844px;background:#f7f8f9;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 18px 44px rgba(20,23,28,.13);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c">
+<div style="height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;flex:none"><span>9:41</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:13px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:23px;height:11px;border-radius:3px;border:1.5px solid rgba(20,23,28,.6);box-sizing:border-box;padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:1px;background:#14171c"></span></span></span></div>
+
+<div style="padding:4px 16px 12px;flex:none;background:#ffffff;border-bottom:1px solid rgba(0,0,0,.1);display:flex;align-items:center;gap:12px">
+<button aria-label="Back" style="width:38px;height:38px;border-radius:11px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:17px;cursor:pointer;flex:none">‹</button>
+<div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Victoria → Stratford</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#6c727c;margin-top:3px;letter-spacing:.03em">last live check 09:00 · 41 min ago</div></div>
+<button style="min-height:36px;padding:0 12px;border-radius:10px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:13px;font-weight:600;cursor:pointer;flex:none">Edit</button>
+</div>
+
+<div style="padding:16px 20px 0;flex:none">
+<div style="border-radius:16px;background:#f0f2f5;border:1px solid rgba(20,23,28,.16);padding:16px 18px;display:flex;gap:13px;align-items:flex-start">
+<span style="width:20px;height:20px;border-radius:50%;border:3px solid #636a75;box-sizing:border-box;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;color:#5c626c;font-size:12px;font-weight:800">?</span>
+<div><div style="font-size:17.5px;font-weight:700;letter-spacing:-.02em;color:#14171c">Probably step-free</div>
+<div style="font-size:13px;color:#4b525c;line-height:1.5;margin-top:4px">The path exists on paper, but live lift status is missing for 2 of 4 lifts. Treat with care.</div></div>
+</div>
+</div>
+
+<div style="flex:1;padding:20px 20px 0;overflow:hidden">
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Start · street level at Victoria</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Lift 1 to Victoria line northbound. Confirmed in service 09:39.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#0098D4;box-shadow:0 0 0 3px rgba(0,152,212,.25);margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Stay on Victoria line<sc-if value="{{ showStopCounts }}" hint-placeholder-val="{{ true }}"><span style="color:#6c727c;font-weight:500"> · 4 stops</span></sc-if></div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">To Highbury &amp; Islington.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #636a75;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#FA7B05;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px">
+<div style="background:#ffffff;border:1px solid rgba(20,23,28,.14);border-radius:14px;padding:14px 15px">
+<div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Change at Highbury &amp; Islington · to Overground</div>
+<div style="font-size:13px;color:#4b525c;line-height:1.5;margin-top:5px">Interchange lift status unknown — no live feed for this lift.</div>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:rgba(125,132,143,.16);color:#4b525c;font-size:11.5px;font-weight:600;margin-top:9px"><span style="width:8px;height:8px;border-radius:50%;background:#636a75"></span>Unknown · last confirmed step-free 9 Aug</span>
+</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#FA7B05;box-shadow:0 0 0 3px rgba(250,123,5,.22);margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:#FA7B05;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Stay on Overground<sc-if value="{{ showStopCounts }}" hint-placeholder-val="{{ true }}"><span style="color:#6c727c;font-weight:500"> · 6 stops</span></sc-if></div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Manual boarding ramp may be needed. Staff assistance recommended.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #636a75;box-sizing:border-box"></div></div>
+<div style="flex:1"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Arrive · street level at Stratford</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Lift to street reported step-free, status not live.</div></div>
+</div>
+</div>
+
+<div style="padding:12px 20px 12px;flex:none;background:linear-gradient(to top,#f7f8f9 65%,rgba(247,248,249,0))">
+<button style="width:100%;min-height:54px;border-radius:15px;border:0;background:#14171c;color:#ffffff;font-size:16.5px;font-weight:600;letter-spacing:-.01em;cursor:pointer">Retry live check</button>
+<div style="font-size:11.5px;color:#636a75;text-align:center;margin-top:10px;line-height:1.5">Unofficial tool. Call TfL 0343 222 1234 to confirm lifts before travelling.</div>
+<div style="width:120px;height:5px;border-radius:3px;background:rgba(20,23,28,.22);margin:12px auto 0"></div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Result · structural gap (no route)</div>
+<div style="width:390px;height:844px;background:#f7f8f9;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 18px 44px rgba(20,23,28,.13);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c">
+<div style="height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;flex:none"><span>9:41</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:13px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:23px;height:11px;border-radius:3px;border:1.5px solid rgba(20,23,28,.6);box-sizing:border-box;padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:1px;background:#14171c"></span></span></span></div>
+
+<div style="padding:4px 16px 12px;flex:none;background:#ffffff;border-bottom:1px solid rgba(0,0,0,.1);display:flex;align-items:center;gap:12px">
+<button aria-label="Back" style="width:38px;height:38px;border-radius:11px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:17px;cursor:pointer;flex:none">‹</button>
+<div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">King's Cross St. P. → Covent Garden</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#6c727c;margin-top:3px;letter-spacing:.03em">structural · not a disruption</div></div>
+<button style="min-height:36px;padding:0 12px;border-radius:10px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:13px;font-weight:600;cursor:pointer;flex:none">Edit</button>
+</div>
+
+<div style="padding:16px 20px 0;flex:none">
+<div style="border-radius:16px;background:#f0f2f5;border:1px dashed rgba(20,23,28,.32);padding:16px 18px;display:flex;gap:13px;align-items:flex-start">
+<span style="width:20px;height:20px;border-radius:50%;border:3px dashed rgba(20,23,28,.55);box-sizing:border-box;flex:none;margin-top:1px"></span>
+<div><div style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">No step-free route</div>
+<div style="font-size:13px;color:#4b525c;line-height:1.5;margin-top:4px">Covent Garden has no step-free path between street and platform. This is permanent, not a lift fault.</div></div>
+</div>
+</div>
+
+<div style="flex:1;padding:18px 20px 0;overflow:hidden">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em;margin-bottom:14px">WHERE IT STOPS</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#003688;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Start · street level at King's Cross St. Pancras</div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Lift 4 to Piccadilly line southbound platform. In service.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#003688;box-shadow:0 0 0 3px rgba(0,54,136,.4);margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:#003688;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:22px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Stay on Piccadilly line<sc-if value="{{ showStopCounts }}" hint-placeholder-val="{{ true }}"><span style="color:#6c727c;font-weight:500"> · 3 stops</span></sc-if></div><div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:4px">Through Russell Square and Holborn.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px dashed rgba(20,23,28,.55);box-sizing:border-box"></div></div>
+<div style="flex:1">
+<div style="background:#ffffff;border:1px dashed rgba(20,23,28,.3);border-radius:14px;padding:14px 15px">
+<div style="font-size:15.5px;font-weight:700;letter-spacing:-.01em">Covent Garden · no street↔platform step-free access</div>
+<div style="font-size:13px;color:#4b525c;line-height:1.5;margin-top:5px">Lifts serve staff levels only; the platform exit is stairs. You would be able to board, but not to leave.</div>
+</div>
+<div style="margin-top:16px;background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;padding:14px 15px">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">NEAREST STEP-FREE ALTERNATIVE</div>
+<div style="font-size:15.5px;font-weight:600;margin-top:7px">Tottenham Court Road</div>
+<div style="font-size:13px;color:#5c626c;line-height:1.5;margin-top:3px">Step-free throughout · 700 m from Covent Garden, mostly level pavement.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="padding:12px 20px 12px;flex:none;background:linear-gradient(to top,#f7f8f9 65%,rgba(247,248,249,0))">
+<button style="width:100%;min-height:54px;border-radius:15px;border:0;background:#14171c;color:#ffffff;font-size:16.5px;font-weight:600;letter-spacing:-.01em;cursor:pointer">Plan to Tottenham Court Road</button>
+<button style="width:100%;min-height:48px;margin-top:9px;border-radius:14px;background:#f0f2f5;border:1px solid rgba(0,0,0,.13);color:#14171c;font-size:15px;font-weight:600;cursor:pointer">Pick a different destination</button>
+<div style="width:120px;height:5px;border-radius:3px;background:rgba(20,23,28,.22);margin:14px auto 0"></div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>In progress · computing + refreshing lifts</div>
+<div style="width:390px;height:844px;background:#f7f8f9;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 18px 44px rgba(20,23,28,.13);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c">
+<div style="height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;flex:none"><span>9:41</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:13px;height:9px;border-radius:2px;background:#14171c"></span><span style="width:23px;height:11px;border-radius:3px;border:1.5px solid rgba(20,23,28,.6);box-sizing:border-box;padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:1px;background:#14171c"></span></span></span></div>
+
+<div style="padding:4px 16px 12px;flex:none;background:#ffffff;border-bottom:1px solid rgba(0,0,0,.1);display:flex;align-items:center;gap:12px">
+<button aria-label="Back" style="width:38px;height:38px;border-radius:11px;background:#f0f2f5;border:1px solid rgba(0,0,0,.1);color:#14171c;font-size:17px;cursor:pointer;flex:none">‹</button>
+<div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">King's Cross St. P. → Canary Wharf</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#6c727c;margin-top:3px;letter-spacing:.03em">checking live lift status…</div></div>
+</div>
+
+<div style="padding:16px 20px 0;flex:none">
+<div style="border-radius:16px;background:#f0f2f5;border:1px solid rgba(0,0,0,.13);padding:16px 18px">
+<div style="display:flex;gap:13px;align-items:center">
+<span style="width:20px;height:20px;border-radius:50%;border:3px solid rgba(20,23,28,.18);border-top-color:#14171c;box-sizing:border-box;flex:none"></span>
+<div style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">Planning step-free route</div>
+</div>
+<div style="font-size:13px;color:#4b525c;line-height:1.5;margin-top:10px">Walking the station graph, then checking 14 lifts on candidate paths.</div>
+<div style="height:6px;border-radius:3px;background:rgba(20,23,28,.12);margin-top:14px;overflow:hidden"><div style="width:62%;height:100%;border-radius:3px;background:#14171c"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:9px;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#5c626c;letter-spacing:.03em"><span>9 OF 14 LIFTS CHECKED</span><span>~3s</span></div>
+</div>
+</div>
+
+<div style="flex:1;padding:22px 20px 0;overflow:hidden">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em;margin-bottom:16px">BUILDING TIMELINE</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Start · street level at King's Cross St. Pancras</div><div style="font-size:13px;color:#5c626c;margin-top:4px">Lift 4 confirmed in service.</div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:14px;height:14px;border-radius:50%;background:#0098D4;margin-top:2px"></div><div style="flex:1;width:5px;border-radius:3px;background:rgba(0,152,212,.35);margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="font-size:15.5px;font-weight:600;letter-spacing:-.01em">Stay on Victoria line</div><div style="height:11px;width:64%;border-radius:5px;background:rgba(20,23,28,.09);margin-top:8px"></div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid rgba(20,23,28,.14);box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:rgba(20,23,28,.09);margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="height:13px;width:78%;border-radius:5px;background:rgba(20,23,28,.12)"></div><div style="height:11px;width:52%;border-radius:5px;background:rgba(20,23,28,.07);margin-top:9px"></div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid rgba(20,23,28,.1);box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:rgba(20,23,28,.07);margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:24px"><div style="height:13px;width:60%;border-radius:5px;background:rgba(20,23,28,.09)"></div></div>
+</div>
+
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid rgba(20,23,28,.08);box-sizing:border-box"></div></div>
+<div style="flex:1"><div style="height:13px;width:70%;border-radius:5px;background:rgba(20,23,28,.07)"></div></div>
+</div>
+</div>
+
+<div style="padding:12px 20px 12px;flex:none">
+<button style="width:100%;min-height:54px;border-radius:15px;background:#f0f2f5;border:1px solid rgba(0,0,0,.13);color:#14171c;font-size:16px;font-weight:600;cursor:pointer">Cancel</button>
+<div style="width:120px;height:5px;border-radius:3px;background:rgba(20,23,28,.22);margin:14px auto 0"></div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1h"><div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>Component inventory</div>
+<div style="width:520px;background:#f7f8f9;border-radius:20px;padding:26px 28px 30px;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 14px 36px rgba(20,23,28,.1);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c;display:flex;flex-direction:column;gap:24px">
+<div><div style="font-size:20px;font-weight:700;letter-spacing:-.02em">Component inventory</div><div style="font-size:12.5px;color:#6c727c;margin-top:5px">Four primitives carry all six screens.</div></div>
+
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">1 · STATION INPUT (44px+ tap target)</div>
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;min-height:60px;display:flex;align-items:center;gap:14px;padding:0 16px"><span style="width:14px;height:14px;border-radius:50%;border:3px solid #6c727c;box-sizing:border-box"></span><span><span style="display:block;font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">FROM</span><span style="display:block;font-size:16px;font-weight:600;margin-top:2px">King's Cross St. Pancras</span></span></div>
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.18);border-radius:14px;min-height:50px;display:flex;align-items:center;gap:11px;padding:0 15px;box-shadow:0 0 0 3px rgba(0,152,212,.35)"><span style="width:13px;height:13px;border-radius:50%;border:2px solid #6c727c;box-sizing:border-box"></span><span style="font-size:15.5px;color:#5c626c">Search stations — focus-visible ring</span></div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">2 · STATUS CHIP (colour + label + shape)</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(15,122,76,.13);color:#0f7a4c;font-size:11.5px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:#0f7a4c"></span>Step-free</span>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border:1px solid rgba(20,23,28,.2);color:#5c626c;font-size:11.5px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,#0f7a4c 50%,transparent 50%);box-shadow:inset 0 0 0 1px #5c626c"></span>Partial</span>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(209,37,46,.13);color:#d1252e;font-size:11.5px;font-weight:600"><span style="width:8px;height:8px;border-radius:2px;background:#d1252e"></span>Lift out</span>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(125,132,143,.16);color:#4b525c;font-size:11.5px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:#636a75"></span>Unknown</span>
+<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border:1px dashed rgba(20,23,28,.28);color:#5c626c;font-size:11.5px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;border:1.5px dashed #5c626c;box-sizing:border-box"></span>No step-free</span>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">3 · VERDICT BANNER (4 states)</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+<div style="border-radius:13px;background:rgba(15,122,76,.1);border:1px solid rgba(15,122,76,.35);padding:12px 13px;font-size:14px;font-weight:700;color:#0f7a4c">Step-free throughout</div>
+<div style="border-radius:13px;background:rgba(209,37,46,.1);border:1px solid rgba(209,37,46,.38);padding:12px 13px;font-size:14px;font-weight:700;color:#d1252e">Route breaks</div>
+<div style="border-radius:13px;background:#f0f2f5;border:1px solid rgba(20,23,28,.16);padding:12px 13px;font-size:14px;font-weight:700">Probably step-free</div>
+<div style="border-radius:13px;background:#f0f2f5;border:1px dashed rgba(20,23,28,.32);padding:12px 13px;font-size:14px;font-weight:700">No step-free route</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6c727c;letter-spacing:.08em">4 · LEG ROW (ring + line-coloured connector)</div>
+<div style="background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:14px;padding:15px 16px">
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:50%;border:4px solid #0f7a4c;box-sizing:border-box"></div><div style="flex:1;width:5px;border-radius:3px;background:#0098D4;margin:5px 0"></div></div>
+<div style="flex:1;padding-bottom:18px"><div style="font-size:15px;font-weight:600">Title · station or action</div><div style="font-size:12.5px;color:#5c626c;margin-top:4px">Detail: which lift, which platform, level boarding.</div></div>
+</div>
+<div style="display:flex;gap:14px">
+<div style="width:18px;display:flex;flex-direction:column;align-items:center;flex:none"><div style="width:18px;height:18px;border-radius:4px;background:#d1252e"></div></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:600;color:#d1252e">Break variant · red square ring, dashed line below</div></div>
+</div>
+</div>
+<div style="font-size:12px;color:#636a75;line-height:1.55">Ring shapes: circle = station, solid dot = pass-through, square = break, dashed = no infrastructure. Status is never colour-only.</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1i"><div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Interaction notes</div>
+<div style="width:420px;background:#ffffff;border-radius:20px;padding:26px 28px 30px;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 14px 36px rgba(20,23,28,.1);font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;color:#14171c;display:flex;flex-direction:column;gap:20px">
+<div style="font-size:20px;font-weight:700;letter-spacing:-.02em">How it behaves</div>
+
+<div><div style="font-size:14px;font-weight:600;margin-bottom:6px">Setting From / To</div><div style="font-size:13px;color:#4b525c;line-height:1.6">Tapping either row opens the full-screen picker (<a href="#1b" style="color:#1a5fa8">1b</a>) for that slot. Results are typeahead-filtered; each row shows the station's own step-free status so a dead end is visible before planning. Picking returns to entry with the slot filled and focus moved to the next empty slot. ⇅ swaps From and To in place. CTA stays disabled until both slots are set.</div></div>
+
+<div><div style="font-size:14px;font-weight:600;margin-bottom:6px">On success</div><div style="font-size:13px;color:#4b525c;line-height:1.6">Verdict banner first, timeline below (<a href="#1c" style="color:#1a5fa8">1c</a>). Sticky header keeps From → To and the check time visible while scrolling. ↻ re-runs only the lift check, not the graph search.</div></div>
+
+<div><div style="font-size:14px;font-weight:600;margin-bottom:6px">On break</div><div style="font-size:13px;color:#4b525c;line-height:1.6">Never silently hide the path (<a href="#1d" style="color:#1a5fa8">1d</a>): the attempted route stays, the failing leg is called out by station and cause, and everything after it dims and switches to a dashed connector — “unreachable”, not “fine”. Primary action replans excluding the failing node; secondary sets a watch on the lift. A permanent gap (<a href="#1f" style="color:#1a5fa8">1f</a>) reads as structural, offers the nearest step-free station instead, and never suggests waiting.</div></div>
+
+<div><div style="font-size:14px;font-weight:600;margin-bottom:6px">On uncertainty</div><div style="font-size:13px;color:#4b525c;line-height:1.6">Missing live data downgrades the verdict to “probably step-free” (<a href="#1e" style="color:#1a5fa8">1e</a>) rather than claiming success. Grey rings mark the unverified legs and name the last confirmed date. The footer always carries the unofficial-tool disclaimer and TfL's number.</div></div>
+
+<div><div style="font-size:14px;font-weight:600;margin-bottom:6px">Accessibility</div><div style="font-size:13px;color:#4b525c;line-height:1.6">Timeline is an ordered list, one item per leg, verdict as the first heading so screen readers hear the answer before the detail. Every status has a text label. Tap targets ≥44px, thumb-zone CTAs, visible focus rings. The graph canvas is an optional extra view, never the only path.</div></div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "add a live journey / on-the-move screen" · "show <a class="dv-oid" href="#1b">1b</a> with the From slot instead" · "make the break screen offer a full alternative route"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showDisclaimer&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showExploreLink&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showStopCounts&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showDisclaimer: this.props.showDisclaimer ?? true,
+      showExploreLink: this.props.showExploreLink ?? true,
+      showStopCounts: this.props.showStopCounts ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

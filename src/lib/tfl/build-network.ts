@@ -1,7 +1,12 @@
 import { LINE_COLORS, MODES, lineColorForCanvas } from "../tokens";
-import type { NetworkData, NetworkEdge, NetworkStation } from "../types";
+import type {
+  NetworkData,
+  NetworkEdge,
+  NetworkRide,
+  NetworkStation,
+} from "../types";
 import type { TflLine, TflRouteSequence, TflStopPoint } from "./client";
-import { buildTopology, type TopologyInputs } from "./topology";
+import { buildTopology, normalizeLineId, type TopologyInputs } from "./topology";
 
 /** Prefer hub / top-most parent so interchange modes share one node. */
 export function canonicalStationId(stop: {
@@ -153,6 +158,8 @@ export function buildNetworkFromSources(args: {
   const stations = new Map<string, NetworkStation>();
   const edgeKeys = new Set<string>();
   const edges: NetworkEdge[] = [];
+  const rideKeys = new Set<string>();
+  const rides: NetworkRide[] = [];
   const naptanToHub = new Map<string, string>();
 
   // Hub-bearing sequences first so StopPoints fallbacks can fold into them.
@@ -206,6 +213,12 @@ export function buildNetworkFromSources(args: {
         const a = resolvedIds[i]!;
         const b = resolvedIds[i + 1]!;
         if (a === b) continue;
+        const rideLine = normalizeLineId(lineId);
+        const rideKey = `${a}|${b}|${rideLine}`;
+        if (!rideKeys.has(rideKey)) {
+          rideKeys.add(rideKey);
+          rides.push({ from: a, to: b, lineId: rideLine });
+        }
         const [from, to] = a < b ? [a, b] : [b, a];
         const key = `${from}|${to}|${lineId}`;
         if (edgeKeys.has(key)) continue;
@@ -259,6 +272,24 @@ export function buildNetworkFromSources(args: {
       e.from = a;
       e.to = b;
     }
+    const seenRides = new Set<string>();
+    for (let i = rides.length - 1; i >= 0; i--) {
+      const r = rides[i]!;
+      const from = mergeInto.get(r.from) ?? r.from;
+      const to = mergeInto.get(r.to) ?? r.to;
+      if (from === to) {
+        rides.splice(i, 1);
+        continue;
+      }
+      const key = `${from}|${to}|${r.lineId}`;
+      if (seenRides.has(key)) {
+        rides.splice(i, 1);
+        continue;
+      }
+      seenRides.add(key);
+      r.from = from;
+      r.to = to;
+    }
   }
 
   const topo = buildTopology(args.topology);
@@ -285,6 +316,10 @@ export function buildNetworkFromSources(args: {
   const filteredChains = topo.platformLiftChains.filter((c) =>
     platformIdSet.has(c.platformId),
   );
+  const filteredInterchange = topo.interchangeChains.filter(
+    (c) =>
+      platformIdSet.has(c.fromPlatformId) && platformIdSet.has(c.toPlatformId),
+  );
   const filteredLifts = lifts.filter((l) => stationIds.has(l.stationId));
 
   const networkLines = args.lines.map((l) => ({
@@ -301,9 +336,11 @@ export function buildNetworkFromSources(args: {
       a.name.localeCompare(b.name),
     ),
     edges,
+    rides,
     platforms: filteredPlatforms,
     lifts: filteredLifts,
     platformLiftChains: filteredChains,
+    interchangeChains: filteredInterchange,
   };
 }
 

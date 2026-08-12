@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -15,9 +15,17 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Stepfree — London live lift status",
+  title: {
+    default: "Loop — step-free London journeys",
+    template: "%s",
+  },
   description:
-    "Unofficial accessibility tool visualising London public transport step-free status as a network graph. Not affiliated with TfL.",
+    "Unofficial step-free route planner for London public transport. Not affiliated with TfL.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f7f8f9",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -26,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${inter.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="h-full overflow-hidden">{children}</body>
+      <body className="h-full overflow-auto">{children}</body>
     </html>
   );
 }

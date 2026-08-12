@@ -1,8 +1,9 @@
 /**
- * Build Outside→platform lift chains from TfL stationdata-detailed CSVs.
+ * Build Outside→platform lift chains and platform↔platform interchange
+ * chains from TfL stationdata-detailed CSVs.
  */
 
-import type { PlatformLiftChain } from "../types";
+import type { InterchangeChain, PlatformLiftChain } from "../types";
 
 export type CsvRow = Record<string, string>;
 
@@ -23,7 +24,7 @@ function splitAreas(raw: string | undefined): string[] {
     .filter(Boolean);
 }
 
-function normalizeLineId(line: string): string {
+export function normalizeLineId(line: string): string {
   const s = line.trim().toLowerCase().replace(/\s+/g, "-");
   const aliases: Record<string, string> = {
     "hammersmith-and-city": "hammersmith-city",
@@ -53,43 +54,58 @@ export type BuiltTopology = {
     platformIds: string[];
   }[];
   platformLiftChains: PlatformLiftChain[];
+  interchangeChains: InterchangeChain[];
   stationNameById: Map<string, string>;
   outsideByStation: Map<string, string>;
 };
 
+export function physicalPlatformId(servicePlatformId: string): string {
+  const i = servicePlatformId.indexOf("::");
+  return i === -1 ? servicePlatformId : servicePlatformId.slice(0, i);
+}
+
 type AdjEdge = { to: string; liftId?: string };
 
 /**
- * BFS from Outside to platform. Collect ordered unique lift IDs along shortest path
- * (street → platform). Same-level and ramp edges are free (no lift).
+ * BFS between two areas. Collect ordered unique lift IDs along the shortest path.
+ * Same-level and ramp edges are free (no lift).
  * Returns `[]` when reachable without lifts; `null` when unreachable.
  */
 export function findLiftChain(
-  outsideId: string,
-  platformId: string,
+  fromId: string,
+  toId: string,
   adjacency: Map<string, AdjEdge[]>,
 ): string[] | null {
-  if (outsideId === platformId) return [];
+  if (fromId === toId) return [];
+  const all = findAllLiftChainsFrom(fromId, adjacency);
+  return all.get(toId) ?? null;
+}
+
+/** Shortest lift chain from `startId` to every reachable area (including itself as `[]`). */
+export function findAllLiftChainsFrom(
+  startId: string,
+  adjacency: Map<string, AdjEdge[]>,
+): Map<string, string[]> {
+  const reached = new Map<string, string[]>([[startId, []]]);
   type Node = { id: string; lifts: string[] };
-  const queue: Node[] = [{ id: outsideId, lifts: [] }];
-  const visited = new Set<string>([outsideId]);
+  const queue: Node[] = [{ id: startId, lifts: [] }];
+  const visited = new Set<string>([startId]);
 
   while (queue.length > 0) {
     const cur = queue.shift()!;
-    const edges = adjacency.get(cur.id) ?? [];
-    for (const e of edges) {
+    for (const e of adjacency.get(cur.id) ?? []) {
       if (visited.has(e.to)) continue;
       const nextLifts = e.liftId
         ? cur.lifts.includes(e.liftId)
           ? cur.lifts
           : [...cur.lifts, e.liftId]
         : cur.lifts;
-      if (e.to === platformId) return nextLifts;
       visited.add(e.to);
+      reached.set(e.to, nextLifts);
       queue.push({ id: e.to, lifts: nextLifts });
     }
   }
-  return null;
+  return reached;
 }
 
 export function buildAdjacency(inputs: TopologyInputs): {
@@ -261,11 +277,56 @@ export function buildTopology(inputs: TopologyInputs): BuiltTopology {
     };
   });
 
+  const interchangeChains = buildInterchangeChains(platforms, adjacency);
+
   return {
     platforms,
     lifts,
     platformLiftChains,
+    interchangeChains,
     stationNameById,
     outsideByStation,
   };
+}
+
+function buildInterchangeChains(
+  platforms: BuiltTopology["platforms"],
+  adjacency: Map<string, AdjEdge[]>,
+): InterchangeChain[] {
+  const byStation = new Map<string, BuiltTopology["platforms"]>();
+  for (const p of platforms) {
+    if (p.lineId === "national-rail") continue;
+    const list = byStation.get(p.stationId) ?? [];
+    list.push(p);
+    byStation.set(p.stationId, list);
+  }
+
+  const chains: InterchangeChain[] = [];
+  for (const plats of byStation.values()) {
+    if (plats.length < 2) continue;
+    const physicalIds = new Set(plats.map((p) => physicalPlatformId(p.id)));
+    const fromPhysical = new Map<string, Map<string, string[]>>();
+    for (const phys of physicalIds) {
+      fromPhysical.set(phys, findAllLiftChainsFrom(phys, adjacency));
+    }
+
+    for (const a of plats) {
+      const physA = physicalPlatformId(a.id);
+      const reached = fromPhysical.get(physA);
+      if (!reached) continue;
+      for (const b of plats) {
+        if (a.id === b.id || a.lineId === b.lineId) continue;
+        const physB = physicalPlatformId(b.id);
+        const liftIds = physA === physB ? [] : reached.get(physB);
+        if (liftIds === undefined) continue;
+        chains.push({
+          fromPlatformId: a.id,
+          toPlatformId: b.id,
+          liftIds,
+          access: liftIds.length === 0 ? "level" : "lifts",
+        });
+      }
+    }
+  }
+  return chains;
 }
