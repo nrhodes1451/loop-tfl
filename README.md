@@ -4,7 +4,7 @@ Unofficial London public-transport accessibility tool. **Loop** plans a single s
 
 ## Stack
 
-Next.js App Router, TypeScript, Tailwind, d3-force (canvas), Inter + IBM Plex Mono.
+Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), Inter + IBM Plex Mono.
 
 ## Routes
 
@@ -12,6 +12,7 @@ Next.js App Router, TypeScript, Tailwind, d3-force (canvas), Inter + IBM Plex Mo
 |------|------------|
 | `/` | Loop — mobile-first step-free route planner |
 | `/explore` | Stepfree — force-directed accessibility graph |
+| `/schematic` | Illustrative isometric of King's Cross St Pancras (not used for routing) |
 | `/api/disruptions` | Live TfL lift outages (`LiftUniqueId` join) |
 
 ## Data sources
@@ -32,10 +33,10 @@ npm run refresh-network   # writes data/network.json from TfL APIs
 npm run dev
 ```
 
-Optional: set `TFL_APP_KEY` for higher rate limits.
+Optional: set `TFL_APP_KEY` (see `.env.example`) for higher rate limits.
 
 ```bash
-npm test                  # topology, status derivation, pathfinder
+npm test                  # topology, status derivation, pathfinder, schematic
 npm run build
 ```
 
@@ -44,13 +45,18 @@ npm run build
 Loop returns one route and an honest verdict:
 
 - **Step-free throughout** — boarding, interchange, and alighting lifts are in service
-- **Route breaks** — a required lift is out; the attempted path stays visible and later legs are marked unreachable
+- **Route breaks** — a required lift is out; the attempted path stays visible and later legs are marked unreachable. Replan can exclude the broken interchange
 - **Probably step-free** — the path exists but live status is missing or older than ~15 minutes
 - **No step-free route** — structural gap (not a live fault); offers the nearest step-free station
 
-## Scope (v1)
+## Scope
 
 - Station → station planning on tube, Elizabeth line, DLR, Overground, tram
 - One route, live lift check, replan excluding a broken interchange
-- Explore graph: expand stations into platform/lift nodes (max 3)
-- Out of scope: walking directions, buses, fares, ETAs, accounts, desktop layouts
+- Explore graph: expand stations into platform/lift nodes (max 3); National Rail is interchange context only, not a rideable mode
+- Schematic: King's Cross only — not to scale, not for wayfinding, isolated from routing
+- Out of scope: walking directions, buses, National Rail routing, fares, ETAs, accounts
+
+## License
+
+Code is [MIT](LICENSE). Topology and live disruptions come from Transport for London and remain subject to [TfL's terms](https://tfl.gov.uk/corporate/terms-and-conditions/transport-data-service). This project is not affiliated with TfL.

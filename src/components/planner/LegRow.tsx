@@ -191,7 +191,8 @@ export function LegRow({
     leg.status === "broken" && (leg.kind === "change" || leg.kind === "lift");
   const callout = breakMark;
   const dashedCard =
-    leg.status === "none" && (leg.kind === "arrive" || leg.kind === "change");
+    leg.status === "none" &&
+    (leg.kind === "arrive" || leg.kind === "change" || leg.kind === "start");
   const showFrom = true;
   const showTo = last;
 

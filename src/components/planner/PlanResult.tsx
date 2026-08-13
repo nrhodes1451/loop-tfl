@@ -22,7 +22,9 @@ export function PlanResult({
   onRefresh,
   onReplanAvoiding,
   onPlanToAlternative,
+  onPlanFromAlternative,
   onPickDestination,
+  onPickOrigin,
 }: {
   index: NetworkIndex;
   from: NetworkStation;
@@ -37,7 +39,9 @@ export function PlanResult({
   onRefresh: () => void;
   onReplanAvoiding: (stationId: string) => void;
   onPlanToAlternative: (stationId: string) => void;
+  onPlanFromAlternative: (stationId: string) => void;
   onPickDestination: () => void;
+  onPickOrigin: () => void;
 }) {
   const subtitle = headerSubtitle(plan, planning);
 
@@ -125,12 +129,15 @@ export function PlanResult({
           ) : (
             <ResultBody
               index={index}
+              from={from}
               to={to}
               plan={plan}
               onRefresh={onRefresh}
               onReplanAvoiding={onReplanAvoiding}
               onPlanToAlternative={onPlanToAlternative}
+              onPlanFromAlternative={onPlanFromAlternative}
               onPickDestination={onPickDestination}
+              onPickOrigin={onPickOrigin}
             />
           )}
         </ScreenSwap>
@@ -141,20 +148,26 @@ export function PlanResult({
 
 function ResultBody({
   index,
+  from,
   to,
   plan,
   onRefresh,
   onReplanAvoiding,
   onPlanToAlternative,
+  onPlanFromAlternative,
   onPickDestination,
+  onPickOrigin,
 }: {
   index: NetworkIndex;
+  from: NetworkStation;
   to: NetworkStation;
   plan: PlanResult;
   onRefresh: () => void;
   onReplanAvoiding: (stationId: string) => void;
   onPlanToAlternative: (stationId: string) => void;
+  onPlanFromAlternative: (stationId: string) => void;
   onPickDestination: () => void;
+  onPickOrigin: () => void;
 }) {
   const changeCount = plan.legs.filter((l) => l.kind === "change").length;
   const okBody =
@@ -170,6 +183,7 @@ function ResultBody({
   );
 
   const unknownCount = plan.legs.filter((l) => l.status === "unknown").length;
+  const gapStation = plan.noneAt === "from" ? from : to;
 
   const bannerTitle =
     plan.status === "break" && breakStation
@@ -182,7 +196,9 @@ function ResultBody({
         ? breakLeg?.detail
         : plan.status === "uncertain"
           ? `The path exists on paper, but live lift status is missing for ${unknownCount || "some"} lift${unknownCount === 1 ? "" : "s"}. Treat with care.`
-          : `${to.name} has no step-free path between street and platform. This is permanent, not a lift fault.`;
+          : plan.noneAt
+            ? `${gapStation.name} has no step-free path between street and platform. This is permanent, not a lift fault.`
+            : "There is no step-free route between these stations. This is permanent, not a lift fault.";
 
   const timelineLabel =
     plan.status === "break"
@@ -230,7 +246,7 @@ function ResultBody({
             </div>
             <p className="m-0" style={{ marginTop: 4, fontSize: 13, color: loop.muted, lineHeight: 1.5 }}>
               Step-free throughout · {formatDistanceM(plan.alternative.distanceM)} from{" "}
-              {to.name}.
+              {gapStation.name}.
             </p>
           </div>
         )}
@@ -246,7 +262,9 @@ function ResultBody({
         onRefresh={onRefresh}
         onReplanAvoiding={onReplanAvoiding}
         onPlanToAlternative={onPlanToAlternative}
+        onPlanFromAlternative={onPlanFromAlternative}
         onPickDestination={onPickDestination}
+        onPickOrigin={onPickOrigin}
       />
     </div>
   );
@@ -258,14 +276,18 @@ function Actions({
   onRefresh,
   onReplanAvoiding,
   onPlanToAlternative,
+  onPlanFromAlternative,
   onPickDestination,
+  onPickOrigin,
 }: {
   plan: PlanResult;
   breakName?: string;
   onRefresh: () => void;
   onReplanAvoiding: (stationId: string) => void;
   onPlanToAlternative: (stationId: string) => void;
+  onPlanFromAlternative: (stationId: string) => void;
   onPickDestination: () => void;
+  onPickOrigin: () => void;
 }) {
   const pad = {
     padding: "14px 0 12px",
@@ -341,25 +363,30 @@ function Actions({
     );
   }
 
+  const originGap = plan.noneAt === "from";
   return (
     <div className="flex flex-col" style={{ ...pad, gap: 8 }}>
       {plan.alternative && (
         <button
           type="button"
-          onClick={() => onPlanToAlternative(plan.alternative!.stationId)}
+          onClick={() =>
+            originGap
+              ? onPlanFromAlternative(plan.alternative!.stationId)
+              : onPlanToAlternative(plan.alternative!.stationId)
+          }
           className="w-full cursor-pointer"
           style={primaryBtn}
         >
-          Plan to {plan.alternative.name}
+          Plan {originGap ? "from" : "to"} {plan.alternative.name}
         </button>
       )}
       <button
         type="button"
-        onClick={onPickDestination}
+        onClick={originGap ? onPickOrigin : onPickDestination}
         className="w-full cursor-pointer"
         style={secondaryBtn}
       >
-        Pick a different destination
+        Pick a different {originGap ? "start" : "destination"}
       </button>
     </div>
   );

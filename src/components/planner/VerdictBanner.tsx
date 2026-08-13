@@ -22,7 +22,7 @@ const COPY: Record<
   none: {
     title: "No step-free route",
     fallback:
-      "There is no step-free path between street and platform at the destination. This is permanent, not a lift fault.",
+      "There is no step-free path between street and platform. This is permanent, not a lift fault.",
   },
 };
 

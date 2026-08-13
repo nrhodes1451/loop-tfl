@@ -5,7 +5,7 @@ import {
   evaluatePath,
   findStructuralPath,
   indexNetwork,
-  nearestStepFree,
+  planJourney,
   STALE_MS,
   type PlanResult as PlanView,
   type StructuralPath,
@@ -113,14 +113,7 @@ export function PlannerShell({ network }: { network: NetworkData }) {
       }
 
       if (!found) {
-        const alt = nearestStepFree(index, dest);
-        setPlan({
-          status: "none",
-          legs: [],
-          liftsChecked: 0,
-          liftsTotal: 0,
-          alternative: alt ?? undefined,
-        });
+        setPlan(planJourney(index, origin, dest, feed));
         setPlanning(false);
         return;
       }
@@ -226,9 +219,17 @@ export function PlannerShell({ network }: { network: NetworkData }) {
               setToId(stationId);
               void runPlan({ to: stationId });
             }}
+            onPlanFromAlternative={(stationId) => {
+              setFromId(stationId);
+              void runPlan({ from: stationId });
+            }}
             onPickDestination={() => {
               setScreen("entry");
               setActiveSlot("to");
+            }}
+            onPickOrigin={() => {
+              setScreen("entry");
+              setActiveSlot("from");
             }}
           />
         ) : (

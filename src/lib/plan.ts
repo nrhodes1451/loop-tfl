@@ -82,6 +82,8 @@ export type PlanResult = {
   status: PlanStatus;
   legs: Leg[];
   breakAt?: string;
+  /** Which end has no street↔platform access when status is "none". Unset if the stations are disconnected. */
+  noneAt?: "from" | "to";
   checkedAt?: string;
   liftsChecked: number;
   liftsTotal: number;
@@ -217,6 +219,26 @@ function hasAlight(index: NetworkIndex, stationId: string, lineId: string): bool
   return accessiblePlatforms(index, stationId, lineId, "alight").length > 0;
 }
 
+function originLineIds(index: NetworkIndex, fromId: string): Set<string> {
+  const originLines = new Set<string>();
+  for (const p of index.network.platforms) {
+    if (p.stationId === fromId && p.lineId !== "national-rail") {
+      originLines.add(p.lineId);
+    }
+  }
+  for (const r of index.network.rides) {
+    if (r.from === fromId) originLines.add(r.lineId);
+  }
+  return originLines;
+}
+
+function canBoardFrom(index: NetworkIndex, fromId: string): boolean {
+  for (const lineId of originLineIds(index, fromId)) {
+    if (accessiblePlatforms(index, fromId, lineId, "board").length > 0) return true;
+  }
+  return false;
+}
+
 type HeapItem = {
   cost: number;
   stationId: string;
@@ -274,17 +296,7 @@ function search(
   const heap: HeapItem[] = [];
   const best = new Map<string, number>();
 
-  const originLines = new Set<string>();
-  for (const p of index.network.platforms) {
-    if (p.stationId === fromId && p.lineId !== "national-rail") {
-      originLines.add(p.lineId);
-    }
-  }
-  for (const r of index.network.rides) {
-    if (r.from === fromId) originLines.add(r.lineId);
-  }
-
-  for (const lineId of originLines) {
+  for (const lineId of originLineIds(index, fromId)) {
     const boards = accessiblePlatforms(index, fromId, lineId, "board");
     if (boards.length === 0) continue;
     const b = boards[0]!;
@@ -907,11 +919,41 @@ export function evaluatePath(
   };
 
   if (status === "none") {
+    result.noneAt = "to";
     const alt = nearestStepFree(index, path.toId);
     if (alt) result.alternative = alt;
   }
 
   return result;
+}
+
+function originNonePlan(index: NetworkIndex, fromId: string): PlanResult {
+  const fromName = stationName(index, fromId);
+  const lineId = [...originLineIds(index, fromId)][0];
+  const startLineNode = lineId ? lineNode(index, lineId) : STREET_NODE;
+  const alt = nearestStepFree(index, fromId);
+  return {
+    status: "none",
+    noneAt: "from",
+    legs: [
+      {
+        kind: "start",
+        status: "none",
+        title: `${fromName} · no street↔platform step-free access`,
+        detail:
+          "Lifts serve staff levels only, or there is no street↔platform step-free access. You cannot reach the platform from street.",
+        stationId: fromId,
+        lineId,
+        lineColor: startLineNode.lineColor,
+        liftIds: [],
+        fromNode: STREET_NODE,
+        toNode: startLineNode,
+      },
+    ],
+    liftsChecked: 0,
+    liftsTotal: 0,
+    alternative: alt ?? undefined,
+  };
 }
 
 export function planJourney(
@@ -928,6 +970,7 @@ export function planJourney(
     options.excludeStationIds ?? [],
   );
   if (!path) {
+    if (!canBoardFrom(index, fromId)) return originNonePlan(index, fromId);
     const alt = nearestStepFree(index, toId);
     return {
       status: "none",

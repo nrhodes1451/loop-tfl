@@ -254,8 +254,37 @@ describe("evaluatePath / planJourney", () => {
   it("returns none with a nearby step-free alternative", () => {
     const result = planJourney(index, "A", "D", okFeed, { now: NOW });
     expect(result.status).toBe("none");
+    expect(result.noneAt).toBe("to");
+    expect(result.legs.at(-1)).toMatchObject({
+      kind: "arrive",
+      status: "none",
+      title: "Delta · no street↔platform step-free access",
+    });
     expect(result.alternative?.stationId).toBe("E");
     expect(result.alternative?.distanceM).toBeGreaterThan(0);
+  });
+
+  it("blames the origin when the start station has no street access", () => {
+    const result = planJourney(index, "D", "A", okFeed, { now: NOW });
+    expect(result.status).toBe("none");
+    expect(result.noneAt).toBe("from");
+    expect(result.legs).toHaveLength(1);
+    expect(result.legs[0]).toMatchObject({
+      kind: "start",
+      status: "none",
+      title: "Delta · no street↔platform step-free access",
+    });
+    expect(result.alternative?.stationId).toBe("E");
+  });
+
+  it("does not blame the destination when stations are disconnected", () => {
+    const result = planJourney(index, "A", "E", okFeed, {
+      now: NOW,
+      excludeStationIds: ["B"],
+    });
+    expect(result.status).toBe("none");
+    expect(result.noneAt).toBeUndefined();
+    expect(result.legs).toEqual([]);
   });
 
   it("downgrades to uncertain when the live feed is down", () => {
