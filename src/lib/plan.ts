@@ -486,11 +486,8 @@ export function nearestStepFree(
   return best;
 }
 
-function liftLabel(index: NetworkIndex, ids: string[]): string {
-  if (ids.length === 0) return "";
-  return ids
-    .map((id) => index.liftById.get(id)?.name ?? "Lift")
-    .join(", then ");
+function liftName(index: NetworkIndex, id: string): string {
+  return index.liftById.get(id)?.name ?? "Lift";
 }
 
 function platformDirection(
@@ -660,17 +657,12 @@ export function evaluatePath(
 ): PlanResult {
   const groups = liftGroups(index, path);
   const allLifts = uniqueLiftIds(groups);
-  const { verdicts, status, breakAt } = groupVerdicts(
+  const { status, breakAt } = groupVerdicts(
     groups,
     disruptions,
     now,
     path.destUnreachable,
   );
-
-  const groupStatus = new Map<string, GroupVerdict>();
-  groups.forEach((g, i) => {
-    groupStatus.set(`${g.role}:${g.stationId}`, verdicts[i] ?? "ok");
-  });
 
   const legs: Leg[] = [];
   const first = path.nodes[0]!;
@@ -679,12 +671,59 @@ export function evaluatePath(
   const toName = stationName(index, path.toId);
 
   let brokenSeen = false;
-  const mark = (stationId: string, role: LiftGroup["role"]): LegStatus => {
-    if (brokenSeen) return "broken";
-    const v = groupStatus.get(`${role}:${stationId}`) ?? "ok";
-    if (v === "broken") brokenSeen = true;
-    if (path.destUnreachable && role === "alight") return "none";
-    return v;
+  const staleFeed = feedStale(disruptions, now);
+
+  const pushLifts = (
+    ids: string[],
+    fromFirst: LegNode,
+    toLast: LegNode,
+    ctx: {
+      stationId: string;
+      lineId: string;
+      lineColor?: string;
+      lastTitle: (name: string) => string;
+      breakTitle?: string;
+      breakDetail?: (msg: string | undefined) => string;
+    },
+  ) => {
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i]!;
+      const isLast = i === ids.length - 1;
+      const alreadyUnreachable = brokenSeen;
+      const st: LegStatus = alreadyUnreachable
+        ? "broken"
+        : staleFeed || !disruptions?.ok
+          ? "unknown"
+          : disruptions.byLiftId[id]
+            ? "broken"
+            : "ok";
+      if (!alreadyUnreachable && st === "broken") brokenSeen = true;
+
+      const name = liftName(index, id);
+      const isBreakHere = st === "broken" && !alreadyUnreachable;
+      const msg = isBreakHere ? disruptionMessage(disruptions, [id]) : undefined;
+
+      legs.push({
+        kind: alreadyUnreachable ? "unreachable" : "lift",
+        status: st,
+        title:
+          isBreakHere && ctx.breakTitle
+            ? ctx.breakTitle
+            : isLast
+              ? ctx.lastTitle(name)
+              : `${name}.`,
+        detail: isBreakHere
+          ? (ctx.breakDetail ? ctx.breakDetail(msg) : (msg ?? ""))
+          : "",
+        stationId: ctx.stationId,
+        lineId: ctx.lineId,
+        lineColor: ctx.lineColor,
+        liftIds: [id],
+        fromNode: i === 0 ? fromFirst : LIFT_NODE,
+        toNode: isLast ? toLast : LIFT_NODE,
+        chip: alreadyUnreachable ? undefined : chipFor(st, disruptions),
+      });
+    }
   };
 
   const boardEvent = first.event.kind === "board" ? first.event : null;
@@ -710,21 +749,12 @@ export function evaluatePath(
   });
 
   if (startLifts.length > 0) {
-    const st = mark(first.stationId, "board");
-    const isBreakHere = groupStatus.get(`board:${first.stationId}`) === "broken";
-    const msg = isBreakHere ? disruptionMessage(disruptions, startLifts) : undefined;
-    legs.push({
-      kind: "lift",
-      status: st,
-      title: `${liftLabel(index, startLifts)} to ${startLine}${startDir ? ` ${startDir}` : ""} platform.`,
-      detail: msg ?? "",
+    pushLifts(startLifts, LIFT_NODE, startLineNode, {
       stationId: first.stationId,
       lineId: first.lineId,
       lineColor: startLineNode.lineColor,
-      liftIds: startLifts,
-      fromNode: LIFT_NODE,
-      toNode: startLineNode,
-      chip: chipFor(st, disruptions),
+      lastTitle: (name) =>
+        `${name} to ${startLine}${startDir ? ` ${startDir}` : ""} platform.`,
     });
   }
 
@@ -781,7 +811,6 @@ export function evaluatePath(
       const ev = n.event;
       if (ev.kind !== "change") continue;
       const alreadyUnreachable = brokenSeen;
-      const isBreakHere = groupStatus.get(`change:${n.stationId}`) === "broken";
       const toLine = lineName(index, n.lineId);
       const fromLineNode = lineNode(index, ev.fromLineId);
       const toLineNode = lineNode(index, n.lineId);
@@ -802,26 +831,17 @@ export function evaluatePath(
       });
 
       if (hasLifts) {
-        const st = mark(n.stationId, "change");
-        const msg = isBreakHere ? disruptionMessage(disruptions, ev.liftIds) : undefined;
-        legs.push({
-          kind: alreadyUnreachable ? "unreachable" : "lift",
-          status: st,
-          title: isBreakHere
-            ? `Change to ${toLine} · interchange lift out of service`
-            : `${liftLabel(index, ev.liftIds)} to ${toLine}${dir ? ` ${dir}` : ""} platform.`,
-          detail: isBreakHere
-            ? msg
-              ? `${stationName(index, n.stationId)}. ${msg}`
-              : `${stationName(index, n.stationId)}. Interchange lift unavailable. No step-free alternative inside this station.`
-            : "",
+        pushLifts(ev.liftIds, LIFT_NODE, toLineNode, {
           stationId: n.stationId,
           lineId: n.lineId,
           lineColor: toLineNode.lineColor,
-          liftIds: ev.liftIds,
-          fromNode: LIFT_NODE,
-          toNode: toLineNode,
-          chip: alreadyUnreachable ? undefined : chipFor(isBreakHere ? "broken" : st, disruptions),
+          lastTitle: (name) =>
+            `${name} to ${toLine}${dir ? ` ${dir}` : ""} platform.`,
+          breakTitle: `Change to ${toLine} · interchange lift out of service`,
+          breakDetail: (msg) =>
+            msg
+              ? `${stationName(index, n.stationId)}. ${msg}`
+              : `${stationName(index, n.stationId)}. Interchange lift unavailable. No step-free alternative inside this station.`,
         });
       }
     }
@@ -847,28 +867,16 @@ export function evaluatePath(
       toNode: STREET_NODE,
     });
   } else {
-    const alreadyUnreachable = brokenSeen;
-    const isBreakHere = groupStatus.get(`alight:${last.stationId}`) === "broken";
-
     if (arriveLifts.length > 0) {
-      const st = mark(last.stationId, "alight");
-      const msg = isBreakHere ? disruptionMessage(disruptions, arriveLifts) : undefined;
-      legs.push({
-        kind: alreadyUnreachable ? "unreachable" : "lift",
-        status: st,
-        title: `${liftLabel(index, arriveLifts)} to street.`,
-        detail: msg ?? "",
+      pushLifts(arriveLifts, lastLineNode, LIFT_NODE, {
         stationId: last.stationId,
         lineId: last.lineId,
         lineColor: lastLineNode.lineColor,
-        liftIds: arriveLifts,
-        fromNode: lastLineNode,
-        toNode: LIFT_NODE,
-        chip: alreadyUnreachable ? undefined : chipFor(st, disruptions),
+        lastTitle: (name) => `${name} to street.`,
       });
     }
 
-    const arriveUnreachable = alreadyUnreachable || isBreakHere;
+    const arriveUnreachable = brokenSeen;
     legs.push({
       kind: arriveUnreachable ? "unreachable" : "arrive",
       status: arriveUnreachable ? "broken" : "ok",

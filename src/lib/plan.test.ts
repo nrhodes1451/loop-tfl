@@ -85,19 +85,21 @@ const network: NetworkData = {
   ],
   lifts: [
     lift("L-A", "A", "Lift A"),
+    lift("L-A-x", "A", "Lift AX"),
     lift("L-B-street", "B", "Lift B street"),
     lift("L-X", "B", "Lift X"),
     lift("L-C", "C", "Lift C"),
+    lift("L-C2", "C", "Lift C2"),
     lift("L-A2", "A", "Lift A2"),
     lift("L-E", "E", "Lift E"),
   ],
   platformLiftChains: [
-    { platformId: "A-v-s", liftIds: ["L-A"], access: "lifts" },
+    { platformId: "A-v-s", liftIds: ["L-A", "L-A-x"], access: "lifts" },
     { platformId: "A-p-s", liftIds: ["L-A2"], access: "lifts" },
     { platformId: "B-v-s", liftIds: ["L-B-street"], access: "lifts" },
     { platformId: "B-v-n", liftIds: ["L-B-street"], access: "lifts" },
     { platformId: "B-j-e", liftIds: ["L-X"], access: "lifts" },
-    { platformId: "C-v-s", liftIds: ["L-C"], access: "lifts" },
+    { platformId: "C-v-s", liftIds: ["L-C", "L-C2"], access: "lifts" },
     { platformId: "D-p-e", liftIds: [], access: "none" },
     { platformId: "E-j-e", liftIds: ["L-E"], access: "lifts" },
     { platformId: "G-p-e", liftIds: [], access: "level" },
@@ -139,13 +141,17 @@ describe("findStructuralPath", () => {
     const result = evaluatePath(index, path!, okFeed, NOW);
     const liftIds = result.legs.flatMap((l) => l.liftIds);
     expect(liftIds).toContain("L-A");
+    expect(liftIds).toContain("L-A-x");
     expect(liftIds).toContain("L-C");
+    expect(liftIds).toContain("L-C2");
     expect(liftIds).not.toContain("L-B-street");
     expect(result.status).toBe("ok");
     expect(result.legs.map((l) => l.kind)).toEqual([
       "start",
       "lift",
+      "lift",
       "ride",
+      "lift",
       "lift",
       "arrive",
     ]);
@@ -156,26 +162,40 @@ describe("findStructuralPath", () => {
     });
     expect(result.legs[1]).toMatchObject({
       kind: "lift",
+      title: "Lift AX.",
+      liftIds: ["L-A-x"],
+      fromNode: { type: "lift" },
+      toNode: { type: "lift" },
+    });
+    expect(result.legs[2]).toMatchObject({
+      kind: "lift",
       title: "Lift A to Victoria south platform.",
       liftIds: ["L-A"],
       fromNode: { type: "lift" },
       toNode: { type: "line", lineId: "victoria" },
     });
-    expect(result.legs[2]).toMatchObject({
+    expect(result.legs[3]).toMatchObject({
       kind: "ride",
       title: "Take the Victoria to Charlie",
       detail: "2 stops through Bravo.",
       fromNode: { type: "line", lineId: "victoria" },
       toNode: { type: "line", lineId: "victoria" },
     });
-    expect(result.legs[3]).toMatchObject({
+    expect(result.legs[4]).toMatchObject({
       kind: "lift",
-      title: "Lift C to street.",
+      title: "Lift C.",
       liftIds: ["L-C"],
       fromNode: { type: "line", lineId: "victoria" },
       toNode: { type: "lift" },
     });
-    expect(result.legs[4]).toMatchObject({
+    expect(result.legs[5]).toMatchObject({
+      kind: "lift",
+      title: "Lift C2 to street.",
+      liftIds: ["L-C2"],
+      fromNode: { type: "lift" },
+      toNode: { type: "lift" },
+    });
+    expect(result.legs[6]).toMatchObject({
       kind: "arrive",
       title: "Arrive · street level at Charlie",
       fromNode: { type: "lift" },
@@ -270,6 +290,7 @@ describe("evaluatePath / planJourney", () => {
     const result = planJourney(index, "A", "E", okFeed, { now: NOW });
     expect(result.legs.map((l) => l.kind)).toEqual([
       "start",
+      "lift",
       "lift",
       "ride",
       "change",
