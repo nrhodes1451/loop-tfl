@@ -1,11 +1,33 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { disruptionStationSummary, type NetworkIndex } from "@/lib/plan";
 import { loop } from "@/lib/tokens";
 import type { DisruptionPayload, NetworkStation } from "@/lib/types";
 import { StationResults, type StationFilter } from "./StationResults";
+
+const PANEL_EASE = [0.2, 0.8, 0.2, 1] as const;
+
+type PanelMotion = "stretch" | "fade";
+
+const panelVariants = {
+  initial: (mode: PanelMotion) =>
+    mode === "stretch"
+      ? { clipPath: "inset(0 0 100% 0)", opacity: 1, y: 0 }
+      : { clipPath: "inset(0 0 0% 0)", opacity: 0, y: 10 },
+  animate: { clipPath: "inset(0 0 0% 0)", opacity: 1, y: 0 },
+  exit: (mode: PanelMotion) =>
+    mode === "stretch"
+      ? { clipPath: "inset(0 0 100% 0)", opacity: 1, y: 0 }
+      : {
+          clipPath: "inset(0 0 0% 0)",
+          opacity: 0,
+          y: -10,
+          pointerEvents: "none" as const,
+        },
+};
 
 export function RouteEntry({
   index,
@@ -16,6 +38,7 @@ export function RouteEntry({
   onFocusSlot,
   onExitSearch,
   onSelect,
+  onClearSlot,
   onSwap,
   onPlan,
   onOpenDisruptions,
@@ -28,6 +51,7 @@ export function RouteEntry({
   onFocusSlot: (slot: "from" | "to") => void;
   onExitSearch: () => void;
   onSelect: (stationId: string) => void;
+  onClearSlot: (slot: "from" | "to") => void;
   onSwap: () => void;
   onPlan: () => void;
   onOpenDisruptions: () => void;
@@ -35,16 +59,46 @@ export function RouteEntry({
   const canPlan = Boolean(from && to && from.id !== to.id);
   const summary = disruptionStationSummary(index, disruptions);
   const searching = activeSlot !== null;
+  const reduce = useReducedMotion();
+  const panelTransition = {
+    type: "tween" as const,
+    duration: reduce ? 0 : 0.4,
+    ease: PANEL_EASE,
+  };
 
-  const [query, setQuery] = useState("");
-  const [querySlot, setQuerySlot] = useState(activeSlot);
+  const panelKey = searching && activeSlot ? `search-${activeSlot}` : "idle";
+  const [committedKey, setCommittedKey] = useState(panelKey);
+  if (committedKey !== panelKey) {
+    setCommittedKey(panelKey);
+  }
+  const fromPanel = committedKey;
+  const slotSwitch =
+    fromPanel !== panelKey &&
+    fromPanel.startsWith("search-") &&
+    panelKey.startsWith("search-");
+  const enterMode: PanelMotion = reduce || slotSwitch || panelKey === "idle" ? "fade" : "stretch";
+  const exitMode: PanelMotion = reduce || slotSwitch || fromPanel === "idle" ? "fade" : "stretch";
+
+  const [fromQuery, setFromQuery] = useState("");
+  const [toQuery, setToQuery] = useState("");
   const [filter, setFilter] = useState<StationFilter>("all");
   const [here, setHere] = useState<{ lat: number; lon: number } | null>(null);
   const [geoError, setGeoError] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
+  const query = activeSlot === "to" ? toQuery : fromQuery;
+  const setQuery = activeSlot === "to" ? setToQuery : setFromQuery;
+
+  const [querySlot, setQuerySlot] = useState(activeSlot);
   if (querySlot !== activeSlot) {
     setQuerySlot(activeSlot);
-    setQuery("");
+    if (activeSlot === "from") setFromQuery(from?.name ?? "");
+    else if (activeSlot === "to") setToQuery(to?.name ?? "");
+    else {
+      setFromQuery("");
+      setToQuery("");
+    }
   }
 
   useEffect(() => {
@@ -52,8 +106,17 @@ export function RouteEntry({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onExitSearch();
     };
+    const onPointerDown = (e: PointerEvent) => {
+      const t = e.target as Node;
+      if (cardRef.current?.contains(t) || resultsRef.current?.contains(t)) return;
+      onExitSearch();
+    };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
   }, [searching, onExitSearch]);
 
   useEffect(() => {
@@ -67,8 +130,8 @@ export function RouteEntry({
   }, [filter, here]);
 
   return (
-    <div className="flex min-h-full flex-col">
-      <header style={{ padding: "22px 20px 0" }}>
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <header className="shrink-0" style={{ padding: "22px 20px 0" }}>
         <div className="flex flex-wrap items-baseline gap-[9px]">
           <div
             style={{
@@ -95,175 +158,212 @@ export function RouteEntry({
         </p>
       </header>
 
-      <div
-        className="flex flex-1 flex-col"
-        style={{ padding: "26px 20px 0", gap: 14 }}
-      >
-        <h2
-          className="m-0"
-          style={{
-            fontSize: 19,
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
-            color: loop.text,
-          }}
-        >
-          Plan a step-free journey
-        </h2>
-
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div
-          className="flex"
-          style={{
-            background: loop.panel,
-            border: `1px solid ${loop.hairline}`,
-            borderRadius: 16,
-            padding: "6px 6px 6px 0",
-          }}
+          className="flex shrink-0 flex-col"
+          style={{ padding: "26px 20px 0", gap: 14 }}
         >
-          <div className="flex min-w-0 flex-1 flex-col">
-            <StationSlot
-              slot="from"
-              station={from}
-              active={activeSlot === "from"}
-              searchMode={searching}
-              query={query}
-              onQuery={setQuery}
-              onFocus={() => onFocusSlot("from")}
-              onExit={onExitSearch}
-            />
-            <div
-              style={{
-                height: 1,
-                background: loop.hairline,
-                marginLeft: 46,
-              }}
-            />
-            <StationSlot
-              slot="to"
-              station={to}
-              active={activeSlot === "to"}
-              searchMode={searching}
-              query={query}
-              onQuery={setQuery}
-              onFocus={() => onFocusSlot("to")}
-              onExit={onExitSearch}
-            />
-          </div>
-          <button
-            type="button"
-            aria-label="Swap start and destination"
-            onClick={onSwap}
-            className="cursor-pointer self-stretch"
+          <h2
+            className="m-0"
             style={{
-              width: 46,
-              background: loop.raised,
-              border: `1px solid ${loop.hairline}`,
-              borderRadius: 12,
-              fontSize: 17,
+              fontSize: 19,
+              fontWeight: 600,
+              letterSpacing: "-0.02em",
               color: loop.text,
             }}
           >
-            ⇅
-          </button>
-        </div>
+            Plan a step-free journey
+          </h2>
 
-        {searching && activeSlot ? (
-          <StationResults
-            index={index}
-            disruptions={disruptions}
-            query={query}
-            filter={filter}
-            onFilter={setFilter}
-            here={here}
-            geoError={geoError}
-            slot={activeSlot}
-            onSelect={onSelect}
-          />
-        ) : (
-          <>
-            {!from && !to ? (
-              <div
-                className="text-center"
-                style={{
-                  border: "1px dashed rgba(0,0,0,.13)",
-                  borderRadius: 14,
-                  padding: "20px 18px",
-                }}
-              >
-                <div style={{ fontSize: 14, fontWeight: 600, color: loop.text }}>
-                  No journeys yet
-                </div>
-                <p
-                  className="m-0"
-                  style={{
-                    marginTop: 6,
-                    fontSize: 12.5,
-                    color: loop.label,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Pick a destination and Loop checks every lift and ramp on the way —
-                  street to street.
-                </p>
-              </div>
-            ) : null}
-
-            <DisruptionCard summary={summary} onOpen={onOpenDisruptions} />
-
-            <div className="mt-auto" />
-          </>
-        )}
-      </div>
-
-      {searching ? null : (
-        <div
-          style={{
-            padding: "14px 20px 12px",
-            paddingBottom: "max(12px, env(safe-area-inset-bottom))",
-            background: "linear-gradient(to top, #f7f8f9 60%, rgba(247,248,249,0))",
-          }}
-        >
-          {!canPlan && (
-            <p
-              className="m-0 text-center"
-              style={{ marginBottom: 8, fontSize: 12, color: loop.label }}
-            >
-              Choose a destination to continue
-            </p>
-          )}
-          <button
-            type="button"
-            disabled={!canPlan}
-            onClick={onPlan}
-            className="w-full"
+          <div
+            ref={cardRef}
+            className="flex"
             style={{
-              minHeight: 54,
-              borderRadius: 15,
-              border: "none",
-              background: canPlan ? loop.text : loop.disabled,
-              color: canPlan ? "#ffffff" : loop.label,
-              fontSize: 16.5,
-              fontWeight: 600,
-              cursor: canPlan ? "pointer" : "not-allowed",
+              background: loop.panel,
+              border: `1px solid ${loop.hairline}`,
+              borderRadius: 16,
+              padding: "6px 6px 6px 0",
             }}
           >
-            Plan step-free route
-          </button>
-          <div className="mt-3 text-center">
-            <Link
-              href="/explore"
+            <div className="flex min-w-0 flex-1 flex-col">
+              <StationSlot
+                slot="from"
+                station={from}
+                active={activeSlot === "from"}
+                searchMode={searching}
+                query={query}
+                onQuery={setQuery}
+              onFocus={() => onFocusSlot("from")}
+              onExit={onExitSearch}
+              onClear={() => {
+                setFromQuery("");
+                onClearSlot("from");
+              }}
+              />
+              <div
+                style={{
+                  height: 1,
+                  background: loop.hairline,
+                  marginLeft: 46,
+                }}
+              />
+              <StationSlot
+                slot="to"
+                station={to}
+                active={activeSlot === "to"}
+                searchMode={searching}
+                query={query}
+                onQuery={setQuery}
+              onFocus={() => onFocusSlot("to")}
+              onExit={onExitSearch}
+              onClear={() => {
+                setToQuery("");
+                onClearSlot("to");
+              }}
+              />
+            </div>
+            <button
+              type="button"
+              aria-label="Swap start and destination"
+              onClick={onSwap}
+              className="cursor-pointer self-stretch"
               style={{
-                fontSize: 12.5,
-                color: loop.muted,
-                borderBottom: "1px solid rgba(0,0,0,.15)",
-                textDecoration: "none",
+                width: 46,
+                background: loop.raised,
+                border: `1px solid ${loop.hairline}`,
+                borderRadius: 12,
+                fontSize: 17,
+                color: loop.text,
               }}
             >
-              Explore the network graph
-            </Link>
+              ⇅
+            </button>
           </div>
         </div>
-      )}
+
+        <div ref={resultsRef} className="relative min-h-0 flex-1">
+          <AnimatePresence initial={false} custom={exitMode} mode="sync">
+            {panelKey === "idle" || !activeSlot ? (
+              <motion.div
+                key="idle"
+                className="absolute inset-0 flex flex-col overflow-hidden"
+                style={{ padding: "14px 20px 0", gap: 14 }}
+                variants={panelVariants}
+                custom={enterMode}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={panelTransition}
+              >
+                <div className="flex min-h-0 flex-1 flex-col" style={{ gap: 14 }}>
+                  {!from && !to ? (
+                    <div
+                      className="text-center"
+                      style={{
+                        border: "1px dashed rgba(0,0,0,.13)",
+                        borderRadius: 14,
+                        padding: "20px 18px",
+                      }}
+                    >
+                      <div style={{ fontSize: 14, fontWeight: 600, color: loop.text }}>
+                        No journeys yet
+                      </div>
+                      <p
+                        className="m-0"
+                        style={{
+                          marginTop: 6,
+                          fontSize: 12.5,
+                          color: loop.label,
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        Pick a destination and Loop checks every lift and ramp on the way —
+                        street to street.
+                      </p>
+                    </div>
+                  ) : null}
+
+                  <DisruptionCard summary={summary} onOpen={onOpenDisruptions} />
+                </div>
+
+                <div
+                  className="shrink-0"
+                  style={{
+                    padding: "14px 0 12px",
+                    paddingBottom: "max(12px, env(safe-area-inset-bottom))",
+                    background:
+                      "linear-gradient(to top, #f7f8f9 60%, rgba(247,248,249,0))",
+                  }}
+                >
+                  {!canPlan && (
+                    <p
+                      className="m-0 text-center"
+                      style={{ marginBottom: 8, fontSize: 12, color: loop.label }}
+                    >
+                      Choose a destination to continue
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    disabled={!canPlan}
+                    onClick={onPlan}
+                    className="w-full"
+                    style={{
+                      minHeight: 54,
+                      borderRadius: 15,
+                      border: "none",
+                      background: canPlan ? loop.text : loop.disabled,
+                      color: canPlan ? "#ffffff" : loop.label,
+                      fontSize: 16.5,
+                      fontWeight: 600,
+                      cursor: canPlan ? "pointer" : "not-allowed",
+                    }}
+                  >
+                    Plan step-free route
+                  </button>
+                  <div className="mt-3 text-center">
+                    <Link
+                      href="/explore"
+                      style={{
+                        fontSize: 12.5,
+                        color: loop.muted,
+                        borderBottom: "1px solid rgba(0,0,0,.15)",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Explore the network graph
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={panelKey}
+                className="absolute inset-0 flex flex-col overflow-hidden"
+                style={{ padding: "14px 20px 0" }}
+                variants={panelVariants}
+                custom={enterMode}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={panelTransition}
+              >
+                <StationResults
+                  index={index}
+                  disruptions={disruptions}
+                  query={activeSlot === "to" ? toQuery : fromQuery}
+                  filter={filter}
+                  onFilter={setFilter}
+                  here={here}
+                  geoError={geoError}
+                  slot={activeSlot}
+                  onSelect={onSelect}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }
@@ -277,6 +377,7 @@ function StationSlot({
   onQuery,
   onFocus,
   onExit,
+  onClear,
 }: {
   slot: "from" | "to";
   station: NetworkStation | null;
@@ -286,16 +387,27 @@ function StationSlot({
   onQuery: (value: string) => void;
   onFocus: () => void;
   onExit: () => void;
+  onClear: () => void;
 }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  useLayoutEffect(() => {
+    if (!active) return;
+    const el = inputRef.current;
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    if (el.value) el.select();
+  }, [active]);
+
   const rowStyle = {
-    minHeight: searchMode ? 56 : 60,
+    minHeight: 60,
     padding: "0 8px 0 18px",
     gap: 14,
     borderRadius: 12,
     border: "none",
     background: "transparent" as const,
     color: loop.text,
-    boxShadow: active ? loop.focus : undefined,
+    boxShadow: active ? loop.focus : "0 0 0 3px transparent",
+    transition: "box-shadow 160ms cubic-bezier(0.2, 0.8, 0.2, 1)",
   };
 
   const marker = (
@@ -308,6 +420,7 @@ function StationSlot({
         boxSizing: "border-box",
         border: `3px solid ${active ? loop.text : loop.label}`,
         borderRadius: slot === "from" ? 99 : 3,
+        transition: "border-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1)",
       }}
     />
   );
@@ -325,6 +438,39 @@ function StationSlot({
     </span>
   );
 
+  const clearSlot = searchMode ? (
+    active ? (
+      <button
+        type="button"
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={onClear}
+        className="cursor-pointer"
+        style={{
+          border: "none",
+          background: "transparent",
+          fontSize: 12,
+          color: loop.label,
+          minHeight: 44,
+          flexShrink: 0,
+        }}
+      >
+        Clear
+      </button>
+    ) : (
+      <span
+        aria-hidden
+        style={{
+          fontSize: 12,
+          minHeight: 44,
+          flexShrink: 0,
+          visibility: "hidden",
+        }}
+      >
+        Clear
+      </span>
+    )
+  ) : null;
+
   if (active) {
     return (
       <div className="flex w-full items-center text-left" style={rowStyle}>
@@ -332,7 +478,7 @@ function StationSlot({
         <span className="min-w-0 flex-1">
           {label}
           <input
-            autoFocus
+            ref={inputRef}
             value={query}
             onChange={(e) => onQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -357,21 +503,7 @@ function StationSlot({
             }}
           />
         </span>
-        <button
-          type="button"
-          onClick={onExit}
-          className="cursor-pointer"
-          style={{
-            border: "none",
-            background: "transparent",
-            fontSize: 12,
-            color: loop.label,
-            minHeight: 44,
-            flexShrink: 0,
-          }}
-        >
-          Clear
-        </button>
+        {clearSlot}
       </div>
     );
   }
@@ -384,7 +516,7 @@ function StationSlot({
       style={rowStyle}
     >
       {marker}
-      <span className="min-w-0">
+      <span className="min-w-0 flex-1">
         {label}
         <span
           className="block truncate"
@@ -397,6 +529,7 @@ function StationSlot({
           {station?.name ?? "Choose a station"}
         </span>
       </span>
+      {clearSlot}
     </button>
   );
 }

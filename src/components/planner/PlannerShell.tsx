@@ -187,7 +187,7 @@ export function PlannerShell({ network }: { network: NetworkData }) {
 
   return (
     <div
-      className="loop mx-auto flex min-h-full w-full flex-col"
+      className="loop mx-auto flex h-full min-h-0 w-full flex-col"
       style={{
         maxWidth: 430,
         background: loop.page,
@@ -241,6 +241,10 @@ export function PlannerShell({ network }: { network: NetworkData }) {
             onFocusSlot={setActiveSlot}
             onExitSearch={onExitSearch}
             onSelect={onSelectStation}
+            onClearSlot={(slot) => {
+              if (slot === "from") setFromId(null);
+              else setToId(null);
+            }}
             onSwap={() => {
               setFromId(toId);
               setToId(fromId);
