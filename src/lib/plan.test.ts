@@ -142,6 +142,44 @@ describe("findStructuralPath", () => {
     expect(liftIds).toContain("L-C");
     expect(liftIds).not.toContain("L-B-street");
     expect(result.status).toBe("ok");
+    expect(result.legs.map((l) => l.kind)).toEqual([
+      "start",
+      "lift",
+      "ride",
+      "lift",
+      "arrive",
+    ]);
+    expect(result.legs[0]).toMatchObject({
+      title: "Start · street level at Alpha",
+      fromNode: { type: "street" },
+      toNode: { type: "lift" },
+    });
+    expect(result.legs[1]).toMatchObject({
+      kind: "lift",
+      title: "Lift A to Victoria south platform.",
+      liftIds: ["L-A"],
+      fromNode: { type: "lift" },
+      toNode: { type: "line", lineId: "victoria" },
+    });
+    expect(result.legs[2]).toMatchObject({
+      kind: "ride",
+      title: "Take the Victoria to Charlie",
+      fromNode: { type: "line", lineId: "victoria" },
+      toNode: { type: "line", lineId: "victoria" },
+    });
+    expect(result.legs[3]).toMatchObject({
+      kind: "lift",
+      title: "Lift C to street.",
+      liftIds: ["L-C"],
+      fromNode: { type: "line", lineId: "victoria" },
+      toNode: { type: "lift" },
+    });
+    expect(result.legs[4]).toMatchObject({
+      kind: "arrive",
+      title: "Arrive · street level at Charlie",
+      fromNode: { type: "lift" },
+      toNode: { type: "street" },
+    });
   });
 
   it("uses an interchange chain when changing lines", () => {
@@ -178,8 +216,8 @@ describe("evaluatePath / planJourney", () => {
     const result = planJourney(index, "A", "E", feed, { now: NOW });
     expect(result.status).toBe("break");
     expect(result.breakAt).toBe("B");
-    const change = result.legs.find((l) => l.kind === "change" || l.status === "broken");
-    expect(change?.status).toBe("broken");
+    const broken = result.legs.find((l) => l.status === "broken" && l.kind === "lift");
+    expect(broken?.liftIds).toContain("L-X");
     expect(result.legs.some((l) => l.kind === "unreachable")).toBe(true);
   });
 
@@ -225,6 +263,55 @@ describe("evaluatePath / planJourney", () => {
     const alt = nearestStepFree(index, "D");
     expect(alt?.stationId).not.toBe("D");
     expect(alt?.stationId).toBe("E");
+  });
+
+  it("splits interchange into a change step plus a lift step", () => {
+    const result = planJourney(index, "A", "E", okFeed, { now: NOW });
+    expect(result.legs.map((l) => l.kind)).toEqual([
+      "start",
+      "lift",
+      "ride",
+      "change",
+      "lift",
+      "ride",
+      "lift",
+      "arrive",
+    ]);
+    const change = result.legs.find((l) => l.kind === "change");
+    expect(change).toMatchObject({
+      title: "Change at Bravo · to Jubilee",
+      fromNode: { type: "line", lineId: "victoria" },
+      toNode: { type: "lift" },
+    });
+    const changeLift = result.legs.find((l) => l.kind === "lift" && l.liftIds.includes("L-X"));
+    expect(changeLift).toMatchObject({
+      title: "Lift X to Jubilee east platform.",
+      fromNode: { type: "lift" },
+      toNode: { type: "line", lineId: "jubilee" },
+    });
+    const secondRide = result.legs.filter((l) => l.kind === "ride")[1];
+    expect(secondRide?.title).toBe("Take the Jubilee to Echo");
+  });
+
+  it("omits lift legs for level or ramp access", () => {
+    const toGolf = planJourney(index, "A", "G", okFeed, { now: NOW });
+    expect(toGolf.legs.at(-1)).toMatchObject({
+      kind: "arrive",
+      title: "Arrive · street level at Golf",
+      fromNode: { type: "line", lineId: "piccadilly" },
+      toNode: { type: "street" },
+    });
+    expect(toGolf.legs.some((l) => l.kind === "lift" && l.title.includes("to street"))).toBe(
+      false,
+    );
+
+    const fromGolf = planJourney(index, "G", "A", okFeed, { now: NOW });
+    expect(fromGolf.legs[0]).toMatchObject({
+      kind: "start",
+      fromNode: { type: "street" },
+      toNode: { type: "line", lineId: "piccadilly" },
+    });
+    expect(fromGolf.legs[1]?.kind).not.toBe("lift");
   });
 });
 

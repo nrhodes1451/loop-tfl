@@ -20,8 +20,22 @@ import type {
 export const STALE_MS = 15 * 60 * 1000;
 const CHANGE_WEIGHT = 10_000;
 
-export type LegKind = "start" | "ride" | "change" | "arrive" | "unreachable";
+export type LegKind =
+  | "start"
+  | "lift"
+  | "ride"
+  | "change"
+  | "arrive"
+  | "unreachable";
 export type LegStatus = "ok" | "broken" | "unknown" | "none";
+
+export type LegNodeType = "street" | "lift" | "line";
+
+export type LegNode = {
+  type: LegNodeType;
+  lineId?: string;
+  lineColor?: string;
+};
 
 export type Leg = {
   kind: LegKind;
@@ -33,6 +47,8 @@ export type Leg = {
   lineColor?: string;
   stops?: number;
   liftIds: string[];
+  fromNode: LegNode;
+  toNode: LegNode;
   chip?: { label: string; tone: "ok" | "break" | "unknown" };
   footnote?: string;
 };
@@ -485,15 +501,21 @@ function platformDirection(
   return p?.direction ? p.direction.replace(/-/g, " ") : "";
 }
 
-function throughCopy(index: NetworkIndex, stationIds: string[]): string {
+function throughCopy(index: NetworkIndex, stationIds: string[], stopCount: number): string {
   const names = stationIds.map((id) => stationName(index, id));
-  if (names.length === 0) return "No lifts needed — you stay on board.";
-  if (names.length === 1) return `Through ${names[0]}. No lifts needed — you stay on board.`;
-  if (names.length === 2) {
-    return `Through ${names[0]} and ${names[1]}. No lifts needed — you stay on board.`;
+  if (names.length === 0) {
+    return `${stopCount} stop${stopCount === 1 ? "" : "s"}.`;
   }
-  return `Through ${names[0]} and ${names[1]}. No lifts needed — you stay on board.`;
+  if (names.length === 1) return `Through ${names[0]}.`;
+  return `Through ${names[0]} and ${names[1]}.`;
 }
+
+function lineNode(index: NetworkIndex, lineId: string): LegNode {
+  return { type: "line", lineId, lineColor: lineColor(index, lineId) };
+}
+
+const STREET_NODE: LegNode = { type: "street" };
+const LIFT_NODE: LegNode = { type: "lift" };
 
 type LiftGroup = {
   stationId: string;
@@ -664,31 +686,46 @@ export function evaluatePath(
     return v;
   };
 
-  // Start
   const boardEvent = first.event.kind === "board" ? first.event : null;
-  const startStatus = mark(first.stationId, "board");
   const startLifts = boardEvent?.liftIds ?? [];
   const startDir = boardEvent ? platformDirection(index, boardEvent.platformId) : "";
   const startLine = lineName(index, first.lineId);
-  let startDetail: string;
-  if (startLifts.length > 0) {
-    startDetail = `${liftLabel(index, startLifts)} to ${startLine}${startDir ? ` ${startDir}` : ""} platform.`;
-  } else {
-    startDetail = `Level or ramp to ${startLine}${startDir ? ` ${startDir}` : ""} platform.`;
-  }
+  const startLineNode = lineNode(index, first.lineId);
+
   legs.push({
-    kind: brokenSeen && startStatus === "broken" && groupStatus.get(`board:${first.stationId}`) !== "broken"
-      ? "unreachable"
-      : "start",
-    status: startStatus,
+    kind: "start",
+    status: "ok",
     title: `Start · street level at ${fromName}`,
-    detail: startDetail,
+    detail:
+      startLifts.length > 0
+        ? ""
+        : `Level or ramp to ${startLine}${startDir ? ` ${startDir}` : ""} platform.`,
     stationId: first.stationId,
     lineId: first.lineId,
-    lineColor: lineColor(index, first.lineId),
-    liftIds: startLifts,
-    chip: startLifts.length > 0 ? chipFor(startStatus, disruptions) : undefined,
+    lineColor: startLineNode.lineColor,
+    liftIds: [],
+    fromNode: STREET_NODE,
+    toNode: startLifts.length > 0 ? LIFT_NODE : startLineNode,
   });
+
+  if (startLifts.length > 0) {
+    const st = mark(first.stationId, "board");
+    const isBreakHere = groupStatus.get(`board:${first.stationId}`) === "broken";
+    const msg = isBreakHere ? disruptionMessage(disruptions, startLifts) : undefined;
+    legs.push({
+      kind: "lift",
+      status: st,
+      title: `${liftLabel(index, startLifts)} to ${startLine}${startDir ? ` ${startDir}` : ""} platform.`,
+      detail: msg ?? "",
+      stationId: first.stationId,
+      lineId: first.lineId,
+      lineColor: startLineNode.lineColor,
+      liftIds: startLifts,
+      fromNode: LIFT_NODE,
+      toNode: startLineNode,
+      chip: chipFor(st, disruptions),
+    });
+  }
 
   // Group ride / change segments
   type Seg =
@@ -720,99 +757,132 @@ export function evaluatePath(
       const destStation = seg.stations[seg.stations.length - 1]!;
       const through = seg.stations.slice(0, -1);
       const unreachable = brokenSeen;
+      const rideNode = lineNode(index, seg.lineId);
       legs.push({
         kind: unreachable ? "unreachable" : "ride",
         status: unreachable ? "broken" : "ok",
         title: unreachable
           ? `Unreachable · ${lineName(index, seg.lineId)} to ${stationName(index, destStation)}`
-          : `Stay on ${lineName(index, seg.lineId)} · ${seg.stations.length} stop${seg.stations.length === 1 ? "" : "s"}`,
+          : `Take the ${lineName(index, seg.lineId)} to ${stationName(index, destStation)}`,
         detail: unreachable
           ? `${seg.stations.length} stop${seg.stations.length === 1 ? "" : "s"}. Blocked by the break above.`
-          : throughCopy(index, through),
+          : throughCopy(index, through, seg.stations.length),
         stationId: destStation,
         lineId: seg.lineId,
-        lineColor: lineColor(index, seg.lineId),
+        lineColor: rideNode.lineColor,
         stops: seg.stations.length,
         liftIds: [],
+        fromNode: rideNode,
+        toNode: rideNode,
       });
     } else {
       const n = seg.node;
       const ev = n.event;
       if (ev.kind !== "change") continue;
-      const st = mark(n.stationId, "change");
-      const unreachable = st === "broken" && groupStatus.get(`change:${n.stationId}`) !== "broken"
-        ? true
-        : brokenSeen && st === "broken" && groupStatus.get(`change:${n.stationId}`) !== "broken";
+      const alreadyUnreachable = brokenSeen;
       const isBreakHere = groupStatus.get(`change:${n.stationId}`) === "broken";
       const toLine = lineName(index, n.lineId);
+      const fromLineNode = lineNode(index, ev.fromLineId);
+      const toLineNode = lineNode(index, n.lineId);
       const dir = platformDirection(index, ev.toPlatformId);
-      let detail: string;
-      if (isBreakHere) {
-        const msg = disruptionMessage(disruptions, ev.liftIds);
-        detail = msg
-          ? `${stationName(index, n.stationId)}. ${msg}`
-          : `${stationName(index, n.stationId)}. Interchange lift unavailable. No step-free alternative inside this station.`;
-      } else if (ev.liftIds.length > 0) {
-        detail = `Step-free interchange: ${liftLabel(index, ev.liftIds)} to ${toLine}${dir ? ` ${dir}` : ""} platform.`;
-      } else {
-        detail = `Level interchange to ${toLine}${dir ? ` ${dir}` : ""} platform.`;
-      }
+      const hasLifts = ev.liftIds.length > 0;
+
       legs.push({
-        kind: unreachable || (brokenSeen && !isBreakHere) ? "unreachable" : "change",
-        status: st,
-        title: isBreakHere
-          ? `Change to ${toLine} · interchange lift out of service`
-          : `Change at ${stationName(index, n.stationId)} · to ${toLine}`,
-        detail,
+        kind: alreadyUnreachable ? "unreachable" : "change",
+        status: alreadyUnreachable ? "broken" : "ok",
+        title: `Change at ${stationName(index, n.stationId)} · to ${toLine}`,
+        detail: hasLifts ? "" : `Level interchange to ${toLine}${dir ? ` ${dir}` : ""} platform.`,
         stationId: n.stationId,
         lineId: n.lineId,
-        lineColor: lineColor(index, n.lineId),
-        liftIds: ev.liftIds,
-        chip: ev.liftIds.length > 0 ? chipFor(isBreakHere ? "broken" : st, disruptions) : undefined,
+        lineColor: toLineNode.lineColor,
+        liftIds: [],
+        fromNode: fromLineNode,
+        toNode: hasLifts ? LIFT_NODE : toLineNode,
       });
+
+      if (hasLifts) {
+        const st = mark(n.stationId, "change");
+        const msg = isBreakHere ? disruptionMessage(disruptions, ev.liftIds) : undefined;
+        legs.push({
+          kind: alreadyUnreachable ? "unreachable" : "lift",
+          status: st,
+          title: isBreakHere
+            ? `Change to ${toLine} · interchange lift out of service`
+            : `${liftLabel(index, ev.liftIds)} to ${toLine}${dir ? ` ${dir}` : ""} platform.`,
+          detail: isBreakHere
+            ? msg
+              ? `${stationName(index, n.stationId)}. ${msg}`
+              : `${stationName(index, n.stationId)}. Interchange lift unavailable. No step-free alternative inside this station.`
+            : "",
+          stationId: n.stationId,
+          lineId: n.lineId,
+          lineColor: toLineNode.lineColor,
+          liftIds: ev.liftIds,
+          fromNode: LIFT_NODE,
+          toNode: toLineNode,
+          chip: alreadyUnreachable ? undefined : chipFor(isBreakHere ? "broken" : st, disruptions),
+        });
+      }
     }
   }
 
   const alightPlats = accessiblePlatforms(index, last.stationId, last.lineId, "alight");
   const alight = alightPlats[0];
-  const arriveStatus = path.destUnreachable
-    ? "none"
-    : mark(last.stationId, "alight");
-  const arriveUnreachable = brokenSeen && arriveStatus === "broken" && groupStatus.get(`alight:${last.stationId}`) !== "broken";
   const arriveLifts = alight?.liftIds ?? [];
-  let arriveDetail: string;
-  if (path.destUnreachable) {
-    arriveDetail =
-      "Lifts serve staff levels only, or there is no street↔platform step-free access. You would be able to board, but not to leave.";
-  } else if (arriveLifts.length > 0) {
-    arriveDetail = `${liftLabel(index, arriveLifts)} to street.`;
-  } else {
-    arriveDetail = "Level or ramp to street.";
-  }
+  const lastLineNode = lineNode(index, last.lineId);
 
-  legs.push({
-    kind:
-      path.destUnreachable
-        ? "arrive"
-        : arriveUnreachable
-          ? "unreachable"
-          : "arrive",
-    status: arriveStatus,
-    title: path.destUnreachable
-      ? `${toName} · no street↔platform step-free access`
-      : arriveUnreachable
+  if (path.destUnreachable) {
+    legs.push({
+      kind: "arrive",
+      status: "none",
+      title: `${toName} · no street↔platform step-free access`,
+      detail:
+        "Lifts serve staff levels only, or there is no street↔platform step-free access. You would be able to board, but not to leave.",
+      stationId: last.stationId,
+      lineId: last.lineId,
+      lineColor: lastLineNode.lineColor,
+      liftIds: [],
+      fromNode: lastLineNode,
+      toNode: STREET_NODE,
+    });
+  } else {
+    const alreadyUnreachable = brokenSeen;
+    const isBreakHere = groupStatus.get(`alight:${last.stationId}`) === "broken";
+
+    if (arriveLifts.length > 0) {
+      const st = mark(last.stationId, "alight");
+      const msg = isBreakHere ? disruptionMessage(disruptions, arriveLifts) : undefined;
+      legs.push({
+        kind: alreadyUnreachable ? "unreachable" : "lift",
+        status: st,
+        title: `${liftLabel(index, arriveLifts)} to street.`,
+        detail: msg ?? "",
+        stationId: last.stationId,
+        lineId: last.lineId,
+        lineColor: lastLineNode.lineColor,
+        liftIds: arriveLifts,
+        fromNode: lastLineNode,
+        toNode: LIFT_NODE,
+        chip: alreadyUnreachable ? undefined : chipFor(st, disruptions),
+      });
+    }
+
+    const arriveUnreachable = alreadyUnreachable || isBreakHere;
+    legs.push({
+      kind: arriveUnreachable ? "unreachable" : "arrive",
+      status: arriveUnreachable ? "broken" : "ok",
+      title: arriveUnreachable
         ? `Not reached · street level at ${toName}`
         : `Arrive · street level at ${toName}`,
-    detail: arriveDetail,
-    stationId: last.stationId,
-    lineId: last.lineId,
-    lineColor: lineColor(index, last.lineId),
-    liftIds: arriveLifts,
-    chip:
-      !path.destUnreachable && arriveLifts.length > 0
-        ? chipFor(arriveStatus, disruptions)
-        : undefined,
-  });
+      detail: arriveLifts.length > 0 ? "" : "Level or ramp to street.",
+      stationId: last.stationId,
+      lineId: last.lineId,
+      lineColor: lastLineNode.lineColor,
+      liftIds: [],
+      fromNode: arriveLifts.length > 0 ? LIFT_NODE : lastLineNode,
+      toNode: STREET_NODE,
+    });
+  }
 
   const checkedAt = disruptions?.updatedAt;
   const stale = feedStale(disruptions, now);

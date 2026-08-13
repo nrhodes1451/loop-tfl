@@ -132,7 +132,7 @@ export function PlanningProgress({
 function SkeletonLegs() {
   const widths = ["72%", "58%", "78%", "52%", "64%"];
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {widths.map((w, i) => (
         <div key={i} className="flex" style={{ gap: 14, opacity: 1 - i * 0.12 }}>
           <div className="flex flex-col items-center" style={{ width: 18 }}>
@@ -145,18 +145,25 @@ function SkeletonLegs() {
                 boxSizing: "border-box",
               }}
             />
-            {i < widths.length - 1 && (
-              <span
-                className="flex-1"
-                style={{
-                  width: 5,
-                  minHeight: 28,
-                  margin: "5px 0",
-                  borderRadius: 3,
-                  background: `rgba(20,23,28,${0.09 - i * 0.005})`,
-                }}
-              />
-            )}
+            <span
+              className="flex-1"
+              style={{
+                width: 5,
+                minHeight: 22,
+                margin: "5px 0",
+                borderRadius: 3,
+                background: `rgba(20,23,28,${0.09 - i * 0.005})`,
+              }}
+            />
+            <span
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 99,
+                border: `4px solid rgba(20,23,28,${0.12 - i * 0.012})`,
+                boxSizing: "border-box",
+              }}
+            />
           </div>
           <div className="flex-1" style={{ paddingBottom: 8 }}>
             <div

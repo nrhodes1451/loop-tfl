@@ -1,103 +1,149 @@
 import type { CSSProperties } from "react";
-import type { Leg } from "@/lib/plan";
-import { loop } from "@/lib/tokens";
+import type { Leg, LegNode, LegStatus } from "@/lib/plan";
+import { colors, loop } from "@/lib/tokens";
 
-function Ring({
-  kind,
+const LIFT_BLUE = "#2563eb";
+
+function liftCircle(status: LegStatus, breakMark: boolean): string {
+  if (status === "broken") return breakMark ? loop.brk : "rgba(20,23,28,.28)";
+  if (status === "unknown" || status === "none") return colors.unknown;
+  return LIFT_BLUE;
+}
+
+function LiftIcon() {
+  return (
+    <svg width="12" height="13" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect
+        x="5"
+        y="2.5"
+        width="14"
+        height="19"
+        rx="2"
+        stroke="#ffffff"
+        strokeWidth="2.4"
+      />
+      <path d="M12 6.5l3.2 3.4H8.8L12 6.5z" fill="#ffffff" />
+      <path d="M12 17.5l-3.2-3.4h6.4L12 17.5z" fill="#ffffff" />
+    </svg>
+  );
+}
+
+function Node({
+  node,
   status,
-  last,
+  breakMark,
 }: {
-  kind: Leg["kind"];
-  status: Leg["status"];
-  last: boolean;
+  node: LegNode;
+  status: LegStatus;
+  breakMark: boolean;
 }) {
-  const broken = status === "broken";
   const none = status === "none";
-  const unknown = status === "unknown";
-  const pass = kind === "ride";
+  const unreachable = status === "broken" && !breakMark;
 
-  let ring: CSSProperties = {
-    width: pass ? 14 : 18,
-    height: pass ? 14 : 18,
+  if (node.type === "street") {
+    const dashed = none || unreachable;
+    return (
+      <span
+        aria-hidden
+        className="relative inline-flex items-center justify-center"
+        style={{
+          width: 22,
+          height: 22,
+          flexShrink: 0,
+          borderRadius: 99,
+          background: dashed ? "transparent" : loop.ok,
+          border: dashed ? "4px dashed rgba(20,23,28,.55)" : "none",
+          boxSizing: "border-box",
+        }}
+      >
+        {!dashed && (
+          <svg width="11" height="12" viewBox="0 0 7 8" fill="none">
+            <path
+              d="M2.6 0h1.8v3.2h1.7L3.5 7.2 0.9 3.2h1.7V0z"
+              fill="#ffffff"
+            />
+          </svg>
+        )}
+      </span>
+    );
+  }
+
+  if (node.type === "lift") {
+    const dashed = none || unreachable;
+    return (
+      <span
+        aria-hidden
+        className="inline-flex items-center justify-center"
+        style={{
+          width: 22,
+          height: 22,
+          flexShrink: 0,
+          borderRadius: 99,
+          background: dashed ? "transparent" : liftCircle(status, breakMark),
+          border: dashed ? "4px dashed rgba(20,23,28,.55)" : "none",
+          boxShadow: breakMark ? "0 0 0 4px rgba(209,37,46,.2)" : undefined,
+          boxSizing: "border-box",
+        }}
+      >
+        {!dashed && <LiftIcon />}
+      </span>
+    );
+  }
+
+  const line = node.lineColor ?? loop.label;
+  const lineStyle: CSSProperties = {
+    width: 22,
+    height: 22,
     flexShrink: 0,
+    borderRadius: 99,
+    background: "#ffffff",
+    border:
+      none || unreachable
+        ? "4px dashed rgba(20,23,28,.55)"
+        : `4px solid ${line}`,
     boxSizing: "border-box",
   };
 
-  if (pass) {
-    const color = broken || none ? "rgba(20,23,28,.28)" : (undefined as unknown as string);
-    ring = {
-      ...ring,
-      borderRadius: 99,
-      background: color ?? "currentColor",
-      boxShadow: color ? undefined : "0 0 0 3px rgba(0,152,212,.25)",
-    };
-  } else if (broken && kind === "change") {
-    ring = {
-      ...ring,
-      borderRadius: 4,
-      background: loop.brk,
-      boxShadow: "0 0 0 4px rgba(209,37,46,.2)",
-    };
-  } else if (none) {
-    ring = {
-      ...ring,
-      borderRadius: 99,
-      border: "4px dashed rgba(20,23,28,.55)",
-      background: "transparent",
-    };
-  } else if (unknown) {
-    ring = {
-      ...ring,
-      borderRadius: 99,
-      border: `4px solid ${loop.unknown}`,
-      background: "transparent",
-    };
-  } else if (kind === "unreachable") {
-    ring = {
-      ...ring,
-      borderRadius: 99,
-      border: "4px dashed rgba(20,23,28,.35)",
-      background: "transparent",
-    };
-  } else {
-    ring = {
-      ...ring,
-      borderRadius: 99,
-      border: `4px solid ${loop.ok}`,
-      background: "transparent",
-    };
-  }
+  return <span aria-hidden style={lineStyle} />;
+}
 
-  const dashed = broken || none || kind === "unreachable";
-  const connectorColor = dashed
-    ? undefined
-    : kind === "arrive" || last
-      ? "transparent"
-      : undefined;
+function Gutter({
+  from,
+  to,
+  status,
+  breakMark,
+}: {
+  from: LegNode;
+  to: LegNode;
+  status: LegStatus;
+  breakMark: boolean;
+}) {
+  const dashed = status === "broken" || status === "none";
+  const lineCol =
+    (from.type === "line" ? from.lineColor : undefined) ??
+    (to.type === "line" ? to.lineColor : undefined);
+  const connectorColor = lineCol ?? loop.ok;
 
   return (
     <div
       className="flex flex-col items-center"
-      style={{ width: 18, alignSelf: "stretch" }}
+      style={{ width: 22, alignSelf: "stretch" }}
     >
-      <span style={ring} />
-      {!last && (
-        <span
-          className="flex-1"
-          style={{
-            width: 5,
-            borderRadius: 3,
-            margin: "5px 0",
-            minHeight: 12,
-            background: dashed
-              ? "repeating-linear-gradient(to bottom, rgba(20,23,28,.28) 0 6px, transparent 6px 12px)"
-              : connectorColor === "transparent"
-                ? "transparent"
-                : "currentColor",
-            opacity: dashed ? 1 : 0.95,
-          }}
-        />
-      )}
+      <Node node={from} status={status} breakMark={breakMark} />
+      <span
+        className="flex-1"
+        style={{
+          width: 5,
+          borderRadius: 3,
+          margin: "5px 0",
+          minHeight: 16,
+          background: dashed
+            ? "repeating-linear-gradient(to bottom, rgba(20,23,28,.28) 0 6px, transparent 6px 12px)"
+            : connectorColor,
+          opacity: dashed ? 1 : 0.95,
+        }}
+      />
+      <Node node={to} status={status} breakMark={breakMark} />
     </div>
   );
 }
@@ -135,22 +181,28 @@ export function LegRow({
   last: boolean;
 }) {
   const dim = leg.kind === "unreachable";
-  const callout = leg.status === "broken" && leg.kind === "change";
-  const dashedCard = leg.status === "none" && (leg.kind === "arrive" || leg.kind === "change");
-  const color = leg.lineColor ?? loop.label;
+  const breakMark =
+    leg.status === "broken" && (leg.kind === "change" || leg.kind === "lift");
+  const callout = breakMark;
+  const dashedCard =
+    leg.status === "none" && (leg.kind === "arrive" || leg.kind === "change");
 
   return (
     <li
       className="flex"
       style={{
         gap: 14,
-        color,
         opacity: dim ? 0.45 : 1,
-        paddingBottom: last ? 0 : 22,
+        paddingBottom: last ? 0 : 24,
         listStyle: "none",
       }}
     >
-      <Ring kind={leg.kind} status={leg.status} last={last} />
+      <Gutter
+        from={leg.fromNode}
+        to={leg.toNode}
+        status={leg.status}
+        breakMark={breakMark}
+      />
       <div className="min-w-0 flex-1" style={{ color: loop.text }}>
         {callout || dashedCard ? (
           <div
@@ -173,17 +225,19 @@ export function LegRow({
             >
               {leg.title}
             </div>
-            <p
-              className="m-0"
-              style={{
-                marginTop: 4,
-                fontSize: 13,
-                lineHeight: 1.5,
-                color: loop.muted,
-              }}
-            >
-              {leg.detail}
-            </p>
+            {leg.detail ? (
+              <p
+                className="m-0"
+                style={{
+                  marginTop: 4,
+                  fontSize: 13,
+                  lineHeight: 1.5,
+                  color: loop.muted,
+                }}
+              >
+                {leg.detail}
+              </p>
+            ) : null}
             {leg.footnote && (
               <div
                 className="font-[family-name:var(--font-ibm-plex-mono)]"
@@ -198,6 +252,7 @@ export function LegRow({
                 {leg.footnote}
               </div>
             )}
+            {leg.chip && <Chip chip={leg.chip} />}
           </div>
         ) : (
           <>
@@ -210,17 +265,19 @@ export function LegRow({
             >
               {leg.title}
             </div>
-            <p
-              className="m-0"
-              style={{
-                marginTop: 4,
-                fontSize: 13,
-                lineHeight: 1.5,
-                color: loop.muted,
-              }}
-            >
-              {leg.detail}
-            </p>
+            {leg.detail ? (
+              <p
+                className="m-0"
+                style={{
+                  marginTop: 4,
+                  fontSize: 13,
+                  lineHeight: 1.5,
+                  color: loop.muted,
+                }}
+              >
+                {leg.detail}
+              </p>
+            ) : null}
             {leg.chip && <Chip chip={leg.chip} />}
           </>
         )}

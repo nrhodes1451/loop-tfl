@@ -165,7 +165,9 @@ function ResultBody({
   const breakStation = plan.breakAt
     ? index.stationById.get(plan.breakAt)?.name
     : undefined;
-  const breakLeg = plan.legs.find((l) => l.status === "broken" && l.kind === "change");
+  const breakLeg = plan.legs.find(
+    (l) => l.status === "broken" && (l.kind === "change" || l.kind === "lift"),
+  );
 
   const unknownCount = plan.legs.filter((l) => l.status === "unknown").length;
 
