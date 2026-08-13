@@ -503,11 +503,12 @@ function platformDirection(
 
 function throughCopy(index: NetworkIndex, stationIds: string[], stopCount: number): string {
   const names = stationIds.map((id) => stationName(index, id));
+  const stops = `${stopCount} stop${stopCount === 1 ? "" : "s"}`;
   if (names.length === 0) {
-    return `${stopCount} stop${stopCount === 1 ? "" : "s"}.`;
+    return `${stops}.`;
   }
-  if (names.length === 1) return `Through ${names[0]}.`;
-  return `Through ${names[0]} and ${names[1]}.`;
+  if (names.length === 1) return `${stops} through ${names[0]}.`;
+  return `${stops} through ${names[0]} and ${names[1]}.`;
 }
 
 function lineNode(index: NetworkIndex, lineId: string): LegNode {

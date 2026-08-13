@@ -57,7 +57,7 @@ function Node({
         }}
       >
         {!dashed && (
-          <svg width="11" height="12" viewBox="0 0 7 8" fill="none">
+          <svg width="12" height="12" viewBox="0 0 7 7" fill="none">
             <path
               d="M2.6 0h1.8v3.2h1.7L3.5 7.2 0.9 3.2h1.7V0z"
               fill="#ffffff"
@@ -112,11 +112,15 @@ function Gutter({
   to,
   status,
   breakMark,
+  showFrom,
+  showTo,
 }: {
   from: LegNode;
   to: LegNode;
   status: LegStatus;
   breakMark: boolean;
+  showFrom: boolean;
+  showTo: boolean;
 }) {
   const dashed = status === "broken" || status === "none";
   const lineCol =
@@ -129,13 +133,14 @@ function Gutter({
       className="flex flex-col items-center"
       style={{ width: 22, alignSelf: "stretch" }}
     >
-      <Node node={from} status={status} breakMark={breakMark} />
+      {showFrom && <Node node={from} status={status} breakMark={breakMark} />}
       <span
         className="flex-1"
         style={{
           width: 5,
           borderRadius: 3,
-          margin: "5px 0",
+          marginTop: showFrom ? 5 : 0,
+          marginBottom: 5,
           minHeight: 16,
           background: dashed
             ? "repeating-linear-gradient(to bottom, rgba(20,23,28,.28) 0 6px, transparent 6px 12px)"
@@ -143,7 +148,7 @@ function Gutter({
           opacity: dashed ? 1 : 0.95,
         }}
       />
-      <Node node={to} status={status} breakMark={breakMark} />
+      {showTo && <Node node={to} status={status} breakMark={breakMark} />}
     </div>
   );
 }
@@ -178,6 +183,7 @@ export function LegRow({
   last,
 }: {
   leg: Leg;
+  previous: Leg | null;
   last: boolean;
 }) {
   const dim = leg.kind === "unreachable";
@@ -186,6 +192,8 @@ export function LegRow({
   const callout = breakMark;
   const dashedCard =
     leg.status === "none" && (leg.kind === "arrive" || leg.kind === "change");
+  const showFrom = true;
+  const showTo = last;
 
   return (
     <li
@@ -193,7 +201,6 @@ export function LegRow({
       style={{
         gap: 14,
         opacity: dim ? 0.45 : 1,
-        paddingBottom: last ? 0 : 24,
         listStyle: "none",
       }}
     >
@@ -202,8 +209,13 @@ export function LegRow({
         to={leg.toNode}
         status={leg.status}
         breakMark={breakMark}
+        showFrom={showFrom}
+        showTo={showTo}
       />
-      <div className="min-w-0 flex-1" style={{ color: loop.text }}>
+      <div
+        className="min-w-0 flex-1"
+        style={{ color: loop.text, paddingBottom: last ? 0 : 24 }}
+      >
         {callout || dashedCard ? (
           <div
             style={{

@@ -132,60 +132,68 @@ export function PlanningProgress({
 function SkeletonLegs() {
   const widths = ["72%", "58%", "78%", "52%", "64%"];
   return (
-    <div className="flex flex-col gap-6">
-      {widths.map((w, i) => (
-        <div key={i} className="flex" style={{ gap: 14, opacity: 1 - i * 0.12 }}>
-          <div className="flex flex-col items-center" style={{ width: 18 }}>
-            <span
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: 99,
-                border: `4px solid rgba(20,23,28,${0.14 - i * 0.012})`,
-                boxSizing: "border-box",
-              }}
-            />
-            <span
-              className="flex-1"
-              style={{
-                width: 5,
-                minHeight: 22,
-                margin: "5px 0",
-                borderRadius: 3,
-                background: `rgba(20,23,28,${0.09 - i * 0.005})`,
-              }}
-            />
-            <span
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: 99,
-                border: `4px solid rgba(20,23,28,${0.12 - i * 0.012})`,
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
-          <div className="flex-1" style={{ paddingBottom: 8 }}>
+    <div>
+      {widths.map((w, i) => {
+        const last = i === widths.length - 1;
+        return (
+          <div key={i} className="flex" style={{ gap: 14, opacity: 1 - i * 0.12 }}>
             <div
-              style={{
-                height: 13,
-                width: w,
-                borderRadius: 5,
-                background: "rgba(20,23,28,.12)",
-              }}
-            />
-            <div
-              style={{
-                marginTop: 8,
-                height: 11,
-                width: "44%",
-                borderRadius: 5,
-                background: "rgba(20,23,28,.08)",
-              }}
-            />
+              className="flex flex-col items-center"
+              style={{ width: 22, alignSelf: "stretch" }}
+            >
+              <span
+                style={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: 99,
+                  border: `4px solid rgba(20,23,28,${0.14 - i * 0.012})`,
+                  boxSizing: "border-box",
+                }}
+              />
+              <span
+                className="flex-1"
+                style={{
+                  width: 5,
+                  minHeight: 16,
+                  margin: "5px 0",
+                  borderRadius: 3,
+                  background: `rgba(20,23,28,${0.09 - i * 0.005})`,
+                }}
+              />
+              {last && (
+                <span
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: 99,
+                    border: `4px solid rgba(20,23,28,${0.08})`,
+                    boxSizing: "border-box",
+                  }}
+                />
+              )}
+            </div>
+            <div className="flex-1" style={{ paddingBottom: last ? 0 : 24 }}>
+              <div
+                style={{
+                  height: 13,
+                  width: w,
+                  borderRadius: 5,
+                  background: "rgba(20,23,28,.12)",
+                }}
+              />
+              <div
+                style={{
+                  marginTop: 8,
+                  height: 11,
+                  width: "44%",
+                  borderRadius: 5,
+                  background: "rgba(20,23,28,.08)",
+                }}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

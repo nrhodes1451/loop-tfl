@@ -164,6 +164,7 @@ describe("findStructuralPath", () => {
     expect(result.legs[2]).toMatchObject({
       kind: "ride",
       title: "Take the Victoria to Charlie",
+      detail: "2 stops through Bravo.",
       fromNode: { type: "line", lineId: "victoria" },
       toNode: { type: "line", lineId: "victoria" },
     });

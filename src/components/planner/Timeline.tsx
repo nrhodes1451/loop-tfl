@@ -26,7 +26,12 @@ export function Timeline({
       )}
       <ol className="m-0 p-0">
         {legs.map((leg, i) => (
-          <LegRow key={`${leg.kind}-${leg.stationId ?? i}-${i}`} leg={leg} last={i === legs.length - 1} />
+          <LegRow
+            key={`${leg.kind}-${leg.stationId ?? i}-${i}`}
+            leg={leg}
+            previous={i > 0 ? (legs[i - 1] ?? null) : null}
+            last={i === legs.length - 1}
+          />
         ))}
       </ol>
     </div>
