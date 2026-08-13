@@ -16,7 +16,6 @@ import { DisruptionList } from "./DisruptionList";
 import { PlanResult } from "./PlanResult";
 import { RouteEntry } from "./RouteEntry";
 import { ScreenSwap, type SwapDirection } from "./ScreenSwap";
-import { StationPicker } from "./StationPicker";
 
 const POLL_MS = 60_000;
 
@@ -24,7 +23,7 @@ export function PlannerShell({ network }: { network: NetworkData }) {
   const index = useMemo(() => indexNetwork(network), [network]);
   const [fromId, setFromId] = useState<string | null>(null);
   const [toId, setToId] = useState<string | null>(null);
-  const [pickerOpen, setPickerOpen] = useState<"from" | "to" | null>(null);
+  const [activeSlot, setActiveSlot] = useState<"from" | "to" | null>(null);
   const [disruptionsOpen, setDisruptionsOpen] = useState(false);
   const [screen, setScreen] = useState<"entry" | "result">("entry");
   const [planning, setPlanning] = useState(false);
@@ -95,6 +94,7 @@ export function PlannerShell({ network }: { network: NetworkData }) {
       if (!origin || !dest) return;
       const token = ++gen.current;
       setScreen("result");
+      setActiveSlot(null);
       setPlanning(true);
       setLiftsChecked(0);
       setLiftsTotal(0);
@@ -157,22 +157,23 @@ export function PlannerShell({ network }: { network: NetworkData }) {
     setPlanning(false);
   }, [loadDisruptions, path, index, runPlan]);
 
+  const onExitSearch = useCallback(() => setActiveSlot(null), []);
+
   const onSelectStation = useCallback(
     (id: string) => {
-      if (pickerOpen === "from") {
+      if (activeSlot === "from") {
         setFromId(id);
-        setPickerOpen(toId ? null : "to");
-      } else if (pickerOpen === "to") {
+        setActiveSlot(toId ? null : "to");
+      } else if (activeSlot === "to") {
         setToId(id);
-        setPickerOpen(fromId ? null : "from");
+        setActiveSlot(fromId ? null : "from");
       }
     },
-    [pickerOpen, fromId, toId],
+    [activeSlot, fromId, toId],
   );
 
-  const screenId = pickerOpen
-    ? `picker-${pickerOpen}`
-    : disruptionsOpen && disruptions?.ok
+  const screenId =
+    disruptionsOpen && disruptions?.ok
       ? "disruptions"
       : screen === "result" && from && to
         ? "result"
@@ -195,15 +196,7 @@ export function PlannerShell({ network }: { network: NetworkData }) {
       }}
     >
       <ScreenSwap id={screenId} direction={direction}>
-        {pickerOpen ? (
-          <StationPicker
-            index={index}
-            disruptions={disruptions}
-            slot={pickerOpen}
-            onSelect={onSelectStation}
-            onBack={() => setPickerOpen(null)}
-          />
-        ) : disruptionsOpen && disruptions?.ok ? (
+        {disruptionsOpen && disruptions?.ok ? (
           <DisruptionList
             index={index}
             disruptions={disruptions}
@@ -235,7 +228,7 @@ export function PlannerShell({ network }: { network: NetworkData }) {
             }}
             onPickDestination={() => {
               setScreen("entry");
-              setPickerOpen("to");
+              setActiveSlot("to");
             }}
           />
         ) : (
@@ -244,7 +237,10 @@ export function PlannerShell({ network }: { network: NetworkData }) {
             from={from}
             to={to}
             disruptions={disruptions}
-            onOpenPicker={setPickerOpen}
+            activeSlot={activeSlot}
+            onFocusSlot={setActiveSlot}
+            onExitSearch={onExitSearch}
+            onSelect={onSelectStation}
             onSwap={() => {
               setFromId(toId);
               setToId(fromId);
@@ -260,7 +256,6 @@ export function PlannerShell({ network }: { network: NetworkData }) {
 
 function swapDirection(fromId: string, toId: string): SwapDirection {
   if (fromId === toId) return "fade";
-  if (fromId.startsWith("picker-") && toId.startsWith("picker-")) return "fade";
   if (toId === "entry") return "back";
   return "forward";
 }

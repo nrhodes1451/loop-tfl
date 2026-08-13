@@ -1,14 +1,21 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { disruptionStationSummary, type NetworkIndex } from "@/lib/plan";
 import { loop } from "@/lib/tokens";
 import type { DisruptionPayload, NetworkStation } from "@/lib/types";
+import { StationResults, type StationFilter } from "./StationResults";
 
 export function RouteEntry({
   index,
   from,
   to,
   disruptions,
-  onOpenPicker,
+  activeSlot,
+  onFocusSlot,
+  onExitSearch,
+  onSelect,
   onSwap,
   onPlan,
   onOpenDisruptions,
@@ -17,13 +24,47 @@ export function RouteEntry({
   from: NetworkStation | null;
   to: NetworkStation | null;
   disruptions: DisruptionPayload | null;
-  onOpenPicker: (slot: "from" | "to") => void;
+  activeSlot: "from" | "to" | null;
+  onFocusSlot: (slot: "from" | "to") => void;
+  onExitSearch: () => void;
+  onSelect: (stationId: string) => void;
   onSwap: () => void;
   onPlan: () => void;
   onOpenDisruptions: () => void;
 }) {
   const canPlan = Boolean(from && to && from.id !== to.id);
   const summary = disruptionStationSummary(index, disruptions);
+  const searching = activeSlot !== null;
+
+  const [query, setQuery] = useState("");
+  const [querySlot, setQuerySlot] = useState(activeSlot);
+  const [filter, setFilter] = useState<StationFilter>("all");
+  const [here, setHere] = useState<{ lat: number; lon: number } | null>(null);
+  const [geoError, setGeoError] = useState(false);
+
+  if (querySlot !== activeSlot) {
+    setQuerySlot(activeSlot);
+    setQuery("");
+  }
+
+  useEffect(() => {
+    if (!searching) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onExitSearch();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [searching, onExitSearch]);
+
+  useEffect(() => {
+    if (filter !== "nearby" || here) return;
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setHere({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+      () => setGeoError(true),
+      { maximumAge: 60_000, timeout: 8_000 },
+    );
+  }, [filter, here]);
 
   return (
     <div className="flex min-h-full flex-col">
@@ -83,7 +124,12 @@ export function RouteEntry({
             <StationSlot
               slot="from"
               station={from}
-              onClick={() => onOpenPicker("from")}
+              active={activeSlot === "from"}
+              searchMode={searching}
+              query={query}
+              onQuery={setQuery}
+              onFocus={() => onFocusSlot("from")}
+              onExit={onExitSearch}
             />
             <div
               style={{
@@ -95,7 +141,12 @@ export function RouteEntry({
             <StationSlot
               slot="to"
               station={to}
-              onClick={() => onOpenPicker("to")}
+              active={activeSlot === "to"}
+              searchMode={searching}
+              query={query}
+              onQuery={setQuery}
+              onFocus={() => onFocusSlot("to")}
+              onExit={onExitSearch}
             />
           </div>
           <button
@@ -116,85 +167,103 @@ export function RouteEntry({
           </button>
         </div>
 
-        {!from && !to ? (
-          <div
-            className="text-center"
-            style={{
-              border: "1px dashed rgba(0,0,0,.13)",
-              borderRadius: 14,
-              padding: "20px 18px",
-            }}
-          >
-            <div style={{ fontSize: 14, fontWeight: 600, color: loop.text }}>
-              No journeys yet
-            </div>
-            <p
-              className="m-0"
-              style={{
-                marginTop: 6,
-                fontSize: 12.5,
-                color: loop.label,
-                lineHeight: 1.5,
-              }}
-            >
-              Pick a destination and Loop checks every lift and ramp on the way —
-              street to street.
-            </p>
-          </div>
-        ) : null}
+        {searching && activeSlot ? (
+          <StationResults
+            index={index}
+            disruptions={disruptions}
+            query={query}
+            filter={filter}
+            onFilter={setFilter}
+            here={here}
+            geoError={geoError}
+            slot={activeSlot}
+            onSelect={onSelect}
+          />
+        ) : (
+          <>
+            {!from && !to ? (
+              <div
+                className="text-center"
+                style={{
+                  border: "1px dashed rgba(0,0,0,.13)",
+                  borderRadius: 14,
+                  padding: "20px 18px",
+                }}
+              >
+                <div style={{ fontSize: 14, fontWeight: 600, color: loop.text }}>
+                  No journeys yet
+                </div>
+                <p
+                  className="m-0"
+                  style={{
+                    marginTop: 6,
+                    fontSize: 12.5,
+                    color: loop.label,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Pick a destination and Loop checks every lift and ramp on the way —
+                  street to street.
+                </p>
+              </div>
+            ) : null}
 
-        <DisruptionCard summary={summary} onOpen={onOpenDisruptions} />
+            <DisruptionCard summary={summary} onOpen={onOpenDisruptions} />
 
-        <div className="mt-auto" />
+            <div className="mt-auto" />
+          </>
+        )}
       </div>
 
-      <div
-        style={{
-          padding: "14px 20px 12px",
-          paddingBottom: "max(12px, env(safe-area-inset-bottom))",
-          background: "linear-gradient(to top, #f7f8f9 60%, rgba(247,248,249,0))",
-        }}
-      >
-        {!canPlan && (
-          <p
-            className="m-0 text-center"
-            style={{ marginBottom: 8, fontSize: 12, color: loop.label }}
-          >
-            Choose a destination to continue
-          </p>
-        )}
-        <button
-          type="button"
-          disabled={!canPlan}
-          onClick={onPlan}
-          className="w-full"
+      {searching ? null : (
+        <div
           style={{
-            minHeight: 54,
-            borderRadius: 15,
-            border: "none",
-            background: canPlan ? loop.text : loop.disabled,
-            color: canPlan ? "#ffffff" : loop.label,
-            fontSize: 16.5,
-            fontWeight: 600,
-            cursor: canPlan ? "pointer" : "not-allowed",
+            padding: "14px 20px 12px",
+            paddingBottom: "max(12px, env(safe-area-inset-bottom))",
+            background: "linear-gradient(to top, #f7f8f9 60%, rgba(247,248,249,0))",
           }}
         >
-          Plan step-free route
-        </button>
-        <div className="mt-3 text-center">
-          <Link
-            href="/explore"
+          {!canPlan && (
+            <p
+              className="m-0 text-center"
+              style={{ marginBottom: 8, fontSize: 12, color: loop.label }}
+            >
+              Choose a destination to continue
+            </p>
+          )}
+          <button
+            type="button"
+            disabled={!canPlan}
+            onClick={onPlan}
+            className="w-full"
             style={{
-              fontSize: 12.5,
-              color: loop.muted,
-              borderBottom: "1px solid rgba(0,0,0,.15)",
-              textDecoration: "none",
+              minHeight: 54,
+              borderRadius: 15,
+              border: "none",
+              background: canPlan ? loop.text : loop.disabled,
+              color: canPlan ? "#ffffff" : loop.label,
+              fontSize: 16.5,
+              fontWeight: 600,
+              cursor: canPlan ? "pointer" : "not-allowed",
             }}
           >
-            Explore the network graph
-          </Link>
+            Plan step-free route
+          </button>
+          <div className="mt-3 text-center">
+            <Link
+              href="/explore"
+              style={{
+                fontSize: 12.5,
+                color: loop.muted,
+                borderBottom: "1px solid rgba(0,0,0,.15)",
+                textDecoration: "none",
+              }}
+            >
+              Explore the network graph
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -202,49 +271,121 @@ export function RouteEntry({
 function StationSlot({
   slot,
   station,
-  onClick,
+  active,
+  searchMode,
+  query,
+  onQuery,
+  onFocus,
+  onExit,
 }: {
   slot: "from" | "to";
   station: NetworkStation | null;
-  onClick: () => void;
+  active: boolean;
+  searchMode: boolean;
+  query: string;
+  onQuery: (value: string) => void;
+  onFocus: () => void;
+  onExit: () => void;
 }) {
+  const rowStyle = {
+    minHeight: searchMode ? 56 : 60,
+    padding: "0 8px 0 18px",
+    gap: 14,
+    borderRadius: 12,
+    border: "none",
+    background: "transparent" as const,
+    color: loop.text,
+    boxShadow: active ? loop.focus : undefined,
+  };
+
+  const marker = (
+    <span
+      aria-hidden
+      style={{
+        width: 14,
+        height: 14,
+        flexShrink: 0,
+        boxSizing: "border-box",
+        border: `3px solid ${active ? loop.text : loop.label}`,
+        borderRadius: slot === "from" ? 99 : 3,
+      }}
+    />
+  );
+
+  const label = (
+    <span
+      className="block font-[family-name:var(--font-ibm-plex-mono)]"
+      style={{
+        fontSize: 9.5,
+        color: loop.label,
+        letterSpacing: "0.08em",
+      }}
+    >
+      {slot === "from" ? "FROM" : "TO"}
+    </span>
+  );
+
+  if (active) {
+    return (
+      <div className="flex w-full items-center text-left" style={rowStyle}>
+        {marker}
+        <span className="min-w-0 flex-1">
+          {label}
+          <input
+            autoFocus
+            value={query}
+            onChange={(e) => onQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                onExit();
+              }
+            }}
+            placeholder="Choose a station"
+            aria-label={slot === "from" ? "From station" : "To station"}
+            className="min-w-0 w-full placeholder:text-[#7b828c]"
+            style={{
+              display: "block",
+              border: "none",
+              outline: "none",
+              background: "transparent",
+              fontSize: 16,
+              fontWeight: 600,
+              color: loop.text,
+              padding: 0,
+              caretColor: loop.text,
+            }}
+          />
+        </span>
+        <button
+          type="button"
+          onClick={onExit}
+          className="cursor-pointer"
+          style={{
+            border: "none",
+            background: "transparent",
+            fontSize: 12,
+            color: loop.label,
+            minHeight: 44,
+            flexShrink: 0,
+          }}
+        >
+          Clear
+        </button>
+      </div>
+    );
+  }
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={onFocus}
       className="flex w-full cursor-pointer items-center text-left"
-      style={{
-        minHeight: 60,
-        padding: "0 8px 0 18px",
-        gap: 14,
-        borderRadius: 12,
-        border: "none",
-        background: "transparent",
-        color: loop.text,
-      }}
+      style={rowStyle}
     >
-      <span
-        aria-hidden
-        style={{
-          width: 14,
-          height: 14,
-          flexShrink: 0,
-          boxSizing: "border-box",
-          border: `3px solid ${loop.label}`,
-          borderRadius: slot === "from" ? 99 : 3,
-        }}
-      />
+      {marker}
       <span className="min-w-0">
-        <span
-          className="block font-[family-name:var(--font-ibm-plex-mono)]"
-          style={{
-            fontSize: 9.5,
-            color: loop.label,
-            letterSpacing: "0.08em",
-          }}
-        >
-          {slot === "from" ? "FROM" : "TO"}
-        </span>
+        {label}
         <span
           className="block truncate"
           style={{
