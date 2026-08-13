@@ -114,6 +114,7 @@ function Gutter({
   breakMark,
   showFrom,
   showTo,
+  last,
 }: {
   from: LegNode;
   to: LegNode;
@@ -121,12 +122,14 @@ function Gutter({
   breakMark: boolean;
   showFrom: boolean;
   showTo: boolean;
+  last: boolean;
 }) {
   const dashed = status === "broken" || status === "none";
   const lineCol =
     (from.type === "line" ? from.lineColor : undefined) ??
     (to.type === "line" ? to.lineColor : undefined);
   const connectorColor = lineCol ?? loop.ok;
+  const showConnector = !last || showTo;
 
   return (
     <div
@@ -134,20 +137,22 @@ function Gutter({
       style={{ width: 22, alignSelf: "stretch" }}
     >
       {showFrom && <Node node={from} status={status} breakMark={breakMark} />}
-      <span
-        className="flex-1"
-        style={{
-          width: 5,
-          borderRadius: 3,
-          marginTop: showFrom ? 5 : 0,
-          marginBottom: 5,
-          minHeight: 16,
-          background: dashed
-            ? "repeating-linear-gradient(to bottom, rgba(20,23,28,.28) 0 6px, transparent 6px 12px)"
-            : connectorColor,
-          opacity: dashed ? 1 : 0.95,
-        }}
-      />
+      {showConnector && (
+        <span
+          className={last ? undefined : "flex-1"}
+          style={{
+            width: 5,
+            borderRadius: 3,
+            marginTop: showFrom ? 5 : 0,
+            marginBottom: showTo ? 5 : 0,
+            minHeight: 16,
+            background: dashed
+              ? "repeating-linear-gradient(to bottom, rgba(20,23,28,.28) 0 6px, transparent 6px 12px)"
+              : connectorColor,
+            opacity: dashed ? 1 : 0.95,
+          }}
+        />
+      )}
       {showTo && <Node node={to} status={status} breakMark={breakMark} />}
     </div>
   );
@@ -215,6 +220,7 @@ export function LegRow({
         breakMark={breakMark}
         showFrom={showFrom}
         showTo={showTo}
+        last={last}
       />
       <div
         className="min-w-0 flex-1"

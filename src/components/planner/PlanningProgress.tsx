@@ -150,24 +150,15 @@ function SkeletonLegs() {
                   boxSizing: "border-box",
                 }}
               />
-              <span
-                className="flex-1"
-                style={{
-                  width: 5,
-                  minHeight: 16,
-                  margin: "5px 0",
-                  borderRadius: 3,
-                  background: `rgba(20,23,28,${0.09 - i * 0.005})`,
-                }}
-              />
-              {last && (
+              {!last && (
                 <span
+                  className="flex-1"
                   style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: 99,
-                    border: `4px solid rgba(20,23,28,${0.08})`,
-                    boxSizing: "border-box",
+                    width: 5,
+                    minHeight: 16,
+                    margin: "5px 0 0",
+                    borderRadius: 3,
+                    background: `rgba(20,23,28,${0.09 - i * 0.005})`,
                   }}
                 />
               )}
