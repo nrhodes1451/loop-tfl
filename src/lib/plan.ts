@@ -880,7 +880,7 @@ export function evaluatePath(
     });
   } else {
     if (arriveLifts.length > 0) {
-      pushLifts(arriveLifts, lastLineNode, LIFT_NODE, {
+      pushLifts(arriveLifts, LIFT_NODE, LIFT_NODE, {
         stationId: last.stationId,
         lineId: last.lineId,
         lineColor: lastLineNode.lineColor,
@@ -900,7 +900,7 @@ export function evaluatePath(
       lineId: last.lineId,
       lineColor: lastLineNode.lineColor,
       liftIds: [],
-      fromNode: arriveLifts.length > 0 ? LIFT_NODE : lastLineNode,
+      fromNode: arriveLifts.length > 0 ? STREET_NODE : lastLineNode,
       toNode: STREET_NODE,
     });
   }

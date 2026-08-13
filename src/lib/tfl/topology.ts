@@ -36,6 +36,25 @@ export function normalizeLineId(line: string): string {
   return aliases[s] ?? s;
 }
 
+/**
+ * TfL PlatformServices rows that tag a line on a platform it does not serve.
+ * Key is `${PlatformUniqueId}\0${normalised line id}`.
+ *
+ * Willesden Junction Plat02 is the low-level bay (Lioness / Bakerloo).
+ * Mildmay only uses high-level 4/5; the extra Stratford row makes
+ * Lioness/Bakerloo↔Mildmay look like a level interchange.
+ */
+const PLATFORM_SERVICE_EXCLUSIONS = new Set([
+  "HUBWIJ-Plat02-EB-london-overground\0mildmay",
+]);
+
+export function isExcludedPlatformService(
+  platformId: string,
+  lineId: string,
+): boolean {
+  return PLATFORM_SERVICE_EXCLUSIONS.has(`${platformId}\0${lineId}`);
+}
+
 export type BuiltTopology = {
   platforms: {
     id: string;
@@ -226,6 +245,7 @@ export function buildTopology(inputs: TopologyInputs): BuiltTopology {
     const platformId = (row.PlatformUniqueId ?? "").trim();
     const lineId = normalizeLineId(row.Line ?? "");
     if (!platformId || !lineId) continue;
+    if (isExcludedPlatformService(platformId, lineId)) continue;
     const meta = platformsRaw.get(platformId);
     if (!meta) continue;
 

@@ -3,6 +3,7 @@ import {
   buildAdjacency,
   buildTopology,
   findLiftChain,
+  isExcludedPlatformService,
   type TopologyInputs,
 } from "./topology";
 
@@ -210,5 +211,111 @@ describe("buildTopology", () => {
     );
     expect(chain?.access).toBe("lifts");
     expect(chain?.liftIds).toEqual(["HUBTEST-Lift-3"]);
+  });
+
+  it("drops TfL's Mildmay tag on Willesden Junction platform 2", () => {
+    const plat01 = "HUBWIJ-Plat01-SB";
+    const plat02 = "HUBWIJ-Plat02-EB-london-overground";
+    const plat04 = "HUBWIJ-Plat04-EB";
+    expect(isExcludedPlatformService(plat02, "mildmay")).toBe(true);
+
+    const topo = buildTopology({
+      stations: [
+        {
+          UniqueId: "HUBWIJ",
+          Name: "Willesden Junction",
+          OutsideStationUniqueId: "HUBWIJ-Outside",
+        },
+      ],
+      platforms: [
+        {
+          UniqueId: plat01,
+          StationUniqueId: "HUBWIJ",
+          FriendlyName: "Southbound Platform 1",
+          CardinalDirection: "Southbound",
+        },
+        {
+          UniqueId: plat02,
+          StationUniqueId: "HUBWIJ",
+          FriendlyName: "Eastbound Platform 2",
+          CardinalDirection: "Eastbound",
+        },
+        {
+          UniqueId: plat04,
+          StationUniqueId: "HUBWIJ",
+          FriendlyName: "Eastbound Platform 4",
+          CardinalDirection: "Eastbound",
+        },
+      ],
+      platformServices: [
+        {
+          PlatformUniqueId: plat01,
+          Line: "lioness",
+          DirectionTowards: "Euston",
+        },
+        {
+          PlatformUniqueId: plat02,
+          Line: "lioness",
+          DirectionTowards: "Euston",
+        },
+        {
+          PlatformUniqueId: plat02,
+          Line: "mildmay",
+          DirectionTowards: "Stratford",
+        },
+        {
+          PlatformUniqueId: plat04,
+          Line: "mildmay",
+          DirectionTowards: "Stratford",
+        },
+      ],
+      lifts: [
+        {
+          StationUniqueId: "HUBWIJ",
+          LiftUniqueId: "HUBWIJ-Lift-1",
+          LiftName: "1",
+          FriendlyName: "Lift 1",
+          FromAreas: plat01,
+          ToAreas: "HUBWIJ-Mid",
+          IntermediateAreas: "",
+        },
+        {
+          StationUniqueId: "HUBWIJ",
+          LiftUniqueId: "HUBWIJ-Lift-2",
+          LiftName: "2",
+          FriendlyName: "Lift 2",
+          FromAreas: "HUBWIJ-Mid",
+          ToAreas: plat04,
+          IntermediateAreas: "",
+        },
+      ],
+      sameLevelPaths: [
+        { From: plat01, To: plat02 },
+        { From: plat02, To: plat01 },
+      ],
+      rampRoutes: [],
+    });
+
+    expect(
+      topo.platforms.some((p) => p.id.startsWith(`${plat02}::mildmay`)),
+    ).toBe(false);
+    expect(
+      topo.platforms.some((p) => p.id.startsWith(`${plat02}::lioness`)),
+    ).toBe(true);
+
+    const levelBogus = topo.interchangeChains.find(
+      (c) =>
+        c.fromPlatformId === `${plat02}::lioness::Euston` &&
+        c.toPlatformId === `${plat02}::mildmay::Stratford`,
+    );
+    expect(levelBogus).toBeUndefined();
+
+    const real = topo.interchangeChains.find(
+      (c) =>
+        c.fromPlatformId === `${plat01}::lioness::Euston` &&
+        c.toPlatformId === `${plat04}::mildmay::Stratford`,
+    );
+    expect(real?.access).toBe("lifts");
+    expect(real?.liftIds).toEqual(["HUBWIJ-Lift-1", "HUBWIJ-Lift-2"]);
   });
 });

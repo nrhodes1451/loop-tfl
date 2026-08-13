@@ -194,7 +194,10 @@ export function LegRow({
     leg.status === "none" &&
     (leg.kind === "arrive" || leg.kind === "change" || leg.kind === "start");
   const showFrom = true;
-  const showTo = last;
+  const showTo =
+    last &&
+    (leg.fromNode.type !== leg.toNode.type ||
+      leg.fromNode.lineId !== leg.toNode.lineId);
 
   return (
     <li

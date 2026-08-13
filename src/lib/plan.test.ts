@@ -185,7 +185,7 @@ describe("findStructuralPath", () => {
       kind: "lift",
       title: "Lift C.",
       liftIds: ["L-C"],
-      fromNode: { type: "line", lineId: "victoria" },
+      fromNode: { type: "lift" },
       toNode: { type: "lift" },
     });
     expect(result.legs[5]).toMatchObject({
@@ -198,7 +198,7 @@ describe("findStructuralPath", () => {
     expect(result.legs[6]).toMatchObject({
       kind: "arrive",
       title: "Arrive · street level at Charlie",
-      fromNode: { type: "lift" },
+      fromNode: { type: "street" },
       toNode: { type: "street" },
     });
   });
