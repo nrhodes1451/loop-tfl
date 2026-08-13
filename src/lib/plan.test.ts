@@ -242,6 +242,18 @@ describe("evaluatePath / planJourney", () => {
     expect(result.legs.some((l) => l.kind === "unreachable")).toBe(true);
   });
 
+  it("offers a nearby alternative when the destination lift is out", () => {
+    const feed: DisruptionPayload = {
+      ...okFeed,
+      byLiftId: { "L-C": "Lift C unavailable" },
+    };
+    const result = planJourney(index, "A", "C", feed, { now: NOW });
+    expect(result.status).toBe("break");
+    expect(result.breakAt).toBe("C");
+    expect(result.alternative?.stationId).toBe("G");
+    expect(result.alternative?.distanceM).toBeGreaterThan(0);
+  });
+
   it("does not treat a pass-through station lift outage as a break", () => {
     const feed: DisruptionPayload = {
       ...okFeed,

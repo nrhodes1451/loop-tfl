@@ -184,6 +184,7 @@ function ResultBody({
 
   const unknownCount = plan.legs.filter((l) => l.status === "unknown").length;
   const gapStation = plan.noneAt === "from" ? from : to;
+  const destLiftOut = plan.status === "break" && plan.breakAt === to.id;
 
   const bannerTitle =
     plan.status === "break" && breakStation
@@ -214,7 +215,7 @@ function ResultBody({
       <div className="min-h-0 flex-1 overflow-auto" style={{ paddingTop: 20 }}>
         <Timeline legs={plan.legs} label={timelineLabel} />
 
-        {plan.status === "none" && plan.alternative && (
+        {(plan.status === "none" || destLiftOut) && plan.alternative && (
           <div
             style={{
               marginTop: 16,
@@ -259,6 +260,7 @@ function ResultBody({
             ? (index.stationById.get(plan.breakAt)?.name ?? "this station")
             : undefined
         }
+        destLiftOut={destLiftOut}
         onRefresh={onRefresh}
         onReplanAvoiding={onReplanAvoiding}
         onPlanToAlternative={onPlanToAlternative}
@@ -273,6 +275,7 @@ function ResultBody({
 function Actions({
   plan,
   breakName,
+  destLiftOut,
   onRefresh,
   onReplanAvoiding,
   onPlanToAlternative,
@@ -282,6 +285,7 @@ function Actions({
 }: {
   plan: PlanResult;
   breakName?: string;
+  destLiftOut: boolean;
   onRefresh: () => void;
   onReplanAvoiding: (stationId: string) => void;
   onPlanToAlternative: (stationId: string) => void;
@@ -326,7 +330,7 @@ function Actions({
     );
   }
 
-  if (plan.status === "break") {
+  if (plan.status === "break" && !destLiftOut) {
     return (
       <div className="flex flex-col" style={{ ...pad, gap: 8 }}>
         <button

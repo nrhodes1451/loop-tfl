@@ -918,8 +918,8 @@ export function evaluatePath(
     liftsTotal: allLifts.length,
   };
 
-  if (status === "none") {
-    result.noneAt = "to";
+  if (status === "none" || (status === "break" && breakAt === path.toId)) {
+    if (status === "none") result.noneAt = "to";
     const alt = nearestStepFree(index, path.toId);
     if (alt) result.alternative = alt;
   }
