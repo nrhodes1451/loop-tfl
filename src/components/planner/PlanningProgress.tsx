@@ -70,6 +70,7 @@ export function PlanningProgress({
               }}
             >
               <div
+                className="loop-progress-fill"
                 style={{
                   height: "100%",
                   width: `${pct}%`,

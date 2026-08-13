@@ -4,6 +4,7 @@ import { formatDistanceM, type NetworkIndex } from "@/lib/plan";
 import { loop } from "@/lib/tokens";
 import type { NetworkStation } from "@/lib/types";
 import { PlanningProgress } from "./PlanningProgress";
+import { ScreenSwap } from "./ScreenSwap";
 import { Timeline } from "./Timeline";
 import { VerdictBanner } from "./VerdictBanner";
 
@@ -84,48 +85,55 @@ export function PlanResult({
             {subtitle}
           </div>
         </div>
-        {!planning && (
-          <button
-            type="button"
-            onClick={onEdit}
-            className="cursor-pointer"
-            style={{
-              minHeight: 36,
-              padding: "0 12px",
-              borderRadius: 10,
-              background: loop.raised,
-              border: "none",
-              fontSize: 13,
-              fontWeight: 600,
-              color: loop.text,
-            }}
-          >
-            Edit
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onEdit}
+          disabled={planning}
+          className="cursor-pointer"
+          style={{
+            minHeight: 36,
+            padding: "0 12px",
+            borderRadius: 10,
+            background: loop.raised,
+            border: "none",
+            fontSize: 13,
+            fontWeight: 600,
+            color: loop.text,
+            opacity: planning ? 0 : 1,
+            pointerEvents: planning ? "none" : "auto",
+            transition: "opacity var(--loop-motion)",
+          }}
+        >
+          Edit
+        </button>
       </header>
 
       <div
         className="flex min-h-0 flex-1 flex-col"
         style={{ padding: "20px 20px 0" }}
       >
-        {planning || !plan ? (
-          <PlanningProgress
-            liftsChecked={liftsChecked}
-            liftsTotal={liftsTotal}
-            onCancel={onCancel}
-          />
-        ) : (
-          <ResultBody
-            index={index}
-            to={to}
-            plan={plan}
-            onRefresh={onRefresh}
-            onReplanAvoiding={onReplanAvoiding}
-            onPlanToAlternative={onPlanToAlternative}
-            onPickDestination={onPickDestination}
-          />
-        )}
+        <ScreenSwap
+          id={planning || !plan ? "planning" : "result"}
+          direction="fade"
+        >
+          {planning || !plan ? (
+            <PlanningProgress
+              liftsChecked={liftsChecked}
+              liftsTotal={liftsTotal}
+              onCancel={onCancel}
+            />
+          ) : (
+            <ResultBody
+              index={index}
+              to={to}
+              plan={plan}
+              onRefresh={onRefresh}
+              onReplanAvoiding={onReplanAvoiding}
+              onPlanToAlternative={onPlanToAlternative}
+              onPickDestination={onPickDestination}
+            />
+          )}
+        </ScreenSwap>
       </div>
     </div>
   );

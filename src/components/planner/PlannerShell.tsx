@@ -15,6 +15,7 @@ import { loop } from "@/lib/tokens";
 import { DisruptionList } from "./DisruptionList";
 import { PlanResult } from "./PlanResult";
 import { RouteEntry } from "./RouteEntry";
+import { ScreenSwap, type SwapDirection } from "./ScreenSwap";
 import { StationPicker } from "./StationPicker";
 
 const POLL_MS = 60_000;
@@ -169,6 +170,20 @@ export function PlannerShell({ network }: { network: NetworkData }) {
     [pickerOpen, fromId, toId],
   );
 
+  const screenId = pickerOpen
+    ? `picker-${pickerOpen}`
+    : disruptionsOpen && disruptions?.ok
+      ? "disruptions"
+      : screen === "result" && from && to
+        ? "result"
+        : "entry";
+  const [swap, setSwap] = useState({ id: screenId, direction: "fade" as SwapDirection });
+  let direction = swap.direction;
+  if (screenId !== swap.id) {
+    direction = swapDirection(swap.id, screenId);
+    setSwap({ id: screenId, direction });
+  }
+
   return (
     <div
       className="loop mx-auto flex min-h-full w-full flex-col"
@@ -179,65 +194,73 @@ export function PlannerShell({ network }: { network: NetworkData }) {
         paddingTop: "env(safe-area-inset-top)",
       }}
     >
-      {pickerOpen ? (
-        <StationPicker
-          key={pickerOpen}
-          index={index}
-          disruptions={disruptions}
-          slot={pickerOpen}
-          onSelect={onSelectStation}
-          onBack={() => setPickerOpen(null)}
-        />
-      ) : disruptionsOpen && disruptions?.ok ? (
-        <DisruptionList
-          index={index}
-          disruptions={disruptions}
-          onBack={() => setDisruptionsOpen(false)}
-        />
-      ) : screen === "result" && from && to ? (
-        <PlanResult
-          index={index}
-          from={from}
-          to={to}
-          plan={plan}
-          planning={planning}
-          liftsChecked={liftsChecked}
-          liftsTotal={liftsTotal}
-          onBack={() => {
-            cancel();
-          }}
-          onEdit={() => {
-            gen.current += 1;
-            setPlanning(false);
-            setScreen("entry");
-          }}
-          onCancel={cancel}
-          onRefresh={() => void refresh()}
-          onReplanAvoiding={(stationId) => void runPlan({ exclude: [stationId] })}
-          onPlanToAlternative={(stationId) => {
-            setToId(stationId);
-            void runPlan({ to: stationId });
-          }}
-          onPickDestination={() => {
-            setScreen("entry");
-            setPickerOpen("to");
-          }}
-        />
-      ) : (
-        <RouteEntry
-          index={index}
-          from={from}
-          to={to}
-          disruptions={disruptions}
-          onOpenPicker={setPickerOpen}
-          onSwap={() => {
-            setFromId(toId);
-            setToId(fromId);
-          }}
-          onPlan={() => void runPlan()}
-          onOpenDisruptions={() => setDisruptionsOpen(true)}
-        />
-      )}
+      <ScreenSwap id={screenId} direction={direction}>
+        {pickerOpen ? (
+          <StationPicker
+            index={index}
+            disruptions={disruptions}
+            slot={pickerOpen}
+            onSelect={onSelectStation}
+            onBack={() => setPickerOpen(null)}
+          />
+        ) : disruptionsOpen && disruptions?.ok ? (
+          <DisruptionList
+            index={index}
+            disruptions={disruptions}
+            onBack={() => setDisruptionsOpen(false)}
+          />
+        ) : screen === "result" && from && to ? (
+          <PlanResult
+            index={index}
+            from={from}
+            to={to}
+            plan={plan}
+            planning={planning}
+            liftsChecked={liftsChecked}
+            liftsTotal={liftsTotal}
+            onBack={() => {
+              cancel();
+            }}
+            onEdit={() => {
+              gen.current += 1;
+              setPlanning(false);
+              setScreen("entry");
+            }}
+            onCancel={cancel}
+            onRefresh={() => void refresh()}
+            onReplanAvoiding={(stationId) => void runPlan({ exclude: [stationId] })}
+            onPlanToAlternative={(stationId) => {
+              setToId(stationId);
+              void runPlan({ to: stationId });
+            }}
+            onPickDestination={() => {
+              setScreen("entry");
+              setPickerOpen("to");
+            }}
+          />
+        ) : (
+          <RouteEntry
+            index={index}
+            from={from}
+            to={to}
+            disruptions={disruptions}
+            onOpenPicker={setPickerOpen}
+            onSwap={() => {
+              setFromId(toId);
+              setToId(fromId);
+            }}
+            onPlan={() => void runPlan()}
+            onOpenDisruptions={() => setDisruptionsOpen(true)}
+          />
+        )}
+      </ScreenSwap>
     </div>
   );
+}
+
+function swapDirection(fromId: string, toId: string): SwapDirection {
+  if (fromId === toId) return "fade";
+  if (fromId.startsWith("picker-") && toId.startsWith("picker-")) return "fade";
+  if (toId === "entry") return "back";
+  return "forward";
 }
