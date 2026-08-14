@@ -1,0 +1,226 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { levelEdgeColor, SCENE_BACKGROUND } from "@/lib/schematic/scene";
+import type { SchematicStation } from "@/lib/schematic/types";
+
+const StationScene3D = dynamic(
+  () => import("./StationScene3D").then((m) => m.StationScene3D),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full" style={{ background: SCENE_BACKGROUND }} />
+    ),
+  },
+);
+
+const LEVELS: { level: number; label: string }[] = [
+  { level: 0, label: "Street" },
+  { level: -1, label: "Ticket hall" },
+  { level: -2, label: "Sub-surface (~5–10 m)" },
+  { level: -3, label: "Mezzanine" },
+  { level: -4, label: "Victoria (~20 m)" },
+  { level: -5, label: "Piccadilly" },
+  { level: -6, label: "Northern (deepest)" },
+];
+
+const MIN_LEVEL = -6;
+const MAX_LEVEL = 0;
+
+const TYPE_KEY: { id: string; name: string; shape: "slab" | "platform" | "shaft" }[] =
+  [
+    { id: "concourse", name: "Concourse", shape: "slab" },
+    { id: "platform", name: "Platform", shape: "platform" },
+    { id: "shaft", name: "Lift shaft", shape: "shaft" },
+  ];
+
+function fmtCoord(n: number): string {
+  return n.toFixed(5);
+}
+
+function TypeGlyph({ shape }: { shape: "slab" | "platform" | "shaft" }) {
+  const stroke = "#8fd8ff";
+  if (shape === "shaft") {
+    return (
+      <span
+        className="inline-block h-[9px] w-[9px] rounded-full border"
+        style={{ borderColor: stroke, background: "rgba(143, 216, 255, 0.2)" }}
+        aria-hidden
+      />
+    );
+  }
+  if (shape === "platform") {
+    return (
+      <span
+        className="inline-block h-[6px] w-[14px] border"
+        style={{ borderColor: stroke, background: "rgba(143, 216, 255, 0.2)" }}
+        aria-hidden
+      />
+    );
+  }
+  return (
+    <span
+      className="inline-block h-[9px] w-[11px] border"
+      style={{ borderColor: stroke, background: "rgba(143, 216, 255, 0.2)" }}
+      aria-hidden
+    />
+  );
+}
+
+export function SchematicPage({ station }: { station: SchematicStation }) {
+  return (
+    <div
+      className="relative h-full w-full overflow-hidden"
+      style={{ background: SCENE_BACKGROUND, color: "#e8edf4" }}
+    >
+      <StationScene3D topology={{ nodes: station.nodes, edges: station.edges }} />
+
+      <header
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 px-3 pt-[max(12px,env(safe-area-inset-top))] pb-3 sm:gap-5 sm:px-6 sm:pt-[18px]"
+      >
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <div
+            className="w-fit rounded-md px-2 py-0.5 font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px] font-medium uppercase tracking-[0.12em]"
+            style={{
+              color: "#ffe7a8",
+              background: "rgba(255, 196, 72, 0.12)",
+              border: "1px solid rgba(255, 196, 72, 0.45)",
+            }}
+          >
+            Schematic — not to scale, not for wayfinding
+          </div>
+          <div className="flex flex-wrap items-baseline gap-[9px]">
+            <div className="text-[18px] font-bold tracking-[-0.02em] sm:text-[21px]">
+              {station.name}
+            </div>
+            <div
+              className="whitespace-nowrap font-[family-name:var(--font-ibm-plex-mono)] text-xs"
+              style={{ color: "#8b93a0" }}
+            >
+              tube only · not National Rail
+            </div>
+          </div>
+          <div
+            className="hidden max-w-[42rem] text-[12.5px] leading-normal sm:block"
+            style={{ color: "#8b93a0" }}
+          >
+            {station.disclaimer}
+          </div>
+          <div
+            className="hidden font-[family-name:var(--font-ibm-plex-mono)] text-[11px] sm:block"
+            style={{ color: "#6f7681" }}
+          >
+            OSM entrance{" "}
+            <a
+              href={station.entrance.source}
+              target="_blank"
+              rel="noreferrer"
+              className="pointer-events-auto underline decoration-[#3a4250] underline-offset-2 hover:decoration-[#8b93a0]"
+              style={{ color: "#8b93a0" }}
+            >
+              {fmtCoord(station.entrance.lat)}, {fmtCoord(station.entrance.lon)}
+            </a>
+            {" · "}
+            {station.entrance.label}
+          </div>
+        </div>
+        <div className="pointer-events-auto flex flex-none flex-col items-end gap-2 pr-[108px]">
+          <div className="flex gap-2">
+            <Link
+              href="/"
+              className="cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]"
+              style={{
+                color: "#d5dbe6",
+                background: "rgba(12, 14, 18, 0.82)",
+                borderColor: "#2a313c",
+              }}
+            >
+              Plan a route
+            </Link>
+            <Link
+              href="/explore"
+              className="cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]"
+              style={{
+                color: "#d5dbe6",
+                background: "rgba(12, 14, 18, 0.82)",
+                borderColor: "#2a313c",
+              }}
+            >
+              Graph
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <aside
+        className="absolute bottom-[max(12px,env(safe-area-inset-bottom))] left-3 right-3 z-10 flex max-h-[42%] flex-col gap-2.5 overflow-auto rounded-[10px] border px-3 py-2.5 sm:right-auto sm:bottom-[22px] sm:left-6 sm:max-h-none sm:max-w-[320px] sm:gap-3 sm:px-4 sm:py-3.5"
+        style={{
+          background: "rgba(8, 10, 14, 0.82)",
+          borderColor: "#2a313c",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <div
+          className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+          style={{ color: "#8b93a0" }}
+        >
+          Depth tiers (schematic)
+        </div>
+        <div className="flex flex-col gap-1">
+          {LEVELS.map((row) => (
+            <div
+              key={row.level}
+              className="flex items-baseline justify-between gap-4 text-[12px]"
+              style={{ color: "#c5ccd6" }}
+            >
+              <span className="flex items-center gap-2">
+                <span
+                  className="inline-block h-[8px] w-[8px] rounded-full"
+                  style={{
+                    background: levelEdgeColor(
+                      row.level,
+                      MIN_LEVEL,
+                      MAX_LEVEL,
+                    ),
+                    boxShadow: `0 0 6px ${levelEdgeColor(row.level, MIN_LEVEL, MAX_LEVEL)}`,
+                  }}
+                />
+                {row.label}
+              </span>
+              <span
+                className="font-[family-name:var(--font-ibm-plex-mono)] text-[11px]"
+                style={{ color: "#8b93a0" }}
+              >
+                {row.level}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="h-px" style={{ background: "#2a313c" }} />
+        <div
+          className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+          style={{ color: "#8b93a0" }}
+        >
+          Volumes
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1.5">
+          {TYPE_KEY.map((row) => (
+            <div
+              key={row.id}
+              className="flex items-center gap-[7px] text-xs"
+              style={{ color: "#c5ccd6" }}
+            >
+              <TypeGlyph shape={row.shape} />
+              {row.name}
+            </div>
+          ))}
+        </div>
+        <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
+          Drag to orbit, pinch or scroll to zoom. Geometry is schematic — not
+          survey-accurate, not for wayfinding.
+        </div>
+      </aside>
+    </div>
+  );
+}

@@ -4,7 +4,7 @@ Unofficial London public-transport accessibility tool. **Loop** plans a single s
 
 ## Stack
 
-Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), Inter + IBM Plex Mono.
+Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), React Three Fiber (schematic), Inter + IBM Plex Mono.
 
 ## Routes
 
@@ -12,7 +12,7 @@ Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), Inter + IBM
 |------|------------|
 | `/` | Loop — mobile-first step-free route planner |
 | `/explore` | Stepfree — force-directed accessibility graph |
-| `/schematic` | Illustrative isometric of King's Cross St Pancras (not used for routing) |
+| `/schematic` | Illustrative 3D schematic of King's Cross St Pancras (not used for routing) |
 | `/api/disruptions` | Live TfL lift outages (`LiftUniqueId` join) |
 
 ## Data sources
