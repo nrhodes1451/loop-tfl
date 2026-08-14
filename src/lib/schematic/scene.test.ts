@@ -4,6 +4,7 @@ import {
   LEVEL_SPACING,
   buildSceneGeometry,
   cameraFrame,
+  hoverHighlight,
   levelT,
   toWorld,
 } from "./scene";
@@ -145,6 +146,40 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(g.polylines.some((p) => p.mode === "escalator")).toBe(true);
     const stairs = g.polylines.find((p) => p.mode === "stairs")!;
     expect(stairs.points[0]![1]).not.toBe(stairs.points[1]![1]);
+  });
+});
+
+describe("hoverHighlight", () => {
+  const geom = buildSceneGeometry(topology, { quality: "high" });
+
+  it("returns empty sets when nothing is hovered", () => {
+    const h = hoverHighlight(null, geom);
+    expect(h.volumeIds.size).toBe(0);
+    expect(h.polylineIds.size).toBe(0);
+  });
+
+  it("highlights a platform volume and its outline only", () => {
+    const h = hoverHighlight("plat-1", geom);
+    expect([...h.volumeIds]).toEqual(["plat-1"]);
+    expect(h.polylineIds.has("wire::plat-1")).toBe(true);
+    expect(h.volumeIds.has("plat-2")).toBe(false);
+    expect(h.polylineIds.has("wire::plat-2")).toBe(false);
+  });
+
+  it("highlights the whole lift shaft when hovering a cabin", () => {
+    const h = hoverHighlight("lift-1", geom);
+    expect(h.volumeIds.has("lift-1")).toBe(true);
+    expect(h.volumeIds.has("lift-1::cabin::-2")).toBe(true);
+    expect(h.volumeIds.has("shaft::HUBKGX-Lift-1")).toBe(true);
+    expect(h.polylineIds.has("shaft-line::HUBKGX-Lift-1")).toBe(true);
+    expect(h.polylineIds.has("wire::lift-1")).toBe(true);
+    expect(h.volumeIds.has("wth")).toBe(false);
+  });
+
+  it("does not pick derived shafts", () => {
+    const shaft = geom.volumes.find((v) => v.id === "shaft::HUBKGX-Lift-1");
+    expect(shaft?.pickable).toBe(false);
+    expect(geom.volumes.find((v) => v.id === "lift-1")?.pickable).toBe(true);
   });
 });
 

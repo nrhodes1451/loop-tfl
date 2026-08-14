@@ -36,6 +36,11 @@ export type SceneVolume = {
   edgeColor: string;
   opacity: number;
   radialSegments: number;
+  label: string;
+  liftId?: string;
+  lineId?: string;
+  /** Derived shafts are too thin to pick reliably through slabs. */
+  pickable: boolean;
 };
 
 export type PolylineRole = "connection" | "outline";
@@ -49,6 +54,8 @@ export type ScenePolyline = {
   segments: boolean;
   color: string;
   lineWidth: number;
+  liftId?: string;
+  volumeId?: string;
 };
 
 export type SceneBounds = {
@@ -332,7 +339,43 @@ function outlineOf(
     segments: true,
     color: vol.edgeColor,
     lineWidth,
+    volumeId: vol.id,
+    liftId: vol.liftId,
   };
+}
+
+export type HoverHighlight = {
+  volumeIds: Set<string>;
+  polylineIds: Set<string>;
+};
+
+/** Lift hover selects the shaft + every cabin; other volumes highlight alone. */
+export function hoverHighlight(
+  hoveredVolumeId: string | null,
+  geom: SceneGeometry,
+): HoverHighlight {
+  const volumeIds = new Set<string>();
+  const polylineIds = new Set<string>();
+  if (!hoveredVolumeId) return { volumeIds, polylineIds };
+  const vol = geom.volumes.find((v) => v.id === hoveredVolumeId);
+  if (!vol) return { volumeIds, polylineIds };
+
+  if (vol.liftId) {
+    for (const v of geom.volumes) {
+      if (v.liftId === vol.liftId) volumeIds.add(v.id);
+    }
+    for (const p of geom.polylines) {
+      if (p.liftId === vol.liftId) polylineIds.add(p.id);
+      if (p.volumeId && volumeIds.has(p.volumeId)) polylineIds.add(p.id);
+    }
+    return { volumeIds, polylineIds };
+  }
+
+  volumeIds.add(vol.id);
+  for (const p of geom.polylines) {
+    if (p.volumeId === vol.id) polylineIds.add(p.id);
+  }
+  return { volumeIds, polylineIds };
 }
 
 type LiftSpan = {
@@ -441,6 +484,10 @@ export function buildSceneGeometry(
         ...tint,
         opacity: nodeOpacity(node.type),
         radialSegments,
+        label: node.label,
+        liftId: node.liftId,
+        lineId: node.lineId,
+        pickable: true,
       });
     } else {
       volumes.push({
@@ -453,6 +500,10 @@ export function buildSceneGeometry(
         ...tint,
         opacity: nodeOpacity(node.type),
         radialSegments,
+        label: node.label,
+        liftId: node.liftId,
+        lineId: node.lineId,
+        pickable: true,
       });
     }
   }
@@ -472,6 +523,9 @@ export function buildSceneGeometry(
         ...colors(level, "lift"),
         opacity: nodeOpacity("lift"),
         radialSegments,
+        label: span.node.label,
+        liftId: span.liftId,
+        pickable: true,
       });
     }
 
@@ -492,6 +546,9 @@ export function buildSceneGeometry(
       ...colors(Math.round(midLevel), "shaft"),
       opacity: 0.12,
       radialSegments,
+      label: span.node.label,
+      liftId: span.liftId,
+      pickable: false,
     });
 
     const top = toWorld(span.x, span.y, span.topLevel);
@@ -504,6 +561,7 @@ export function buildSceneGeometry(
       segments: false,
       color: levelEdgeColor(midLevel, minLevel, maxLevel, "shaft"),
       lineWidth: connectionWidth("shaft", quality),
+      liftId: span.liftId,
     });
   }
 
@@ -564,6 +622,7 @@ export function buildSceneGeometry(
       segments: false,
       color: levelEdgeColor(other.level, minLevel, maxLevel, "lift"),
       lineWidth: connectionWidth("landing", quality),
+      liftId: edge.liftId,
     });
   }
 

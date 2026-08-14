@@ -217,7 +217,8 @@ export function SchematicPage({ station }: { station: SchematicStation }) {
           ))}
         </div>
         <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
-          Drag to orbit, pinch or scroll to zoom. Geometry is schematic — not
+          Drag to orbit, pinch or scroll to zoom. Hover a volume for its name;
+          lifts highlight the whole shaft. Geometry is schematic — not
           survey-accurate, not for wayfinding.
         </div>
       </aside>
