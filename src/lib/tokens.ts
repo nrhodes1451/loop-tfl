@@ -68,6 +68,54 @@ export function lineColorForCanvas(lineId: string): string {
   return LINE_COLORS[lineId] ?? "#A0A5A9";
 }
 
+function parseHexRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
+  const n = Number.parseInt(full, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function hexFromRgb(r: number, g: number, b: number): string {
+  const c = (n: number) =>
+    Math.round(Math.max(0, Math.min(255, n)))
+      .toString(16)
+      .padStart(2, "0");
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+
+function mixHex(a: string, b: string, t: number): string {
+  const [ar, ag, ab] = parseHexRgb(a);
+  const [br, bg, bb] = parseHexRgb(b);
+  return hexFromRgb(
+    ar + (br - ar) * t,
+    ag + (bg - ag) * t,
+    ab + (bb - ab) * t,
+  );
+}
+
+function hexLuminance(hex: string): number {
+  const [r, g, b] = parseHexRgb(hex);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+}
+
+/**
+ * TfL line colours for the dark schematic. Northern is white (official black
+ * disappears on the scene background); other dark lines are lifted toward white.
+ */
+export function lineColorForSchematic(lineId: string): string {
+  if (lineId === "national-rail") return NATIONAL_RAIL_RED;
+  if (lineId === "northern") return "#ffffff";
+  const base = LINE_COLORS[lineId] ?? "#A0A5A9";
+  if (hexLuminance(base) >= 0.32) return base;
+  return mixHex(base, "#ffffff", 0.42);
+}
+
 export const MODES = [
   "tube",
   "elizabeth-line",

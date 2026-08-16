@@ -3,6 +3,7 @@
  * do not import plan/status/topology.
  */
 
+import { lineColorForSchematic } from "../tokens";
 import type {
   SchematicEdge,
   SchematicEdgeMode,
@@ -83,15 +84,15 @@ export type SceneGeometry = {
   maxLevel: number;
 };
 
-const COOL_TO_WARM: Vec3[] = [
-  [94, 232, 255],
-  [74, 168, 255],
-  [107, 124, 255],
-  [196, 92, 255],
-  [255, 90, 154],
-  [255, 122, 58],
-  [255, 193, 74],
-];
+const NEUTRAL_EDGE: Vec3 = [165, 174, 188];
+/** Tram green — readable on the dark scene, TfL-adjacent. */
+const STREET_EDGE: Vec3 = [132, 184, 23];
+/** Bakerloo-derived warm sand for ticket halls. */
+const TICKET_HALL_EDGE: Vec3 = [214, 168, 96];
+/** Cool lilac so mezzanines don’t collide with tube lines. */
+const MEZZANINE_EDGE: Vec3 = [168, 148, 214];
+const LIFT_EDGE: Vec3 = [186, 228, 242];
+const FACE_DARK: Vec3 = [8, 10, 14];
 
 type Footprint = { wx: number; wy: number; h: number };
 
@@ -135,13 +136,6 @@ function rgbToHex(rgb: Vec3): string {
   return `#${c(rgb[0])}${c(rgb[1])}${c(rgb[2])}`;
 }
 
-function hueAt(t: number): Vec3 {
-  const u = clamp01(t) * (COOL_TO_WARM.length - 1);
-  const i = Math.min(Math.floor(u), COOL_TO_WARM.length - 2);
-  const f = u - i;
-  return mixRgb(COOL_TO_WARM[i]!, COOL_TO_WARM[i + 1]!, f);
-}
-
 /** t = 0 at maxLevel (street), t = 1 at minLevel (deepest). */
 export function levelT(level: number, minLevel: number, maxLevel: number): number {
   const span = maxLevel - minLevel;
@@ -149,37 +143,79 @@ export function levelT(level: number, minLevel: number, maxLevel: number): numbe
   return clamp01((maxLevel - level) / span);
 }
 
+function parseHex(hex: string): Vec3 {
+  const h = hex.replace("#", "");
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
+  const n = Number.parseInt(full, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
 function typeTint(rgb: Vec3, type: SchematicNodeType): Vec3 {
   switch (type) {
     case "lift":
     case "shaft":
-      return mixRgb(rgb, [212, 246, 255], 0.42);
-    case "concourse":
-      return mixRgb(rgb, [255, 255, 255], 0.12);
-    case "street":
-      return mixRgb(rgb, [255, 255, 255], 0.22);
+      return mixRgb(rgb, LIFT_EDGE, 0.35);
     default:
       return rgb;
   }
 }
 
+function accentRgb(
+  type: SchematicNodeType,
+  lineId?: string,
+  level?: number,
+): Vec3 {
+  if (type === "platform" && lineId) {
+    return parseHex(lineColorForSchematic(lineId));
+  }
+  if (type === "street") return STREET_EDGE;
+  if (type === "concourse") {
+    return level != null && level <= -3 ? MEZZANINE_EDGE : TICKET_HALL_EDGE;
+  }
+  if (type === "lift" || type === "shaft") return LIFT_EDGE;
+  return NEUTRAL_EDGE;
+}
+
+export function schematicEdgeColor(
+  type: SchematicNodeType = "platform",
+  lineId?: string,
+  level?: number,
+): string {
+  return rgbToHex(typeTint(accentRgb(type, lineId, level), type));
+}
+
+export function schematicFaceColor(
+  type: SchematicNodeType = "platform",
+  lineId?: string,
+  level?: number,
+): string {
+  const edge = typeTint(accentRgb(type, lineId, level), type);
+  return rgbToHex(mixRgb(edge, FACE_DARK, 0.62));
+}
+
+/** @deprecated Prefer schematicEdgeColor; kept for callers that only have a level. */
 export function levelEdgeColor(
-  level: number,
-  minLevel: number,
-  maxLevel: number,
+  _level: number,
+  _minLevel: number,
+  _maxLevel: number,
   type: SchematicNodeType = "platform",
 ): string {
-  return rgbToHex(typeTint(hueAt(levelT(level, minLevel, maxLevel)), type));
+  return schematicEdgeColor(type);
 }
 
 export function levelFaceColor(
-  level: number,
-  minLevel: number,
-  maxLevel: number,
+  _level: number,
+  _minLevel: number,
+  _maxLevel: number,
   type: SchematicNodeType = "platform",
 ): string {
-  const edge = typeTint(hueAt(levelT(level, minLevel, maxLevel)), type);
-  return rgbToHex(mixRgb(edge, [8, 10, 14], 0.62));
+  return schematicFaceColor(type);
 }
 
 function nodeOpacity(type: SchematicNodeType): number {
@@ -464,15 +500,15 @@ export function buildSceneGeometry(
   const polylines: ScenePolyline[] = [];
   const spans = liftSpans(nodes, edges, byId);
 
-  const colors = (level: number, type: SchematicNodeType) => ({
-    faceColor: levelFaceColor(level, minLevel, maxLevel, type),
-    edgeColor: levelEdgeColor(level, minLevel, maxLevel, type),
+  const colors = (type: SchematicNodeType, lineId?: string, level?: number) => ({
+    faceColor: schematicFaceColor(type, lineId, level),
+    edgeColor: schematicEdgeColor(type, lineId, level),
   });
 
   for (const node of nodes) {
     const fp = footprint(node);
     const position = toWorld(node.x, node.y, node.level);
-    const tint = colors(node.level, node.type);
+    const tint = colors(node.type, node.lineId, node.level);
     if (node.type === "lift" || node.type === "shaft") {
       volumes.push({
         id: node.id,
@@ -520,7 +556,7 @@ export function buildSceneGeometry(
         level,
         position: toWorld(span.x, span.y, level),
         size: [fp.wx / 2, fp.h, 0],
-        ...colors(level, "lift"),
+        ...colors("lift"),
         opacity: nodeOpacity("lift"),
         radialSegments,
         label: span.node.label,
@@ -543,7 +579,7 @@ export function buildSceneGeometry(
       level: midLevel,
       position: toWorld(span.x, span.y, midLevel),
       size: [0.12, height, 0],
-      ...colors(Math.round(midLevel), "shaft"),
+      ...colors("shaft"),
       opacity: 0.12,
       radialSegments,
       label: span.node.label,
@@ -559,7 +595,7 @@ export function buildSceneGeometry(
       mode: "shaft",
       points: [top, bot],
       segments: false,
-      color: levelEdgeColor(midLevel, minLevel, maxLevel, "shaft"),
+      color: schematicEdgeColor("shaft"),
       lineWidth: connectionWidth("shaft", quality),
       liftId: span.liftId,
     });
@@ -577,7 +613,13 @@ export function buildSceneGeometry(
         mode: "level",
         points: [toWorld(from.x, from.y, from.level), toWorld(to.x, to.y, to.level)],
         segments: false,
-        color: levelEdgeColor(from.level, minLevel, maxLevel, "platform"),
+        color: schematicEdgeColor(
+          from.type === "platform" || to.type === "platform"
+            ? "platform"
+            : from.type,
+          from.lineId ?? to.lineId,
+          from.level,
+        ),
         lineWidth: connectionWidth("level", quality),
       });
       continue;
@@ -590,11 +632,10 @@ export function buildSceneGeometry(
         mode: edge.mode,
         points: [toWorld(from.x, from.y, from.level), toWorld(to.x, to.y, to.level)],
         segments: false,
-        color: levelEdgeColor(
-          (from.level + to.level) / 2,
-          minLevel,
-          maxLevel,
+        color: schematicEdgeColor(
           "concourse",
+          undefined,
+          Math.min(from.level, to.level),
         ),
         lineWidth: connectionWidth(edge.mode, quality),
       });
@@ -620,7 +661,7 @@ export function buildSceneGeometry(
         toWorld(other.x, other.y, other.level),
       ],
       segments: false,
-      color: levelEdgeColor(other.level, minLevel, maxLevel, "lift"),
+      color: schematicEdgeColor("lift"),
       lineWidth: connectionWidth("landing", quality),
       liftId: edge.liftId,
     });

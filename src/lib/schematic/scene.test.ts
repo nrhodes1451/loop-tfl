@@ -6,6 +6,7 @@ import {
   cameraFrame,
   hoverHighlight,
   levelT,
+  schematicEdgeColor,
   toWorld,
 } from "./scene";
 import type { SchematicEdge, SchematicStation } from "./types";
@@ -29,6 +30,27 @@ describe("levelT", () => {
     expect(levelT(0, -6, 0)).toBe(0);
     expect(levelT(-6, -6, 0)).toBe(1);
     expect(levelT(-3, -6, 0)).toBeCloseTo(0.5);
+  });
+});
+
+describe("schematicEdgeColor", () => {
+  it("uses TfL yellow for Circle, not for Northern", () => {
+    expect(schematicEdgeColor("platform", "circle").toLowerCase()).toBe(
+      "#ffd300",
+    );
+    expect(schematicEdgeColor("platform", "northern").toLowerCase()).toBe(
+      "#ffffff",
+    );
+  });
+
+  it("gives street, ticket hall, and mezzanine distinct colours", () => {
+    const street = schematicEdgeColor("street", undefined, 0).toLowerCase();
+    const hall = schematicEdgeColor("concourse", undefined, -1).toLowerCase();
+    const mezz = schematicEdgeColor("concourse", undefined, -3).toLowerCase();
+    expect(street).not.toBe(hall);
+    expect(hall).not.toBe(mezz);
+    expect(street).not.toBe(mezz);
+    expect(street).toBe("#84b817");
   });
 });
 
@@ -100,6 +122,15 @@ describe("buildSceneGeometry HUBKGX", () => {
         expect(sorted[i]!.position[1]).toBeLessThan(sorted[i - 1]!.position[1]);
       }
     }
+  });
+
+  it("colours platforms with TfL line colours (Northern white on dark)", () => {
+    const northern = geom.volumes.find((v) => v.id === "plat-7");
+    const circle = geom.volumes.find((v) => v.id === "plat-1");
+    const victoria = geom.volumes.find((v) => v.id === "plat-3");
+    expect(northern?.edgeColor.toLowerCase()).toBe("#ffffff");
+    expect(circle?.edgeColor.toLowerCase()).toBe("#ffd300");
+    expect(victoria?.edgeColor.toLowerCase()).toBe("#0098d4");
   });
 
   it("distinguishes node types by silhouette", () => {

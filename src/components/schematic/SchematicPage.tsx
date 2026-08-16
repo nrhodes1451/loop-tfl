@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { levelEdgeColor, SCENE_BACKGROUND } from "@/lib/schematic/scene";
+import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
 import type { SchematicStation } from "@/lib/schematic/types";
+import { LINE_COLORS, lineColorForSchematic } from "@/lib/tokens";
 
 const StationScene3D = dynamic(
   () => import("./StationScene3D").then((m) => m.StationScene3D),
@@ -15,18 +16,15 @@ const StationScene3D = dynamic(
   },
 );
 
-const LEVELS: { level: number; label: string }[] = [
-  { level: 0, label: "Street" },
-  { level: -1, label: "Ticket hall" },
-  { level: -2, label: "Sub-surface (~5–10 m)" },
-  { level: -3, label: "Mezzanine" },
-  { level: -4, label: "Victoria (~20 m)" },
-  { level: -5, label: "Piccadilly" },
-  { level: -6, label: "Northern (deepest)" },
+const LEVELS: { level: number; label: string; color: string }[] = [
+  { level: 0, label: "Street", color: "#84b817" },
+  { level: -1, label: "Ticket hall", color: "#d6a860" },
+  { level: -2, label: "Circle / H&C / Met", color: LINE_COLORS.circle },
+  { level: -3, label: "Mezzanine", color: "#a894d6" },
+  { level: -4, label: "Victoria", color: lineColorForSchematic("victoria") },
+  { level: -5, label: "Piccadilly", color: lineColorForSchematic("piccadilly") },
+  { level: -6, label: "Northern (deepest)", color: lineColorForSchematic("northern") },
 ];
-
-const MIN_LEVEL = -6;
-const MAX_LEVEL = 0;
 
 const TYPE_KEY: { id: string; name: string; shape: "slab" | "platform" | "shaft" }[] =
   [
@@ -165,7 +163,7 @@ export function SchematicPage({ station }: { station: SchematicStation }) {
           className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
           style={{ color: "#8b93a0" }}
         >
-          Depth tiers (schematic)
+          Depth tiers (TfL colours)
         </div>
         <div className="flex flex-col gap-1">
           {LEVELS.map((row) => (
@@ -178,12 +176,8 @@ export function SchematicPage({ station }: { station: SchematicStation }) {
                 <span
                   className="inline-block h-[8px] w-[8px] rounded-full"
                   style={{
-                    background: levelEdgeColor(
-                      row.level,
-                      MIN_LEVEL,
-                      MAX_LEVEL,
-                    ),
-                    boxShadow: `0 0 6px ${levelEdgeColor(row.level, MIN_LEVEL, MAX_LEVEL)}`,
+                    background: row.color,
+                    boxShadow: `0 0 6px ${row.color}`,
                   }}
                 />
                 {row.label}
