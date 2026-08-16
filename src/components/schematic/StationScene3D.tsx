@@ -129,34 +129,53 @@ function VolumeMesh({
   };
 
   return (
-    <mesh
-      position={volume.position}
-      renderOrder={1}
-      {...(!volume.pickable ? { raycast: noopRaycast } : {})}
-      onPointerOver={volume.pickable ? onOver : undefined}
-      onPointerOut={volume.pickable ? onOut : undefined}
-    >
-      {volume.kind === "cylinder" ? (
-        <cylinderGeometry
-          args={[
-            volume.size[0],
-            volume.size[0],
-            volume.size[1],
-            volume.radialSegments,
-          ]}
-        />
-      ) : (
-        <boxGeometry args={volume.size} />
-      )}
-      {faceOpacities.map((faceOpacity, i) => (
-        <GlassFace
-          key={i}
-          attach={`material-${i}`}
-          color={volume.faceColor}
-          opacity={faceOpacity}
-        />
-      ))}
-    </mesh>
+    <group>
+      <mesh
+        position={volume.position}
+        renderOrder={1}
+        {...(!volume.pickable ? { raycast: noopRaycast } : {})}
+        onPointerOver={volume.pickable ? onOver : undefined}
+        onPointerOut={volume.pickable ? onOut : undefined}
+      >
+        {volume.kind === "cylinder" ? (
+          <cylinderGeometry
+            args={[
+              volume.size[0],
+              volume.size[0],
+              volume.size[1],
+              volume.radialSegments,
+            ]}
+          />
+        ) : (
+          <boxGeometry args={volume.size} />
+        )}
+        {faceOpacities.map((faceOpacity, i) => (
+          <GlassFace
+            key={i}
+            attach={`material-${i}`}
+            color={volume.faceColor}
+            opacity={faceOpacity}
+          />
+        ))}
+      </mesh>
+      {volume.type === "shaft" && volume.pickable ? (
+        <mesh
+          position={volume.position}
+          onPointerOver={onOver}
+          onPointerOut={onOut}
+        >
+          <cylinderGeometry
+            args={[
+              Math.max(volume.size[0] * 2.4, 0.28),
+              Math.max(volume.size[0] * 2.4, 0.28),
+              volume.size[1],
+              8,
+            ]}
+          />
+          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+        </mesh>
+      ) : null}
+    </group>
   );
 }
 

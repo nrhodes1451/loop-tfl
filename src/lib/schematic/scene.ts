@@ -44,7 +44,7 @@ export type SceneVolume = {
   label: string;
   liftId?: string;
   lineId?: string;
-  /** Derived shafts are too thin to pick reliably through slabs. */
+  /** Shafts use a fatter invisible hit volume in the 3D view. */
   pickable: boolean;
 };
 
@@ -620,7 +620,7 @@ export function buildSceneGeometry(
       radialSegments,
       label: span.node.label,
       liftId: span.liftId,
-      pickable: false,
+      pickable: true,
     });
 
     const top = toWorld(span.x, span.y, span.topLevel);

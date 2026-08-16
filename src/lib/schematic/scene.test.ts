@@ -286,9 +286,16 @@ describe("hoverHighlight", () => {
     expect(h.volumeIds.has("wth")).toBe(false);
   });
 
-  it("does not pick derived shafts", () => {
+  it("highlights the whole lift when hovering the shaft", () => {
+    const h = hoverHighlight("shaft::HUBKGX-Lift-1", geom);
+    expect(h.volumeIds.has("shaft::HUBKGX-Lift-1")).toBe(true);
+    expect(h.volumeIds.has("lift-1")).toBe(true);
+    expect(h.polylineIds.has("shaft-line::HUBKGX-Lift-1")).toBe(true);
+  });
+
+  it("lets derived shafts be picked", () => {
     const shaft = geom.volumes.find((v) => v.id === "shaft::HUBKGX-Lift-1");
-    expect(shaft?.pickable).toBe(false);
+    expect(shaft?.pickable).toBe(true);
     expect(geom.volumes.find((v) => v.id === "lift-1")?.pickable).toBe(true);
   });
 });
