@@ -14,7 +14,6 @@ import {
   type RefObject,
 } from "react";
 import {
-  ACESFilmicToneMapping,
   Color,
   DoubleSide,
   NoToneMapping,
@@ -305,9 +304,9 @@ function StationMeshes({
   );
 }
 
-function HighQualityEffects() {
+function SceneEffects({ samples }: { samples: number }) {
   return (
-    <EffectComposer multisampling={4} enableNormalPass={false}>
+    <EffectComposer multisampling={samples} enableNormalPass={false}>
       <Bloom
         luminanceThreshold={0.84}
         luminanceSmoothing={0.18}
@@ -398,11 +397,10 @@ export function StationScene3D({ topology, quality: qualityProp }: StationScene3
       }}
     >
       <Canvas
-        dpr={quality === "low" ? 1 : [1, 1.5]}
+        dpr={quality === "low" ? [1, 1.25] : [1, 1.5]}
         gl={{
-          antialias: quality === "high",
-          toneMapping:
-            quality === "high" ? NoToneMapping : ACESFilmicToneMapping,
+          antialias: true,
+          toneMapping: NoToneMapping,
           outputColorSpace: SRGBColorSpace,
         }}
         camera={{
@@ -435,7 +433,7 @@ export function StationScene3D({ topology, quality: qualityProp }: StationScene3
             setIsDragging(false);
           }}
         />
-        {quality === "high" ? <HighQualityEffects /> : null}
+        <SceneEffects samples={quality === "high" ? 4 : 2} />
       </Canvas>
       <button
         type="button"
