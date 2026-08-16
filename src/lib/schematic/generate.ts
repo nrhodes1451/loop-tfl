@@ -12,7 +12,7 @@ import type {
 } from "./types";
 
 export const GENERATED_DISCLAIMER =
-  "Schematic — not to scale, not for wayfinding. Illustrative only; not used for routing or accessibility decisions. Layout is generated from TfL lift/platform chains; x/y/level are invented.";
+  "Schematic — not to scale, not for wayfinding. Visualisation aid, not a blueprint.";
 
 export type GeneratePlatform = {
   id: string;

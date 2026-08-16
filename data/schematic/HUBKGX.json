@@ -1,7 +1,7 @@
 {
   "stationId": "HUBKGX",
   "name": "King's Cross St Pancras",
-  "disclaimer": "Schematic — not to scale, not for wayfinding. Illustrative only; not used for routing or accessibility decisions.",
+  "disclaimer": "Schematic — not to scale, not for wayfinding. Visualisation aid, not a blueprint.",
   "entrance": {
     "lat": 51.5304091,
     "lon": -0.1237367,

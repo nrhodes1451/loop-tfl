@@ -180,10 +180,11 @@ export function SchematicPage({
             </div>
           </div>
           <div
-            className="hidden max-w-[42rem] text-[12.5px] leading-normal sm:block"
+            className="max-w-[42rem] text-[12.5px] leading-normal"
             style={{ color: "#8b93a0" }}
           >
-            {station.disclaimer}
+            Visualisation aid, not a blueprint. Connecting lines indicate level access; only
+            lift shafts change elevation.
           </div>
           <div
             className="hidden font-[family-name:var(--font-ibm-plex-mono)] text-[11px] sm:block"
@@ -291,8 +292,7 @@ export function SchematicPage({
         </div>
         <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
           Drag to orbit, pinch or scroll to zoom. Hover a volume for its name;
-          lifts highlight the whole shaft. Geometry is schematic — not
-          survey-accurate, not for wayfinding.
+          lifts highlight the whole shaft.
         </div>
       </aside>
     </div>
