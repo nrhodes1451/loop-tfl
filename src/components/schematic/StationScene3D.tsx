@@ -288,7 +288,7 @@ function StationMeshes({
 
 function HighQualityEffects() {
   return (
-    <EffectComposer multisampling={0} enableNormalPass={false}>
+    <EffectComposer multisampling={4} enableNormalPass={false}>
       <Bloom
         luminanceThreshold={0.84}
         luminanceSmoothing={0.18}

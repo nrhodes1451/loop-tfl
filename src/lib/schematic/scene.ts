@@ -22,8 +22,8 @@ export type SceneQuality = "high" | "low";
 
 export const LEVEL_SPACING = 2.8;
 export const SCENE_BACKGROUND = "#050608";
-export const VOLUME_FACE_OPACITY = 0.1;
-export const VOLUME_BOTTOM_OPACITY = 0.2;
+export const VOLUME_FACE_OPACITY = 0.05;
+export const VOLUME_BOTTOM_OPACITY = 0.25;
 
 export type VolumeKind = "box" | "cylinder";
 
