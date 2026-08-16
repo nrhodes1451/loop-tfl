@@ -2,6 +2,8 @@
 
 Unofficial London public-transport accessibility tool. **Loop** plans a single street-to-street step-free journey; **Stepfree** is the optional network graph. Not affiliated with Transport for London.
 
+Live: [loop.penrose.tools](https://loop.penrose.tools)
+
 ## Stack
 
 Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), React Three Fiber (schematic), Inter + IBM Plex Mono.
@@ -12,7 +14,7 @@ Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), React Three
 |------|------------|
 | `/` | Loop — mobile-first step-free route planner |
 | `/explore` | Stepfree — force-directed accessibility graph |
-| `/schematic` | Illustrative 3D station schematics (dropdown; King’s Cross is hand-authored, others generated). Not used for routing |
+| `/schematic` | Redirects to King’s Cross. Per-station views at `/schematic/[stationId]` (King’s Cross is hand-authored, others generated). Not used for routing |
 | `/api/disruptions` | Live TfL lift outages (`LiftUniqueId` join) |
 
 ## Data sources
@@ -23,7 +25,7 @@ Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), React Three
 | Lift / platform topology | `https://api.tfl.gov.uk/stationdata/tfl-stationdata-detailed.zip` |
 | Live outages | `GET /Disruptions/Lifts/v2` (join on `LiftUniqueId`) |
 
-Static topology is persisted in `data/network.json` (regenerate with the script below). That file includes undirected graph `edges`, directed `rides`, street↔platform `platformLiftChains`, and platform↔platform `interchangeChains`. Invented station schematics are generated from those chains into `data/schematic/generated/` (`npm run build-schematics`, also run at the end of `refresh-network`). King’s Cross (`data/schematic/HUBKGX.json`) is a hand-authored override. Live disruptions are fetched at runtime via `/api/disruptions` with a ~60s in-memory TTL. There is no fabricated fallback data — if the live feed fails, the UI shows an explicit error and statuses degrade to unknown.
+Static topology is persisted in `data/network.json` (regenerate with the script below). That file includes undirected graph `edges`, directed `rides`, street↔platform `platformLiftChains`, and platform↔platform `interchangeChains`. Invented station schematics are generated from those chains into `data/schematic/generated/` (`npm run build-schematics`; also run at the end of `refresh-network` and as part of `npm run build`). King’s Cross (`data/schematic/HUBKGX.json`) is a hand-authored override. Live disruptions are fetched at runtime via `/api/disruptions` with a ~60s in-memory TTL. There is no fabricated fallback data — if the live feed fails, the UI shows an explicit error and statuses degrade to unknown.
 
 ## Setup
 
@@ -38,15 +40,35 @@ Optional: set `TFL_APP_KEY` (see `.env.example`) for higher rate limits.
 
 ```bash
 npm test                  # topology, status derivation, pathfinder, schematic
-npm run build
+npm run build             # regenerates schematics, then next build
 ```
+
+## Deploy
+
+Hosted on Cloud Run (`loop` in `us-east4`), mapped to `loop.penrose.tools`. From the repo root, with `data/network.json` and `data/schematic/` present:
+
+```bash
+gcloud run deploy loop \
+  --source . \
+  --project penrose-tools \
+  --region us-east4 \
+  --allow-unauthenticated \
+  --port 8080 \
+  --memory 1Gi \
+  --cpu 1 \
+  --max-instances 5
+```
+
+Cloud Build runs `npm run build` (`build-schematics` then `next build`) and starts with `next start`. Optional: set `TFL_APP_KEY` on the service for higher TfL rate limits.
+
+Custom domain: Cloud Run domain mapping in `us-east4` plus a Squarespace CNAME `loop` → `ghs.googlehosted.com`. Certificate issuance can take up to 24 hours after the mapping is created.
 
 ## Planner verdicts
 
 Loop returns one route and an honest verdict:
 
 - **Step-free throughout** — boarding, interchange, and alighting lifts are in service
-- **Route breaks** — a required lift is out; the attempted path stays visible and later legs are marked unreachable. Replan can exclude the broken interchange
+- **Step-free route breaks** — a required lift is out; the attempted path stays visible and later legs are marked unreachable. Replan can exclude the broken interchange
 - **Probably step-free** — the path exists but live status is missing or older than ~15 minutes
 - **No step-free route** — structural gap (not a live fault); offers the nearest step-free station
 
