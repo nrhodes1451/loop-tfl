@@ -2,9 +2,13 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { StationPicker } from "@/components/schematic/StationPicker";
 import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
-import type { SchematicStation } from "@/lib/schematic/types";
-import { LINE_COLORS, lineColorForSchematic } from "@/lib/tokens";
+import type {
+  SchematicStation,
+  SchematicStationRef,
+} from "@/lib/schematic/types";
+import { lineColorForSchematic } from "@/lib/tokens";
 
 const StationScene3D = dynamic(
   () => import("./StationScene3D").then((m) => m.StationScene3D),
@@ -16,22 +20,94 @@ const StationScene3D = dynamic(
   },
 );
 
-const LEVELS: { level: number; label: string; color: string }[] = [
-  { level: 0, label: "Street", color: "#84b817" },
-  { level: -1, label: "Ticket hall", color: "#d6a860" },
-  { level: -2, label: "Circle / H&C / Met", color: LINE_COLORS.circle },
-  { level: -3, label: "Mezzanine", color: "#a894d6" },
-  { level: -4, label: "Victoria", color: lineColorForSchematic("victoria") },
-  { level: -5, label: "Piccadilly", color: lineColorForSchematic("piccadilly") },
-  { level: -6, label: "Northern (deepest)", color: lineColorForSchematic("northern") },
-];
-
 const TYPE_KEY: { id: string; name: string; shape: "slab" | "platform" | "shaft" }[] =
   [
     { id: "concourse", name: "Concourse", shape: "slab" },
     { id: "platform", name: "Platform", shape: "platform" },
     { id: "shaft", name: "Lift shaft", shape: "shaft" },
   ];
+
+const LINE_LABELS: Record<string, string> = {
+  bakerloo: "Bakerloo",
+  central: "Central",
+  circle: "Circle",
+  district: "District",
+  "hammersmith-city": "Hammersmith & City",
+  jubilee: "Jubilee",
+  metropolitan: "Metropolitan",
+  northern: "Northern",
+  piccadilly: "Piccadilly",
+  victoria: "Victoria",
+  "waterloo-city": "Waterloo & City",
+  "elizabeth-line": "Elizabeth line",
+  elizabeth: "Elizabeth line",
+  dlr: "DLR",
+  "london-overground": "Overground",
+  overground: "Overground",
+  liberty: "Liberty",
+  lioness: "Lioness",
+  mildmay: "Mildmay",
+  suffragette: "Suffragette",
+  weaver: "Weaver",
+  windrush: "Windrush",
+  tram: "Tram",
+  "national-rail": "National Rail",
+};
+
+function lineLabel(id: string): string {
+  if (LINE_LABELS[id]) return LINE_LABELS[id];
+  return id
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function depthLegend(
+  station: SchematicStation,
+): { key: string; level: number; label: string; color: string }[] {
+  const rows: { key: string; level: number; label: string; color: string }[] =
+    [];
+  if (station.nodes.some((n) => n.type === "street")) {
+    rows.push({
+      key: "street",
+      level: 0,
+      label: "Street",
+      color: "#84b817",
+    });
+  }
+  const concourseLevels = [
+    ...new Set(
+      station.nodes.filter((n) => n.type === "concourse").map((n) => n.level),
+    ),
+  ].sort((a, b) => b - a);
+  for (const level of concourseLevels) {
+    const mezz = level <= -3;
+    rows.push({
+      key: `concourse-${level}`,
+      level,
+      label: mezz ? "Mezzanine" : "Ticket hall",
+      color: mezz ? "#a894d6" : "#d6a860",
+    });
+  }
+  const lines = new Map<string, number>();
+  for (const n of station.nodes) {
+    if (n.type !== "platform" || !n.lineId) continue;
+    const prev = lines.get(n.lineId);
+    if (prev == null || n.level < prev) lines.set(n.lineId, n.level);
+  }
+  const lineRows = [...lines.entries()].sort(
+    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+  );
+  for (const [lineId, level] of lineRows) {
+    rows.push({
+      key: `line-${lineId}`,
+      level,
+      label: lineLabel(lineId),
+      color: lineColorForSchematic(lineId),
+    });
+  }
+  return rows;
+}
 
 function fmtCoord(n: number): string {
   return n.toFixed(5);
@@ -66,7 +142,14 @@ function TypeGlyph({ shape }: { shape: "slab" | "platform" | "shaft" }) {
   );
 }
 
-export function SchematicPage({ station }: { station: SchematicStation }) {
+export function SchematicPage({
+  station,
+  stations,
+}: {
+  station: SchematicStation;
+  stations: SchematicStationRef[];
+}) {
+  const levels = depthLegend(station);
   return (
     <div
       className="relative h-full w-full overflow-hidden"
@@ -88,15 +171,12 @@ export function SchematicPage({ station }: { station: SchematicStation }) {
           >
             Schematic — not to scale, not for wayfinding
           </div>
-          <div className="flex flex-wrap items-baseline gap-[9px]">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
             <div className="text-[18px] font-bold tracking-[-0.02em] sm:text-[21px]">
               {station.name}
             </div>
-            <div
-              className="whitespace-nowrap font-[family-name:var(--font-ibm-plex-mono)] text-xs"
-              style={{ color: "#8b93a0" }}
-            >
-              tube only · not National Rail
+            <div className="pointer-events-auto">
+              <StationPicker currentId={station.stationId} stations={stations} />
             </div>
           </div>
           <div
@@ -109,7 +189,6 @@ export function SchematicPage({ station }: { station: SchematicStation }) {
             className="hidden font-[family-name:var(--font-ibm-plex-mono)] text-[11px] sm:block"
             style={{ color: "#6f7681" }}
           >
-            OSM entrance{" "}
             <a
               href={station.entrance.source}
               target="_blank"
@@ -166,9 +245,9 @@ export function SchematicPage({ station }: { station: SchematicStation }) {
           Depth tiers (TfL colours)
         </div>
         <div className="flex flex-col gap-1">
-          {LEVELS.map((row) => (
+          {levels.map((row) => (
             <div
-              key={row.level}
+              key={row.key}
               className="flex items-baseline justify-between gap-4 text-[12px]"
               style={{ color: "#c5ccd6" }}
             >

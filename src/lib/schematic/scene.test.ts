@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import kgxJson from "../../../data/schematic/HUBKGX.json";
 import {
   LEVEL_SPACING,
+  VOLUME_BOTTOM_OPACITY,
+  VOLUME_FACE_OPACITY,
   buildSceneGeometry,
   cameraFrame,
   hoverHighlight,
@@ -174,10 +176,10 @@ describe("buildSceneGeometry HUBKGX", () => {
     const hall = geom.volumes.find((v) => v.id === "wth")!;
     expect(circle.faceColor.toLowerCase()).toBe(circle.edgeColor.toLowerCase());
     expect(northern.faceColor.toLowerCase()).toBe("#ffffff");
-    expect(circle.opacity).toBe(0.1);
-    expect(circle.bottomOpacity).toBe(0.2);
-    expect(hall.opacity).toBe(0.1);
-    expect(hall.bottomOpacity).toBe(0.2);
+    expect(circle.opacity).toBe(VOLUME_FACE_OPACITY);
+    expect(circle.bottomOpacity).toBe(VOLUME_BOTTOM_OPACITY);
+    expect(hall.opacity).toBe(VOLUME_FACE_OPACITY);
+    expect(hall.bottomOpacity).toBe(VOLUME_BOTTOM_OPACITY);
   });
 
   it("orients same-line platforms in parallel (long axis perpendicular to offset)", () => {

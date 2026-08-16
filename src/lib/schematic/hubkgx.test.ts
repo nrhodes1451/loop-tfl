@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { SchematicStation } from "./types";
@@ -19,10 +19,21 @@ const FORBIDDEN_IMPORT = /from\s+["'](@\/lib\/(plan|status|tfl\/topology)|\.\.\/
 
 function sourceFilesUnder(relDir: string): string[] {
   const dir = path.join(process.cwd(), relDir);
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".ts") || f.endsWith(".tsx"))
-    .filter((f) => !f.endsWith(".test.ts"))
-    .map((f) => path.join(dir, f));
+  const out: string[] = [];
+  const walk = (current: string) => {
+    for (const name of readdirSync(current)) {
+      const full = path.join(current, name);
+      if (statSync(full).isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!name.endsWith(".ts") && !name.endsWith(".tsx")) continue;
+      if (name.endsWith(".test.ts") || name.endsWith(".test.tsx")) continue;
+      out.push(full);
+    }
+  };
+  walk(dir);
+  return out;
 }
 
 describe("HUBKGX schematic JSON", () => {

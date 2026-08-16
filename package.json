@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "refresh-network": "tsx scripts/refresh-network.ts",
+    "build-schematics": "tsx scripts/build-schematics.ts",
     "test": "vitest run"
   },
   "dependencies": {

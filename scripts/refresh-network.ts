@@ -21,6 +21,7 @@ import {
   type TflRouteSequence,
 } from "../src/lib/tfl/client";
 import type { CsvRow, TopologyInputs } from "../src/lib/tfl/topology";
+import { buildSchematics } from "./build-schematics";
 
 function parseCsv(buf: Buffer): CsvRow[] {
   return parse(buf, {
@@ -145,6 +146,10 @@ async function main() {
   await writeFile(outPath, JSON.stringify(network));
   console.log(
     `Wrote ${outPath}: ${network.stations.length} stations, ${network.edges.length} edges, ${network.rides.length} rides, ${network.platforms.length} platforms, ${network.lifts.length} lifts, ${network.interchangeChains.length} interchange chains`,
+  );
+  const schematics = await buildSchematics();
+  console.log(
+    `Wrote ${schematics.generated} generated schematics, skipped ${schematics.skipped} override(s)`,
   );
 }
 

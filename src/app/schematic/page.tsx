@@ -1,7 +1,5 @@
-import { SchematicPage } from "@/components/schematic/SchematicPage";
-import { loadSchematic } from "@/lib/schematic/load";
+import { redirect } from "next/navigation";
 
-export default async function SchematicRoute() {
-  const station = await loadSchematic("HUBKGX");
-  return <SchematicPage station={station} />;
+export default function SchematicIndexPage() {
+  redirect("/schematic/HUBKGX");
 }

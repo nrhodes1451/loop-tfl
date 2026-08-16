@@ -51,3 +51,13 @@ export type SchematicStation = {
   /** Optional layout notes (CULG sanity-check, etc.). Not for routing. */
   notes?: string;
 };
+
+export type SchematicStationRef = {
+  id: string;
+  name: string;
+};
+
+export type SchematicIndex = {
+  generatedAt: string;
+  stations: SchematicStationRef[];
+};

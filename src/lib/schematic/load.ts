@@ -5,28 +5,76 @@
 
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
-import type { SchematicStation } from "./types";
+import type { SchematicIndex, SchematicStation, SchematicStationRef } from "./types";
 
-const cache = new Map<string, { mtimeMs: number; data: SchematicStation }>();
+const stationCache = new Map<string, { mtimeMs: number; data: SchematicStation }>();
+let indexCache: { mtimeMs: number; data: SchematicIndex } | null = null;
+
+export class SchematicNotFoundError extends Error {
+  constructor(public stationId: string) {
+    super(`No schematic for ${stationId}`);
+    this.name = "SchematicNotFoundError";
+  }
+}
+
+function assertSafeId(stationId: string) {
+  if (!stationId || stationId.includes("/") || stationId.includes("\\") || stationId.includes("..")) {
+    throw new SchematicNotFoundError(stationId);
+  }
+}
+
+async function readJsonIfExists<T>(filePath: string): Promise<{ mtimeMs: number; data: T } | null> {
+  try {
+    const { mtimeMs } = await stat(filePath);
+    const raw = await readFile(filePath, "utf8");
+    return { mtimeMs, data: JSON.parse(raw) as T };
+  } catch (err) {
+    if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
 
 export async function loadSchematic(
   stationId: string,
 ): Promise<SchematicStation> {
-  const filePath = path.join(
+  assertSafeId(stationId);
+  const overridePath = path.join(
     process.cwd(),
     "data",
     "schematic",
     `${stationId}.json`,
   );
+  const generatedPath = path.join(
+    process.cwd(),
+    "data",
+    "schematic",
+    "generated",
+    `${stationId}.json`,
+  );
+
+  const override = await readJsonIfExists<SchematicStation>(overridePath);
+  const chosen = override ?? (await readJsonIfExists<SchematicStation>(generatedPath));
+  if (!chosen) throw new SchematicNotFoundError(stationId);
+
+  const hit = stationCache.get(stationId);
+  if (hit && hit.mtimeMs === chosen.mtimeMs) return hit.data;
+  stationCache.set(stationId, chosen);
+  return chosen.data;
+}
+
+export async function listSchematicStations(): Promise<SchematicStationRef[]> {
+  const filePath = path.join(process.cwd(), "data", "schematic", "index.json");
   const { mtimeMs } = await stat(filePath);
-  const hit = cache.get(stationId);
-  if (hit && hit.mtimeMs === mtimeMs) return hit.data;
+  if (indexCache && indexCache.mtimeMs === mtimeMs) return indexCache.data.stations;
   const raw = await readFile(filePath, "utf8");
-  const data = JSON.parse(raw) as SchematicStation;
-  cache.set(stationId, { mtimeMs, data });
-  return data;
+  const data = JSON.parse(raw) as SchematicIndex;
+  indexCache = { mtimeMs, data };
+  return data.stations;
 }
 
 export function clearSchematicCache() {
-  cache.clear();
+  stationCache.clear();
+  indexCache = null;
 }
