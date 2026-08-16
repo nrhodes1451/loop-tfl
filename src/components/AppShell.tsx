@@ -121,6 +121,17 @@ export function AppShell({ network }: { network: NetworkData }) {
           >
             Plan a route
           </Link>
+          <Link
+            href={selected ? `/schematic/${encodeURIComponent(selected)}` : "/schematic"}
+            className="cursor-pointer whitespace-nowrap rounded-[7px] border px-[13px] py-2 text-[12.5px] font-medium no-underline"
+            style={{
+              color: "#2a2f37",
+              background: "#ffffff",
+              borderColor: "#cfd3d9",
+            }}
+          >
+            Schematic
+          </Link>
           <button
             type="button"
             onClick={() => setResetToken((n) => n + 1)}

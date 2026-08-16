@@ -321,7 +321,7 @@ export function RouteEntry({
                   >
                     Plan step-free route
                   </button>
-                  <div className="mt-3 text-center">
+                  <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
                     <Link
                       href="/explore"
                       style={{
@@ -332,6 +332,17 @@ export function RouteEntry({
                       }}
                     >
                       Explore the network graph
+                    </Link>
+                    <Link
+                      href="/schematic"
+                      style={{
+                        fontSize: 12.5,
+                        color: loop.muted,
+                        borderBottom: "1px solid rgba(0,0,0,.15)",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Station schematics
                     </Link>
                   </div>
                 </div>
