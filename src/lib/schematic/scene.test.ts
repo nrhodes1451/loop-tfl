@@ -223,6 +223,19 @@ describe("buildSceneGeometry HUBKGX", () => {
     }
   });
 
+  it("draws four vertical bars on lift shafts", () => {
+    const shaftWire = geom.polylines.find((p) => p.id.startsWith("wire::shaft::"));
+    expect(shaftWire).toBeTruthy();
+    const pts = shaftWire!.points;
+    let verts = 0;
+    for (let i = 0; i + 1 < pts.length; i += 2) {
+      const a = pts[i]!;
+      const b = pts[i + 1]!;
+      if (a[0] === b[0] && a[2] === b[2] && a[1] !== b[1]) verts += 1;
+    }
+    expect(verts).toBe(4);
+  });
+
   it("uses fewer cylinder segments on low quality", () => {
     const low = buildSceneGeometry(topology, { quality: "low" });
     const highVol = geom.volumes.find((v) => v.kind === "cylinder")!;
