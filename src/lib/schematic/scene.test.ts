@@ -223,7 +223,7 @@ describe("buildSceneGeometry HUBKGX", () => {
     }
   });
 
-  it("draws four vertical bars on lift shafts", () => {
+  it("draws three vertical bars on lift shafts", () => {
     const shaftWire = geom.polylines.find((p) => p.id.startsWith("wire::shaft::"));
     expect(shaftWire).toBeTruthy();
     const pts = shaftWire!.points;
@@ -233,7 +233,7 @@ describe("buildSceneGeometry HUBKGX", () => {
       const b = pts[i + 1]!;
       if (a[0] === b[0] && a[2] === b[2] && a[1] !== b[1]) verts += 1;
     }
-    expect(verts).toBe(4);
+    expect(verts).toBe(3);
   });
 
   it("uses fewer cylinder segments on low quality", () => {

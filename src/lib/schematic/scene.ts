@@ -704,7 +704,7 @@ export function buildSceneGeometry(
   }
 
   for (const vol of volumes) {
-    const bars = vol.type === "shaft" ? 4 : stiles;
+    const bars = vol.type === "shaft" ? 3 : stiles;
     polylines.push(outlineOf(vol, ring, bars, outlineWidth));
   }
 
