@@ -179,8 +179,24 @@ function VolumeMesh({
   );
 }
 
-function boostedColor(hex: string, gain: number): Color {
+/** Rec.709 luma — matches the bloom luminance pass better than sRGB average. */
+function rec709Lum(color: Color): number {
+  return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+}
+
+/** Mid TfL colours sit around here; brighter lines are pulled down to match. */
+const BLOOM_TARGET_LUM = 0.58;
+/** Shafts stack several bright strokes; extra pullback after luma compensation. */
+const SHAFT_BLOOM_SCALE = 0.82;
+
+function isShaftLine(line: ScenePolyline): boolean {
+  return line.mode === "shaft" || line.id.startsWith("wire::shaft::");
+}
+
+function bloomLineColor(hex: string, roleGain: number, extra: number): Color {
   const color = new Color(hex);
+  const lum = Math.max(rec709Lum(color), 0.22);
+  const gain = roleGain * extra * Math.min(1, BLOOM_TARGET_LUM / lum);
   color.multiplyScalar(gain);
   return color;
 }
@@ -196,7 +212,8 @@ function GlowLine({
 }) {
   if (line.points.length < 2) return null;
   const baseGain = line.role === "outline" ? 1.85 : 1.4;
-  const gain = highlighted ? baseGain * 1.45 : baseGain;
+  const roleGain = highlighted ? baseGain * 1.45 : baseGain;
+  const extra = isShaftLine(line) ? SHAFT_BLOOM_SCALE : 1;
   const opacity = highlighted
     ? 1
     : dimmed
@@ -208,7 +225,7 @@ function GlowLine({
     <Line
       points={line.points}
       segments={line.segments}
-      color={boostedColor(line.color, gain)}
+      color={bloomLineColor(line.color, roleGain, extra)}
       lineWidth={highlighted ? line.lineWidth * 1.35 : line.lineWidth}
       transparent
       opacity={opacity}
