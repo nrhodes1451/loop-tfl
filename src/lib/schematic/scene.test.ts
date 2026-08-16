@@ -168,6 +168,18 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(victoria?.edgeColor.toLowerCase()).toBe("#0098d4");
   });
 
+  it("fills volumes with the same colour at high transparency", () => {
+    const circle = geom.volumes.find((v) => v.id === "plat-1")!;
+    const northern = geom.volumes.find((v) => v.id === "plat-7")!;
+    const hall = geom.volumes.find((v) => v.id === "wth")!;
+    expect(circle.faceColor.toLowerCase()).toBe(circle.edgeColor.toLowerCase());
+    expect(northern.faceColor.toLowerCase()).toBe("#ffffff");
+    expect(circle.opacity).toBe(0.1);
+    expect(circle.bottomOpacity).toBe(0.2);
+    expect(hall.opacity).toBe(0.1);
+    expect(hall.bottomOpacity).toBe(0.2);
+  });
+
   it("orients same-line platforms in parallel (long axis perpendicular to offset)", () => {
     const circle1 = geom.volumes.find((v) => v.id === "plat-1")!;
     const circle2 = geom.volumes.find((v) => v.id === "plat-2")!;

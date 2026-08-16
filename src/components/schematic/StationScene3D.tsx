@@ -13,7 +13,13 @@ import {
   type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from "react";
-import { ACESFilmicToneMapping, Color, NoToneMapping, SRGBColorSpace } from "three";
+import {
+  ACESFilmicToneMapping,
+  Color,
+  DoubleSide,
+  NoToneMapping,
+  SRGBColorSpace,
+} from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
   SCENE_BACKGROUND,
@@ -56,6 +62,38 @@ function useQuality(override?: SceneQuality): SceneQuality {
 
 function noopRaycast() {}
 
+function scaledOpacity(
+  base: number,
+  highlighted: boolean,
+  dimmed: boolean,
+): number {
+  if (highlighted) return Math.min(0.42, base * 2.4);
+  if (dimmed) return base * 0.28;
+  return base;
+}
+
+function GlassFace({
+  color,
+  opacity,
+  attach,
+}: {
+  color: string;
+  opacity: number;
+  attach: string;
+}) {
+  return (
+    <meshBasicMaterial
+      attach={attach}
+      color={color}
+      transparent
+      opacity={opacity}
+      depthWrite={false}
+      side={DoubleSide}
+      toneMapped
+    />
+  );
+}
+
 function VolumeMesh({
   volume,
   highlighted,
@@ -69,11 +107,16 @@ function VolumeMesh({
   draggingRef: RefObject<boolean>;
   onHover: (id: string | null) => void;
 }) {
-  const opacity = highlighted
-    ? Math.min(0.42, volume.opacity * 2.4)
-    : dimmed
-      ? volume.opacity * 0.28
-      : volume.opacity;
+  const opacity = scaledOpacity(volume.opacity, highlighted, dimmed);
+  const bottomOpacity = scaledOpacity(
+    volume.bottomOpacity,
+    highlighted,
+    dimmed,
+  );
+  const faceOpacities =
+    volume.kind === "cylinder"
+      ? [opacity, opacity, bottomOpacity]
+      : [opacity, opacity, opacity, bottomOpacity, opacity, opacity];
 
   const onOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
@@ -105,13 +148,14 @@ function VolumeMesh({
       ) : (
         <boxGeometry args={volume.size} />
       )}
-      <meshBasicMaterial
-        color={volume.faceColor}
-        transparent
-        opacity={opacity}
-        depthWrite={false}
-        toneMapped
-      />
+      {faceOpacities.map((faceOpacity, i) => (
+        <GlassFace
+          key={i}
+          attach={`material-${i}`}
+          color={volume.faceColor}
+          opacity={faceOpacity}
+        />
+      ))}
     </mesh>
   );
 }

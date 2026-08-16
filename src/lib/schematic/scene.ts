@@ -22,6 +22,8 @@ export type SceneQuality = "high" | "low";
 
 export const LEVEL_SPACING = 2.8;
 export const SCENE_BACKGROUND = "#050608";
+export const VOLUME_FACE_OPACITY = 0.1;
+export const VOLUME_BOTTOM_OPACITY = 0.2;
 
 export type VolumeKind = "box" | "cylinder";
 
@@ -35,7 +37,9 @@ export type SceneVolume = {
   size: Vec3;
   faceColor: string;
   edgeColor: string;
+  /** Sides and top. Bottom face uses `bottomOpacity`. */
   opacity: number;
+  bottomOpacity: number;
   radialSegments: number;
   label: string;
   liftId?: string;
@@ -92,7 +96,6 @@ const TICKET_HALL_EDGE: Vec3 = [214, 168, 96];
 /** Cool lilac so mezzanines don’t collide with tube lines. */
 const MEZZANINE_EDGE: Vec3 = [168, 148, 214];
 const LIFT_EDGE: Vec3 = [186, 228, 242];
-const FACE_DARK: Vec3 = [8, 10, 14];
 
 type Footprint = { wx: number; wy: number; h: number };
 
@@ -230,8 +233,7 @@ export function schematicFaceColor(
   lineId?: string,
   level?: number,
 ): string {
-  const edge = typeTint(accentRgb(type, lineId, level), type);
-  return rgbToHex(mixRgb(edge, FACE_DARK, 0.62));
+  return rgbToHex(typeTint(accentRgb(type, lineId, level), type));
 }
 
 /** @deprecated Prefer schematicEdgeColor; kept for callers that only have a level. */
@@ -251,12 +253,6 @@ export function levelFaceColor(
   type: SchematicNodeType = "platform",
 ): string {
   return schematicFaceColor(type);
-}
-
-function nodeOpacity(type: SchematicNodeType): number {
-  if (type === "lift" || type === "shaft") return 0.2;
-  if (type === "platform") return 0.16;
-  return 0.14;
 }
 
 function levelRange(nodes: SchematicNode[]): { minLevel: number; maxLevel: number } {
@@ -535,6 +531,11 @@ export function buildSceneGeometry(
   const polylines: ScenePolyline[] = [];
   const spans = liftSpans(nodes, edges, byId);
 
+  const glassFill = {
+    opacity: VOLUME_FACE_OPACITY,
+    bottomOpacity: VOLUME_BOTTOM_OPACITY,
+  };
+
   const colors = (type: SchematicNodeType, lineId?: string, level?: number) => ({
     faceColor: schematicFaceColor(type, lineId, level),
     edgeColor: schematicEdgeColor(type, lineId, level),
@@ -553,7 +554,7 @@ export function buildSceneGeometry(
         position,
         size: [fp.wx / 2, fp.h, 0],
         ...tint,
-        opacity: nodeOpacity(node.type),
+        ...glassFill,
         radialSegments,
         label: node.label,
         liftId: node.liftId,
@@ -569,7 +570,7 @@ export function buildSceneGeometry(
         position,
         size: [fp.wx, fp.h, fp.wy],
         ...tint,
-        opacity: nodeOpacity(node.type),
+        ...glassFill,
         radialSegments,
         label: node.label,
         liftId: node.liftId,
@@ -592,7 +593,7 @@ export function buildSceneGeometry(
         position: toWorld(span.x, span.y, level),
         size: [fp.wx / 2, fp.h, 0],
         ...colors("lift"),
-        opacity: nodeOpacity("lift"),
+        ...glassFill,
         radialSegments,
         label: span.node.label,
         liftId: span.liftId,
@@ -615,7 +616,7 @@ export function buildSceneGeometry(
       position: toWorld(span.x, span.y, midLevel),
       size: [0.12, height, 0],
       ...colors("shaft"),
-      opacity: 0.12,
+      ...glassFill,
       radialSegments,
       label: span.node.label,
       liftId: span.liftId,
