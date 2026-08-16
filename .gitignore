@@ -42,6 +42,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# derived station schematics (regenerate with npm run build-schematics)
+/data/schematic/generated/
+/data/schematic/index.json
+
 # local design canvases — not production source
 /designs-handoff/
 /context/design_handoff_stepfree_graph/
