@@ -21,6 +21,7 @@ import type {
   SchematicStation,
 } from "@/lib/schematic/types";
 import { LINE_COLORS } from "@/lib/tokens";
+import { platformPlanSize } from "@/lib/schematic/scene";
 
 type ViewBox = { x: number; y: number; w: number; h: number };
 
@@ -34,11 +35,10 @@ const SUBSURFACE_STRIPES = [
 
 type Footprint = { wx: number; wy: number; h: number };
 
-function footprint(node: SchematicNode): Footprint {
+function footprint(node: SchematicNode, nodes: SchematicNode[]): Footprint {
   switch (node.type) {
     case "platform":
-      if (node.lineId === "circle") return { wx: 3.15, wy: 0.64, h: 11 };
-      return { wx: 0.56, wy: 2.85, h: 11 };
+      return { ...platformPlanSize(node, nodes), h: 11 };
     case "concourse":
       return { wx: 2.05, wy: 1.55, h: 14 };
     case "street":
@@ -141,7 +141,7 @@ function computeViewBox(station: SchematicStation): ViewBox {
     maxY = Math.max(maxY, p.y);
   };
   for (const node of station.nodes) {
-    const fp = footprint(node);
+    const fp = footprint(node, station.nodes);
     const top = isoBoxTop(node.x, node.y, fp.wx, fp.wy, node.level, ISO);
     for (const p of top) {
       include(p);
@@ -188,6 +188,7 @@ function clientToViewBox(
 
 type SlabProps = {
   node: SchematicNode;
+  nodes: SchematicNode[];
   dimmed: boolean;
   highlighted: boolean;
   hovered: boolean;
@@ -198,6 +199,7 @@ type SlabProps = {
 
 function IsoSlab({
   node,
+  nodes,
   dimmed,
   highlighted,
   hovered,
@@ -205,7 +207,7 @@ function IsoSlab({
   onLeave,
   onClick,
 }: SlabProps) {
-  const fp = footprint(node);
+  const fp = footprint(node, nodes);
   const top = isoBoxTop(node.x, node.y, fp.wx, fp.wy, node.level, ISO);
   const bot = top.map((p) => dropIso(p, fp.h));
   const south = [top[0]!, top[1]!, bot[1]!, bot[0]!];
@@ -632,6 +634,7 @@ export function StationIsoView({ station }: { station: SchematicStation }) {
             <IsoSlab
               key={item.key}
               node={item.node}
+              nodes={station.nodes}
               dimmed={dimmed}
               highlighted={isHi}
               hovered={hoveredId === item.node.id}

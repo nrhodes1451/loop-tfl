@@ -6,10 +6,11 @@ import {
   cameraFrame,
   hoverHighlight,
   levelT,
+  platformPlanSize,
   schematicEdgeColor,
   toWorld,
 } from "./scene";
-import type { SchematicEdge, SchematicStation } from "./types";
+import type { SchematicEdge, SchematicNode, SchematicStation } from "./types";
 
 const station = kgxJson as SchematicStation;
 const topology = { nodes: station.nodes, edges: station.edges };
@@ -22,6 +23,40 @@ describe("toWorld", () => {
     expect(deep[1]).toBe(-6 * LEVEL_SPACING);
     expect(deep[0]).toBe(shallow[0]);
     expect(deep[2]).toBe(shallow[2]);
+  });
+});
+
+describe("platformPlanSize", () => {
+  const plat = (
+    id: string,
+    lineId: string,
+    x: number,
+    y: number,
+  ): SchematicNode => ({
+    id,
+    type: "platform",
+    label: id,
+    level: -2,
+    x,
+    y,
+    lineId,
+  });
+
+  it("places a lone platform long in Y", () => {
+    const a = plat("a", "victoria", 0, 0);
+    expect(platformPlanSize(a, [a])).toEqual({ wx: 0.56, wy: 2.85 });
+  });
+
+  it("orients a pair perpendicular to their offset so they sit in parallel", () => {
+    const a = plat("a", "circle", 0, 0);
+    const b = plat("b", "circle", 4, 0);
+    expect(platformPlanSize(a, [a, b])).toEqual({ wx: 0.56, wy: 2.85 });
+    expect(platformPlanSize(b, [a, b])).toEqual({ wx: 0.56, wy: 2.85 });
+
+    const c = plat("c", "northern", 0, 0);
+    const d = plat("d", "northern", 0, 4);
+    expect(platformPlanSize(c, [c, d])).toEqual({ wx: 2.85, wy: 0.56 });
+    expect(platformPlanSize(d, [c, d])).toEqual({ wx: 2.85, wy: 0.56 });
   });
 });
 
@@ -131,6 +166,17 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(northern?.edgeColor.toLowerCase()).toBe("#ffffff");
     expect(circle?.edgeColor.toLowerCase()).toBe("#ffd300");
     expect(victoria?.edgeColor.toLowerCase()).toBe("#0098d4");
+  });
+
+  it("orients same-line platforms in parallel (long axis perpendicular to offset)", () => {
+    const circle1 = geom.volumes.find((v) => v.id === "plat-1")!;
+    const circle2 = geom.volumes.find((v) => v.id === "plat-2")!;
+    const victoria = geom.volumes.find((v) => v.id === "plat-3")!;
+    // Circle pair is offset in X, so boxes must be thin in X / long in Z.
+    expect(circle1.size[0]).toBeLessThan(circle1.size[2]);
+    expect(circle2.size[0]).toBeLessThan(circle2.size[2]);
+    expect(circle1.size[0]).toBeCloseTo(victoria.size[0]);
+    expect(circle1.size[2]).toBeCloseTo(victoria.size[2]);
   });
 
   it("distinguishes node types by silhouette", () => {

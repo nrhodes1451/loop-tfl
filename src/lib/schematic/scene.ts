@@ -96,11 +96,46 @@ const FACE_DARK: Vec3 = [8, 10, 14];
 
 type Footprint = { wx: number; wy: number; h: number };
 
-function footprint(node: SchematicNode): Footprint {
+const PLATFORM_THIN = 0.56;
+const PLATFORM_LONG = 2.85;
+const PLATFORM_H = 0.4;
+
+/**
+ * Same-line platforms sit side-by-side: long axis perpendicular to the
+ * vector between sibling centres. Default (one platform) is long in Y.
+ */
+export function platformPlanSize(
+  node: SchematicNode,
+  nodes: SchematicNode[],
+): { wx: number; wy: number } {
+  const siblings = nodes.filter(
+    (n) =>
+      n.type === "platform" &&
+      n.lineId &&
+      n.lineId === node.lineId &&
+      n.id !== node.id,
+  );
+  if (siblings.length === 0) {
+    return { wx: PLATFORM_THIN, wy: PLATFORM_LONG };
+  }
+  let dx = 0;
+  let dy = 0;
+  for (const s of siblings) {
+    dx += s.x - node.x;
+    dy += s.y - node.y;
+  }
+  dx /= siblings.length;
+  dy /= siblings.length;
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    return { wx: PLATFORM_THIN, wy: PLATFORM_LONG };
+  }
+  return { wx: PLATFORM_LONG, wy: PLATFORM_THIN };
+}
+
+function footprint(node: SchematicNode, nodes: SchematicNode[]): Footprint {
   switch (node.type) {
     case "platform":
-      if (node.lineId === "circle") return { wx: 3.15, wy: 0.64, h: 0.4 };
-      return { wx: 0.56, wy: 2.85, h: 0.4 };
+      return { ...platformPlanSize(node, nodes), h: PLATFORM_H };
     case "concourse":
       return { wx: 2.05, wy: 1.55, h: 0.48 };
     case "street":
@@ -506,7 +541,7 @@ export function buildSceneGeometry(
   });
 
   for (const node of nodes) {
-    const fp = footprint(node);
+    const fp = footprint(node, nodes);
     const position = toWorld(node.x, node.y, node.level);
     const tint = colors(node.type, node.lineId, node.level);
     if (node.type === "lift" || node.type === "shaft") {
@@ -548,7 +583,7 @@ export function buildSceneGeometry(
     for (const level of span.levels) {
       if (level === span.node.level) continue;
       const id = `${span.node.id}::cabin::${level}`;
-      const fp = footprint(span.node);
+      const fp = footprint(span.node, nodes);
       volumes.push({
         id,
         kind: "cylinder",
@@ -565,7 +600,7 @@ export function buildSceneGeometry(
       });
     }
 
-    const cabinH = footprint(span.node).h;
+    const cabinH = footprint(span.node, nodes).h;
     const height = Math.max(
       (span.topLevel - span.botLevel) * LEVEL_SPACING + cabinH,
       cabinH,

@@ -8,7 +8,7 @@
     "source": "https://www.openstreetmap.org/node/911189370",
     "label": "Euston Road / King's Cross forecourt (wheelchair entrance)"
   },
-  "notes": "Tube only; National Rail / St Pancras / Thameslink omitted. Connectivity copied from TfL lift/area topology (HUBKGX-Lift-1/2/3/5/6/7/8/11). x/y/level are invented schematic layout. Depth tiers (not CULG survey): street 0, ticket hall −1, Circle/H&C/Met −2 (~5–10 m sub-surface default), mezzanine −3, Victoria −4 (~20 m deep-tube default), Piccadilly −5, Northern −6 (deepest). CULG-order sanity-check only: sub-surface shallower than Victoria, Piccadilly, Northern.",
+  "notes": "Tube only; National Rail / St Pancras / Thameslink omitted. Connectivity copied from TfL lift/area topology (HUBKGX-Lift-1/2/3/5/6/7/8/11). Level walks added from that graph: Outside→WTH (street-wth), TTH↔NTH (joins Circle/Northern tree to Victoria/Piccadilly). x/y/level are invented schematic layout. Depth tiers (not CULG survey): street 0, ticket hall −1, Circle/H&C/Met −2 (~5–10 m sub-surface default), mezzanine −3, Victoria −4 (~20 m deep-tube default), Piccadilly −5, Northern −6 (deepest). CULG-order sanity-check only: sub-surface shallower than Victoria, Piccadilly, Northern.",
   "nodes": [
     {
       "id": "street-wth",
@@ -332,6 +332,8 @@
       "mode": "lift",
       "liftId": "HUBKGX-Lift-11"
     },
+    { "from": "street-wth", "to": "wth", "mode": "level" },
+    { "from": "tth", "to": "nth", "mode": "level" },
     { "from": "plat-1", "to": "plat-2", "mode": "level" },
     { "from": "plat-3", "to": "plat-4", "mode": "level" },
     { "from": "plat-5", "to": "plat-6", "mode": "level" },

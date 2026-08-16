@@ -67,6 +67,41 @@ describe("HUBKGX schematic JSON", () => {
     expect(station.nodes.some((n) => n.lineId === "national-rail")).toBe(false);
     expect(station.notes ?? "").toMatch(/Tube only/i);
   });
+
+  it("connects street-wth and joins the two lift trees with level walks", () => {
+    expect(
+      station.edges.some(
+        (e) =>
+          e.mode === "level" &&
+          ((e.from === "street-wth" && e.to === "wth") ||
+            (e.from === "wth" && e.to === "street-wth")),
+      ),
+    ).toBe(true);
+    expect(
+      station.edges.some(
+        (e) =>
+          e.mode === "level" &&
+          ((e.from === "tth" && e.to === "nth") ||
+            (e.from === "nth" && e.to === "tth")),
+      ),
+    ).toBe(true);
+
+    const adj = new Map<string, string[]>();
+    for (const n of station.nodes) adj.set(n.id, []);
+    for (const e of station.edges) {
+      adj.get(e.from)?.push(e.to);
+      adj.get(e.to)?.push(e.from);
+    }
+    const seen = new Set<string>();
+    const stack = [station.nodes[0]!.id];
+    while (stack.length) {
+      const id = stack.pop()!;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      for (const nxt of adj.get(id) ?? []) stack.push(nxt);
+    }
+    expect(seen.size).toBe(station.nodes.length);
+  });
 });
 
 describe("schematic module isolation", () => {
