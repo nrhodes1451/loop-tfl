@@ -177,6 +177,12 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(circle2.size[0]).toBeLessThan(circle2.size[2]);
     expect(circle1.size[0]).toBeCloseTo(victoria.size[0]);
     expect(circle1.size[2]).toBeCloseTo(victoria.size[2]);
+    expect(Math.abs(circle2.position[0] - circle1.position[0])).toBeCloseTo(
+      Math.abs(
+        geom.volumes.find((v) => v.id === "plat-4")!.position[0] -
+          victoria.position[0],
+      ),
+    );
   });
 
   it("distinguishes node types by silhouette", () => {

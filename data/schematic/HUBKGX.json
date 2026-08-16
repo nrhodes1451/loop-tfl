@@ -71,7 +71,7 @@
       "type": "platform",
       "label": "Platform 1 westbound · Circle / H&C / Met",
       "level": -2,
-      "x": 1.4,
+      "x": 2.6,
       "y": -1.1,
       "lineId": "circle"
     },
@@ -80,7 +80,7 @@
       "type": "platform",
       "label": "Platform 2 eastbound · Circle / H&C / Met",
       "level": -2,
-      "x": 5.8,
+      "x": 4.6,
       "y": -1.1,
       "lineId": "circle"
     },
