@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { StationPicker } from "@/components/schematic/StationPicker";
@@ -149,6 +150,7 @@ export function SchematicPage({
   station: SchematicStation;
   stations: SchematicStationRef[];
 }) {
+  const [showLegend, setShowLegend] = useState(true);
   const levels = depthLegend(station);
   return (
     <div
@@ -179,29 +181,33 @@ export function SchematicPage({
               <StationPicker currentId={station.stationId} stations={stations} />
             </div>
           </div>
-          <div
-            className="max-w-[42rem] text-[12.5px] leading-normal"
-            style={{ color: "#8b93a0" }}
-          >
-            Visualisation aid, not a blueprint. Connecting lines indicate level access; only
-            lift shafts change elevation.
-          </div>
-          <div
-            className="hidden font-[family-name:var(--font-ibm-plex-mono)] text-[11px] sm:block"
-            style={{ color: "#6f7681" }}
-          >
-            <a
-              href={station.entrance.source}
-              target="_blank"
-              rel="noreferrer"
-              className="pointer-events-auto underline decoration-[#3a4250] underline-offset-2 hover:decoration-[#8b93a0]"
-              style={{ color: "#8b93a0" }}
-            >
-              {fmtCoord(station.entrance.lat)}, {fmtCoord(station.entrance.lon)}
-            </a>
-            {" · "}
-            {station.entrance.label}
-          </div>
+          {showLegend ? (
+            <>
+              <div
+                className="max-w-[42rem] text-[12.5px] leading-normal"
+                style={{ color: "#8b93a0" }}
+              >
+                Visualisation aid, not a blueprint. Connecting lines indicate
+                level access; only lift shafts change elevation.
+              </div>
+              <div
+                className="hidden font-[family-name:var(--font-ibm-plex-mono)] text-[11px] sm:block"
+                style={{ color: "#6f7681" }}
+              >
+                <a
+                  href={station.entrance.source}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="pointer-events-auto underline decoration-[#3a4250] underline-offset-2 hover:decoration-[#8b93a0]"
+                  style={{ color: "#8b93a0" }}
+                >
+                  {fmtCoord(station.entrance.lat)}, {fmtCoord(station.entrance.lon)}
+                </a>
+                {" · "}
+                {station.entrance.label}
+              </div>
+            </>
+          ) : null}
         </div>
         <div className="pointer-events-auto flex flex-none flex-col items-end gap-2 pr-[108px]">
           <div className="flex gap-2">
@@ -231,8 +237,9 @@ export function SchematicPage({
         </div>
       </header>
 
+      {showLegend ? (
       <aside
-        className="absolute bottom-[max(12px,env(safe-area-inset-bottom))] left-3 right-3 z-10 flex max-h-[42%] flex-col gap-2.5 overflow-auto rounded-[10px] border px-3 py-2.5 sm:right-auto sm:bottom-[22px] sm:left-6 sm:max-h-none sm:max-w-[320px] sm:gap-3 sm:px-4 sm:py-3.5"
+        className="absolute bottom-[max(52px,calc(env(safe-area-inset-bottom)+44px))] left-3 right-3 z-10 flex max-h-[42%] flex-col gap-2.5 overflow-auto rounded-[10px] border px-3 py-2.5 sm:right-auto sm:bottom-[22px] sm:left-6 sm:max-h-none sm:max-w-[320px] sm:gap-3 sm:px-4 sm:py-3.5"
         style={{
           background: "rgba(8, 10, 14, 0.82)",
           borderColor: "#2a313c",
@@ -295,6 +302,25 @@ export function SchematicPage({
           lifts highlight the whole shaft.
         </div>
       </aside>
+      ) : null}
+
+      <label
+        className="absolute z-20 flex cursor-pointer items-center gap-2 rounded-[7px] border px-2.5 py-1.5 text-[12px] select-none bottom-[max(12px,env(safe-area-inset-bottom))] right-3 sm:bottom-[22px] sm:right-6 sm:px-[13px] sm:py-2 sm:text-[12.5px]"
+        style={{
+          color: "#d5dbe6",
+          background: "rgba(12, 14, 18, 0.82)",
+          borderColor: "#2a313c",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={showLegend}
+          onChange={(e) => setShowLegend(e.target.checked)}
+          className="h-3.5 w-3.5 cursor-pointer accent-[#8fd8ff]"
+        />
+        Show legend
+      </label>
     </div>
   );
 }
