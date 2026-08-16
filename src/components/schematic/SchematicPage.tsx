@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { StationPicker } from "@/components/schematic/StationPicker";
@@ -151,13 +151,24 @@ export function SchematicPage({
   stations: SchematicStationRef[];
 }) {
   const [showLegend, setShowLegend] = useState(true);
+  const resetView = useRef<(() => void) | null>(null);
   const levels = depthLegend(station);
+  const chromeBtn =
+    "cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]";
+  const chromeBtnStyle = {
+    color: "#d5dbe6",
+    background: "rgba(12, 14, 18, 0.82)",
+    borderColor: "#2a313c",
+  } as const;
   return (
     <div
       className="relative h-full w-full overflow-hidden"
       style={{ background: SCENE_BACKGROUND, color: "#e8edf4" }}
     >
-      <StationScene3D topology={{ nodes: station.nodes, edges: station.edges }} />
+      <StationScene3D
+        topology={{ nodes: station.nodes, edges: station.edges }}
+        resetRef={resetView}
+      />
 
       <header
         className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 px-3 pt-[max(12px,env(safe-area-inset-top))] pb-3 sm:gap-5 sm:px-6 sm:pt-[18px]"
@@ -209,30 +220,22 @@ export function SchematicPage({
             </>
           ) : null}
         </div>
-        <div className="pointer-events-auto flex flex-none flex-col items-end gap-2 pr-[108px]">
+        <div className="pointer-events-auto flex flex-none flex-col items-end gap-2">
           <div className="flex gap-2">
-            <Link
-              href="/"
-              className="cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]"
-              style={{
-                color: "#d5dbe6",
-                background: "rgba(12, 14, 18, 0.82)",
-                borderColor: "#2a313c",
-              }}
-            >
+            <Link href="/" className={chromeBtn} style={chromeBtnStyle}>
               Plan a route
             </Link>
-            <Link
-              href="/explore"
-              className="cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]"
-              style={{
-                color: "#d5dbe6",
-                background: "rgba(12, 14, 18, 0.82)",
-                borderColor: "#2a313c",
-              }}
-            >
+            <Link href="/explore" className={chromeBtn} style={chromeBtnStyle}>
               Graph
             </Link>
+            <button
+              type="button"
+              onClick={() => resetView.current?.()}
+              className={chromeBtn}
+              style={chromeBtnStyle}
+            >
+              Reset view
+            </button>
           </div>
         </div>
       </header>

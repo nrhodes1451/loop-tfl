@@ -37,6 +37,7 @@ import {
 export type StationScene3DProps = {
   topology: StationTopology;
   quality?: SceneQuality;
+  resetRef?: RefObject<(() => void) | null>;
 };
 
 function detectQuality(): SceneQuality {
@@ -337,7 +338,11 @@ function tooltipPos(
   };
 }
 
-export function StationScene3D({ topology, quality: qualityProp }: StationScene3DProps) {
+export function StationScene3D({
+  topology,
+  quality: qualityProp,
+  resetRef,
+}: StationScene3DProps) {
   const quality = useQuality(qualityProp);
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -350,6 +355,14 @@ export function StationScene3D({ topology, quality: qualityProp }: StationScene3
     h: number;
   } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!resetRef) return;
+    resetRef.current = () => controlsRef.current?.reset();
+    return () => {
+      resetRef.current = null;
+    };
+  }, [resetRef]);
 
   const geom = useMemo(
     () => buildSceneGeometry(topology, { quality }),
@@ -435,18 +448,6 @@ export function StationScene3D({ topology, quality: qualityProp }: StationScene3
         />
         <SceneEffects samples={quality === "high" ? 4 : 2} />
       </Canvas>
-      <button
-        type="button"
-        onClick={() => controlsRef.current?.reset()}
-        className="absolute top-3 right-3 z-10 cursor-pointer rounded-[7px] border px-[13px] py-2 text-[12.5px] font-medium"
-        style={{
-          color: "#d5dbe6",
-          background: "rgba(12, 14, 18, 0.82)",
-          borderColor: "#2a313c",
-        }}
-      >
-        Reset view
-      </button>
       {hovered && tip ? (
         <div
           className="pointer-events-none absolute z-20 max-w-[248px] rounded-lg border px-2.5 py-1.5 text-[12px]"
