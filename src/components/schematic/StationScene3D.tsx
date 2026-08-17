@@ -44,6 +44,8 @@ export type StationScene3DProps = {
   quality?: SceneQuality;
   resetRef?: RefObject<(() => void) | null>;
   surface?: OsmSurface | null;
+  showSurface?: boolean;
+  showSchematic?: boolean;
 };
 
 function detectQuality(): SceneQuality {
@@ -294,9 +296,11 @@ function CompassTracker({
 function CompassButton({
   roseRef,
   onFaceNorth,
+  raised = false,
 }: {
   roseRef: RefObject<HTMLDivElement | null>;
   onFaceNorth: () => void;
+  raised?: boolean;
 }) {
   return (
     <button
@@ -304,7 +308,11 @@ function CompassButton({
       onClick={onFaceNorth}
       aria-label="Face north"
       title="Face north"
-      className="absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(56px,calc(env(safe-area-inset-bottom)+52px))] sm:right-6 sm:bottom-[72px]"
+      className={
+        raised
+          ? "absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(140px,calc(env(safe-area-inset-bottom)+136px))] sm:right-6 sm:bottom-[148px]"
+          : "absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(56px,calc(env(safe-area-inset-bottom)+52px))] sm:right-6 sm:bottom-[72px]"
+      }
       onPointerDown={(e) => e.stopPropagation()}
       style={{
         color: "#e8edf4",
@@ -457,6 +465,8 @@ export function StationScene3D({
   quality: qualityProp,
   resetRef,
   surface = null,
+  showSurface = true,
+  showSchematic = true,
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -503,7 +513,7 @@ export function StationScene3D({
     () => hoverHighlight(hoveredId, geom),
     [hoveredId, geom],
   );
-  const hovered = hoveredId
+  const hovered = hoveredId && showSchematic
     ? geom.volumes.find((v) => v.id === hoveredId)
     : undefined;
 
@@ -558,18 +568,22 @@ export function StationScene3D({
         <FrameCamera frame={frame} />
         {surface && placement ? (
           <>
-            <SurfaceLayer surface={surface} placement={placement} />
-            <group position={placement.position} scale={placement.scale}>
-              <StationMeshes
-                geom={geom}
-                highlight={highlight}
-                active={hoveredId !== null}
-                draggingRef={draggingRef}
-                onHover={setHoveredId}
-              />
-            </group>
+            {showSurface ? (
+              <SurfaceLayer surface={surface} placement={placement} />
+            ) : null}
+            {showSchematic ? (
+              <group position={placement.position} scale={placement.scale}>
+                <StationMeshes
+                  geom={geom}
+                  highlight={highlight}
+                  active={hoveredId !== null}
+                  draggingRef={draggingRef}
+                  onHover={setHoveredId}
+                />
+              </group>
+            ) : null}
           </>
-        ) : (
+        ) : showSchematic ? (
           <StationMeshes
             geom={geom}
             highlight={highlight}
@@ -577,7 +591,7 @@ export function StationScene3D({
             draggingRef={draggingRef}
             onHover={setHoveredId}
           />
-        )}
+        ) : null}
         <CompassTracker controlsRef={controlsRef} roseRef={roseRef} />
         <SceneControls
           frame={frame}
@@ -596,6 +610,7 @@ export function StationScene3D({
       </Canvas>
       <CompassButton
         roseRef={roseRef}
+        raised={!!surface}
         onFaceNorth={() => {
           const controls = controlsRef.current;
           if (controls) faceNorth(controls);

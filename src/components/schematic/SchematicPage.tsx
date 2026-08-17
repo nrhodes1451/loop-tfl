@@ -144,6 +144,36 @@ function TypeGlyph({ shape }: { shape: "slab" | "platform" | "shaft" }) {
   );
 }
 
+function ChromeCheck({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  label: string;
+}) {
+  return (
+    <label
+      className="flex cursor-pointer items-center gap-2 rounded-[7px] border px-2.5 py-1.5 text-[12px] select-none sm:px-[13px] sm:py-2 sm:text-[12.5px]"
+      style={{
+        color: "#d5dbe6",
+        background: "rgba(12, 14, 18, 0.82)",
+        borderColor: "#2a313c",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="h-3.5 w-3.5 cursor-pointer accent-[#8fd8ff]"
+      />
+      {label}
+    </label>
+  );
+}
+
 export function SchematicPage({
   station,
   stations,
@@ -154,6 +184,8 @@ export function SchematicPage({
   surface?: OsmSurface | null;
 }) {
   const [showLegend, setShowLegend] = useState(true);
+  const [showMap, setShowMap] = useState(true);
+  const [showSchematic, setShowSchematic] = useState(true);
   const resetView = useRef<(() => void) | null>(null);
   const levels = depthLegend(station);
   const chromeBtn =
@@ -172,6 +204,8 @@ export function SchematicPage({
         topology={{ nodes: station.nodes, edges: station.edges }}
         resetRef={resetView}
         surface={surface}
+        showSurface={showMap}
+        showSchematic={showSchematic}
       />
 
       <header
@@ -317,23 +351,29 @@ export function SchematicPage({
       </aside>
       ) : null}
 
-      <label
-        className="absolute z-20 flex cursor-pointer items-center gap-2 rounded-[7px] border px-2.5 py-1.5 text-[12px] select-none bottom-[max(12px,env(safe-area-inset-bottom))] right-3 sm:bottom-[22px] sm:right-6 sm:px-[13px] sm:py-2 sm:text-[12.5px]"
-        style={{
-          color: "#d5dbe6",
-          background: "rgba(12, 14, 18, 0.82)",
-          borderColor: "#2a313c",
-          backdropFilter: "blur(8px)",
-        }}
+      <div
+        className="absolute z-20 flex flex-col items-stretch gap-1.5 right-3 bottom-[max(12px,env(safe-area-inset-bottom))] sm:right-6 sm:bottom-[22px]"
       >
-        <input
-          type="checkbox"
+        {surface ? (
+          <>
+            <ChromeCheck
+              checked={showMap}
+              onChange={setShowMap}
+              label="Map"
+            />
+            <ChromeCheck
+              checked={showSchematic}
+              onChange={setShowSchematic}
+              label="Schematic"
+            />
+          </>
+        ) : null}
+        <ChromeCheck
           checked={showLegend}
-          onChange={(e) => setShowLegend(e.target.checked)}
-          className="h-3.5 w-3.5 cursor-pointer accent-[#8fd8ff]"
+          onChange={setShowLegend}
+          label="Show legend"
         />
-        Show legend
-      </label>
+      </div>
     </div>
   );
 }
