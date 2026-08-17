@@ -2,8 +2,6 @@
 
 import { Line, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { Bloom, EffectComposer, ToneMapping, Vignette } from "@react-three/postprocessing";
-import { ToneMappingMode } from "postprocessing";
 import {
   useEffect,
   useLayoutEffect,
@@ -14,7 +12,6 @@ import {
   type RefObject,
 } from "react";
 import {
-  Color,
   DoubleSide,
   NoToneMapping,
   Spherical,
@@ -187,28 +184,6 @@ function VolumeMesh({
   );
 }
 
-/** Rec.709 luma — matches the bloom luminance pass better than sRGB average. */
-function rec709Lum(color: Color): number {
-  return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
-}
-
-/** Mid TfL colours sit around here; brighter lines are pulled down to match. */
-const BLOOM_TARGET_LUM = 0.58;
-/** Shafts stack several bright strokes; extra pullback after luma compensation. */
-const SHAFT_BLOOM_SCALE = 0.82;
-
-function isShaftLine(line: ScenePolyline): boolean {
-  return line.mode === "shaft" || line.id.startsWith("wire::shaft::");
-}
-
-function bloomLineColor(hex: string, roleGain: number, extra: number): Color {
-  const color = new Color(hex);
-  const lum = Math.max(rec709Lum(color), 0.22);
-  const gain = roleGain * extra * Math.min(1, BLOOM_TARGET_LUM / lum);
-  color.multiplyScalar(gain);
-  return color;
-}
-
 function GlowLine({
   line,
   highlighted,
@@ -219,9 +194,6 @@ function GlowLine({
   dimmed: boolean;
 }) {
   if (line.points.length < 2) return null;
-  const baseGain = line.role === "outline" ? 1.85 : 1.4;
-  const roleGain = highlighted ? baseGain * 1.45 : baseGain;
-  const extra = isShaftLine(line) ? SHAFT_BLOOM_SCALE : 1;
   const opacity = highlighted
     ? 1
     : dimmed
@@ -233,7 +205,7 @@ function GlowLine({
     <Line
       points={line.points}
       segments={line.segments}
-      color={bloomLineColor(line.color, roleGain, extra)}
+      color={line.color}
       lineWidth={highlighted ? line.lineWidth * 1.35 : line.lineWidth}
       transparent
       opacity={opacity}
@@ -427,22 +399,6 @@ function StationMeshes({
   );
 }
 
-function SceneEffects({ samples }: { samples: number }) {
-  return (
-    <EffectComposer multisampling={samples} enableNormalPass={false}>
-      <Bloom
-        luminanceThreshold={0.84}
-        luminanceSmoothing={0.18}
-        intensity={1.05}
-        mipmapBlur
-        radius={0.72}
-      />
-      <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-      <Vignette offset={0.32} darkness={0.58} />
-    </EffectComposer>
-  );
-}
-
 function tooltipPos(
   cursor: { x: number; y: number },
   wrap: { width: number; height: number },
@@ -552,6 +508,8 @@ export function StationScene3D({
       <Canvas
         dpr={quality === "low" ? [1, 1.25] : [1, 1.5]}
         gl={{
+          // MSAA is framebuffer-wide: schematic 1px lines need it; the map
+          // rides along at no extra cost. Bloom/composer MSAA is off.
           antialias: true,
           toneMapping: NoToneMapping,
           outputColorSpace: SRGBColorSpace,
@@ -604,7 +562,6 @@ export function StationScene3D({
             setIsDragging(false);
           }}
         />
-        <SceneEffects samples={quality === "high" ? 4 : 2} />
       </Canvas>
       <CompassButton
         roseRef={roseRef}
