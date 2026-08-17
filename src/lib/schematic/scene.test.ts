@@ -301,12 +301,21 @@ describe("hoverHighlight", () => {
 });
 
 describe("cameraFrame", () => {
-  it("looks at the bounds center from above-front", () => {
+  it("looks at the bounds center from the south (facing north)", () => {
     const geom = buildSceneGeometry(topology);
     const frame = cameraFrame(geom.bounds);
     expect(frame.target).toEqual(geom.bounds.center);
     expect(frame.position[1]).toBeGreaterThan(frame.target[1]);
+    expect(frame.position[0]).toBeCloseTo(frame.target[0], 6);
+    expect(frame.position[2]).toBeLessThan(frame.target[2]);
     expect(frame.maxPolarAngle).toBeLessThan(Math.PI / 2);
     expect(frame.minDistance).toBeLessThan(frame.maxDistance);
+  });
+
+  it("can keep a smaller minDistance than the framed radius", () => {
+    const geom = buildSceneGeometry(topology);
+    const frame = cameraFrame(geom.bounds, { minDistance: 4 });
+    expect(frame.minDistance).toBe(4);
+    expect(frame.maxDistance).toBeGreaterThan(4);
   });
 });

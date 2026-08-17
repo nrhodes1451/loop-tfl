@@ -355,8 +355,12 @@ function computeBounds(volumes: SceneVolume[], polylines: ScenePolyline[]): Scen
     for (const p of line.points) expandBounds(min, max, p);
   }
   if (!Number.isFinite(min[0])) {
-    return { min: [0, 0, 0], max: [1, 1, 1], center: [0, 0, 0], radius: 8 };
+    return makeBounds([0, 0, 0], [1, 1, 1]);
   }
+  return makeBounds(min, max);
+}
+
+export function makeBounds(min: Vec3, max: Vec3): SceneBounds {
   const center: Vec3 = [
     (min[0] + max[0]) / 2,
     (min[1] + max[1]) / 2,
@@ -369,18 +373,38 @@ function computeBounds(volumes: SceneVolume[], polylines: ScenePolyline[]): Scen
   return { min, max, center, radius };
 }
 
-export function cameraFrame(bounds: SceneBounds): CameraFrame {
+export function unionBounds(a: SceneBounds, b: SceneBounds): SceneBounds {
+  return makeBounds(
+    [
+      Math.min(a.min[0], b.min[0]),
+      Math.min(a.min[1], b.min[1]),
+      Math.min(a.min[2], b.min[2]),
+    ],
+    [
+      Math.max(a.max[0], b.max[0]),
+      Math.max(a.max[1], b.max[1]),
+      Math.max(a.max[2], b.max[2]),
+    ],
+  );
+}
+
+export function cameraFrame(
+  bounds: SceneBounds,
+  opts: { minDistance?: number } = {},
+): CameraFrame {
   const { center, radius } = bounds;
   const dist = radius * 2.15;
+  /** Same elevation/range as before, but from the south so the view faces +Z (north). */
+  const horiz = Math.hypot(0.62, 0.78);
   const position: Vec3 = [
-    center[0] + dist * 0.62,
+    center[0],
     center[1] + dist * 0.52,
-    center[2] + dist * 0.78,
+    center[2] - dist * horiz,
   ];
   return {
     target: center,
     position,
-    minDistance: Math.max(4, radius * 0.7),
+    minDistance: opts.minDistance ?? Math.max(4, radius * 0.7),
     maxDistance: radius * 5.5,
     minPolarAngle: 0.22,
     maxPolarAngle: 1.32,

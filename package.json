@@ -10,6 +10,7 @@
     "lint": "eslint",
     "refresh-network": "tsx scripts/refresh-network.ts",
     "build-schematics": "tsx scripts/build-schematics.ts",
+    "fetch-osm-buildings": "tsx scripts/fetch-osm-buildings.ts",
     "test": "vitest run"
   },
   "dependencies": {

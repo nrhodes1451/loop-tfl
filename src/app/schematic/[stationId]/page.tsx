@@ -3,8 +3,11 @@ import { SchematicPage } from "@/components/schematic/SchematicPage";
 import {
   SchematicNotFoundError,
   listSchematicStations,
+  loadOsmSurface,
   loadSchematic,
 } from "@/lib/schematic/load";
+import type { OsmSurface } from "@/lib/schematic/osm";
+import type { SchematicStation } from "@/lib/schematic/types";
 
 export async function generateStaticParams() {
   const stations = await listSchematicStations();
@@ -33,11 +36,16 @@ export default async function SchematicStationPage(
   const { stationId: raw } = await props.params;
   const stationId = decodeURIComponent(raw);
   const stations = await listSchematicStations();
+  let station: SchematicStation;
+  let surface: OsmSurface | null = null;
   try {
-    const station = await loadSchematic(stationId);
-    return <SchematicPage station={station} stations={stations} />;
+    station = await loadSchematic(stationId);
+    surface = stationId === "HUBKGX" ? await loadOsmSurface("HUBKGX") : null;
   } catch (err) {
     if (err instanceof SchematicNotFoundError) notFound();
     throw err;
   }
+  return (
+    <SchematicPage station={station} stations={stations} surface={surface} />
+  );
 }

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   clearSchematicCache,
   listSchematicStations,
+  loadOsmSurface,
   loadSchematic,
   SchematicNotFoundError,
 } from "./load";
@@ -31,5 +32,23 @@ describe("loadSchematic", () => {
     await expect(loadSchematic("../network")).rejects.toBeInstanceOf(
       SchematicNotFoundError,
     );
+  });
+});
+
+describe("loadOsmSurface", () => {
+  it("loads the baked King’s Cross building block", async () => {
+    const surface = await loadOsmSurface("HUBKGX");
+    expect(surface).not.toBeNull();
+    expect(surface!.stationId).toBe("HUBKGX");
+    expect(surface!.sizeM).toBe(400);
+    expect(surface!.origin.source).toBe("tfl-stoppoint");
+    expect(surface!.origin.lat).toBeCloseTo(51.530663, 5);
+    expect(surface!.origin.lon).toBeCloseTo(-0.123194, 5);
+    expect(surface!.buildings.length).toBeGreaterThan(50);
+    expect(surface!.buildings[0]!.ring.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("returns null when no bake exists", async () => {
+    expect(await loadOsmSurface("NOPE")).toBeNull();
   });
 });

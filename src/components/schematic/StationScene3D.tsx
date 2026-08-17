@@ -1,7 +1,7 @@
 "use client";
 
 import { Line, OrbitControls } from "@react-three/drei";
-import { Canvas, useThree, type ThreeEvent } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { Bloom, EffectComposer, ToneMapping, Vignette } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
 import {
@@ -17,6 +17,7 @@ import {
   Color,
   DoubleSide,
   NoToneMapping,
+  Spherical,
   SRGBColorSpace,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -25,6 +26,7 @@ import {
   buildSceneGeometry,
   cameraFrame,
   hoverHighlight,
+  unionBounds,
   type CameraFrame,
   type HoverHighlight,
   type SceneGeometry,
@@ -33,11 +35,15 @@ import {
   type SceneVolume,
   type StationTopology,
 } from "@/lib/schematic/scene";
+import { placeSchematic, surfaceWorldBounds } from "@/lib/schematic/geo";
+import type { OsmSurface } from "@/lib/schematic/osm";
+import { SurfaceLayer } from "./SurfaceLayer";
 
 export type StationScene3DProps = {
   topology: StationTopology;
   quality?: SceneQuality;
   resetRef?: RefObject<(() => void) | null>;
+  surface?: OsmSurface | null;
 };
 
 function detectQuality(): SceneQuality {
@@ -248,6 +254,97 @@ function FrameCamera({ frame }: { frame: CameraFrame }) {
   return null;
 }
 
+/** Look heading: 0 = north (+Z), clockwise east. */
+function lookHeading(controls: OrbitControlsImpl): number {
+  const dx = controls.object.position.x - controls.target.x;
+  const dz = controls.object.position.z - controls.target.z;
+  return Math.atan2(-dx, -dz);
+}
+
+function faceNorth(controls: OrbitControlsImpl) {
+  const cam = controls.object;
+  const offset = cam.position.clone().sub(controls.target);
+  const spherical = new Spherical().setFromVector3(offset);
+  spherical.theta = Math.PI;
+  cam.position.copy(controls.target).add(offset.setFromSpherical(spherical));
+  cam.lookAt(controls.target);
+  const extra = controls as OrbitControlsImpl & {
+    sphericalDelta?: { set: (r: number, phi: number, theta: number) => void };
+  };
+  extra.sphericalDelta?.set(0, 0, 0);
+  controls.update();
+}
+
+function CompassTracker({
+  controlsRef,
+  roseRef,
+}: {
+  controlsRef: RefObject<OrbitControlsImpl | null>;
+  roseRef: RefObject<HTMLDivElement | null>;
+}) {
+  useFrame(() => {
+    const controls = controlsRef.current;
+    const rose = roseRef.current;
+    if (!controls || !rose) return;
+    rose.style.transform = `rotate(${-lookHeading(controls)}rad)`;
+  });
+  return null;
+}
+
+function CompassButton({
+  roseRef,
+  onFaceNorth,
+}: {
+  roseRef: RefObject<HTMLDivElement | null>;
+  onFaceNorth: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onFaceNorth}
+      aria-label="Face north"
+      title="Face north"
+      className="absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(56px,calc(env(safe-area-inset-bottom)+52px))] sm:right-6 sm:bottom-[72px]"
+      onPointerDown={(e) => e.stopPropagation()}
+      style={{
+        color: "#e8edf4",
+        background: "rgba(12, 14, 18, 0.82)",
+        borderColor: "#2a313c",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <div
+        ref={roseRef}
+        className="flex h-10 w-10 items-center justify-center will-change-transform"
+      >
+        <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden>
+          <circle
+            cx="20"
+            cy="20"
+            r="18"
+            fill="none"
+            stroke="#2a313c"
+            strokeWidth="1"
+          />
+          <polygon points="20,11 23,19 17,19" fill="#e8edf4" />
+          <polygon points="20,29 17,21 23,21" fill="#3a4250" />
+          <text
+            x="20"
+            y="10"
+            textAnchor="middle"
+            fill="#ffe7a8"
+            fontSize="8"
+            fontWeight="700"
+            fontFamily="ui-sans-serif, system-ui, sans-serif"
+          >
+            N
+          </text>
+        </svg>
+      </div>
+    </button>
+  );
+}
+
 function SceneControls({
   frame,
   controlsRef,
@@ -359,10 +456,12 @@ export function StationScene3D({
   topology,
   quality: qualityProp,
   resetRef,
+  surface = null,
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const roseRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [pointer, setPointer] = useState<{
@@ -385,7 +484,21 @@ export function StationScene3D({
     () => buildSceneGeometry(topology, { quality }),
     [topology, quality],
   );
-  const frame = useMemo(() => cameraFrame(geom.bounds), [geom.bounds]);
+  const placement = useMemo(
+    () => (surface ? placeSchematic(geom) : null),
+    [surface, geom],
+  );
+  const frame = useMemo(() => {
+    if (!surface || !placement) return cameraFrame(geom.bounds);
+    const maxH = surface.buildings.reduce((m, b) => Math.max(m, b.height), 10);
+    return cameraFrame(
+      unionBounds(
+        placement.bounds,
+        surfaceWorldBounds(surface.sizeM, maxH, placement.bounds),
+      ),
+      { minDistance: Math.max(4, placement.bounds.radius * 0.7) },
+    );
+  }, [geom.bounds, surface, placement]);
   const highlight = useMemo(
     () => hoverHighlight(hoveredId, geom),
     [hoveredId, geom],
@@ -443,13 +556,29 @@ export function StationScene3D({
       >
         <color attach="background" args={[SCENE_BACKGROUND]} />
         <FrameCamera frame={frame} />
-        <StationMeshes
-          geom={geom}
-          highlight={highlight}
-          active={hoveredId !== null}
-          draggingRef={draggingRef}
-          onHover={setHoveredId}
-        />
+        {surface && placement ? (
+          <>
+            <SurfaceLayer surface={surface} placement={placement} />
+            <group position={placement.position} scale={placement.scale}>
+              <StationMeshes
+                geom={geom}
+                highlight={highlight}
+                active={hoveredId !== null}
+                draggingRef={draggingRef}
+                onHover={setHoveredId}
+              />
+            </group>
+          </>
+        ) : (
+          <StationMeshes
+            geom={geom}
+            highlight={highlight}
+            active={hoveredId !== null}
+            draggingRef={draggingRef}
+            onHover={setHoveredId}
+          />
+        )}
+        <CompassTracker controlsRef={controlsRef} roseRef={roseRef} />
         <SceneControls
           frame={frame}
           controlsRef={controlsRef}
@@ -465,6 +594,13 @@ export function StationScene3D({
         />
         <SceneEffects samples={quality === "high" ? 4 : 2} />
       </Canvas>
+      <CompassButton
+        roseRef={roseRef}
+        onFaceNorth={() => {
+          const controls = controlsRef.current;
+          if (controls) faceNorth(controls);
+        }}
+      />
       {hovered && tip ? (
         <div
           className="pointer-events-none absolute z-20 max-w-[248px] rounded-lg border px-2.5 py-1.5 text-[12px]"

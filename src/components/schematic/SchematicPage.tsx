@@ -9,6 +9,7 @@ import type {
   SchematicStation,
   SchematicStationRef,
 } from "@/lib/schematic/types";
+import type { OsmSurface } from "@/lib/schematic/osm";
 import { lineColorForSchematic } from "@/lib/tokens";
 
 const StationScene3D = dynamic(
@@ -146,9 +147,11 @@ function TypeGlyph({ shape }: { shape: "slab" | "platform" | "shaft" }) {
 export function SchematicPage({
   station,
   stations,
+  surface = null,
 }: {
   station: SchematicStation;
   stations: SchematicStationRef[];
+  surface?: OsmSurface | null;
 }) {
   const [showLegend, setShowLegend] = useState(true);
   const resetView = useRef<(() => void) | null>(null);
@@ -168,6 +171,7 @@ export function SchematicPage({
       <StationScene3D
         topology={{ nodes: station.nodes, edges: station.edges }}
         resetRef={resetView}
+        surface={surface}
       />
 
       <header
@@ -302,8 +306,14 @@ export function SchematicPage({
         </div>
         <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
           Drag to orbit, pinch or scroll to zoom. Hover a volume for its name;
-          lifts highlight the whole shaft.
+          lifts highlight the whole shaft. Click the compass to face north.
         </div>
+        {surface ? (
+          <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
+            OSM building footprints, {surface.attribution}. {surface.sizeM} m
+            box around the TfL station point — not a surveyed basement.
+          </div>
+        ) : null}
       </aside>
       ) : null}
 
