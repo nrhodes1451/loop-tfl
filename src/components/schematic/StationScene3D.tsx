@@ -568,9 +568,7 @@ export function StationScene3D({
         <FrameCamera frame={frame} />
         {surface && placement ? (
           <>
-            {showSurface ? (
-              <SurfaceLayer surface={surface} placement={placement} />
-            ) : null}
+            {showSurface ? <SurfaceLayer surface={surface} /> : null}
             {showSchematic ? (
               <group position={placement.position} scale={placement.scale}>
                 <StationMeshes

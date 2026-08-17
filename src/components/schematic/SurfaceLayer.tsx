@@ -4,12 +4,11 @@ import { useLayoutEffect, useMemo } from "react";
 import {
   DoubleSide,
   ExtrudeGeometry,
-  Path,
+  PlaneGeometry,
   Shape,
   type BufferGeometry,
 } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
-import { type Aabb2, type SchematicPlacement } from "@/lib/schematic/geo";
 import {
   MIN_RING_EDGE_M,
   simplifyRing,
@@ -17,8 +16,8 @@ import {
 } from "@/lib/schematic/osm";
 
 const BUILDING_COLOR = "#9ec5e8";
-const GROUND_COLOR = "#d0d4db";
-const SURFACE_OPACITY = 0.42;
+const GROUND_COLOR = "#cceeff";
+const SURFACE_OPACITY = 0.7;
 
 function noopRaycast() {}
 
@@ -44,28 +43,9 @@ function buildingGeometry(ring: [number, number][], height: number): ExtrudeGeom
   return geom;
 }
 
-function groundGeometry(sizeM: number, cutout: Aabb2): ExtrudeGeometry {
-  const half = sizeM / 2;
-  const shape = new Shape();
-  shape.moveTo(-half, half);
-  shape.lineTo(half, half);
-  shape.lineTo(half, -half);
-  shape.lineTo(-half, -half);
-  shape.closePath();
-
-  if (cutout.maxX - cutout.minX > 0.5 && cutout.maxZ - cutout.minZ > 0.5) {
-    const hole = new Path();
-    hole.moveTo(cutout.minX, -cutout.minZ);
-    hole.lineTo(cutout.maxX, -cutout.minZ);
-    hole.lineTo(cutout.maxX, -cutout.maxZ);
-    hole.lineTo(cutout.minX, -cutout.maxZ);
-    hole.closePath();
-    shape.holes.push(hole);
-  }
-
-  const geom = new ExtrudeGeometry(shape, { ...EXTRUDE, depth: 0.08 });
+function groundGeometry(sizeM: number): PlaneGeometry {
+  const geom = new PlaneGeometry(sizeM, sizeM);
   geom.rotateX(-Math.PI / 2);
-  geom.translate(0, -0.04, 0);
   return geom;
 }
 
@@ -76,17 +56,10 @@ function mergeBuildingBatch(geoms: ExtrudeGeometry[]): BufferGeometry | null {
   return merged;
 }
 
-export function SurfaceLayer({
-  surface,
-  placement,
-}: {
-  surface: OsmSurface;
-  placement: SchematicPlacement;
-}) {
-  const hole = placement.cutout;
+export function SurfaceLayer({ surface }: { surface: OsmSurface }) {
   const ground = useMemo(
-    () => groundGeometry(surface.sizeM, hole),
-    [surface.sizeM, hole],
+    () => groundGeometry(surface.sizeM),
+    [surface.sizeM],
   );
   useLayoutEffect(() => () => ground.dispose(), [ground]);
 
