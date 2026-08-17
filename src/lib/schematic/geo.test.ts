@@ -55,9 +55,9 @@ describe("placeSchematic", () => {
   );
   const placed = placeSchematic(geom);
 
-  it("uses 1 metre per schematic unit", () => {
+  it("uses 4 metres per schematic unit", () => {
     expect(placed.scale).toBe(SCHEMATIC_METRES_PER_UNIT);
-    expect(placed.scale).toBe(1);
+    expect(placed.scale).toBe(4);
   });
 
   it("puts the street-node centroid on the origin in XZ", () => {

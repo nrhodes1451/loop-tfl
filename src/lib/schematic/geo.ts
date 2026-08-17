@@ -11,7 +11,7 @@ import {
   type Vec3,
 } from "./scene";
 
-export const SCHEMATIC_METRES_PER_UNIT = 1;
+export const SCHEMATIC_METRES_PER_UNIT = 4;
 export const SURFACE_SIZE_M = 400;
 export const CUTOUT_PAD_M = 8;
 
