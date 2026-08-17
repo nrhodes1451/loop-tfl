@@ -6,15 +6,29 @@ import {
   ExtrudeGeometry,
   Path,
   Shape,
+  type BufferGeometry,
 } from "three";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { aabbIntersects, type Aabb2, type SchematicPlacement } from "@/lib/schematic/geo";
-import { ringAabb, type OsmBuilding, type OsmSurface } from "@/lib/schematic/osm";
+import {
+  MIN_RING_EDGE_M,
+  ringAabb,
+  simplifyRing,
+  type OsmBuilding,
+  type OsmSurface,
+} from "@/lib/schematic/osm";
 
 const BUILDING_COLOR = "#8a929c";
 const GROUND_COLOR = "#14171c";
 const OVERLAP_OPACITY = 0.2;
 
 function noopRaycast() {}
+
+const EXTRUDE = {
+  bevelEnabled: false,
+  steps: 1,
+  curveSegments: 1,
+} as const;
 
 function buildingGeometry(ring: [number, number][], height: number): ExtrudeGeometry {
   const shape = new Shape();
@@ -27,11 +41,7 @@ function buildingGeometry(ring: [number, number][], height: number): ExtrudeGeom
     shape.lineTo(-p[0], -p[1]);
   }
   shape.closePath();
-  const geom = new ExtrudeGeometry(shape, {
-    depth: height,
-    bevelEnabled: false,
-    steps: 1,
-  });
+  const geom = new ExtrudeGeometry(shape, { ...EXTRUDE, depth: height });
   geom.rotateX(-Math.PI / 2);
   return geom;
 }
@@ -55,11 +65,7 @@ function groundGeometry(sizeM: number, cutout: Aabb2): ExtrudeGeometry {
     shape.holes.push(hole);
   }
 
-  const geom = new ExtrudeGeometry(shape, {
-    depth: 0.08,
-    bevelEnabled: false,
-    steps: 1,
-  });
+  const geom = new ExtrudeGeometry(shape, { ...EXTRUDE, depth: 0.08 });
   geom.rotateX(-Math.PI / 2);
   geom.translate(0, -0.04, 0);
   return geom;
@@ -80,29 +86,11 @@ function renderedBuildingAabb(ring: [number, number][]): Aabb2 {
   return { minX: -a.maxX, maxX: -a.minX, minZ: a.minZ, maxZ: a.maxZ };
 }
 
-function BuildingMesh({
-  building,
-  faded,
-}: {
-  building: OsmBuilding;
-  faded: boolean;
-}) {
-  const geom = useMemo(
-    () => buildingGeometry(building.ring, building.height),
-    [building],
-  );
-  useLayoutEffect(() => () => geom.dispose(), [geom]);
-  return (
-    <mesh geometry={geom} raycast={noopRaycast}>
-      <meshLambertMaterial
-        color={BUILDING_COLOR}
-        transparent={faded}
-        opacity={faded ? OVERLAP_OPACITY : 1}
-        side={DoubleSide}
-        depthWrite={!faded}
-      />
-    </mesh>
-  );
+function mergeBuildingBatch(geoms: ExtrudeGeometry[]): BufferGeometry | null {
+  if (geoms.length === 0) return null;
+  const merged = mergeGeometries(geoms, false);
+  for (const g of geoms) g.dispose();
+  return merged;
 }
 
 export function SurfaceLayer({
@@ -120,13 +108,29 @@ export function SurfaceLayer({
   );
   useLayoutEffect(() => () => ground.dispose(), [ground]);
 
-  const fadedIds = useMemo(() => {
-    const ids = new Set<string>();
+  const batches = useMemo(() => {
+    const opaque: ExtrudeGeometry[] = [];
+    const faded: ExtrudeGeometry[] = [];
     for (const b of surface.buildings) {
-      if (aabbIntersects(renderedBuildingAabb(b.ring), overlap)) ids.add(b.id);
+      const ring = simplifyRing(b.ring, MIN_RING_EDGE_M);
+      if (ring.length < 3) continue;
+      const geom = buildingGeometry(ring, b.height);
+      if (aabbIntersects(renderedBuildingAabb(ring), overlap)) faded.push(geom);
+      else opaque.push(geom);
     }
-    return ids;
+    return {
+      opaque: mergeBuildingBatch(opaque),
+      faded: mergeBuildingBatch(faded),
+    };
   }, [surface.buildings, overlap]);
+
+  useLayoutEffect(
+    () => () => {
+      batches.opaque?.dispose();
+      batches.faded?.dispose();
+    },
+    [batches],
+  );
 
   return (
     <group>
@@ -135,13 +139,22 @@ export function SurfaceLayer({
       <mesh geometry={ground} raycast={noopRaycast}>
         <meshLambertMaterial color={GROUND_COLOR} side={DoubleSide} />
       </mesh>
-      {surface.buildings.map((building) => (
-        <BuildingMesh
-          key={building.id}
-          building={building}
-          faded={fadedIds.has(building.id)}
-        />
-      ))}
+      {batches.opaque ? (
+        <mesh geometry={batches.opaque} raycast={noopRaycast}>
+          <meshLambertMaterial color={BUILDING_COLOR} />
+        </mesh>
+      ) : null}
+      {batches.faded ? (
+        <mesh geometry={batches.faded} raycast={noopRaycast}>
+          <meshLambertMaterial
+            color={BUILDING_COLOR}
+            transparent
+            opacity={OVERLAP_OPACITY}
+            depthWrite={false}
+            side={DoubleSide}
+          />
+        </mesh>
+      ) : null}
     </group>
   );
 }

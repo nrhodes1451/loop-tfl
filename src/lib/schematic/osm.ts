@@ -7,6 +7,8 @@ import { latLonToEnu, type Aabb2, type LatLon } from "./geo";
 
 export const DEFAULT_BUILDING_HEIGHT_M = 10;
 export const METRES_PER_LEVEL = 3;
+/** Drop footprint vertices closer than this; keeps the blocky look cheap. */
+export const MIN_RING_EDGE_M = 2;
 
 export type OsmBuilding = {
   id: string;
@@ -124,6 +126,33 @@ export function clipRingToBox(
   return clipped.length >= 3 ? clipped : [];
 }
 
+/**
+ * Collapse short edges. Closed rings stay closed in the caller (no duplicate last point).
+ */
+export function simplifyRing(
+  ring: [number, number][],
+  minEdgeM: number = MIN_RING_EDGE_M,
+): [number, number][] {
+  const open = dropClosingDuplicate(ring);
+  if (open.length <= 4) return open;
+  const out: [number, number][] = [open[0]!];
+  for (let i = 1; i < open.length; i++) {
+    const prev = out[out.length - 1]!;
+    const p = open[i]!;
+    if (Math.hypot(p[0] - prev[0], p[1] - prev[1]) >= minEdgeM) out.push(p);
+  }
+  if (out.length < 3) return open;
+  const first = out[0]!;
+  const last = out[out.length - 1]!;
+  if (
+    out.length > 3 &&
+    Math.hypot(last[0] - first[0], last[1] - first[1]) < minEdgeM
+  ) {
+    out.pop();
+  }
+  return out.length >= 3 ? out : open;
+}
+
 export function ringAabb(ring: [number, number][]): Aabb2 {
   const aabb: Aabb2 = {
     minX: Infinity,
@@ -158,10 +187,12 @@ export function buildingsFromOverpass(
     }
     const clipped = clipRingToBox(ring, half);
     if (clipped.length < 3) continue;
+    const simple = simplifyRing(clipped, MIN_RING_EDGE_M);
+    if (simple.length < 3) continue;
     out.push({
       id: `way/${el.id}`,
       height: parseBuildingHeight(tags),
-      ring: clipped,
+      ring: simple,
     });
   }
   return out;
