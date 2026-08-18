@@ -1,0 +1,93 @@
+import { describe, expect, it } from "vitest";
+import vtpbf from "vt-pbf";
+import { HUBKGX_ORIGIN } from "./geo";
+import { ringAabb } from "./osm";
+import {
+  buildingsFromMvt,
+  latToTileY,
+  lonLatToTile,
+  lonToTileX,
+  tileKey,
+  tilePointToLonLat,
+  tileToLat,
+  tileToLon,
+  tilesAround,
+  zoomForDistance,
+} from "./pmtiles";
+
+describe("slippy tiles", () => {
+  it("maps King’s Cross into the expected z15 tile", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    expect(tile.z).toBe(15);
+    expect(tile.x).toBe(lonToTileX(HUBKGX_ORIGIN.lon, 15));
+    expect(tile.y).toBe(latToTileY(HUBKGX_ORIGIN.lat, 15));
+    expect(tile.x).toBeGreaterThan(16000);
+    expect(tile.y).toBeGreaterThan(10000);
+  });
+
+  it("round-trips tile corners through lon/lat", () => {
+    const z = 15;
+    const x = 16384;
+    const y = 10894;
+    const west = tileToLon(x, z);
+    const east = tileToLon(x + 1, z);
+    const north = tileToLat(y, z);
+    const south = tileToLat(y + 1, z);
+    expect(east).toBeGreaterThan(west);
+    expect(north).toBeGreaterThan(south);
+    const nw = tilePointToLonLat({ z, x, y }, 0, 0, 4096);
+    expect(nw.lon).toBeCloseTo(west, 8);
+    expect(nw.lat).toBeCloseTo(north, 8);
+  });
+
+  it("returns a 3×3 neighbourhood, wrapping x", () => {
+    const around = tilesAround(0, 0, 4, 1);
+    expect(around).toHaveLength(9);
+    expect(around.map(tileKey).filter((k, i, a) => a.indexOf(k) === i)).toHaveLength(
+      9,
+    );
+  });
+});
+
+describe("zoomForDistance", () => {
+  it("picks z15 close in, z14 mid, and drops 3D when far", () => {
+    expect(zoomForDistance(120)).toBe(15);
+    expect(zoomForDistance(4_000)).toBe(14);
+    expect(zoomForDistance(12_000)).toBeNull();
+  });
+});
+
+describe("buildingsFromMvt", () => {
+  it("decodes a polygon in the KGX tile into an ENU ring", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const buf = vtpbf.fromGeojsonVt({
+      buildings: {
+        features: [
+          {
+            id: 7,
+            type: 3,
+            geometry: [
+              [
+                [200, 200],
+                [500, 200],
+                [500, 500],
+                [200, 500],
+                [200, 200],
+              ],
+            ],
+            tags: { height: 22 },
+          },
+        ],
+      },
+    });
+    const buildings = buildingsFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
+    expect(buildings).toHaveLength(1);
+    expect(buildings[0]!.height).toBe(22);
+    expect(buildings[0]!.ring.length).toBeGreaterThanOrEqual(3);
+    const aabb = ringAabb(buildings[0]!.ring);
+    expect(aabb.maxX).toBeGreaterThan(aabb.minX);
+    expect(aabb.maxZ).toBeGreaterThan(aabb.minZ);
+    expect(Math.abs(aabb.minX)).toBeLessThan(5_000);
+    expect(Math.abs(aabb.minZ)).toBeLessThan(5_000);
+  });
+});
