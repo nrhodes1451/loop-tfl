@@ -2,14 +2,21 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { DoubleSide, Fog, type BufferGeometry } from "three";
+import { Fog, type BufferGeometry } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
   BUILDING_COLOR,
   GROUND_COLOR,
+  SURFACE_HEMI_GROUND,
+  SURFACE_HEMI_INTENSITY,
   SURFACE_OPACITY,
+  SURFACE_SKY,
+  SURFACE_SUN_INTENSITY,
+  SURFACE_SUN_POSITION,
   buildingsToGeometry,
   groundGeometry,
+  wrapLambertCacheKey,
+  wrapLambertCompile,
 } from "@/lib/schematic/building-geom";
 import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
 import { enuToLatLon, type LatLon } from "@/lib/schematic/geo";
@@ -230,15 +237,23 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
 
   return (
     <group>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[140, 220, 90]} intensity={0.95} />
+      <hemisphereLight
+        color={SURFACE_SKY}
+        groundColor={SURFACE_HEMI_GROUND}
+        intensity={SURFACE_HEMI_INTENSITY}
+      />
+      <directionalLight
+        position={SURFACE_SUN_POSITION}
+        intensity={SURFACE_SUN_INTENSITY}
+      />
       <mesh geometry={ground} raycast={noopRaycast}>
         <meshLambertMaterial
           color={GROUND_COLOR}
           transparent
           opacity={SURFACE_OPACITY}
           depthWrite={false}
-          side={DoubleSide}
+          onBeforeCompile={wrapLambertCompile}
+          customProgramCacheKey={wrapLambertCacheKey}
         />
       </mesh>
       {visible.map((row) => (
@@ -248,7 +263,8 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
             transparent
             opacity={SURFACE_OPACITY}
             depthWrite={false}
-            side={DoubleSide}
+            onBeforeCompile={wrapLambertCompile}
+            customProgramCacheKey={wrapLambertCacheKey}
           />
         </mesh>
       ))}

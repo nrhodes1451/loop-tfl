@@ -16,6 +16,35 @@ export const BUILDING_COLOR = "#9ec5e8";
 export const GROUND_COLOR = "#cceeff";
 export const SURFACE_OPACITY = 0.7;
 
+/** Sky / ground colours for the outdoor hemisphere fill. */
+export const SURFACE_SKY = "#eef3f7";
+export const SURFACE_HEMI_GROUND = "#5a6b78";
+export const SURFACE_HEMI_INTENSITY = 0.8;
+export const SURFACE_SUN_INTENSITY = 0.5;
+export const SURFACE_SUN_POSITION = [140, 220, 90] as const;
+
+const LAMBERT_DOT_NL =
+  "float dotNL = saturate( dot( geometryNormal, directLight.direction ) );";
+const WRAP_LAMBERT_DOT_NL =
+  "float dotNL = saturate( 0.5 * dot( geometryNormal, directLight.direction ) + 0.5 );";
+
+/**
+ * Half-Lambert (wrap) so a directional light has mid-tones instead of a
+ * hard lit / unlit cliff on each prism face.
+ */
+export function wrapLambertFragment(fragmentShader: string): string {
+  if (!fragmentShader.includes(LAMBERT_DOT_NL)) return fragmentShader;
+  return fragmentShader.replace(LAMBERT_DOT_NL, WRAP_LAMBERT_DOT_NL);
+}
+
+export function wrapLambertCompile(shader: { fragmentShader: string }) {
+  shader.fragmentShader = wrapLambertFragment(shader.fragmentShader);
+}
+
+export function wrapLambertCacheKey() {
+  return "wrapLambert";
+}
+
 const EXTRUDE = {
   bevelEnabled: false,
   steps: 1,

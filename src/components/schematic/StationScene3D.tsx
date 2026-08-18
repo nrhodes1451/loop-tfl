@@ -386,15 +386,19 @@ function SceneControls({
   frame,
   controlsRef,
   panMode,
+  panAltitude,
   onDragStart,
   onDragEnd,
 }: {
   frame: CameraFrame;
   controlsRef: RefObject<OrbitControlsImpl | null>;
   panMode: boolean;
+  panAltitude: RefObject<{ cam: number; target: number } | null>;
   onDragStart: () => void;
   onDragEnd: () => void;
 }) {
+  const camera = useThree((s) => s.camera);
+
   useLayoutEffect(() => {
     const controls = controlsRef.current;
     if (!controls) return;
@@ -404,6 +408,28 @@ function SceneControls({
     controls.saveState();
   }, [controlsRef, frame]);
 
+  useLayoutEffect(() => {
+    if (!panMode) {
+      panAltitude.current = null;
+      return;
+    }
+    panAltitude.current = {
+      cam: camera.position.y,
+      target: controlsRef.current?.target.y ?? frame.target[1],
+    };
+  }, [panMode, camera, controlsRef, frame.target, panAltitude]);
+
+  useFrame(() => {
+    const lock = panAltitude.current;
+    const controls = controlsRef.current;
+    if (!lock || !controls) return;
+    /* Orbit dolly/pan must not change world height in map pan mode. */
+    /* eslint-disable react-hooks/immutability */
+    camera.position.y = lock.cam;
+    controls.target.y = lock.target;
+    /* eslint-enable react-hooks/immutability */
+  });
+
   return (
     <OrbitControls
       ref={controlsRef}
@@ -411,7 +437,7 @@ function SceneControls({
       enableDamping
       dampingFactor={0.08}
       enableRotate={!panMode}
-      screenSpacePanning={panMode}
+      screenSpacePanning={false}
       mouseButtons={{
         LEFT: panMode ? MOUSE.PAN : MOUSE.ROTATE,
         MIDDLE: MOUSE.DOLLY,
@@ -422,8 +448,8 @@ function SceneControls({
         TWO: TOUCH.DOLLY_PAN,
       }}
       target={frame.target}
-      minPolarAngle={frame.minPolarAngle}
-      maxPolarAngle={frame.maxPolarAngle}
+      minPolarAngle={panMode ? 0.08 : frame.minPolarAngle}
+      maxPolarAngle={panMode ? 1.52 : frame.maxPolarAngle}
       minDistance={frame.minDistance}
       maxDistance={frame.maxDistance}
       onStart={onDragStart}
@@ -513,10 +539,21 @@ export function StationScene3D({
     h: number;
   } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const panAltitude = useRef<{ cam: number; target: number } | null>(null);
 
   useLayoutEffect(() => {
     if (!resetRef) return;
-    resetRef.current = () => controlsRef.current?.reset();
+    resetRef.current = () => {
+      const controls = controlsRef.current;
+      if (!controls) return;
+      controls.reset();
+      if (panAltitude.current) {
+        panAltitude.current = {
+          cam: controls.object.position.y,
+          target: controls.target.y,
+        };
+      }
+    };
     return () => {
       resetRef.current = null;
     };
@@ -649,6 +686,7 @@ export function StationScene3D({
           frame={frame}
           controlsRef={controlsRef}
           panMode={panMode}
+          panAltitude={panAltitude}
           onDragStart={() => {
             draggingRef.current = true;
             setIsDragging(true);

@@ -1,13 +1,19 @@
 "use client";
 
 import { useLayoutEffect, useMemo } from "react";
-import { DoubleSide } from "three";
 import {
   BUILDING_COLOR,
   GROUND_COLOR,
+  SURFACE_HEMI_GROUND,
+  SURFACE_HEMI_INTENSITY,
   SURFACE_OPACITY,
+  SURFACE_SKY,
+  SURFACE_SUN_INTENSITY,
+  SURFACE_SUN_POSITION,
   buildingsToGeometry,
   groundGeometry,
+  wrapLambertCacheKey,
+  wrapLambertCompile,
 } from "@/lib/schematic/building-geom";
 import type { OsmSurface } from "@/lib/schematic/osm";
 
@@ -29,15 +35,23 @@ export function SurfaceLayer({ surface }: { surface: OsmSurface }) {
 
   return (
     <group>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[140, 220, 90]} intensity={0.95} />
+      <hemisphereLight
+        color={SURFACE_SKY}
+        groundColor={SURFACE_HEMI_GROUND}
+        intensity={SURFACE_HEMI_INTENSITY}
+      />
+      <directionalLight
+        position={SURFACE_SUN_POSITION}
+        intensity={SURFACE_SUN_INTENSITY}
+      />
       <mesh geometry={ground} raycast={noopRaycast}>
         <meshLambertMaterial
           color={GROUND_COLOR}
           transparent
           opacity={SURFACE_OPACITY}
           depthWrite={false}
-          side={DoubleSide}
+          onBeforeCompile={wrapLambertCompile}
+          customProgramCacheKey={wrapLambertCacheKey}
         />
       </mesh>
       {buildings ? (
@@ -47,7 +61,8 @@ export function SurfaceLayer({ surface }: { surface: OsmSurface }) {
             transparent
             opacity={SURFACE_OPACITY}
             depthWrite={false}
-            side={DoubleSide}
+            onBeforeCompile={wrapLambertCompile}
+            customProgramCacheKey={wrapLambertCacheKey}
           />
         </mesh>
       ) : null}
