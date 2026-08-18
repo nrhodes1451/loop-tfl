@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { StationPicker } from "@/components/schematic/StationPicker";
@@ -187,6 +187,10 @@ export function SchematicPage({
   const [showMap, setShowMap] = useState(true);
   const [showSchematic, setShowSchematic] = useState(true);
   const resetView = useRef<(() => void) | null>(null);
+  const topology = useMemo(
+    () => ({ nodes: station.nodes, edges: station.edges }),
+    [station.nodes, station.edges],
+  );
   const levels = depthLegend(station);
   const chromeBtn =
     "cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]";
@@ -201,7 +205,7 @@ export function SchematicPage({
       style={{ background: SCENE_BACKGROUND, color: "#e8edf4" }}
     >
       <StationScene3D
-        topology={{ nodes: station.nodes, edges: station.edges }}
+        topology={topology}
         resetRef={resetView}
         surface={surface}
         showSurface={showMap}
@@ -339,8 +343,8 @@ export function SchematicPage({
           ))}
         </div>
         <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
-          Drag to orbit, pinch or scroll to zoom. Hover a volume for its name;
-          lifts highlight the whole shaft. Click the compass to face north.
+          Drag to orbit, pinch or scroll to zoom. Hover or tap a volume for its
+          name; lifts highlight the whole shaft. Click the compass to face north.
         </div>
         {surface ? (
           <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>

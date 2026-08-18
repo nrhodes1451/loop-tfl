@@ -52,6 +52,11 @@ function detectQuality(): SceneQuality {
     : "high";
 }
 
+function detectCoarsePointer(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
 function useQuality(override?: SceneQuality): SceneQuality {
   const [detected, setDetected] = useState<SceneQuality>(detectQuality);
 
@@ -63,6 +68,19 @@ function useQuality(override?: SceneQuality): SceneQuality {
   }, []);
 
   return override ?? detected;
+}
+
+function useCoarsePointer(): boolean {
+  const [coarse, setCoarse] = useState(detectCoarsePointer);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    const apply = () => setCoarse(mq.matches);
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  return coarse;
 }
 
 function noopRaycast() {}
@@ -104,12 +122,14 @@ function VolumeMesh({
   highlighted,
   dimmed,
   draggingRef,
+  stickyHover,
   onHover,
 }: {
   volume: SceneVolume;
   highlighted: boolean;
   dimmed: boolean;
   draggingRef: RefObject<boolean>;
+  stickyHover: boolean;
   onHover: (id: string | null) => void;
 }) {
   const opacity = scaledOpacity(volume.opacity, highlighted, dimmed);
@@ -130,7 +150,13 @@ function VolumeMesh({
   };
   const onOut = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
+    if (stickyHover) return;
     onHover(null);
+  };
+  const onTap = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    if (draggingRef.current) return;
+    onHover(volume.id);
   };
 
   return (
@@ -141,6 +167,7 @@ function VolumeMesh({
         {...(!volume.pickable ? { raycast: noopRaycast } : {})}
         onPointerOver={volume.pickable ? onOver : undefined}
         onPointerOut={volume.pickable ? onOut : undefined}
+        onClick={volume.pickable ? onTap : undefined}
       >
         {volume.kind === "cylinder" ? (
           <cylinderGeometry
@@ -168,6 +195,7 @@ function VolumeMesh({
           position={volume.position}
           onPointerOver={onOver}
           onPointerOut={onOut}
+          onClick={onTap}
         >
           <cylinderGeometry
             args={[
@@ -367,12 +395,14 @@ function StationMeshes({
   highlight,
   active,
   draggingRef,
+  stickyHover,
   onHover,
 }: {
   geom: SceneGeometry;
   highlight: HoverHighlight;
   active: boolean;
   draggingRef: RefObject<boolean>;
+  stickyHover: boolean;
   onHover: (id: string | null) => void;
 }) {
   return (
@@ -384,6 +414,7 @@ function StationMeshes({
           highlighted={highlight.volumeIds.has(volume.id)}
           dimmed={active && !highlight.volumeIds.has(volume.id)}
           draggingRef={draggingRef}
+          stickyHover={stickyHover}
           onHover={onHover}
         />
       ))}
@@ -425,6 +456,7 @@ export function StationScene3D({
   showSchematic = true,
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
+  const stickyHover = useCoarsePointer();
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const roseRef = useRef<HTMLDivElement>(null);
@@ -448,7 +480,7 @@ export function StationScene3D({
 
   const geom = useMemo(
     () => buildSceneGeometry(topology, { quality }),
-    [topology, quality],
+    [topology.nodes, topology.edges, quality],
   );
   const placement = useMemo(
     () => (surface ? placeSchematic(geom) : null),
@@ -501,6 +533,7 @@ export function StationScene3D({
       aria-label="Schematic 3D station view. Not to scale, not for wayfinding."
       onPointerMove={onWrapPointerMove}
       onPointerLeave={() => {
+        if (stickyHover) return;
         setHoveredId(null);
         setPointer(null);
       }}
@@ -534,6 +567,7 @@ export function StationScene3D({
                   highlight={highlight}
                   active={hoveredId !== null}
                   draggingRef={draggingRef}
+                  stickyHover={stickyHover}
                   onHover={setHoveredId}
                 />
               </group>
@@ -545,6 +579,7 @@ export function StationScene3D({
             highlight={highlight}
             active={hoveredId !== null}
             draggingRef={draggingRef}
+            stickyHover={stickyHover}
             onHover={setHoveredId}
           />
         ) : null}
