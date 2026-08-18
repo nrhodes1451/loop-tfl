@@ -67,7 +67,7 @@ describe("ringForDistance", () => {
     expect(ringForDistance(4_000, 14)).toBeGreaterThan(
       ringForDistance(400, 15),
     );
-    expect(ringForDistance(10_000, 13)).toBeLessThanOrEqual(4);
+    expect(ringForDistance(10_000, 13)).toBeLessThanOrEqual(3);
   });
 });
 

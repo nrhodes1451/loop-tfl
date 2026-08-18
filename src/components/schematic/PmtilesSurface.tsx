@@ -26,8 +26,8 @@ import {
 /** Ground plane in ENU metres — Greater London fits with margin. */
 const GROUND_SIZE_M = 50_000;
 const SAMPLE_EVERY_MS = 120;
-/** One 9×9 window per zoom so pulling out does not evict closer tiles. */
-const MAX_TILES_PER_ZOOM = 81;
+/** One 7×7 window per zoom so pulling out does not evict closer tiles. */
+const MAX_TILES_PER_ZOOM = 49;
 
 function noopRaycast() {}
 

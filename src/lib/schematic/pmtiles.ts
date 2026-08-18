@@ -103,7 +103,7 @@ export function tileWidthM(z: number, lat: number): number {
 
 /**
  * Neighbourhood radius so the loaded square is wider than the oblique view.
- * Close: 3×3. Zoomed out: up to 9×9.
+ * Close: 3×3. Zoomed out: up to 7×7.
  */
 export function ringForDistance(
   distM: number,
@@ -112,7 +112,7 @@ export function ringForDistance(
 ): number {
   const tileM = tileWidthM(z, lat);
   const span = Math.max(distM * 2, tileM);
-  return Math.min(4, Math.max(1, Math.ceil(span / tileM)));
+  return Math.min(3, Math.max(1, Math.ceil(span / tileM)));
 }
 
 /** Linear fog so the tile-window edge fades into the scene background. */
