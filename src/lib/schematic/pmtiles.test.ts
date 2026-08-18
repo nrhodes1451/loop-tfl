@@ -11,6 +11,7 @@ import {
   tilePointToLonLat,
   tileToLat,
   tileToLon,
+  ringForDistance,
   tilesAround,
   zoomForDistance,
 } from "./pmtiles";
@@ -50,10 +51,22 @@ describe("slippy tiles", () => {
 });
 
 describe("zoomForDistance", () => {
-  it("picks z15 close in, z14 mid, and drops 3D when far", () => {
+  it("picks z15 close in, z14/z13 mid, and drops 3D when far", () => {
     expect(zoomForDistance(120)).toBe(15);
-    expect(zoomForDistance(4_000)).toBe(14);
-    expect(zoomForDistance(12_000)).toBeNull();
+    expect(zoomForDistance(3_000)).toBe(14);
+    expect(zoomForDistance(8_000)).toBe(13);
+    expect(zoomForDistance(20_000)).toBeNull();
+  });
+});
+
+describe("ringForDistance", () => {
+  it("grows the neighbourhood as the camera pulls back", () => {
+    expect(ringForDistance(150, 15)).toBe(1);
+    expect(ringForDistance(1_200, 15)).toBeGreaterThan(1);
+    expect(ringForDistance(4_000, 14)).toBeGreaterThan(
+      ringForDistance(400, 15),
+    );
+    expect(ringForDistance(10_000, 13)).toBeLessThanOrEqual(4);
   });
 });
 

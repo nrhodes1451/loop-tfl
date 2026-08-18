@@ -86,12 +86,33 @@ export function tilePointToLonLat(
 
 /**
  * Camera distance → building tile zoom. Null = skip 3D footprints.
- * Caps at z15 (typical Protomaps maxzoom).
+ * Caps at z15 (typical Protomaps maxzoom). Farther views drop to z14/z13
+ * so each tile covers more ground.
  */
 export function zoomForDistance(distM: number): number | null {
-  if (!Number.isFinite(distM) || distM > 8_000) return null;
-  if (distM > 3_000) return PMTILES_MIN_BUILDING_ZOOM;
+  if (!Number.isFinite(distM) || distM > 16_000) return null;
+  if (distM > 6_000) return 13;
+  if (distM > 2_000) return PMTILES_MIN_BUILDING_ZOOM;
   return PMTILES_MAX_ZOOM;
+}
+
+/** Mercator tile width in metres at `lat`. */
+export function tileWidthM(z: number, lat: number): number {
+  return (40_075_016.686 * Math.cos((lat * Math.PI) / 180)) / 2 ** z;
+}
+
+/**
+ * Neighbourhood radius so the loaded square is wider than the oblique view.
+ * Close: 3×3. Zoomed out: up to 9×9.
+ */
+export function ringForDistance(
+  distM: number,
+  z: number,
+  lat: number = 51.53,
+): number {
+  const tileM = tileWidthM(z, lat);
+  const span = Math.max(distM * 2, tileM);
+  return Math.min(4, Math.max(1, Math.ceil(span / tileM)));
 }
 
 export function tilesAround(

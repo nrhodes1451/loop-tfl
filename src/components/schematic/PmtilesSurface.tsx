@@ -14,6 +14,7 @@ import {
 import { enuToLatLon, type LatLon } from "@/lib/schematic/geo";
 import {
   fetchTileBuildings,
+  ringForDistance,
   tileKey,
   tilesAround,
   zoomForDistance,
@@ -22,7 +23,6 @@ import {
 
 /** Ground plane in ENU metres — Greater London fits with margin. */
 const GROUND_SIZE_M = 50_000;
-const TILE_RING = 1;
 const SAMPLE_EVERY_MS = 120;
 
 function noopRaycast() {}
@@ -63,7 +63,12 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     }
     // buildingGeometry negates east so Three.js +X is west; undo that for tiles.
     const ll = enuToLatLon(-target.x, target.z, originRef.current);
-    const next = tilesAround(ll.lon, ll.lat, z, TILE_RING);
+    const next = tilesAround(
+      ll.lon,
+      ll.lat,
+      z,
+      ringForDistance(dist, z, ll.lat),
+    );
     const key = tileSetKey(next);
     if (key === lastKey.current) return;
     lastKey.current = key;
