@@ -26,11 +26,101 @@ import {
 /** Ground plane in ENU metres — Greater London fits with margin. */
 const GROUND_SIZE_M = 50_000;
 const SAMPLE_EVERY_MS = 120;
+/** One 9×9 window per zoom so pulling out does not evict closer tiles. */
+const MAX_TILES_PER_ZOOM = 81;
 
 function noopRaycast() {}
 
 function tileSetKey(tiles: TileCoord[]): string {
   return tiles.map(tileKey).join(",");
+}
+
+function visibleFromCache(
+  tiles: TileCoord[],
+  cache: TileGeomCache,
+): Map<string, BufferGeometry> {
+  const shown = new Map<string, BufferGeometry>();
+  for (const tile of tiles) {
+    const key = tileKey(tile);
+    const geom = cache.geom(key);
+    if (geom) shown.set(key, geom);
+  }
+  return shown;
+}
+
+/** Keeps extruded tiles after the far-zoom drop so zooming back in is instant. */
+class TileGeomCache {
+  private readonly stored = new Map<string, BufferGeometry | null>();
+  private readonly orderByZoom = new Map<number, string[]>();
+  private readonly inflight = new Map<string, Promise<BufferGeometry | null>>();
+  private keep = new Set<string>();
+  private alive = true;
+
+  setKeep(keys: Iterable<string>) {
+    this.keep = new Set(keys);
+  }
+
+  has(key: string): boolean {
+    return this.stored.has(key);
+  }
+
+  geom(key: string): BufferGeometry | undefined | null {
+    return this.stored.get(key);
+  }
+
+  private remember(key: string, geom: BufferGeometry | null) {
+    this.stored.set(key, geom);
+    const z = Number.parseInt(key, 10);
+    let order = this.orderByZoom.get(z);
+    if (!order) {
+      order = [];
+      this.orderByZoom.set(z, order);
+    }
+    const idx = order.indexOf(key);
+    if (idx >= 0) order.splice(idx, 1);
+    order.push(key);
+    while (order.length > MAX_TILES_PER_ZOOM) {
+      const drop = order.find((k) => !this.keep.has(k));
+      if (drop == null) break;
+      order.splice(order.indexOf(drop), 1);
+      const old = this.stored.get(drop);
+      this.stored.delete(drop);
+      old?.dispose();
+    }
+  }
+
+  load(tile: TileCoord, origin: LatLon): Promise<BufferGeometry | null> {
+    const key = tileKey(tile);
+    if (this.stored.has(key)) return Promise.resolve(this.stored.get(key)!);
+    const pending = this.inflight.get(key);
+    if (pending) return pending;
+    const next = fetchTileBuildings(tile, origin)
+      .then((buildings) => {
+        this.inflight.delete(key);
+        if (!this.alive) {
+          buildingsToGeometry(buildings)?.dispose();
+          return null;
+        }
+        if (this.stored.has(key)) return this.stored.get(key)!;
+        const geom = buildingsToGeometry(buildings);
+        this.remember(key, geom);
+        return geom;
+      })
+      .catch(() => {
+        this.inflight.delete(key);
+        return null;
+      });
+    this.inflight.set(key, next);
+    return next;
+  }
+
+  dispose() {
+    this.alive = false;
+    for (const geom of this.stored.values()) geom?.dispose();
+    this.stored.clear();
+    this.orderByZoom.clear();
+    this.inflight.clear();
+  }
 }
 
 export function PmtilesSurface({ origin }: { origin: LatLon }) {
@@ -41,7 +131,9 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
   const [geoms, setGeoms] = useState<Map<string, BufferGeometry>>(
     () => new Map(),
   );
-  const geomsRef = useRef(geoms);
+  const cacheRef = useRef<TileGeomCache | null>(null);
+  if (cacheRef.current == null) cacheRef.current = new TileGeomCache();
+  const cache = cacheRef.current;
   const lastSample = useRef(0);
   const lastKey = useRef("");
   const originRef = useRef(origin);
@@ -59,7 +151,8 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
 
   useFrame(() => {
     const now = performance.now();
-    if (now - lastSample.current < SAMPLE_EVERY_MS) return;
+    const waiting = lastKey.current === "";
+    if (!waiting && now - lastSample.current < SAMPLE_EVERY_MS) return;
     lastSample.current = now;
     const target = controls?.target;
     if (!target) return;
@@ -75,7 +168,9 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     if (z == null) {
       if (lastKey.current !== "") {
         lastKey.current = "";
+        cache.setKeep([]);
         setTiles([]);
+        setGeoms(new Map());
       }
       return;
     }
@@ -89,23 +184,14 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     const key = tileSetKey(next);
     if (key === lastKey.current) return;
     lastKey.current = key;
+    cache.setKeep(next.map(tileKey));
     setTiles(next);
+    setGeoms(visibleFromCache(next, cache));
   });
 
   useEffect(() => {
     let cancelled = false;
-    const wanted = new Set(tiles.map(tileKey));
-
-    setGeoms((prev) => {
-      const kept = new Map<string, BufferGeometry>();
-      for (const [key, geom] of prev) {
-        if (wanted.has(key)) kept.set(key, geom);
-      }
-      geomsRef.current = kept;
-      return kept;
-    });
-
-    const missing = tiles.filter((t) => !geomsRef.current.has(tileKey(t)));
+    const missing = tiles.filter((t) => !cache.has(tileKey(t)));
     if (missing.length === 0) {
       return () => {
         cancelled = true;
@@ -113,47 +199,21 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     }
 
     void Promise.all(
-      missing.map(async (tile) => {
-        const buildings = await fetchTileBuildings(tile, originRef.current);
-        return { key: tileKey(tile), geom: buildingsToGeometry(buildings) };
-      }),
-    ).then((rows) => {
-      if (cancelled) {
-        for (const row of rows) row.geom?.dispose();
-        return;
-      }
-      setGeoms((prev) => {
-        const next = new Map(prev);
-        for (const row of rows) {
-          if (!wanted.has(row.key)) {
-            row.geom?.dispose();
-            continue;
-          }
-          if (row.geom) next.set(row.key, row.geom);
-        }
-        geomsRef.current = next;
-        return next;
-      });
+      missing.map((tile) => cache.load(tile, originRef.current)),
+    ).then(() => {
+      if (cancelled) return;
+      setGeoms(visibleFromCache(tiles, cache));
     });
 
     return () => {
       cancelled = true;
     };
-  }, [tiles]);
-
-  const prevGeoms = useRef<Map<string, BufferGeometry>>(new Map());
-  useLayoutEffect(() => {
-    const prev = prevGeoms.current;
-    prevGeoms.current = geoms;
-    for (const [key, geom] of prev) {
-      if (!geoms.has(key)) geom.dispose();
-    }
-  }, [geoms]);
+  }, [cache, tiles]);
 
   useLayoutEffect(() => {
     return () => {
-      for (const geom of prevGeoms.current.values()) geom.dispose();
-      prevGeoms.current = new Map();
+      cacheRef.current?.dispose();
+      cacheRef.current = null;
     };
   }, []);
 
