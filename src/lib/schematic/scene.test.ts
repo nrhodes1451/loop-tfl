@@ -318,4 +318,14 @@ describe("cameraFrame", () => {
     expect(frame.minDistance).toBe(4);
     expect(frame.maxDistance).toBeGreaterThan(4);
   });
+
+  it("can raise maxDistance and far past the framed radius", () => {
+    const geom = buildSceneGeometry(topology);
+    const frame = cameraFrame(geom.bounds, {
+      maxDistance: 25_000,
+      far: 80_000,
+    });
+    expect(frame.maxDistance).toBe(25_000);
+    expect(frame.far).toBe(80_000);
+  });
 });

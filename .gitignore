@@ -46,6 +46,9 @@ next-env.d.ts
 /data/schematic/generated/
 /data/schematic/index.json
 
+# London PMTiles extract (npm run fetch-london-pmtiles) — not committed
+/data/osm/london.pmtiles
+
 # local design canvases — not production source
 /designs-handoff/
 /context/design_handoff_stepfree_graph/

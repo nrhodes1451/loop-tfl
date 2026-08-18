@@ -390,7 +390,7 @@ export function unionBounds(a: SceneBounds, b: SceneBounds): SceneBounds {
 
 export function cameraFrame(
   bounds: SceneBounds,
-  opts: { minDistance?: number } = {},
+  opts: { minDistance?: number; maxDistance?: number; far?: number } = {},
 ): CameraFrame {
   const { center, radius } = bounds;
   const dist = radius * 2.15;
@@ -405,10 +405,10 @@ export function cameraFrame(
     target: center,
     position,
     minDistance: opts.minDistance ?? Math.max(4, radius * 0.7),
-    maxDistance: radius * 5.5,
+    maxDistance: opts.maxDistance ?? radius * 5.5,
     minPolarAngle: 0.22,
     maxPolarAngle: 1.32,
-    far: Math.max(80, radius * 20),
+    far: opts.far ?? Math.max(80, radius * 20),
   };
 }
 

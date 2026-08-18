@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { StationPicker } from "@/components/schematic/StationPicker";
@@ -11,6 +11,7 @@ import type {
 } from "@/lib/schematic/types";
 import type { OsmSurface } from "@/lib/schematic/osm";
 import { lineColorForSchematic } from "@/lib/tokens";
+import { PMTILES_ATTRIBUTION, PMTILES_URL } from "@/lib/schematic/pmtiles";
 
 const StationScene3D = dynamic(
   () => import("./StationScene3D").then((m) => m.StationScene3D),
@@ -186,12 +187,31 @@ export function SchematicPage({
   const [showLegend, setShowLegend] = useState(true);
   const [showMap, setShowMap] = useState(true);
   const [showSchematic, setShowSchematic] = useState(true);
+  const [panMode, setPanMode] = useState(false);
+  const [pmtilesOk, setPmtilesOk] = useState(false);
   const resetView = useRef<(() => void) | null>(null);
+  const usePmtiles = station.stationId === "HUBKGX" && pmtilesOk;
+
+  useEffect(() => {
+    if (station.stationId !== "HUBKGX") return;
+    let cancelled = false;
+    fetch(PMTILES_URL, { method: "HEAD" })
+      .then((res) => {
+        if (!cancelled) setPmtilesOk(res.ok);
+      })
+      .catch(() => {
+        if (!cancelled) setPmtilesOk(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [station.stationId]);
   const topology = useMemo(
     () => ({ nodes: station.nodes, edges: station.edges }),
     [station.nodes, station.edges],
   );
   const levels = depthLegend(station);
+  const hasMap = !!(surface || usePmtiles);
   const chromeBtn =
     "cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]";
   const chromeBtnStyle = {
@@ -210,6 +230,8 @@ export function SchematicPage({
         surface={surface}
         showSurface={showMap}
         showSchematic={showSchematic}
+        usePmtiles={usePmtiles}
+        panMode={panMode}
       />
 
       <header
@@ -343,10 +365,18 @@ export function SchematicPage({
           ))}
         </div>
         <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
-          Drag to orbit, pinch or scroll to zoom. Hover or tap a volume for its
-          name; lifts highlight the whole shaft. Click the compass to face north.
+          {panMode
+            ? "Drag to pan, pinch or scroll to zoom."
+            : "Drag to orbit, pinch or scroll to zoom."}{" "}
+          Hover or tap a volume for its name; lifts highlight the whole shaft.
+          Click the compass to face north.
         </div>
-        {surface ? (
+        {usePmtiles ? (
+          <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
+            OSM building footprints via PMTiles ({PMTILES_ATTRIBUTION}). Not a
+            surveyed basement.
+          </div>
+        ) : surface ? (
           <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
             OSM building footprints, {surface.attribution}. {surface.sizeM} m
             box around the TfL station point — not a surveyed basement.
@@ -358,7 +388,7 @@ export function SchematicPage({
       <div
         className="absolute z-20 flex flex-col items-stretch gap-1.5 right-3 bottom-[max(12px,env(safe-area-inset-bottom))] sm:right-6 sm:bottom-[22px]"
       >
-        {surface ? (
+        {hasMap ? (
           <>
             <ChromeCheck
               checked={showMap}
@@ -369,6 +399,11 @@ export function SchematicPage({
               checked={showSchematic}
               onChange={setShowSchematic}
               label="Schematic"
+            />
+            <ChromeCheck
+              checked={panMode}
+              onChange={setPanMode}
+              label="Pan"
             />
           </>
         ) : null}

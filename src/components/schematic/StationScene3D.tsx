@@ -13,9 +13,12 @@ import {
 } from "react";
 import {
   DoubleSide,
+  MOUSE,
   NoToneMapping,
+  PerspectiveCamera,
   Spherical,
   SRGBColorSpace,
+  TOUCH,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
@@ -32,8 +35,16 @@ import {
   type SceneVolume,
   type StationTopology,
 } from "@/lib/schematic/scene";
-import { placeSchematic, surfaceWorldBounds } from "@/lib/schematic/geo";
+import {
+  CITY_FAR_M,
+  CITY_MAX_DISTANCE_M,
+  HUBKGX_ORIGIN,
+  SURFACE_SIZE_M,
+  placeSchematic,
+  surfaceWorldBounds,
+} from "@/lib/schematic/geo";
 import type { OsmSurface } from "@/lib/schematic/osm";
+import { PmtilesSurface } from "./PmtilesSurface";
 import { SurfaceLayer } from "./SurfaceLayer";
 
 export type StationScene3DProps = {
@@ -43,6 +54,10 @@ export type StationScene3DProps = {
   surface?: OsmSurface | null;
   showSurface?: boolean;
   showSchematic?: boolean;
+  /** Prefer London PMTiles over the 400 m bake. */
+  usePmtiles?: boolean;
+  /** Left-drag pans the ground instead of orbiting. */
+  panMode?: boolean;
 };
 
 function detectQuality(): SceneQuality {
@@ -251,6 +266,13 @@ function FrameCamera({ frame }: { frame: CameraFrame }) {
   useLayoutEffect(() => {
     camera.position.set(...frame.position);
     camera.lookAt(...frame.target);
+    if (camera instanceof PerspectiveCamera) {
+      /* Three.js cameras are mutable scene objects. */
+      /* eslint-disable react-hooks/immutability */
+      camera.near = 0.1;
+      camera.far = frame.far;
+      /* eslint-enable react-hooks/immutability */
+    }
     camera.updateProjectionMatrix();
   }, [camera, frame]);
   return null;
@@ -310,7 +332,7 @@ function CompassButton({
       title="Face north"
       className={
         raised
-          ? "absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(140px,calc(env(safe-area-inset-bottom)+136px))] sm:right-6 sm:bottom-[148px]"
+          ? "absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(176px,calc(env(safe-area-inset-bottom)+172px))] sm:right-6 sm:bottom-[184px]"
           : "absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(56px,calc(env(safe-area-inset-bottom)+52px))] sm:right-6 sm:bottom-[72px]"
       }
       onPointerDown={(e) => e.stopPropagation()}
@@ -356,11 +378,13 @@ function CompassButton({
 function SceneControls({
   frame,
   controlsRef,
+  panMode,
   onDragStart,
   onDragEnd,
 }: {
   frame: CameraFrame;
   controlsRef: RefObject<OrbitControlsImpl | null>;
+  panMode: boolean;
   onDragStart: () => void;
   onDragEnd: () => void;
 }) {
@@ -379,6 +403,17 @@ function SceneControls({
       makeDefault
       enableDamping
       dampingFactor={0.08}
+      enableRotate={!panMode}
+      screenSpacePanning={panMode}
+      mouseButtons={{
+        LEFT: panMode ? MOUSE.PAN : MOUSE.ROTATE,
+        MIDDLE: MOUSE.DOLLY,
+        RIGHT: MOUSE.PAN,
+      }}
+      touches={{
+        ONE: panMode ? TOUCH.PAN : TOUCH.ROTATE,
+        TWO: TOUCH.DOLLY_PAN,
+      }}
       target={frame.target}
       minPolarAngle={frame.minPolarAngle}
       maxPolarAngle={frame.maxPolarAngle}
@@ -454,6 +489,8 @@ export function StationScene3D({
   surface = null,
   showSurface = true,
   showSchematic = true,
+  usePmtiles = false,
+  panMode = false,
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
   const stickyHover = useCoarsePointer();
@@ -482,21 +519,32 @@ export function StationScene3D({
     () => buildSceneGeometry(topology, { quality }),
     [topology.nodes, topology.edges, quality],
   );
+  const geoScene = !!(surface || usePmtiles);
   const placement = useMemo(
-    () => (surface ? placeSchematic(geom) : null),
-    [surface, geom],
+    () => (geoScene ? placeSchematic(geom) : null),
+    [geoScene, geom],
   );
   const frame = useMemo(() => {
-    if (!surface || !placement) return cameraFrame(geom.bounds);
-    const maxH = surface.buildings.reduce((m, b) => Math.max(m, b.height), 10);
+    if (!geoScene || !placement) return cameraFrame(geom.bounds);
+    const minDistance = Math.max(4, placement.bounds.radius * 0.7);
+    if (usePmtiles) {
+      return cameraFrame(placement.bounds, {
+        minDistance,
+        maxDistance: CITY_MAX_DISTANCE_M,
+        far: CITY_FAR_M,
+      });
+    }
+    const maxH = surface
+      ? surface.buildings.reduce((m, b) => Math.max(m, b.height), 10)
+      : 10;
     return cameraFrame(
       unionBounds(
         placement.bounds,
-        surfaceWorldBounds(surface.sizeM, maxH, placement.bounds),
+        surfaceWorldBounds(surface?.sizeM ?? SURFACE_SIZE_M, maxH, placement.bounds),
       ),
-      { minDistance: Math.max(4, placement.bounds.radius * 0.7) },
+      { minDistance },
     );
-  }, [geom.bounds, surface, placement]);
+  }, [geom.bounds, geoScene, surface, placement, usePmtiles]);
   const highlight = useMemo(
     () => hoverHighlight(hoveredId, geom),
     [hoveredId, geom],
@@ -557,9 +605,15 @@ export function StationScene3D({
       >
         <color attach="background" args={[SCENE_BACKGROUND]} />
         <FrameCamera frame={frame} />
-        {surface && placement ? (
+        {geoScene && placement ? (
           <>
-            {showSurface ? <SurfaceLayer surface={surface} /> : null}
+            {showSurface ? (
+              usePmtiles ? (
+                <PmtilesSurface origin={HUBKGX_ORIGIN} />
+              ) : surface ? (
+                <SurfaceLayer surface={surface} />
+              ) : null
+            ) : null}
             {showSchematic ? (
               <group position={placement.position} scale={placement.scale}>
                 <StationMeshes
@@ -587,6 +641,7 @@ export function StationScene3D({
         <SceneControls
           frame={frame}
           controlsRef={controlsRef}
+          panMode={panMode}
           onDragStart={() => {
             draggingRef.current = true;
             setIsDragging(true);
@@ -600,7 +655,7 @@ export function StationScene3D({
       </Canvas>
       <CompassButton
         roseRef={roseRef}
-        raised={!!surface}
+        raised={geoScene}
         onFaceNorth={() => {
           const controls = controlsRef.current;
           if (controls) faceNorth(controls);
