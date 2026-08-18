@@ -115,6 +115,19 @@ export function ringForDistance(
   return Math.min(4, Math.max(1, Math.ceil(span / tileM)));
 }
 
+/** Linear fog so the tile-window edge fades into the scene background. */
+export function fogRange(
+  distM: number,
+  z: number,
+  lat: number = 51.53,
+): { near: number; far: number } {
+  const ring = ringForDistance(distM, z, lat);
+  const windowM = (2 * ring + 1) * tileWidthM(z, lat);
+  const near = Math.max(80, distM * 0.9);
+  const far = Math.max(near + 50, Math.min(distM * 2.2, windowM));
+  return { near, far };
+}
+
 export function tilesAround(
   lon: number,
   lat: number,

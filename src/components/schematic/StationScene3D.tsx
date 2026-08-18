@@ -128,6 +128,7 @@ function GlassFace({
       depthWrite={false}
       side={DoubleSide}
       toneMapped
+      fog={false}
     />
   );
 }
@@ -220,7 +221,12 @@ function VolumeMesh({
               8,
             ]}
           />
-          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          <meshBasicMaterial
+            transparent
+            opacity={0}
+            depthWrite={false}
+            fog={false}
+          />
         </mesh>
       ) : null}
     </group>
@@ -256,6 +262,7 @@ function GlowLine({
       frustumCulled={false}
       renderOrder={2}
       depthWrite={false}
+      fog={false}
       raycast={noopRaycast}
     />
   );

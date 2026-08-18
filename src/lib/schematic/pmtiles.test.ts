@@ -4,6 +4,7 @@ import { HUBKGX_ORIGIN } from "./geo";
 import { ringAabb } from "./osm";
 import {
   buildingsFromMvt,
+  fogRange,
   latToTileY,
   lonLatToTile,
   lonToTileX,
@@ -67,6 +68,18 @@ describe("ringForDistance", () => {
       ringForDistance(400, 15),
     );
     expect(ringForDistance(10_000, 13)).toBeLessThanOrEqual(4);
+  });
+});
+
+describe("fogRange", () => {
+  it("keeps near past the schematic and far on the tile window", () => {
+    const close = fogRange(150, 15);
+    expect(close.near).toBeGreaterThanOrEqual(80);
+    expect(close.far).toBeGreaterThan(close.near);
+    const far = fogRange(4_000, 14);
+    expect(far.near).toBeGreaterThan(close.near);
+    expect(far.far).toBeGreaterThan(far.near);
+    expect(far.far).toBeLessThanOrEqual((2 * ringForDistance(4_000, 14) + 1) * 2_000);
   });
 });
 

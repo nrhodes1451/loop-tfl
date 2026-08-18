@@ -2,7 +2,7 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { DoubleSide, type BufferGeometry } from "three";
+import { DoubleSide, Fog, type BufferGeometry } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
   BUILDING_COLOR,
@@ -11,9 +11,11 @@ import {
   buildingsToGeometry,
   groundGeometry,
 } from "@/lib/schematic/building-geom";
+import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
 import { enuToLatLon, type LatLon } from "@/lib/schematic/geo";
 import {
   fetchTileBuildings,
+  fogRange,
   ringForDistance,
   tileKey,
   tilesAround,
@@ -34,6 +36,7 @@ function tileSetKey(tiles: TileCoord[]): string {
 export function PmtilesSurface({ origin }: { origin: LatLon }) {
   const controls = useThree((s) => s.controls) as OrbitControlsImpl | null;
   const camera = useThree((s) => s.camera);
+  const scene = useThree((s) => s.scene);
   const [tiles, setTiles] = useState<TileCoord[]>([]);
   const [geoms, setGeoms] = useState<Map<string, BufferGeometry>>(
     () => new Map(),
@@ -46,6 +49,14 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     originRef.current = origin;
   }, [origin]);
 
+  useLayoutEffect(() => {
+    const fog = new Fog(SCENE_BACKGROUND, 80, 2_000);
+    scene.fog = fog;
+    return () => {
+      if (scene.fog === fog) scene.fog = null;
+    };
+  }, [scene]);
+
   useFrame(() => {
     const now = performance.now();
     if (now - lastSample.current < SAMPLE_EVERY_MS) return;
@@ -54,6 +65,13 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     if (!target) return;
     const dist = camera.position.distanceTo(target);
     const z = zoomForDistance(dist);
+    const ll = enuToLatLon(-target.x, target.z, originRef.current);
+    const fogZ = z ?? 13;
+    const range = fogRange(dist, fogZ, ll.lat);
+    if (scene.fog instanceof Fog) {
+      scene.fog.near = range.near;
+      scene.fog.far = range.far;
+    }
     if (z == null) {
       if (lastKey.current !== "") {
         lastKey.current = "";
@@ -62,7 +80,6 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
       return;
     }
     // buildingGeometry negates east so Three.js +X is west; undo that for tiles.
-    const ll = enuToLatLon(-target.x, target.z, originRef.current);
     const next = tilesAround(
       ll.lon,
       ll.lat,
