@@ -25,9 +25,9 @@ export const NEIGHBOR_UNLOAD_RADIUS_M = 1_100;
  * Camera–target distance at or below which dollhouses mount.
  * Matches tile z15 (`zoomForDistance` is 15 only when dist ≤ 2000).
  */
-export const STATION_SHOW_DIST_M = 2_000;
+export const STATION_SHOW_DIST_M = 1_750;
 /** Hide all dollhouses once the camera is this far (zoom hysteresis). */
-export const STATION_HIDE_DIST_M = 2_500;
+export const STATION_HIDE_DIST_M = 1_700;
 /** How often to sample orbit target / distance, same as PMTiles tiles. */
 export const STATION_LOD_SAMPLE_MS = 120;
 export const STATION_LOD_MOVE_M = 40;
