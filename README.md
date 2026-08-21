@@ -16,6 +16,8 @@ Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), React Three
 | `/explore` | Stepfree — force-directed accessibility graph |
 | `/schematic` | Redirects to King’s Cross. Per-station views at `/schematic/[stationId]` (King’s Cross is hand-authored, others generated). Not used for routing |
 | `/api/disruptions` | Live TfL lift outages (`LiftUniqueId` join) |
+| `/api/osm/london.pmtiles` | Range-served Greater London PMTiles extract (404 if the file is missing) |
+| `/api/schematic/[stationId]` | JSON for one station schematic (used to load neighbours in the 3D view) |
 
 ## Data sources
 
@@ -47,7 +49,7 @@ npm run build             # regenerates schematics, then next build
 
 ## Deploy
 
-Hosted on Cloud Run (`loop` in `us-east4`), mapped to `loop.penrose.tools`. From the repo root, with `data/network.json` and `data/schematic/` present:
+Hosted on Cloud Run (`loop` in `us-east4`), mapped to `loop.penrose.tools`. From the repo root, with `data/network.json`, `data/schematic/`, and `data/osm/london.pmtiles` present (`npm run fetch-london-pmtiles` if you do not have the extract yet):
 
 ```bash
 gcloud run deploy loop \
@@ -60,6 +62,8 @@ gcloud run deploy loop \
   --cpu 1 \
   --max-instances 5
 ```
+
+`data/osm/london.pmtiles` is gitignored. `.gcloudignore` follows `.gitignore` then un-ignores that file so `--source .` uploads it. Cloud Build does not fetch the extract; if the file is absent at deploy time, `/api/osm/london.pmtiles` 404s and the schematic runs without the OSM surface.
 
 Cloud Build runs `npm run build` (`build-schematics` then `next build`) and starts with `next start`. Optional: set `TFL_APP_KEY` on the service for higher TfL rate limits.
 
@@ -79,9 +83,9 @@ Loop returns one route and an honest verdict:
 - Station → station planning on tube, Elizabeth line, DLR, Overground, tram
 - One route, live lift check, replan excluding a broken interchange
 - Explore graph: expand stations into platform/lift nodes (max 3); National Rail is interchange context only, not a rideable mode
-- Schematic: every network station, invented layout, not to scale, not for wayfinding, isolated from routing. King’s Cross is hand-authored and overlays OSM land, water, and buildings when `data/osm/london.pmtiles` is present.
+- Schematic: every network station, invented layout, not to scale, not for wayfinding, isolated from routing. Stations sit on a geographic 3D surface; neighbours load via `/api/schematic/[stationId]`. King’s Cross is a hand-authored override. OSM land, water, and buildings overlay when `data/osm/london.pmtiles` is present.
 - Out of scope: walking directions, buses, National Rail routing, fares, ETAs, accounts
 
 ## License
 
-Code is [MIT](LICENSE). Topology and live disruptions come from Transport for London and remain subject to [TfL's terms](https://tfl.gov.uk/corporate/terms-and-conditions/transport-data-service). Building footprints are © OpenStreetMap contributors. This project is not affiliated with TfL.
+Code is [MIT](LICENSE). Topology and live disruptions come from Transport for London and remain subject to [TfL's terms](https://tfl.gov.uk/corporate/terms-and-conditions/transport-data-service). OSM land, water, and buildings are © OpenStreetMap contributors; tiles from [Protomaps](https://protomaps.com/). This project is not affiliated with TfL.
