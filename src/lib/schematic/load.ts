@@ -5,6 +5,11 @@
 
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
+import {
+  distanceM,
+  NEIGHBOR_LOAD_RADIUS_M,
+  type LatLon,
+} from "./geo";
 import type { OsmSurface } from "./osm";
 import type { SchematicIndex, SchematicStation, SchematicStationRef } from "./types";
 
@@ -73,6 +78,20 @@ export async function listSchematicStations(): Promise<SchematicStationRef[]> {
   const data = JSON.parse(raw) as SchematicIndex;
   indexCache = { mtimeMs, data };
   return data.stations;
+}
+
+export async function loadSchematicsNear(
+  origin: LatLon,
+  radiusM: number = NEIGHBOR_LOAD_RADIUS_M,
+): Promise<SchematicStation[]> {
+  const refs = await listSchematicStations();
+  const hits = refs.filter(
+    (s) =>
+      Number.isFinite(s.lat) &&
+      Number.isFinite(s.lon) &&
+      distanceM(s, origin) <= radiusM,
+  );
+  return Promise.all(hits.map((s) => loadSchematic(s.id)));
 }
 
 export async function loadOsmSurface(

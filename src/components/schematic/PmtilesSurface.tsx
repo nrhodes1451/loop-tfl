@@ -19,7 +19,7 @@ import {
   wrapLambertCompile,
 } from "@/lib/schematic/building-geom";
 import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
-import { enuToLatLon, type LatLon } from "@/lib/schematic/geo";
+import { worldToLatLon, type LatLon } from "@/lib/schematic/geo";
 import {
   fetchTileBuildings,
   fogRange,
@@ -165,7 +165,7 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     if (!target) return;
     const dist = camera.position.distanceTo(target);
     const z = zoomForDistance(dist);
-    const ll = enuToLatLon(-target.x, target.z, originRef.current);
+    const ll = worldToLatLon(target.x, target.z, originRef.current);
     const fogZ = z ?? 13;
     const range = fogRange(dist, fogZ, ll.lat);
     if (scene.fog instanceof Fog) {

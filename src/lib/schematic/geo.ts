@@ -17,6 +17,10 @@ export const CUTOUT_PAD_M = 8;
 /** Orbit ceiling when the London PMTiles surface is active. */
 export const CITY_MAX_DISTANCE_M = 25_000;
 export const CITY_FAR_M = 80_000;
+/** First-paint / fetch radius for in-situ neighbor dollhouses. */
+export const NEIGHBOR_LOAD_RADIUS_M = 2_000;
+/** Keep mounted neighbors until they leave this radius (hysteresis). */
+export const NEIGHBOR_UNLOAD_RADIUS_M = 2_500;
 
 /** TfL StopPoint for HUBKGX — 3D origin, not the OSM wheelchair entrance. */
 export const HUBKGX_ORIGIN = {
@@ -75,6 +79,55 @@ export function enuToLatLon(
     lat: origin.lat + z / m.lat,
     lon: origin.lon + x / m.lon,
   };
+}
+
+/**
+ * Scene metres matching extruded OSM: Three +X is west, +Z is north.
+ * `buildingGeometry` negates east; PMTiles camera sampling undoes the same flip.
+ */
+export function latLonToWorld(
+  lat: number,
+  lon: number,
+  origin: LatLon,
+): { x: number; z: number } {
+  const enu = latLonToEnu(lat, lon, origin);
+  return { x: -enu.x, z: enu.z };
+}
+
+export function worldToLatLon(
+  x: number,
+  z: number,
+  origin: LatLon,
+): LatLon {
+  return enuToLatLon(-x, z, origin);
+}
+
+/** Planar distance in metres (local tangent at `b`). */
+export function distanceM(a: LatLon, b: LatLon): number {
+  const p = latLonToEnu(a.lat, a.lon, b);
+  return Math.hypot(p.x, p.z);
+}
+
+/**
+ * HUBKGX stays on the TfL StopPoint origin so the 400 m bake stays aligned.
+ * Other stations plant at their schematic / index lat/lon.
+ */
+export function schematicWorldOffset(
+  stationId: string,
+  lat: number,
+  lon: number,
+  origin: LatLon = HUBKGX_ORIGIN,
+): { x: number; z: number } {
+  if (stationId === "HUBKGX") return { x: 0, z: 0 };
+  return latLonToWorld(lat, lon, origin);
+}
+
+export function schematicPlacementLatLon(
+  stationId: string,
+  entrance: LatLon,
+): LatLon {
+  if (stationId === "HUBKGX") return HUBKGX_ORIGIN;
+  return entrance;
 }
 
 export function applyPlacement(
@@ -205,6 +258,47 @@ export function placeSchematic(
     bounds: makeBounds(min, max),
     streetAabb,
     cutout,
+  };
+}
+
+/** Same as `placeSchematic`, then translate so the street centroid sits on `world`. */
+export function placeSchematicAt(
+  geom: SceneGeometry,
+  world: { x: number; z: number },
+  scale: number = SCHEMATIC_METRES_PER_UNIT,
+): SchematicPlacement {
+  const local = placeSchematic(geom, scale);
+  const position: Vec3 = [
+    local.position[0] + world.x,
+    local.position[1],
+    local.position[2] + world.z,
+  ];
+  const min: Vec3 = [
+    local.bounds.min[0] + world.x,
+    local.bounds.min[1],
+    local.bounds.min[2] + world.z,
+  ];
+  const max: Vec3 = [
+    local.bounds.max[0] + world.x,
+    local.bounds.max[1],
+    local.bounds.max[2] + world.z,
+  ];
+  return {
+    scale: local.scale,
+    position,
+    bounds: makeBounds(min, max),
+    streetAabb: {
+      minX: local.streetAabb.minX + world.x,
+      maxX: local.streetAabb.maxX + world.x,
+      minZ: local.streetAabb.minZ + world.z,
+      maxZ: local.streetAabb.maxZ + world.z,
+    },
+    cutout: {
+      minX: local.cutout.minX + world.x,
+      maxX: local.cutout.maxX + world.x,
+      minZ: local.cutout.minZ + world.z,
+      maxZ: local.cutout.maxZ + world.z,
+    },
   };
 }
 

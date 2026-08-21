@@ -12,6 +12,7 @@ import type {
 import type { OsmSurface } from "@/lib/schematic/osm";
 import { lineColorForSchematic } from "@/lib/tokens";
 import { PMTILES_ATTRIBUTION, PMTILES_URL } from "@/lib/schematic/pmtiles";
+import type { SceneStation } from "./StationScene3D";
 
 const StationScene3D = dynamic(
   () => import("./StationScene3D").then((m) => m.StationScene3D),
@@ -175,13 +176,29 @@ function ChromeCheck({
   );
 }
 
+function toSceneStation(
+  s: SchematicStation,
+  refs: SchematicStationRef[],
+): SceneStation {
+  const ref = refs.find((r) => r.id === s.stationId);
+  return {
+    id: s.stationId,
+    name: s.name,
+    topology: { nodes: s.nodes, edges: s.edges },
+    lat: ref?.lat ?? s.entrance.lat,
+    lon: ref?.lon ?? s.entrance.lon,
+  };
+}
+
 export function SchematicPage({
   station,
   stations,
+  nearby = [],
   surface = null,
 }: {
   station: SchematicStation;
   stations: SchematicStationRef[];
+  nearby?: SchematicStation[];
   surface?: OsmSurface | null;
 }) {
   const [showLegend, setShowLegend] = useState(true);
@@ -190,10 +207,9 @@ export function SchematicPage({
   const [panMode, setPanMode] = useState(false);
   const [pmtilesOk, setPmtilesOk] = useState(false);
   const resetView = useRef<(() => void) | null>(null);
-  const usePmtiles = station.stationId === "HUBKGX" && pmtilesOk;
+  const usePmtiles = pmtilesOk;
 
   useEffect(() => {
-    if (station.stationId !== "HUBKGX") return;
     let cancelled = false;
     fetch(PMTILES_URL, { method: "HEAD" })
       .then((res) => {
@@ -205,11 +221,13 @@ export function SchematicPage({
     return () => {
       cancelled = true;
     };
-  }, [station.stationId]);
-  const topology = useMemo(
-    () => ({ nodes: station.nodes, edges: station.edges }),
-    [station.nodes, station.edges],
-  );
+  }, []);
+  const sceneStations = useMemo(() => {
+    const byId = new Map<string, SchematicStation>();
+    byId.set(station.stationId, station);
+    for (const n of nearby) byId.set(n.stationId, n);
+    return [...byId.values()].map((s) => toSceneStation(s, stations));
+  }, [station, nearby, stations]);
   const levels = depthLegend(station);
   const hasMap = !!(surface || usePmtiles);
   const chromeBtn =
@@ -225,7 +243,9 @@ export function SchematicPage({
       style={{ background: SCENE_BACKGROUND, color: "#e8edf4" }}
     >
       <StationScene3D
-        topology={topology}
+        selectedId={station.stationId}
+        stations={sceneStations}
+        index={stations}
         resetRef={resetView}
         surface={surface}
         showSurface={showMap}

@@ -4,8 +4,10 @@ import {
   listSchematicStations,
   loadOsmSurface,
   loadSchematic,
+  loadSchematicsNear,
   SchematicNotFoundError,
 } from "./load";
+import { HUBKGX_ORIGIN } from "./geo";
 
 describe("loadSchematic", () => {
   it("prefers the hand-authored HUBKGX override", async () => {
@@ -23,9 +25,24 @@ describe("loadSchematic", () => {
     expect(stations.length).toBeGreaterThan(1);
     const generated = stations.find((s) => s.id !== "HUBKGX");
     expect(generated).toBeTruthy();
+    expect(typeof generated!.lat).toBe("number");
+    expect(typeof generated!.lon).toBe("number");
+    const kgx = stations.find((s) => s.id === "HUBKGX");
+    expect(kgx!.lat).toBeCloseTo(HUBKGX_ORIGIN.lat, 4);
+    expect(kgx!.lon).toBeCloseTo(HUBKGX_ORIGIN.lon, 4);
     const station = await loadSchematic(generated!.id);
     expect(station.stationId).toBe(generated!.id);
     expect(station.nodes.some((n) => n.id === "street")).toBe(true);
+  });
+
+  it("loads schematics within a radius of the origin", async () => {
+    clearSchematicCache();
+    const near = await loadSchematicsNear(HUBKGX_ORIGIN, 2_000);
+    expect(near.some((s) => s.stationId === "HUBKGX")).toBe(true);
+    expect(near.length).toBeGreaterThan(1);
+    const tight = await loadSchematicsNear(HUBKGX_ORIGIN, 80);
+    expect(tight.some((s) => s.stationId === "HUBKGX")).toBe(true);
+    expect(tight.length).toBeLessThan(near.length);
   });
 
   it("rejects unsafe ids", async () => {

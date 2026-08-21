@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Line, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import {
@@ -8,8 +9,10 @@ import {
   useMemo,
   useRef,
   useState,
+  type Dispatch,
   type PointerEvent as ReactPointerEvent,
   type RefObject,
+  type SetStateAction,
 } from "react";
 import {
   DoubleSide,
@@ -26,6 +29,8 @@ import {
   buildSceneGeometry,
   cameraFrame,
   hoverHighlight,
+  makeHoverId,
+  splitHoverId,
   unionBounds,
   type CameraFrame,
   type HoverHighlight,
@@ -39,16 +44,37 @@ import {
   CITY_FAR_M,
   CITY_MAX_DISTANCE_M,
   HUBKGX_ORIGIN,
+  NEIGHBOR_LOAD_RADIUS_M,
+  NEIGHBOR_UNLOAD_RADIUS_M,
   SURFACE_SIZE_M,
-  placeSchematic,
+  distanceM,
+  placeSchematicAt,
+  schematicWorldOffset,
   surfaceWorldBounds,
+  worldToLatLon,
+  type LatLon,
 } from "@/lib/schematic/geo";
 import type { OsmSurface } from "@/lib/schematic/osm";
+import type {
+  SchematicStation,
+  SchematicStationRef,
+} from "@/lib/schematic/types";
 import { PmtilesSurface } from "./PmtilesSurface";
 import { SurfaceLayer } from "./SurfaceLayer";
 
-export type StationScene3DProps = {
+export type SceneStation = {
+  id: string;
+  name: string;
   topology: StationTopology;
+  lat: number;
+  lon: number;
+};
+
+export type StationScene3DProps = {
+  selectedId: string;
+  stations: SceneStation[];
+  index: SchematicStationRef[];
+  origin?: LatLon;
   quality?: SceneQuality;
   resetRef?: RefObject<(() => void) | null>;
   surface?: OsmSurface | null;
@@ -140,6 +166,7 @@ function VolumeMesh({
   draggingRef,
   stickyHover,
   onHover,
+  onPick,
 }: {
   volume: SceneVolume;
   highlighted: boolean;
@@ -147,6 +174,7 @@ function VolumeMesh({
   draggingRef: RefObject<boolean>;
   stickyHover: boolean;
   onHover: (id: string | null) => void;
+  onPick?: () => void;
 }) {
   const opacity = scaledOpacity(volume.opacity, highlighted, dimmed);
   const bottomOpacity = scaledOpacity(
@@ -173,6 +201,7 @@ function VolumeMesh({
     e.stopPropagation();
     if (draggingRef.current) return;
     onHover(volume.id);
+    onPick?.();
   };
 
   return (
@@ -552,20 +581,27 @@ function SceneControls({
 }
 
 function StationMeshes({
+  stationId,
   geom,
   highlight,
   active,
   draggingRef,
   stickyHover,
   onHover,
+  onPick,
 }: {
+  stationId: string;
   geom: SceneGeometry;
   highlight: HoverHighlight;
   active: boolean;
   draggingRef: RefObject<boolean>;
   stickyHover: boolean;
   onHover: (id: string | null) => void;
+  onPick?: (stationId: string) => void;
 }) {
+  const hoverVolume = (volumeId: string | null) => {
+    onHover(volumeId ? makeHoverId(stationId, volumeId) : null);
+  };
   return (
     <group>
       {geom.volumes.map((volume) => (
@@ -576,7 +612,8 @@ function StationMeshes({
           dimmed={active && !highlight.volumeIds.has(volume.id)}
           draggingRef={draggingRef}
           stickyHover={stickyHover}
-          onHover={onHover}
+          onHover={hoverVolume}
+          onPick={onPick ? () => onPick(stationId) : undefined}
         />
       ))}
       {geom.polylines.map((line) => (
@@ -608,8 +645,111 @@ function tooltipPos(
   };
 }
 
+function FocusSampler({
+  origin,
+  controlsRef,
+  onFocus,
+}: {
+  origin: LatLon;
+  controlsRef: RefObject<OrbitControlsImpl | null>;
+  onFocus: (ll: LatLon) => void;
+}) {
+  const last = useRef(0);
+  const sent = useRef<LatLon | null>(null);
+  useFrame(() => {
+    const now = performance.now();
+    if (now - last.current < 200) return;
+    const target = controlsRef.current?.target;
+    if (!target) return;
+    last.current = now;
+    const ll = worldToLatLon(target.x, target.z, origin);
+    const prev = sent.current;
+    if (prev && distanceM(prev, ll) < 40) return;
+    sent.current = ll;
+    onFocus(ll);
+  });
+  return null;
+}
+
+function useNearbyStations(
+  index: SchematicStationRef[],
+  initial: SceneStation[],
+  selectedId: string,
+  focus: LatLon,
+  extra: Record<string, SceneStation>,
+  setExtra: Dispatch<SetStateAction<Record<string, SceneStation>>>,
+  enabled: boolean,
+): string[] {
+  const inflight = useRef(new Set<string>());
+
+  const initialById = useMemo(() => {
+    const m = new Map<string, SceneStation>();
+    for (const s of initial) m.set(s.id, s);
+    return m;
+  }, [initial]);
+
+  const focusLat = focus.lat;
+  const focusLon = focus.lon;
+
+  useEffect(() => {
+    if (!enabled) return;
+    const origin = { lat: focusLat, lon: focusLon };
+    const needed = index.filter(
+      (s) => distanceM(s, origin) <= NEIGHBOR_LOAD_RADIUS_M,
+    );
+    for (const ref of needed) {
+      if (
+        initialById.has(ref.id) ||
+        extra[ref.id] ||
+        inflight.current.has(ref.id)
+      ) {
+        continue;
+      }
+      inflight.current.add(ref.id);
+      fetch(`/api/schematic/${encodeURIComponent(ref.id)}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((json: SchematicStation | null) => {
+          if (!json) return;
+          const station: SceneStation = {
+            id: json.stationId,
+            name: json.name,
+            topology: { nodes: json.nodes, edges: json.edges },
+            lat: ref.lat,
+            lon: ref.lon,
+          };
+          setExtra((prev) =>
+            prev[station.id] ? prev : { ...prev, [station.id]: station },
+          );
+        })
+        .catch(() => {})
+        .finally(() => {
+          inflight.current.delete(ref.id);
+        });
+    }
+  }, [enabled, extra, focusLat, focusLon, index, initialById, setExtra]);
+
+  return useMemo(() => {
+    const origin = { lat: focusLat, lon: focusLon };
+    const loaded = [...initialById.values()];
+    for (const s of Object.values(extra)) {
+      if (!initialById.has(s.id)) loaded.push(s);
+    }
+    const next = !enabled
+      ? loaded.filter((s) => s.id === selectedId)
+      : loaded.filter(
+          (s) =>
+            s.id === selectedId ||
+            distanceM(s, origin) <= NEIGHBOR_UNLOAD_RADIUS_M,
+        );
+    return next.map((s) => s.id).sort();
+  }, [enabled, extra, focusLat, focusLon, initialById, selectedId]);
+}
+
 export function StationScene3D({
-  topology,
+  selectedId,
+  stations,
+  index,
+  origin = HUBKGX_ORIGIN,
   quality: qualityProp,
   resetRef,
   surface = null,
@@ -620,6 +760,7 @@ export function StationScene3D({
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
   const stickyHover = useCoarsePointer();
+  const router = useRouter();
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const roseRef = useRef<HTMLDivElement>(null);
@@ -632,7 +773,23 @@ export function StationScene3D({
     h: number;
   } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [extra, setExtra] = useState<Record<string, SceneStation>>({});
+  const [panFocus, setPanFocus] = useState<LatLon | null>(null);
+  const [focusForId, setFocusForId] = useState(selectedId);
   const panAltitude = useRef<{ cam: number; target: number } | null>(null);
+  const selectedSeed = stations.find((s) => s.id === selectedId) ?? stations[0];
+  const selectedLat = selectedSeed?.lat;
+  const selectedLon = selectedSeed?.lon;
+  if (focusForId !== selectedId) {
+    setFocusForId(selectedId);
+    setPanFocus(null);
+    setHoveredId(null);
+  }
+  const focus: LatLon =
+    panFocus ??
+    (selectedLat != null && selectedLon != null
+      ? { lat: selectedLat, lon: selectedLon }
+      : origin);
 
   useLayoutEffect(() => {
     if (!resetRef) return;
@@ -652,17 +809,61 @@ export function StationScene3D({
     };
   }, [resetRef]);
 
-  const geom = useMemo(
-    () => buildSceneGeometry(topology, { quality }),
-    [topology.nodes, topology.edges, quality],
-  );
   const geoScene = !!(surface || usePmtiles);
-  const placement = useMemo(
-    () => (geoScene ? placeSchematic(geom) : null),
-    [geoScene, geom],
+  const loadedById = useMemo(() => {
+    const m = new Map<string, SceneStation>();
+    for (const s of stations) m.set(s.id, s);
+    for (const s of Object.values(extra)) {
+      if (!m.has(s.id)) m.set(s.id, s);
+    }
+    return m;
+  }, [stations, extra]);
+  const visibleIds = useNearbyStations(
+    index,
+    stations,
+    selectedId,
+    focus,
+    extra,
+    setExtra,
+    geoScene,
   );
+  const visibleKey = visibleIds.join("\0");
+  const selectedRow = useMemo(() => {
+    const s = stations.find((row) => row.id === selectedId) ?? stations[0];
+    if (!s) return null;
+    const geom = buildSceneGeometry(s.topology, { quality });
+    const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);
+    return {
+      station: s,
+      geom,
+      placement: geoScene ? placeSchematicAt(geom, world) : null,
+    };
+  }, [stations, selectedId, quality, geoScene, origin]);
+  const built = useMemo(() => {
+    const ids = visibleKey ? visibleKey.split("\0") : [];
+    return ids.flatMap((id) => {
+      const s = loadedById.get(id);
+      if (!s) return [];
+      if (selectedRow && s.id === selectedRow.station.id) return [selectedRow];
+      const geom = buildSceneGeometry(s.topology, { quality });
+      const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);
+      const placement = geoScene ? placeSchematicAt(geom, world) : null;
+      return [{ station: s, geom, placement }];
+    });
+  }, [visibleKey, loadedById, selectedRow, quality, geoScene, origin]);
   const frame = useMemo(() => {
-    if (!geoScene || !placement) return cameraFrame(geom.bounds);
+    if (!selectedRow) {
+      return cameraFrame({
+        min: [-1, -1, -1],
+        max: [1, 1, 1],
+        center: [0, 0, 0],
+        radius: 8,
+      });
+    }
+    if (!geoScene || !selectedRow.placement) {
+      return cameraFrame(selectedRow.geom.bounds);
+    }
+    const placement = selectedRow.placement;
     const minDistance = Math.max(4, placement.bounds.radius * 0.7);
     if (usePmtiles) {
       return cameraFrame(placement.bounds, {
@@ -677,18 +878,25 @@ export function StationScene3D({
     return cameraFrame(
       unionBounds(
         placement.bounds,
-        surfaceWorldBounds(surface?.sizeM ?? SURFACE_SIZE_M, maxH, placement.bounds),
+        surfaceWorldBounds(
+          surface?.sizeM ?? SURFACE_SIZE_M,
+          maxH,
+          placement.bounds,
+        ),
       ),
       { minDistance },
     );
-  }, [geom.bounds, geoScene, surface, placement, usePmtiles]);
-  const highlight = useMemo(
-    () => hoverHighlight(hoveredId, geom),
-    [hoveredId, geom],
-  );
-  const hovered = hoveredId && showSchematic
-    ? geom.volumes.find((v) => v.id === hoveredId)
-    : undefined;
+  }, [geoScene, selectedRow, surface, usePmtiles]);
+
+  const hovered = useMemo(() => {
+    if (!hoveredId || !showSchematic) return undefined;
+    const { stationId, volumeId } = splitHoverId(hoveredId);
+    const row = built.find((b) => b.station.id === stationId);
+    if (!row) return undefined;
+    const volume = row.geom.volumes.find((v) => v.id === volumeId);
+    if (!volume) return undefined;
+    return { station: row.station, volume };
+  }, [built, hoveredId, showSchematic]);
 
   const onWrapPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
     const el = wrapRef.current;
@@ -706,6 +914,11 @@ export function StationScene3D({
     hovered && pointer && !isDragging
       ? tooltipPos(pointer, { width: pointer.w, height: pointer.h })
       : null;
+
+  const onPickStation = (id: string) => {
+    if (id === selectedId) return;
+    router.push(`/schematic/${encodeURIComponent(id)}`);
+  };
 
   return (
     <div
@@ -742,32 +955,59 @@ export function StationScene3D({
       >
         <color attach="background" args={[SCENE_BACKGROUND]} />
         <FrameCamera frame={frame} />
-        {geoScene && placement ? (
+        {geoScene ? (
           <>
             {showSurface ? (
               usePmtiles ? (
-                <PmtilesSurface origin={HUBKGX_ORIGIN} />
+                <PmtilesSurface origin={origin} />
               ) : surface ? (
                 <SurfaceLayer surface={surface} />
               ) : null
             ) : null}
-            {showSchematic ? (
-              <group position={placement.position} scale={placement.scale}>
-                <StationMeshes
-                  geom={geom}
-                  highlight={highlight}
-                  active={hoveredId !== null}
-                  draggingRef={draggingRef}
-                  stickyHover={stickyHover}
-                  onHover={setHoveredId}
-                />
-              </group>
-            ) : null}
+            {showSchematic
+              ? built.map((row) => {
+                  if (!row.placement) return null;
+                  const parsed = hoveredId ? splitHoverId(hoveredId) : null;
+                  const thisHover = parsed?.stationId === row.station.id;
+                  const highlight = hoverHighlight(
+                    thisHover && parsed ? parsed.volumeId : null,
+                    row.geom,
+                  );
+                  return (
+                    <group
+                      key={row.station.id}
+                      position={row.placement.position}
+                      scale={row.placement.scale}
+                    >
+                      <StationMeshes
+                        stationId={row.station.id}
+                        geom={row.geom}
+                        highlight={highlight}
+                        active={thisHover}
+                        draggingRef={draggingRef}
+                        stickyHover={stickyHover}
+                        onHover={setHoveredId}
+                        onPick={onPickStation}
+                      />
+                    </group>
+                  );
+                })
+              : null}
+            <FocusSampler
+              key={selectedId}
+              origin={origin}
+              controlsRef={controlsRef}
+              onFocus={setPanFocus}
+            />
           </>
-        ) : showSchematic ? (
+        ) : showSchematic && selectedRow ? (
           <StationMeshes
-            geom={geom}
-            highlight={highlight}
+            stationId={selectedRow.station.id}
+            geom={selectedRow.geom}
+            highlight={hoverHighlight(
+              hoveredId ? splitHoverId(hoveredId).volumeId : null,
+              selectedRow.geom,
+            )}
             active={hoveredId !== null}
             draggingRef={draggingRef}
             stickyHover={stickyHover}
@@ -810,16 +1050,20 @@ export function StationScene3D({
             borderColor: "#2a313c",
           }}
         >
-          <div className="font-medium">{hovered.label}</div>
+          <div className="font-medium">
+            {hovered.station.id === selectedId
+              ? hovered.volume.label
+              : `${hovered.station.name} · ${hovered.volume.label}`}
+          </div>
           <div
             className="font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px]"
             style={{ color: "#8b93a0" }}
           >
-            {hovered.type}
+            {hovered.volume.type}
             {" · "}
-            level {hovered.level}
-            {hovered.liftId ? ` · ${hovered.liftId}` : ""}
-            {hovered.lineId ? ` · ${hovered.lineId}` : ""}
+            level {hovered.volume.level}
+            {hovered.volume.liftId ? ` · ${hovered.volume.liftId}` : ""}
+            {hovered.volume.lineId ? ` · ${hovered.volume.lineId}` : ""}
           </div>
         </div>
       ) : null}

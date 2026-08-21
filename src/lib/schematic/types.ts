@@ -55,6 +55,8 @@ export type SchematicStation = {
 export type SchematicStationRef = {
   id: string;
   name: string;
+  lat: number;
+  lon: number;
 };
 
 export type SchematicIndex = {

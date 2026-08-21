@@ -8,8 +8,10 @@ import {
   cameraFrame,
   hoverHighlight,
   levelT,
+  makeHoverId,
   platformPlanSize,
   schematicEdgeColor,
+  splitHoverId,
   toWorld,
 } from "./scene";
 import type { SchematicEdge, SchematicNode, SchematicStation } from "./types";
@@ -297,6 +299,36 @@ describe("hoverHighlight", () => {
     const shaft = geom.volumes.find((v) => v.id === "shaft::HUBKGX-Lift-1");
     expect(shaft?.pickable).toBe(true);
     expect(geom.volumes.find((v) => v.id === "lift-1")?.pickable).toBe(true);
+  });
+});
+
+describe("makeHoverId", () => {
+  it("round-trips volume ids that themselves contain ::", () => {
+    const volumeId = "shaft::HUBKGX-Lift-1";
+    const id = makeHoverId("HUBKGX", volumeId);
+    expect(splitHoverId(id)).toEqual({
+      stationId: "HUBKGX",
+      volumeId,
+    });
+  });
+
+  it("keeps two stations' street volumes distinct", () => {
+    const a = makeHoverId("940GZZLUEUS", "street");
+    const b = makeHoverId("HUBKGX", "street");
+    expect(a).not.toBe(b);
+    expect(splitHoverId(a).stationId).toBe("940GZZLUEUS");
+    expect(splitHoverId(b).stationId).toBe("HUBKGX");
+    expect(splitHoverId(a).volumeId).toBe("street");
+  });
+
+  it("does not let one station's highlight include another station's volume id", () => {
+    const geom = buildSceneGeometry(topology, { quality: "high" });
+    const hovered = splitHoverId(makeHoverId("940GZZLUEUS", "wth"));
+    expect(hovered.stationId).not.toBe("HUBKGX");
+    const h = hoverHighlight(hovered.volumeId, geom);
+    expect(h.volumeIds.has("wth")).toBe(true);
+    const other = hoverHighlight(null, geom);
+    expect(other.volumeIds.size).toBe(0);
   });
 });
 

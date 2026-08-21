@@ -97,7 +97,7 @@ export async function buildSchematics(): Promise<{
   const index: SchematicIndex = {
     generatedAt: new Date().toISOString(),
     stations: [...network.stations]
-      .map((s) => ({ id: s.id, name: s.name }))
+      .map((s) => ({ id: s.id, name: s.name, lat: s.lat, lon: s.lon }))
       .sort((a, b) => a.name.localeCompare(b.name, "en")),
   };
   await writeFile(

@@ -440,6 +440,20 @@ export type HoverHighlight = {
   polylineIds: Set<string>;
 };
 
+/** Prefix volume ids so generated stations (`street`, `lift-1`) do not collide. */
+export function makeHoverId(stationId: string, volumeId: string): string {
+  return `${stationId}::${volumeId}`;
+}
+
+/** Split on the first `::` — station ids never contain it; volume ids often do. */
+export function splitHoverId(
+  id: string,
+): { stationId: string; volumeId: string } {
+  const i = id.indexOf("::");
+  if (i <= 0) return { stationId: "", volumeId: id };
+  return { stationId: id.slice(0, i), volumeId: id.slice(i + 2) };
+}
+
 /** Lift hover selects the shaft + every cabin; other volumes highlight alone. */
 export function hoverHighlight(
   hoveredVolumeId: string | null,
