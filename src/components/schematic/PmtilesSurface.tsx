@@ -5,28 +5,33 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Fog, type BufferGeometry } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
-  BUILDING_COLOR,
   GROUND_COLOR,
+  LAND_COLOR,
+  ROAD_COLOR,
   SURFACE_HEMI_GROUND,
   SURFACE_HEMI_INTENSITY,
   SURFACE_OPACITY,
+  SURFACE_ORDER,
   SURFACE_SKY,
   SURFACE_SUN_INTENSITY,
   SURFACE_SUN_POSITION,
-  buildingsToGeometry,
+  WATER_COLOR,
+  disposeSurfaceTile,
+  featuresToTileGeom,
   groundGeometry,
   wrapLambertCacheKey,
   wrapLambertCompile,
+  type SurfaceTileGeom,
 } from "@/lib/schematic/building-geom";
 import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
 import { worldToLatLon, type LatLon } from "@/lib/schematic/geo";
 import {
-  fetchTileBuildings,
+  fetchTileSurface,
   fogRange,
+  landZoomForDistance,
   ringForDistance,
   tileKey,
   tilesAround,
-  zoomForDistance,
   type TileCoord,
 } from "@/lib/schematic/pmtiles";
 
@@ -45,8 +50,8 @@ function tileSetKey(tiles: TileCoord[]): string {
 function visibleFromCache(
   tiles: TileCoord[],
   cache: TileGeomCache,
-): Map<string, BufferGeometry> {
-  const shown = new Map<string, BufferGeometry>();
+): Map<string, SurfaceTileGeom> {
+  const shown = new Map<string, SurfaceTileGeom>();
   for (const tile of tiles) {
     const key = tileKey(tile);
     const geom = cache.geom(key);
@@ -55,11 +60,11 @@ function visibleFromCache(
   return shown;
 }
 
-/** Keeps extruded tiles after the far-zoom drop so zooming back in is instant. */
+/** Keeps decoded tiles after the far-zoom drop so zooming back in is instant. */
 class TileGeomCache {
-  private readonly stored = new Map<string, BufferGeometry | null>();
+  private readonly stored = new Map<string, SurfaceTileGeom | null>();
   private readonly orderByZoom = new Map<number, string[]>();
-  private readonly inflight = new Map<string, Promise<BufferGeometry | null>>();
+  private readonly inflight = new Map<string, Promise<SurfaceTileGeom | null>>();
   private keep = new Set<string>();
   private alive = true;
 
@@ -71,11 +76,11 @@ class TileGeomCache {
     return this.stored.has(key);
   }
 
-  geom(key: string): BufferGeometry | undefined | null {
+  geom(key: string): SurfaceTileGeom | undefined | null {
     return this.stored.get(key);
   }
 
-  private remember(key: string, geom: BufferGeometry | null) {
+  private remember(key: string, geom: SurfaceTileGeom | null) {
     this.stored.set(key, geom);
     const z = Number.parseInt(key, 10);
     let order = this.orderByZoom.get(z);
@@ -92,24 +97,27 @@ class TileGeomCache {
       order.splice(order.indexOf(drop), 1);
       const old = this.stored.get(drop);
       this.stored.delete(drop);
-      old?.dispose();
+      disposeSurfaceTile(old);
     }
   }
 
-  load(tile: TileCoord, origin: LatLon): Promise<BufferGeometry | null> {
+  load(tile: TileCoord, origin: LatLon): Promise<SurfaceTileGeom | null> {
     const key = tileKey(tile);
     if (this.stored.has(key)) return Promise.resolve(this.stored.get(key)!);
     const pending = this.inflight.get(key);
     if (pending) return pending;
-    const next = fetchTileBuildings(tile, origin)
-      .then((buildings) => {
+    const next = fetchTileSurface(tile, origin)
+      .then((features) => {
         this.inflight.delete(key);
+        const geom = featuresToTileGeom(features);
         if (!this.alive) {
-          buildingsToGeometry(buildings)?.dispose();
+          disposeSurfaceTile(geom);
           return null;
         }
-        if (this.stored.has(key)) return this.stored.get(key)!;
-        const geom = buildingsToGeometry(buildings);
+        if (this.stored.has(key)) {
+          disposeSurfaceTile(geom);
+          return this.stored.get(key)!;
+        }
         this.remember(key, geom);
         return geom;
       })
@@ -123,11 +131,37 @@ class TileGeomCache {
 
   dispose() {
     this.alive = false;
-    for (const geom of this.stored.values()) geom?.dispose();
+    for (const geom of this.stored.values()) disposeSurfaceTile(geom);
     this.stored.clear();
     this.orderByZoom.clear();
     this.inflight.clear();
   }
+}
+
+function LayerMesh({
+  geometry,
+  color,
+  renderOrder,
+  vertexColors = false,
+}: {
+  geometry: BufferGeometry;
+  color: string;
+  renderOrder: number;
+  vertexColors?: boolean;
+}) {
+  return (
+    <mesh geometry={geometry} renderOrder={renderOrder} raycast={noopRaycast}>
+      <meshLambertMaterial
+        color={vertexColors ? "#ffffff" : color}
+        vertexColors={vertexColors}
+        transparent
+        opacity={SURFACE_OPACITY}
+        depthWrite={false}
+        onBeforeCompile={wrapLambertCompile}
+        customProgramCacheKey={wrapLambertCacheKey}
+      />
+    </mesh>
+  );
 }
 
 export function PmtilesSurface({ origin }: { origin: LatLon }) {
@@ -135,7 +169,7 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
   const camera = useThree((s) => s.camera);
   const scene = useThree((s) => s.scene);
   const [tiles, setTiles] = useState<TileCoord[]>([]);
-  const [geoms, setGeoms] = useState<Map<string, BufferGeometry>>(
+  const [geoms, setGeoms] = useState<Map<string, SurfaceTileGeom>>(
     () => new Map(),
   );
   const cacheRef = useRef<TileGeomCache | null>(null);
@@ -164,24 +198,13 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     const target = controls?.target;
     if (!target) return;
     const dist = camera.position.distanceTo(target);
-    const z = zoomForDistance(dist);
+    const z = landZoomForDistance(dist);
     const ll = worldToLatLon(target.x, target.z, originRef.current);
-    const fogZ = z ?? 13;
-    const range = fogRange(dist, fogZ, ll.lat);
+    const range = fogRange(dist, z, ll.lat);
     if (scene.fog instanceof Fog) {
       scene.fog.near = range.near;
       scene.fog.far = range.far;
     }
-    if (z == null) {
-      if (lastKey.current !== "") {
-        lastKey.current = "";
-        cache.setKeep([]);
-        setTiles([]);
-        setGeoms(new Map());
-      }
-      return;
-    }
-    // buildingGeometry negates east so Three.js +X is west; undo that for tiles.
     const next = tilesAround(
       ll.lon,
       ll.lat,
@@ -233,7 +256,7 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
       const geom = geoms.get(key);
       return geom ? { key, geom } : null;
     })
-    .filter((row): row is { key: string; geom: BufferGeometry } => row != null);
+    .filter((row): row is { key: string; geom: SurfaceTileGeom } => row != null);
 
   return (
     <group>
@@ -251,7 +274,7 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
         (centred on the ENU origin) would otherwise paint over every tile
         beyond King's Cross and under every tile in front of it.
       */}
-      <mesh geometry={ground} renderOrder={-1} raycast={noopRaycast}>
+      <mesh geometry={ground} renderOrder={SURFACE_ORDER.ground} raycast={noopRaycast}>
         <meshLambertMaterial
           color={GROUND_COLOR}
           transparent
@@ -262,16 +285,37 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
         />
       </mesh>
       {visible.map((row) => (
-        <mesh key={row.key} geometry={row.geom} raycast={noopRaycast}>
-          <meshLambertMaterial
-            color={BUILDING_COLOR}
-            transparent
-            opacity={SURFACE_OPACITY}
-            depthWrite={false}
-            onBeforeCompile={wrapLambertCompile}
-            customProgramCacheKey={wrapLambertCacheKey}
-          />
-        </mesh>
+        <group key={row.key}>
+          {row.geom.land ? (
+            <LayerMesh
+              geometry={row.geom.land}
+              color={LAND_COLOR}
+              renderOrder={SURFACE_ORDER.land}
+            />
+          ) : null}
+          {row.geom.water ? (
+            <LayerMesh
+              geometry={row.geom.water}
+              color={WATER_COLOR}
+              renderOrder={SURFACE_ORDER.water}
+            />
+          ) : null}
+          {row.geom.roads ? (
+            <LayerMesh
+              geometry={row.geom.roads}
+              color={ROAD_COLOR}
+              renderOrder={SURFACE_ORDER.roads}
+            />
+          ) : null}
+          {row.geom.buildings ? (
+            <LayerMesh
+              geometry={row.geom.buildings}
+              color="#ffffff"
+              renderOrder={SURFACE_ORDER.buildings}
+              vertexColors
+            />
+          ) : null}
+        </group>
       ))}
     </group>
   );

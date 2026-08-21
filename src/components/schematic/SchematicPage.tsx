@@ -389,8 +389,8 @@ export function SchematicPage({
         </div>
         {usePmtiles ? (
           <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
-            OSM building footprints via PMTiles ({PMTILES_ATTRIBUTION}). Not a
-            surveyed basement.
+            OSM land, water, and building footprints via PMTiles (
+            {PMTILES_ATTRIBUTION}). Not a surveyed basement.
           </div>
         ) : null}
       </aside>

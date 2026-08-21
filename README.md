@@ -24,9 +24,9 @@ Next.js App Router, TypeScript, Tailwind, Motion, d3-force (canvas), React Three
 | Station–station rides | `GET /Line/Mode/{mode}` + `GET /Line/{id}/Route/Sequence/all` |
 | Lift / platform topology | `https://api.tfl.gov.uk/stationdata/tfl-stationdata-detailed.zip` |
 | Live outages | `GET /Disruptions/Lifts/v2` (join on `LiftUniqueId`) |
-| OSM buildings (schematic surface) | Greater London PMTiles extract (`npm run fetch-london-pmtiles`) served from `/api/osm/london.pmtiles` |
+| OSM land, water, and buildings (schematic surface) | Greater London PMTiles extract (`npm run fetch-london-pmtiles`) served from `/api/osm/london.pmtiles` |
 
-Static topology is persisted in `data/network.json` (regenerate with the script below). That file includes undirected graph `edges`, directed `rides`, street↔platform `platformLiftChains`, and platform↔platform `interchangeChains`. Invented station schematics are generated from those chains into `data/schematic/generated/` (`npm run build-schematics`; also run at the end of `refresh-network` and as part of `npm run build`). King’s Cross (`data/schematic/HUBKGX.json`) is a hand-authored override. Its 3D view overlays OSM building footprints from the London PMTiles extract (`data/osm/london.pmtiles`, regenerate with `npm run fetch-london-pmtiles`) when that file is present. Live disruptions are fetched at runtime via `/api/disruptions` with a ~60s in-memory TTL. There is no fabricated fallback data — if the live feed fails, the UI shows an explicit error and statuses degrade to unknown.
+Static topology is persisted in `data/network.json` (regenerate with the script below). That file includes undirected graph `edges`, directed `rides`, street↔platform `platformLiftChains`, and platform↔platform `interchangeChains`. Invented station schematics are generated from those chains into `data/schematic/generated/` (`npm run build-schematics`; also run at the end of `refresh-network` and as part of `npm run build`). King’s Cross (`data/schematic/HUBKGX.json`) is a hand-authored override. The 3D view overlays OSM land, water, and building footprints from the London PMTiles extract (`data/osm/london.pmtiles`, regenerate with `npm run fetch-london-pmtiles`) when that file is present. Live disruptions are fetched at runtime via `/api/disruptions` with a ~60s in-memory TTL. There is no fabricated fallback data — if the live feed fails, the UI shows an explicit error and statuses degrade to unknown.
 
 ## Setup
 
@@ -79,7 +79,7 @@ Loop returns one route and an honest verdict:
 - Station → station planning on tube, Elizabeth line, DLR, Overground, tram
 - One route, live lift check, replan excluding a broken interchange
 - Explore graph: expand stations into platform/lift nodes (max 3); National Rail is interchange context only, not a rideable mode
-- Schematic: every network station, invented layout, not to scale, not for wayfinding, isolated from routing. King’s Cross is hand-authored and overlays OSM buildings when `data/osm/london.pmtiles` is present.
+- Schematic: every network station, invented layout, not to scale, not for wayfinding, isolated from routing. King’s Cross is hand-authored and overlays OSM land, water, and buildings when `data/osm/london.pmtiles` is present.
 - Out of scope: walking directions, buses, National Rail routing, fares, ETAs, accounts
 
 ## License

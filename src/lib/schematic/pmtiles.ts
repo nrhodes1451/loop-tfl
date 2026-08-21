@@ -11,7 +11,9 @@ import {
   DEFAULT_BUILDING_HEIGHT_M,
   MIN_RING_EDGE_M,
   simplifyRing,
+  type OsmArea,
   type OsmBuilding,
+  type OsmLine,
 } from "./osm";
 
 export const PMTILES_URL = "/api/osm/london.pmtiles";
@@ -21,8 +23,49 @@ export const PMTILES_ATTRIBUTION =
 /** Protomaps planet/basemap tiles typically stop at z15. */
 export const PMTILES_MAX_ZOOM = 15;
 export const PMTILES_MIN_BUILDING_ZOOM = 14;
+/** Footprints are decoded at z13+ (z13 is the pulled-back building zoom). */
+export const PMTILES_BUILDING_LAYER_MIN_ZOOM = 13;
+export const PMTILES_LAND_MIN_ZOOM = 11;
 
 export type TileCoord = { z: number; x: number; y: number };
+
+export type TileSurface = {
+  land: OsmArea[];
+  water: OsmArea[];
+  waterways: OsmLine[];
+  roads: OsmLine[];
+  buildings: OsmBuilding[];
+};
+
+const PARK_KINDS = new Set([
+  "park",
+  "forest",
+  "wood",
+  "garden",
+  "grass",
+  "meadow",
+  "cemetery",
+  "pitch",
+  "playground",
+  "golf_course",
+  "nature_reserve",
+  "national_park",
+  "recreation_ground",
+  "dog_park",
+  "protected_area",
+]);
+
+const WATER_POLY_KINDS = new Set([
+  "water",
+  "lake",
+  "ocean",
+  "playa",
+  "other",
+]);
+
+const WATERWAY_DETAILS = new Set(["canal", "river"]);
+
+const ROAD_KINDS = new Set(["highway", "major_road", "rail"]);
 
 let archive: PMTiles | null = null;
 
@@ -96,6 +139,17 @@ export function zoomForDistance(distM: number): number | null {
   return PMTILES_MAX_ZOOM;
 }
 
+/**
+ * Land / water / roads stay loaded after buildings drop.
+ * Same z15–z13 ladder as footprints, then z12 to ~22 km and z11 beyond.
+ */
+export function landZoomForDistance(distM: number): number {
+  const buildings = zoomForDistance(distM);
+  if (buildings != null) return buildings;
+  if (!Number.isFinite(distM) || distM > 22_000) return PMTILES_LAND_MIN_ZOOM;
+  return 12;
+}
+
 /** Mercator tile width in metres at `lat`. */
 export function tileWidthM(z: number, lat: number): number {
   return (40_075_016.686 * Math.cos((lat * Math.PI) / 180)) / 2 ** z;
@@ -155,6 +209,24 @@ function heightFromProps(props: Record<string, unknown>): number {
   return DEFAULT_BUILDING_HEIGHT_M;
 }
 
+function propTrue(value: unknown): boolean {
+  return (
+    value === true ||
+    value === 1 ||
+    value === "true" ||
+    value === "yes" ||
+    value === "1"
+  );
+}
+
+function kindOf(props: Record<string, unknown>): string {
+  return String(props.kind ?? "");
+}
+
+function kindDetailOf(props: Record<string, unknown>): string {
+  return String(props.kind_detail ?? "");
+}
+
 function ringFromLonLatCoords(
   coords: number[][],
   origin: LatLon,
@@ -170,17 +242,16 @@ function ringFromLonLatCoords(
   return simplifyRing(ring, MIN_RING_EDGE_M);
 }
 
-function buildingsFromGeometry(
+function ringsFromPolygon(
   geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
   origin: LatLon,
   id: string,
-  height: number,
-): OsmBuilding[] {
+): { id: string; ring: [number, number][] }[] {
   const polygons =
     geometry.type === "Polygon"
       ? [geometry.coordinates]
       : geometry.coordinates;
-  const out: OsmBuilding[] = [];
+  const out: { id: string; ring: [number, number][] }[] = [];
   let part = 0;
   for (const polygon of polygons) {
     const outer = polygon[0];
@@ -189,7 +260,6 @@ function buildingsFromGeometry(
     if (ring.length < 3) continue;
     out.push({
       id: part === 0 ? id : `${id}/${part}`,
-      height,
       ring,
     });
     part += 1;
@@ -197,48 +267,180 @@ function buildingsFromGeometry(
   return out;
 }
 
-export function buildingsFromMvt(
-  data: Uint8Array,
-  tile: TileCoord,
+function pathsFromLine(
+  geometry: GeoJSON.LineString | GeoJSON.MultiLineString,
   origin: LatLon,
-): OsmBuilding[] {
-  const vt = new VectorTile(new PbfReader(data));
-  const layer = vt.layers.buildings ?? vt.layers.building;
-  if (!layer) return [];
-  const out: OsmBuilding[] = [];
-  for (let i = 0; i < layer.length; i++) {
-    const feat = layer.feature(i);
-    if (feat.type !== 3) continue;
-    const kind = feat.properties.kind;
-    if (kind === "address") continue;
-    const gj = feat.toGeoJSON(tile.x, tile.y, tile.z);
-    if (gj.geometry.type !== "Polygon" && gj.geometry.type !== "MultiPolygon") {
-      continue;
-    }
-    const id = `tile/${tileKey(tile)}/${feat.id ?? i}`;
-    out.push(
-      ...buildingsFromGeometry(
-        gj.geometry,
-        origin,
-        id,
-        heightFromProps(feat.properties as Record<string, unknown>),
-      ),
-    );
+  id: string,
+): { id: string; path: [number, number][] }[] {
+  const lines =
+    geometry.type === "LineString"
+      ? [geometry.coordinates]
+      : geometry.coordinates;
+  const out: { id: string; path: [number, number][] }[] = [];
+  let part = 0;
+  for (const line of lines) {
+    const path = ringFromLonLatCoords(line, origin);
+    if (path.length < 2) continue;
+    out.push({
+      id: part === 0 ? id : `${id}/${part}`,
+      path,
+    });
+    part += 1;
   }
   return out;
 }
 
-export async function fetchTileBuildings(
+function emptySurface(): TileSurface {
+  return {
+    land: [],
+    water: [],
+    waterways: [],
+    roads: [],
+    buildings: [],
+  };
+}
+
+function featId(
+  tile: TileCoord,
+  layer: string,
+  featIdRaw: unknown,
+  i: number,
+): string {
+  return `tile/${tileKey(tile)}/${layer}/${featIdRaw ?? i}`;
+}
+
+export function surfaceFromMvt(
+  data: Uint8Array,
+  tile: TileCoord,
+  origin: LatLon,
+): TileSurface {
+  const out = emptySurface();
+  const vt = new VectorTile(new PbfReader(data));
+
+  const landuse = vt.layers.landuse;
+  if (landuse) {
+    for (let i = 0; i < landuse.length; i++) {
+      const feat = landuse.feature(i);
+      if (feat.type !== 3) continue;
+      const props = feat.properties as Record<string, unknown>;
+      const kind = kindOf(props);
+      if (!PARK_KINDS.has(kind)) continue;
+      const gj = feat.toGeoJSON(tile.x, tile.y, tile.z);
+      if (gj.geometry.type !== "Polygon" && gj.geometry.type !== "MultiPolygon") {
+        continue;
+      }
+      for (const row of ringsFromPolygon(
+        gj.geometry,
+        origin,
+        featId(tile, "landuse", feat.id, i),
+      )) {
+        out.land.push({ ...row, kind });
+      }
+    }
+  }
+
+  const water = vt.layers.water;
+  if (water) {
+    for (let i = 0; i < water.length; i++) {
+      const feat = water.feature(i);
+      const props = feat.properties as Record<string, unknown>;
+      const kind = kindOf(props);
+      const detail = kindDetailOf(props);
+      const gj = feat.toGeoJSON(tile.x, tile.y, tile.z);
+      const id = featId(tile, "water", feat.id, i);
+      if (feat.type === 3) {
+        if (kind && !WATER_POLY_KINDS.has(kind)) continue;
+        if (
+          gj.geometry.type !== "Polygon" &&
+          gj.geometry.type !== "MultiPolygon"
+        ) {
+          continue;
+        }
+        for (const row of ringsFromPolygon(gj.geometry, origin, id)) {
+          out.water.push({ ...row, kind: kind || "water" });
+        }
+      } else if (feat.type === 2) {
+        if (!WATERWAY_DETAILS.has(detail)) continue;
+        if (
+          gj.geometry.type !== "LineString" &&
+          gj.geometry.type !== "MultiLineString"
+        ) {
+          continue;
+        }
+        for (const row of pathsFromLine(gj.geometry, origin, id)) {
+          out.waterways.push({ ...row, kind: detail });
+        }
+      }
+    }
+  }
+
+  const roads = vt.layers.roads ?? vt.layers.road;
+  if (roads) {
+    for (let i = 0; i < roads.length; i++) {
+      const feat = roads.feature(i);
+      if (feat.type !== 2) continue;
+      const props = feat.properties as Record<string, unknown>;
+      const kind = kindOf(props);
+      if (!ROAD_KINDS.has(kind)) continue;
+      if (propTrue(props.is_link) || propTrue(props.is_tunnel)) continue;
+      const gj = feat.toGeoJSON(tile.x, tile.y, tile.z);
+      if (
+        gj.geometry.type !== "LineString" &&
+        gj.geometry.type !== "MultiLineString"
+      ) {
+        continue;
+      }
+      for (const row of pathsFromLine(
+        gj.geometry,
+        origin,
+        featId(tile, "roads", feat.id, i),
+      )) {
+        out.roads.push({ ...row, kind });
+      }
+    }
+  }
+
+  if (tile.z >= PMTILES_BUILDING_LAYER_MIN_ZOOM) {
+    const buildings = vt.layers.buildings ?? vt.layers.building;
+    if (buildings) {
+      for (let i = 0; i < buildings.length; i++) {
+        const feat = buildings.feature(i);
+        if (feat.type !== 3) continue;
+        const props = feat.properties as Record<string, unknown>;
+        if (kindOf(props) === "address") continue;
+        const gj = feat.toGeoJSON(tile.x, tile.y, tile.z);
+        if (
+          gj.geometry.type !== "Polygon" &&
+          gj.geometry.type !== "MultiPolygon"
+        ) {
+          continue;
+        }
+        for (const row of ringsFromPolygon(
+          gj.geometry,
+          origin,
+          featId(tile, "buildings", feat.id, i),
+        )) {
+          out.buildings.push({
+            ...row,
+            height: heightFromProps(props),
+          });
+        }
+      }
+    }
+  }
+
+  return out;
+}
+
+export async function fetchTileSurface(
   tile: TileCoord,
   origin: LatLon,
   source: PMTiles = getLondonPmtiles(),
-): Promise<OsmBuilding[]> {
+): Promise<TileSurface> {
   const result = await source.getZxy(tile.z, tile.x, tile.y);
-  if (!result) return [];
+  if (!result) return emptySurface();
   const raw = result.data;
   const bytes =
-    raw instanceof Uint8Array
-      ? raw
-      : new Uint8Array(raw as ArrayBuffer);
-  return buildingsFromMvt(bytes, tile, origin);
+    raw instanceof Uint8Array ? raw : new Uint8Array(raw as ArrayBuffer);
+  return surfaceFromMvt(bytes, tile, origin);
 }

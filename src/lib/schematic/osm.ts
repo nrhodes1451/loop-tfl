@@ -16,6 +16,20 @@ export type OsmBuilding = {
   ring: [number, number][];
 };
 
+export type OsmArea = {
+  id: string;
+  kind: string;
+  /** ENU metres, [east, north]. */
+  ring: [number, number][];
+};
+
+export type OsmLine = {
+  id: string;
+  kind: string;
+  /** ENU metres, [east, north]. */
+  path: [number, number][];
+};
+
 function dropClosingDuplicate(ring: [number, number][]): [number, number][] {
   if (ring.length < 2) return ring;
   const first = ring[0]!;

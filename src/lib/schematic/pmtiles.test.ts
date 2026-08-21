@@ -3,8 +3,8 @@ import vtpbf from "vt-pbf";
 import { HUBKGX_ORIGIN } from "./geo";
 import { ringAabb } from "./osm";
 import {
-  buildingsFromMvt,
   fogRange,
+  landZoomForDistance,
   latToTileY,
   lonLatToTile,
   lonToTileX,
@@ -13,9 +13,27 @@ import {
   tileToLat,
   tileToLon,
   ringForDistance,
+  surfaceFromMvt,
   tilesAround,
   zoomForDistance,
 } from "./pmtiles";
+
+function polyRing() {
+  return [
+    [200, 200],
+    [500, 200],
+    [500, 500],
+    [200, 500],
+    [200, 200],
+  ];
+}
+
+function linePath() {
+  return [
+    [100, 100],
+    [800, 100],
+  ];
+}
 
 describe("slippy tiles", () => {
   it("maps King’s Cross into the expected z15 tile", () => {
@@ -60,6 +78,17 @@ describe("zoomForDistance", () => {
   });
 });
 
+describe("landZoomForDistance", () => {
+  it("tracks building zoom then continues to z12/z11", () => {
+    expect(landZoomForDistance(120)).toBe(15);
+    expect(landZoomForDistance(3_000)).toBe(14);
+    expect(landZoomForDistance(8_000)).toBe(13);
+    expect(landZoomForDistance(20_000)).toBe(12);
+    expect(landZoomForDistance(23_000)).toBe(11);
+    expect(landZoomForDistance(25_000)).toBe(11);
+  });
+});
+
 describe("ringForDistance", () => {
   it("grows the neighbourhood as the camera pulls back", () => {
     expect(ringForDistance(150, 15)).toBe(1);
@@ -83,8 +112,8 @@ describe("fogRange", () => {
   });
 });
 
-describe("buildingsFromMvt", () => {
-  it("decodes a polygon in the KGX tile into an ENU ring", () => {
+describe("surfaceFromMvt", () => {
+  it("decodes a building polygon in the KGX tile into an ENU ring", () => {
     const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
     const buf = vtpbf.fromGeojsonVt({
       buildings: {
@@ -92,28 +121,133 @@ describe("buildingsFromMvt", () => {
           {
             id: 7,
             type: 3,
-            geometry: [
-              [
-                [200, 200],
-                [500, 200],
-                [500, 500],
-                [200, 500],
-                [200, 200],
-              ],
-            ],
+            geometry: [polyRing()],
             tags: { height: 22 },
           },
         ],
       },
     });
-    const buildings = buildingsFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
-    expect(buildings).toHaveLength(1);
-    expect(buildings[0]!.height).toBe(22);
-    expect(buildings[0]!.ring.length).toBeGreaterThanOrEqual(3);
-    const aabb = ringAabb(buildings[0]!.ring);
+    const surface = surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
+    expect(surface.buildings).toHaveLength(1);
+    expect(surface.buildings[0]!.height).toBe(22);
+    expect(surface.buildings[0]!.ring.length).toBeGreaterThanOrEqual(3);
+    const aabb = ringAabb(surface.buildings[0]!.ring);
     expect(aabb.maxX).toBeGreaterThan(aabb.minX);
     expect(aabb.maxZ).toBeGreaterThan(aabb.minZ);
     expect(Math.abs(aabb.minX)).toBeLessThan(5_000);
     expect(Math.abs(aabb.minZ)).toBeLessThan(5_000);
+  });
+
+  it("keeps park landuse and drops residential", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const buf = vtpbf.fromGeojsonVt({
+      landuse: {
+        features: [
+          {
+            id: 1,
+            type: 3,
+            geometry: [polyRing()],
+            tags: { kind: "park" },
+          },
+          {
+            id: 2,
+            type: 3,
+            geometry: [polyRing()],
+            tags: { kind: "residential" },
+          },
+        ],
+      },
+    });
+    const surface = surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
+    expect(surface.land).toHaveLength(1);
+    expect(surface.land[0]!.kind).toBe("park");
+  });
+
+  it("keeps water polygons and canal lines, skips streams", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const buf = vtpbf.fromGeojsonVt({
+      water: {
+        features: [
+          {
+            id: 1,
+            type: 3,
+            geometry: [polyRing()],
+            tags: { kind: "water" },
+          },
+          {
+            id: 2,
+            type: 2,
+            geometry: [linePath()],
+            tags: { kind: "other", kind_detail: "canal" },
+          },
+          {
+            id: 3,
+            type: 2,
+            geometry: [linePath()],
+            tags: { kind: "other", kind_detail: "stream" },
+          },
+        ],
+      },
+    });
+    const surface = surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
+    expect(surface.water).toHaveLength(1);
+    expect(surface.waterways).toHaveLength(1);
+    expect(surface.waterways[0]!.kind).toBe("canal");
+    expect(surface.waterways[0]!.path.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("keeps major roads and skips links, tunnels, and minor roads", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const buf = vtpbf.fromGeojsonVt({
+      roads: {
+        features: [
+          {
+            id: 1,
+            type: 2,
+            geometry: [linePath()],
+            tags: { kind: "highway" },
+          },
+          {
+            id: 2,
+            type: 2,
+            geometry: [linePath()],
+            tags: { kind: "highway", is_link: true },
+          },
+          {
+            id: 3,
+            type: 2,
+            geometry: [linePath()],
+            tags: { kind: "major_road", is_tunnel: true },
+          },
+          {
+            id: 4,
+            type: 2,
+            geometry: [linePath()],
+            tags: { kind: "minor_road" },
+          },
+        ],
+      },
+    });
+    const surface = surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
+    expect(surface.roads).toHaveLength(1);
+    expect(surface.roads[0]!.kind).toBe("highway");
+  });
+
+  it("omits buildings below z13", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 12);
+    const buf = vtpbf.fromGeojsonVt({
+      buildings: {
+        features: [
+          {
+            id: 7,
+            type: 3,
+            geometry: [polyRing()],
+            tags: { height: 22 },
+          },
+        ],
+      },
+    });
+    const surface = surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
+    expect(surface.buildings).toHaveLength(0);
   });
 });
