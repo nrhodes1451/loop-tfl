@@ -373,21 +373,6 @@ export function makeBounds(min: Vec3, max: Vec3): SceneBounds {
   return { min, max, center, radius };
 }
 
-export function unionBounds(a: SceneBounds, b: SceneBounds): SceneBounds {
-  return makeBounds(
-    [
-      Math.min(a.min[0], b.min[0]),
-      Math.min(a.min[1], b.min[1]),
-      Math.min(a.min[2], b.min[2]),
-    ],
-    [
-      Math.max(a.max[0], b.max[0]),
-      Math.max(a.max[1], b.max[1]),
-      Math.max(a.max[2], b.max[2]),
-    ],
-  );
-}
-
 export function cameraFrame(
   bounds: SceneBounds,
   opts: { minDistance?: number; maxDistance?: number; far?: number } = {},

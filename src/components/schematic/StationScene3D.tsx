@@ -31,7 +31,6 @@ import {
   hoverHighlight,
   makeHoverId,
   splitHoverId,
-  unionBounds,
   type CameraFrame,
   type HoverHighlight,
   type SceneGeometry,
@@ -46,21 +45,22 @@ import {
   HUBKGX_ORIGIN,
   NEIGHBOR_LOAD_RADIUS_M,
   NEIGHBOR_UNLOAD_RADIUS_M,
-  SURFACE_SIZE_M,
+  STATION_LOD_DIST_STEP_M,
+  STATION_LOD_MOVE_M,
+  STATION_LOD_SAMPLE_MS,
   distanceM,
   placeSchematicAt,
   schematicWorldOffset,
-  surfaceWorldBounds,
+  stationsShownAtDistance,
   worldToLatLon,
   type LatLon,
+  type SchematicPlacement,
 } from "@/lib/schematic/geo";
-import type { OsmSurface } from "@/lib/schematic/osm";
 import type {
   SchematicStation,
   SchematicStationRef,
 } from "@/lib/schematic/types";
 import { PmtilesSurface } from "./PmtilesSurface";
-import { SurfaceLayer } from "./SurfaceLayer";
 
 export type SceneStation = {
   id: string;
@@ -77,10 +77,9 @@ export type StationScene3DProps = {
   origin?: LatLon;
   quality?: SceneQuality;
   resetRef?: RefObject<(() => void) | null>;
-  surface?: OsmSurface | null;
   showSurface?: boolean;
   showSchematic?: boolean;
-  /** Prefer London PMTiles over the 400 m bake. */
+  /** London PMTiles surface when the extract is present. */
   usePmtiles?: boolean;
   /** Left-drag pans the ground instead of orbiting. */
   panMode?: boolean;
@@ -645,28 +644,45 @@ function tooltipPos(
   };
 }
 
-function FocusSampler({
+type CameraLod = LatLon & { distM: number };
+
+type BuiltRow = {
+  station: SceneStation;
+  geom: SceneGeometry;
+  placement: SchematicPlacement | null;
+};
+
+function CameraLodSampler({
   origin,
   controlsRef,
-  onFocus,
+  onLod,
 }: {
   origin: LatLon;
   controlsRef: RefObject<OrbitControlsImpl | null>;
-  onFocus: (ll: LatLon) => void;
+  onLod: (lod: CameraLod) => void;
 }) {
+  const camera = useThree((s) => s.camera);
   const last = useRef(0);
-  const sent = useRef<LatLon | null>(null);
+  const sent = useRef<CameraLod | null>(null);
   useFrame(() => {
     const now = performance.now();
-    if (now - last.current < 200) return;
+    if (now - last.current < STATION_LOD_SAMPLE_MS) return;
     const target = controlsRef.current?.target;
     if (!target) return;
     last.current = now;
     const ll = worldToLatLon(target.x, target.z, origin);
+    const distM = camera.position.distanceTo(target);
     const prev = sent.current;
-    if (prev && distanceM(prev, ll) < 40) return;
-    sent.current = ll;
-    onFocus(ll);
+    if (
+      prev &&
+      distanceM(prev, ll) < STATION_LOD_MOVE_M &&
+      Math.abs(prev.distM - distM) < STATION_LOD_DIST_STEP_M
+    ) {
+      return;
+    }
+    const next = { lat: ll.lat, lon: ll.lon, distM };
+    sent.current = next;
+    onLod(next);
   });
   return null;
 }
@@ -674,11 +690,11 @@ function FocusSampler({
 function useNearbyStations(
   index: SchematicStationRef[],
   initial: SceneStation[],
-  selectedId: string,
-  focus: LatLon,
+  lod: CameraLod,
   extra: Record<string, SceneStation>,
   setExtra: Dispatch<SetStateAction<Record<string, SceneStation>>>,
   enabled: boolean,
+  shown: boolean,
 ): string[] {
   const inflight = useRef(new Set<string>());
 
@@ -688,11 +704,27 @@ function useNearbyStations(
     return m;
   }, [initial]);
 
-  const focusLat = focus.lat;
-  const focusLon = focus.lon;
+  const focusLat = lod.lat;
+  const focusLon = lod.lon;
 
   useEffect(() => {
     if (!enabled) return;
+    const origin = { lat: focusLat, lon: focusLon };
+    setExtra((prev) => {
+      let changed = false;
+      const next = { ...prev };
+      for (const [id, s] of Object.entries(next)) {
+        if (distanceM(s, origin) > NEIGHBOR_UNLOAD_RADIUS_M) {
+          delete next[id];
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [enabled, focusLat, focusLon, setExtra]);
+
+  useEffect(() => {
+    if (!enabled || !shown) return;
     const origin = { lat: focusLat, lon: focusLon };
     const needed = index.filter(
       (s) => distanceM(s, origin) <= NEIGHBOR_LOAD_RADIUS_M,
@@ -726,23 +758,20 @@ function useNearbyStations(
           inflight.current.delete(ref.id);
         });
     }
-  }, [enabled, extra, focusLat, focusLon, index, initialById, setExtra]);
+  }, [enabled, extra, focusLat, focusLon, index, initialById, setExtra, shown]);
 
   return useMemo(() => {
+    if (!enabled || !shown) return [];
     const origin = { lat: focusLat, lon: focusLon };
     const loaded = [...initialById.values()];
     for (const s of Object.values(extra)) {
       if (!initialById.has(s.id)) loaded.push(s);
     }
-    const next = !enabled
-      ? loaded.filter((s) => s.id === selectedId)
-      : loaded.filter(
-          (s) =>
-            s.id === selectedId ||
-            distanceM(s, origin) <= NEIGHBOR_UNLOAD_RADIUS_M,
-        );
-    return next.map((s) => s.id).sort();
-  }, [enabled, extra, focusLat, focusLon, initialById, selectedId]);
+    return loaded
+      .filter((s) => distanceM(s, origin) <= NEIGHBOR_UNLOAD_RADIUS_M)
+      .map((s) => s.id)
+      .sort();
+  }, [enabled, extra, focusLat, focusLon, initialById, shown]);
 }
 
 export function StationScene3D({
@@ -752,7 +781,6 @@ export function StationScene3D({
   origin = HUBKGX_ORIGIN,
   quality: qualityProp,
   resetRef,
-  surface = null,
   showSurface = true,
   showSchematic = true,
   usePmtiles = false,
@@ -774,22 +802,33 @@ export function StationScene3D({
   } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [extra, setExtra] = useState<Record<string, SceneStation>>({});
-  const [panFocus, setPanFocus] = useState<LatLon | null>(null);
-  const [focusForId, setFocusForId] = useState(selectedId);
+  const [lod, setLod] = useState<CameraLod>(() => {
+    const s = stations.find((row) => row.id === selectedId) ?? stations[0];
+    return {
+      lat: s?.lat ?? origin.lat,
+      lon: s?.lon ?? origin.lon,
+      distM: 0,
+    };
+  });
+  const [lodForId, setLodForId] = useState(selectedId);
+  const [shown, setShown] = useState(true);
+  const geomCacheRef = useRef(new Map<string, BuiltRow>());
   const panAltitude = useRef<{ cam: number; target: number } | null>(null);
   const selectedSeed = stations.find((s) => s.id === selectedId) ?? stations[0];
   const selectedLat = selectedSeed?.lat;
   const selectedLon = selectedSeed?.lon;
-  if (focusForId !== selectedId) {
-    setFocusForId(selectedId);
-    setPanFocus(null);
+  if (lodForId !== selectedId) {
+    setLodForId(selectedId);
+    setLod({
+      lat: selectedLat ?? origin.lat,
+      lon: selectedLon ?? origin.lon,
+      distM: 0,
+    });
+    setShown(true);
     setHoveredId(null);
   }
-  const focus: LatLon =
-    panFocus ??
-    (selectedLat != null && selectedLon != null
-      ? { lat: selectedLat, lon: selectedLon }
-      : origin);
+  const nextShown = stationsShownAtDistance(lod.distM, shown);
+  if (nextShown !== shown) setShown(nextShown);
 
   useLayoutEffect(() => {
     if (!resetRef) return;
@@ -809,7 +848,7 @@ export function StationScene3D({
     };
   }, [resetRef]);
 
-  const geoScene = !!(surface || usePmtiles);
+  const geoScene = usePmtiles;
   const loadedById = useMemo(() => {
     const m = new Map<string, SceneStation>();
     for (const s of stations) m.set(s.id, s);
@@ -821,11 +860,11 @@ export function StationScene3D({
   const visibleIds = useNearbyStations(
     index,
     stations,
-    selectedId,
-    focus,
+    lod,
     extra,
     setExtra,
     geoScene,
+    geoScene && shown,
   );
   const visibleKey = visibleIds.join("\0");
   const selectedRow = useMemo(() => {
@@ -840,17 +879,32 @@ export function StationScene3D({
     };
   }, [stations, selectedId, quality, geoScene, origin]);
   const built = useMemo(() => {
+    const cache = geomCacheRef.current;
     const ids = visibleKey ? visibleKey.split("\0") : [];
-    return ids.flatMap((id) => {
-      const s = loadedById.get(id);
-      if (!s) return [];
-      if (selectedRow && s.id === selectedRow.station.id) return [selectedRow];
-      const geom = buildSceneGeometry(s.topology, { quality });
-      const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);
-      const placement = geoScene ? placeSchematicAt(geom, world) : null;
-      return [{ station: s, geom, placement }];
-    });
-  }, [visibleKey, loadedById, selectedRow, quality, geoScene, origin]);
+    const keep = new Set(ids.map((id) => `${quality}\0${id}`));
+    for (const key of [...cache.keys()]) {
+      if (!keep.has(key)) cache.delete(key);
+    }
+    const rows: BuiltRow[] = [];
+    for (const id of ids) {
+      const key = `${quality}\0${id}`;
+      let row = cache.get(key);
+      if (!row) {
+        const s = loadedById.get(id);
+        if (!s) continue;
+        const geom = buildSceneGeometry(s.topology, { quality });
+        const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);
+        row = {
+          station: s,
+          geom,
+          placement: geoScene ? placeSchematicAt(geom, world) : null,
+        };
+        cache.set(key, row);
+      }
+      rows.push(row);
+    }
+    return rows;
+  }, [visibleKey, loadedById, quality, geoScene, origin]);
   const frame = useMemo(() => {
     if (!selectedRow) {
       return cameraFrame({
@@ -865,28 +919,12 @@ export function StationScene3D({
     }
     const placement = selectedRow.placement;
     const minDistance = Math.max(4, placement.bounds.radius * 0.7);
-    if (usePmtiles) {
-      return cameraFrame(placement.bounds, {
-        minDistance,
-        maxDistance: CITY_MAX_DISTANCE_M,
-        far: CITY_FAR_M,
-      });
-    }
-    const maxH = surface
-      ? surface.buildings.reduce((m, b) => Math.max(m, b.height), 10)
-      : 10;
-    return cameraFrame(
-      unionBounds(
-        placement.bounds,
-        surfaceWorldBounds(
-          surface?.sizeM ?? SURFACE_SIZE_M,
-          maxH,
-          placement.bounds,
-        ),
-      ),
-      { minDistance },
-    );
-  }, [geoScene, selectedRow, surface, usePmtiles]);
+    return cameraFrame(placement.bounds, {
+      minDistance,
+      maxDistance: CITY_MAX_DISTANCE_M,
+      far: CITY_FAR_M,
+    });
+  }, [geoScene, selectedRow]);
 
   const hovered = useMemo(() => {
     if (!hoveredId || !showSchematic) return undefined;
@@ -957,13 +995,7 @@ export function StationScene3D({
         <FrameCamera frame={frame} />
         {geoScene ? (
           <>
-            {showSurface ? (
-              usePmtiles ? (
-                <PmtilesSurface origin={origin} />
-              ) : surface ? (
-                <SurfaceLayer surface={surface} />
-              ) : null
-            ) : null}
+            {showSurface ? <PmtilesSurface origin={origin} /> : null}
             {showSchematic
               ? built.map((row) => {
                   if (!row.placement) return null;
@@ -993,11 +1025,11 @@ export function StationScene3D({
                   );
                 })
               : null}
-            <FocusSampler
+            <CameraLodSampler
               key={selectedId}
               origin={origin}
               controlsRef={controlsRef}
-              onFocus={setPanFocus}
+              onLod={setLod}
             />
           </>
         ) : showSchematic && selectedRow ? (

@@ -17,10 +17,21 @@ export const CUTOUT_PAD_M = 8;
 /** Orbit ceiling when the London PMTiles surface is active. */
 export const CITY_MAX_DISTANCE_M = 25_000;
 export const CITY_FAR_M = 80_000;
-/** First-paint / fetch radius for in-situ neighbor dollhouses. */
-export const NEIGHBOR_LOAD_RADIUS_M = 2_000;
-/** Keep mounted neighbors until they leave this radius (hysteresis). */
-export const NEIGHBOR_UNLOAD_RADIUS_M = 2_500;
+/** Fetch radius for in-situ neighbor dollhouses (orbit-target, metres). */
+export const NEIGHBOR_LOAD_RADIUS_M = 800;
+/** Keep cached neighbors until they leave this radius (hysteresis). */
+export const NEIGHBOR_UNLOAD_RADIUS_M = 1_100;
+/**
+ * Camera–target distance at or below which dollhouses mount.
+ * Matches tile z15 (`zoomForDistance` is 15 only when dist ≤ 2000).
+ */
+export const STATION_SHOW_DIST_M = 2_000;
+/** Hide all dollhouses once the camera is this far (zoom hysteresis). */
+export const STATION_HIDE_DIST_M = 2_500;
+/** How often to sample orbit target / distance, same as PMTiles tiles. */
+export const STATION_LOD_SAMPLE_MS = 120;
+export const STATION_LOD_MOVE_M = 40;
+export const STATION_LOD_DIST_STEP_M = 50;
 
 /** TfL StopPoint for HUBKGX — 3D origin, not the OSM wheelchair entrance. */
 export const HUBKGX_ORIGIN = {
@@ -109,7 +120,7 @@ export function distanceM(a: LatLon, b: LatLon): number {
 }
 
 /**
- * HUBKGX stays on the TfL StopPoint origin so the 400 m bake stays aligned.
+ * HUBKGX stays on the TfL StopPoint origin (scene origin).
  * Other stations plant at their schematic / index lat/lon.
  */
 export function schematicWorldOffset(
@@ -128,6 +139,19 @@ export function schematicPlacementLatLon(
 ): LatLon {
   if (stationId === "HUBKGX") return HUBKGX_ORIGIN;
   return entrance;
+}
+
+/**
+ * Hysteresis around STATION_SHOW_DIST / STATION_HIDE_DIST so rocking
+ * across 2 km does not pop every dollhouse.
+ */
+export function stationsShownAtDistance(
+  distM: number,
+  currentlyShown: boolean,
+): boolean {
+  if (!Number.isFinite(distM) || distM < 0) return false;
+  if (currentlyShown) return distM <= STATION_HIDE_DIST_M;
+  return distM <= STATION_SHOW_DIST_M;
 }
 
 export function applyPlacement(
@@ -304,16 +328,4 @@ export function placeSchematicAt(
 
 export function aabbIntersects(a: Aabb2, b: Aabb2): boolean {
   return a.minX <= b.maxX && a.maxX >= b.minX && a.minZ <= b.maxZ && a.maxZ >= b.minZ;
-}
-
-export function surfaceWorldBounds(
-  sizeM: number,
-  maxBuildingHeight: number,
-  schematic: SceneBounds,
-): SceneBounds {
-  const half = sizeM / 2;
-  return makeBounds(
-    [-half, Math.min(0, schematic.min[1]), -half],
-    [half, Math.max(maxBuildingHeight, schematic.max[1]), half],
-  );
 }

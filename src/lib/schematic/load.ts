@@ -10,7 +10,6 @@ import {
   NEIGHBOR_LOAD_RADIUS_M,
   type LatLon,
 } from "./geo";
-import type { OsmSurface } from "./osm";
 import type { SchematicIndex, SchematicStation, SchematicStationRef } from "./types";
 
 const stationCache = new Map<string, { mtimeMs: number; data: SchematicStation }>();
@@ -92,20 +91,6 @@ export async function loadSchematicsNear(
       distanceM(s, origin) <= radiusM,
   );
   return Promise.all(hits.map((s) => loadSchematic(s.id)));
-}
-
-export async function loadOsmSurface(
-  stationId: string,
-): Promise<OsmSurface | null> {
-  assertSafeId(stationId);
-  const filePath = path.join(
-    process.cwd(),
-    "data",
-    "osm",
-    `${stationId.toLowerCase()}-buildings.json`,
-  );
-  const found = await readJsonIfExists<OsmSurface>(filePath);
-  return found?.data ?? null;
 }
 
 export function clearSchematicCache() {

@@ -9,7 +9,6 @@ import type {
   SchematicStation,
   SchematicStationRef,
 } from "@/lib/schematic/types";
-import type { OsmSurface } from "@/lib/schematic/osm";
 import { lineColorForSchematic } from "@/lib/tokens";
 import { PMTILES_ATTRIBUTION, PMTILES_URL } from "@/lib/schematic/pmtiles";
 import type { SceneStation } from "./StationScene3D";
@@ -194,12 +193,10 @@ export function SchematicPage({
   station,
   stations,
   nearby = [],
-  surface = null,
 }: {
   station: SchematicStation;
   stations: SchematicStationRef[];
   nearby?: SchematicStation[];
-  surface?: OsmSurface | null;
 }) {
   const [showLegend, setShowLegend] = useState(true);
   const [showMap, setShowMap] = useState(true);
@@ -229,7 +226,7 @@ export function SchematicPage({
     return [...byId.values()].map((s) => toSceneStation(s, stations));
   }, [station, nearby, stations]);
   const levels = depthLegend(station);
-  const hasMap = !!(surface || usePmtiles);
+  const hasMap = usePmtiles;
   const chromeBtn =
     "cursor-pointer whitespace-nowrap rounded-[7px] border px-2.5 py-1.5 text-[12px] font-medium no-underline sm:px-[13px] sm:py-2 sm:text-[12.5px]";
   const chromeBtnStyle = {
@@ -247,7 +244,6 @@ export function SchematicPage({
         stations={sceneStations}
         index={stations}
         resetRef={resetView}
-        surface={surface}
         showSurface={showMap}
         showSchematic={showSchematic}
         usePmtiles={usePmtiles}
@@ -395,11 +391,6 @@ export function SchematicPage({
           <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
             OSM building footprints via PMTiles ({PMTILES_ATTRIBUTION}). Not a
             surveyed basement.
-          </div>
-        ) : surface ? (
-          <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
-            OSM building footprints, {surface.attribution}. {surface.sizeM} m
-            box around the TfL station point — not a surveyed basement.
           </div>
         ) : null}
       </aside>

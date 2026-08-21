@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import kgxJson from "../../../data/schematic/HUBKGX.json";
 import {
   HUBKGX_ORIGIN,
+  NEIGHBOR_LOAD_RADIUS_M,
   SCHEMATIC_METRES_PER_UNIT,
   applyPlacement,
   distanceM,
@@ -11,6 +12,7 @@ import {
   placeSchematic,
   placeSchematicAt,
   schematicWorldOffset,
+  stationsShownAtDistance,
   worldToLatLon,
 } from "./geo";
 import { buildSceneGeometry } from "./scene";
@@ -180,5 +182,24 @@ describe("placeSchematicAt", () => {
     expect(offset.x).toBeCloseTo(world.x, 9);
     expect(offset.z).toBeCloseTo(world.z, 9);
     expect(Math.hypot(offset.x, offset.z)).toBeGreaterThan(100);
+  });
+});
+
+describe("stationsShownAtDistance", () => {
+  it("shows dollhouses when close, even if they were hidden", () => {
+    expect(stationsShownAtDistance(150, false)).toBe(true);
+  });
+
+  it("hides dollhouses when far, even if they were shown", () => {
+    expect(stationsShownAtDistance(3_000, true)).toBe(false);
+  });
+
+  it("uses hysteresis between show and hide distances", () => {
+    expect(stationsShownAtDistance(2_200, true)).toBe(true);
+    expect(stationsShownAtDistance(2_200, false)).toBe(false);
+  });
+
+  it("loads neighbors in an 800 m window", () => {
+    expect(NEIGHBOR_LOAD_RADIUS_M).toBe(800);
   });
 });
