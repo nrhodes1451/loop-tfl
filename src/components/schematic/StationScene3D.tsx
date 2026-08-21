@@ -292,6 +292,69 @@ function lookHeading(controls: OrbitControlsImpl): number {
   return Math.atan2(-dx, -dz);
 }
 
+type WasdKeys = { w: boolean; a: boolean; s: boolean; d: boolean };
+
+function emptyWasd(): WasdKeys {
+  return { w: false, a: false, s: false, d: false };
+}
+
+function isFormField(el: EventTarget | null): boolean {
+  if (!(el instanceof HTMLElement)) return false;
+  const tag = el.tagName;
+  return (
+    tag === "INPUT" ||
+    tag === "TEXTAREA" ||
+    tag === "SELECT" ||
+    el.isContentEditable
+  );
+}
+
+function applyWasdKey(keys: WasdKeys, code: string, down: boolean): boolean {
+  switch (code) {
+    case "KeyW":
+      keys.w = down;
+      return true;
+    case "KeyA":
+      keys.a = down;
+      return true;
+    case "KeyS":
+      keys.s = down;
+      return true;
+    case "KeyD":
+      keys.d = down;
+      return true;
+    default:
+      return false;
+  }
+}
+
+/** Ground-plane pan in look space. Speed scales with zoom (camera–target distance). */
+function panByWasd(controls: OrbitControlsImpl, keys: WasdKeys, dt: number) {
+  let right = 0;
+  let forward = 0;
+  if (keys.w) forward += 1;
+  if (keys.s) forward -= 1;
+  if (keys.a) right += 1;
+  if (keys.d) right -= 1;
+  const mag = Math.hypot(right, forward);
+  if (mag === 0) return;
+
+  const heading = lookHeading(controls);
+  const sin = Math.sin(heading);
+  const cos = Math.cos(heading);
+  const dist = controls.object.position.distanceTo(controls.target);
+  const step = dist * 0.85 * Math.min(dt, 0.05);
+  const nx = right / mag;
+  const nz = forward / mag;
+  const dx = (nx * cos + nz * sin) * step;
+  const dz = (-nx * sin + nz * cos) * step;
+
+  controls.target.x += dx;
+  controls.target.z += dz;
+  controls.object.position.x += dx;
+  controls.object.position.z += dz;
+}
+
 function faceNorth(controls: OrbitControlsImpl) {
   const cam = controls.object;
   const offset = cam.position.clone().sub(controls.target);
@@ -398,6 +461,7 @@ function SceneControls({
   onDragEnd: () => void;
 }) {
   const camera = useThree((s) => s.camera);
+  const wasd = useRef(emptyWasd());
 
   useLayoutEffect(() => {
     const controls = controlsRef.current;
@@ -419,10 +483,39 @@ function SceneControls({
     };
   }, [panMode, camera, controlsRef, frame.target, panAltitude]);
 
-  useFrame(() => {
-    const lock = panAltitude.current;
+  useEffect(() => {
+    const onDown = (e: KeyboardEvent) => {
+      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (isFormField(e.target)) return;
+      if (applyWasdKey(wasd.current, e.code, true)) e.preventDefault();
+    };
+    const onUp = (e: KeyboardEvent) => {
+      applyWasdKey(wasd.current, e.code, false);
+    };
+    const clear = () => {
+      const keys = wasd.current;
+      keys.w = false;
+      keys.a = false;
+      keys.s = false;
+      keys.d = false;
+    };
+    window.addEventListener("keydown", onDown);
+    window.addEventListener("keyup", onUp);
+    window.addEventListener("blur", clear);
+    return () => {
+      window.removeEventListener("keydown", onDown);
+      window.removeEventListener("keyup", onUp);
+      window.removeEventListener("blur", clear);
+      clear();
+    };
+  }, []);
+
+  useFrame((_, dt) => {
     const controls = controlsRef.current;
-    if (!lock || !controls) return;
+    if (!controls) return;
+    panByWasd(controls, wasd.current, dt);
+    const lock = panAltitude.current;
+    if (!lock) return;
     /* Orbit dolly/pan must not change world height in map pan mode. */
     /* eslint-disable react-hooks/immutability */
     camera.position.y = lock.cam;
@@ -622,7 +715,7 @@ export function StationScene3D({
         background: SCENE_BACKGROUND,
         cursor: isDragging ? "grabbing" : hovered ? "pointer" : "grab",
       }}
-      aria-label="Schematic 3D station view. Not to scale, not for wayfinding."
+      aria-label="Schematic 3D station view. WASD to pan. Not to scale, not for wayfinding."
       onPointerMove={onWrapPointerMove}
       onPointerLeave={() => {
         if (stickyHover) return;

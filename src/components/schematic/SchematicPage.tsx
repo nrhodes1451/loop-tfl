@@ -366,8 +366,8 @@ export function SchematicPage({
         </div>
         <div className="text-[11px] leading-snug" style={{ color: "#8b93a0" }}>
           {panMode
-            ? "Drag to pan, pinch or scroll to zoom."
-            : "Drag to orbit, pinch or scroll to zoom."}{" "}
+            ? "WASD or drag to pan, pinch or scroll to zoom."
+            : "WASD to pan, drag to orbit, pinch or scroll to zoom."}{" "}
           Hover or tap a volume for its name; lifts highlight the whole shaft.
           Click the compass to face north.
         </div>
