@@ -44,7 +44,8 @@ export function SurfaceLayer({ surface }: { surface: OsmSurface }) {
         position={SURFACE_SUN_POSITION}
         intensity={SURFACE_SUN_INTENSITY}
       />
-      <mesh geometry={ground} raycast={noopRaycast}>
+      {/* Ground before buildings regardless of transparent depth sorting. */}
+      <mesh geometry={ground} renderOrder={-1} raycast={noopRaycast}>
         <meshLambertMaterial
           color={GROUND_COLOR}
           transparent

@@ -246,7 +246,12 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
         position={SURFACE_SUN_POSITION}
         intensity={SURFACE_SUN_INTENSITY}
       />
-      <mesh geometry={ground} raycast={noopRaycast}>
+      {/*
+        Transparent meshes sort by bounding-sphere depth, so the ground plane
+        (centred on the ENU origin) would otherwise paint over every tile
+        beyond King's Cross and under every tile in front of it.
+      */}
+      <mesh geometry={ground} renderOrder={-1} raycast={noopRaycast}>
         <meshLambertMaterial
           color={GROUND_COLOR}
           transparent
