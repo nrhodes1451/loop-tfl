@@ -15,7 +15,7 @@ export const SCHEMATIC_METRES_PER_UNIT = 4;
 export const SURFACE_SIZE_M = 400;
 export const CUTOUT_PAD_M = 8;
 /** Orbit ceiling when the London PMTiles surface is active. */
-export const CITY_MAX_DISTANCE_M = 25_000;
+export const CITY_MAX_DISTANCE_M = 5_000;
 export const CITY_FAR_M = 80_000;
 /** Fetch radius for in-situ neighbor dollhouses (orbit-target, metres). */
 export const NEIGHBOR_LOAD_RADIUS_M = 800;
