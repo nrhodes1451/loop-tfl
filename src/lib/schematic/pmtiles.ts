@@ -150,6 +150,13 @@ export function landZoomForDistance(distM: number): number {
   return 12;
 }
 
+/** Next step down the z15–z11 ladder, or null at the coarsest land zoom. */
+export function nextCoarserLandZoom(distM: number): number | null {
+  const z = landZoomForDistance(distM);
+  if (z <= PMTILES_LAND_MIN_ZOOM) return null;
+  return z - 1;
+}
+
 /** Mercator tile width in metres at `lat`. */
 export function tileWidthM(z: number, lat: number): number {
   return (40_075_016.686 * Math.cos((lat * Math.PI) / 180)) / 2 ** z;
@@ -169,7 +176,27 @@ export function ringForDistance(
   return Math.min(3, Math.max(1, Math.ceil(span / tileM)));
 }
 
-/** Linear fog so the tile-window edge fades into the scene background. */
+/** Camera-distance fog bands. Tight when close; stable within each step. */
+export const FOG_BANDS = [
+  { maxDist: 200, near: 160, far: 380 },
+  { maxDist: 500, near: 350, far: 750 },
+  { maxDist: 1_000, near: 700, far: 1_400 },
+  { maxDist: 2_000, near: 1_400, far: 2_600 },
+  { maxDist: Infinity, near: 3_200, far: 5_500 },
+] as const;
+
+function fogBand(distM: number): { near: number; far: number } {
+  for (const band of FOG_BANDS) {
+    if (distM <= band.maxDist) return { near: band.near, far: band.far };
+  }
+  const last = FOG_BANDS[FOG_BANDS.length - 1]!;
+  return { near: last.near, far: last.far };
+}
+
+/**
+ * Linear fog: close-in bands hug the view; far is also capped at the
+ * tile-window edge so unloaded tiles never pop out of the mist.
+ */
 export function fogRange(
   distM: number,
   z: number,
@@ -177,8 +204,9 @@ export function fogRange(
 ): { near: number; far: number } {
   const ring = ringForDistance(distM, z, lat);
   const windowM = (2 * ring + 1) * tileWidthM(z, lat);
-  const near = Math.max(80, distM * 0.9);
-  const far = Math.max(near + 50, Math.min(distM * 2.2, windowM));
+  const band = fogBand(Number.isFinite(distM) ? distM : Infinity);
+  const far = Math.max(band.near + 50, Math.min(band.far, windowM));
+  const near = Math.max(80, Math.min(band.near, far * 0.65));
   return { near, far };
 }
 

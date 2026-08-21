@@ -24,7 +24,11 @@ import {
   type SurfaceTileGeom,
 } from "@/lib/schematic/building-geom";
 import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
-import { worldToLatLon, type LatLon } from "@/lib/schematic/geo";
+import {
+  CITY_MAX_DISTANCE_M,
+  worldToLatLon,
+  type LatLon,
+} from "@/lib/schematic/geo";
 import {
   fetchTileSurface,
   fogRange,
@@ -58,6 +62,18 @@ function visibleFromCache(
     if (geom) shown.set(key, geom);
   }
   return shown;
+}
+
+function tilesReady(tiles: TileCoord[], cache: TileGeomCache): boolean {
+  return tiles.length > 0 && tiles.every((t) => cache.has(tileKey(t)));
+}
+
+function keepKeys(...groups: TileCoord[][]): string[] {
+  const keys = new Set<string>();
+  for (const group of groups) {
+    for (const tile of group) keys.add(tileKey(tile));
+  }
+  return [...keys];
 }
 
 /** Keeps decoded tiles after the far-zoom drop so zooming back in is instant. */
@@ -168,7 +184,8 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
   const controls = useThree((s) => s.controls) as OrbitControlsImpl | null;
   const camera = useThree((s) => s.camera);
   const scene = useThree((s) => s.scene);
-  const [tiles, setTiles] = useState<TileCoord[]>([]);
+  const [wanted, setWanted] = useState<TileCoord[]>([]);
+  const [shown, setShown] = useState<TileCoord[]>([]);
   const [geoms, setGeoms] = useState<Map<string, SurfaceTileGeom>>(
     () => new Map(),
   );
@@ -178,6 +195,8 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
   const lastSample = useRef(0);
   const lastKey = useRef("");
   const originRef = useRef(origin);
+  const shownRef = useRef<TileCoord[]>([]);
+  const preloadRef = useRef<TileCoord[]>([]);
   useLayoutEffect(() => {
     originRef.current = origin;
   }, [origin]);
@@ -191,10 +210,6 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
   }, [scene]);
 
   useFrame(() => {
-    const now = performance.now();
-    const waiting = lastKey.current === "";
-    if (!waiting && now - lastSample.current < SAMPLE_EVERY_MS) return;
-    lastSample.current = now;
     const target = controls?.target;
     if (!target) return;
     const dist = camera.position.distanceTo(target);
@@ -205,40 +220,66 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
       scene.fog.near = range.near;
       scene.fog.far = range.far;
     }
+    const now = performance.now();
+    const waiting = lastKey.current === "";
+    if (!waiting && now - lastSample.current < SAMPLE_EVERY_MS) return;
+    lastSample.current = now;
     const next = tilesAround(
       ll.lon,
       ll.lat,
       z,
       ringForDistance(dist, z, ll.lat),
     );
+    const farZ = landZoomForDistance(CITY_MAX_DISTANCE_M);
+    const preload =
+      z > farZ
+        ? tilesAround(
+            ll.lon,
+            ll.lat,
+            farZ,
+            ringForDistance(CITY_MAX_DISTANCE_M, farZ, ll.lat),
+          )
+        : [];
+    preloadRef.current = preload;
     const key = tileSetKey(next);
     if (key === lastKey.current) return;
     lastKey.current = key;
-    cache.setKeep(next.map(tileKey));
-    setTiles(next);
-    setGeoms(visibleFromCache(next, cache));
+    cache.setKeep(keepKeys(next, shownRef.current, preload));
+    setWanted(next);
+    const prevZ = shownRef.current[0]?.z;
+    const zoomChanged = prevZ != null && prevZ !== z;
+    // Hold the previous LOD until the new zoom's window is in cache.
+    if (tilesReady(next, cache) || !zoomChanged) {
+      shownRef.current = next;
+      setShown(next);
+      setGeoms(visibleFromCache(next, cache));
+    }
   });
 
   useEffect(() => {
+    if (wanted.length === 0) return;
     let cancelled = false;
-    const missing = tiles.filter((t) => !cache.has(tileKey(t)));
-    if (missing.length === 0) {
-      return () => {
-        cancelled = true;
-      };
-    }
+    const origin = originRef.current;
 
-    void Promise.all(
-      missing.map((tile) => cache.load(tile, originRef.current)),
-    ).then(() => {
-      if (cancelled) return;
-      setGeoms(visibleFromCache(tiles, cache));
-    });
+    void (async () => {
+      const missing = wanted.filter((t) => !cache.has(tileKey(t)));
+      if (missing.length > 0) {
+        await Promise.all(missing.map((tile) => cache.load(tile, origin)));
+        if (cancelled) return;
+        shownRef.current = wanted;
+        setShown(wanted);
+        setGeoms(visibleFromCache(wanted, cache));
+      }
+
+      const preload = preloadRef.current.filter((t) => !cache.has(tileKey(t)));
+      if (preload.length === 0) return;
+      await Promise.all(preload.map((tile) => cache.load(tile, origin)));
+    })();
 
     return () => {
       cancelled = true;
     };
-  }, [cache, tiles]);
+  }, [cache, wanted]);
 
   useLayoutEffect(() => {
     return () => {
@@ -250,7 +291,7 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
   const ground = useMemo(() => groundGeometry(GROUND_SIZE_M), []);
   useLayoutEffect(() => () => ground.dispose(), [ground]);
 
-  const visible = tiles
+  const visible = shown
     .map((t) => {
       const key = tileKey(t);
       const geom = geoms.get(key);

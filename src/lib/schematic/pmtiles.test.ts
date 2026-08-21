@@ -1,17 +1,20 @@
 import { describe, expect, it } from "vitest";
 import vtpbf from "vt-pbf";
-import { HUBKGX_ORIGIN } from "./geo";
+import { CITY_MAX_DISTANCE_M, HUBKGX_ORIGIN } from "./geo";
 import { ringAabb } from "./osm";
 import {
+  FOG_BANDS,
   fogRange,
   landZoomForDistance,
   latToTileY,
   lonLatToTile,
   lonToTileX,
+  nextCoarserLandZoom,
   tileKey,
   tilePointToLonLat,
   tileToLat,
   tileToLon,
+  tileWidthM,
   ringForDistance,
   surfaceFromMvt,
   tilesAround,
@@ -89,6 +92,16 @@ describe("landZoomForDistance", () => {
   });
 });
 
+describe("nextCoarserLandZoom", () => {
+  it("steps down the z15–z11 ladder and stops at z11", () => {
+    expect(nextCoarserLandZoom(120)).toBe(14);
+    expect(nextCoarserLandZoom(3_000)).toBe(13);
+    expect(nextCoarserLandZoom(8_000)).toBe(12);
+    expect(nextCoarserLandZoom(20_000)).toBe(11);
+    expect(nextCoarserLandZoom(23_000)).toBeNull();
+  });
+});
+
 describe("ringForDistance", () => {
   it("grows the neighbourhood as the camera pulls back", () => {
     expect(ringForDistance(150, 15)).toBe(1);
@@ -98,17 +111,29 @@ describe("ringForDistance", () => {
     );
     expect(ringForDistance(10_000, 13)).toBeLessThanOrEqual(3);
   });
+
+  it("uses a 7×7 window at the far-orbit z14 preload distance", () => {
+    expect(ringForDistance(CITY_MAX_DISTANCE_M, 14)).toBe(3);
+  });
 });
 
 describe("fogRange", () => {
-  it("keeps near past the schematic and far on the tile window", () => {
+  it("uses tight bands when close and steps at 200/500/1k/2k/5k", () => {
     const close = fogRange(150, 15);
-    expect(close.near).toBeGreaterThanOrEqual(80);
-    expect(close.far).toBeGreaterThan(close.near);
-    const far = fogRange(4_000, 14);
-    expect(far.near).toBeGreaterThan(close.near);
-    expect(far.far).toBeGreaterThan(far.near);
-    expect(far.far).toBeLessThanOrEqual((2 * ringForDistance(4_000, 14) + 1) * 2_000);
+    expect(close.near).toBe(FOG_BANDS[0]!.near);
+    expect(close.far).toBe(FOG_BANDS[0]!.far);
+    expect(fogRange(200, 15).far).toBe(FOG_BANDS[0]!.far);
+    expect(fogRange(201, 15).far).toBe(FOG_BANDS[1]!.far);
+    expect(fogRange(500, 15).far).toBe(FOG_BANDS[1]!.far);
+    expect(fogRange(1_000, 15).far).toBe(FOG_BANDS[2]!.far);
+    expect(fogRange(2_000, 15).far).toBe(FOG_BANDS[3]!.far);
+
+    const city = fogRange(4_000, 14);
+    const windowM =
+      (2 * ringForDistance(4_000, 14) + 1) * tileWidthM(14, 51.53);
+    expect(city.far).toBeLessThanOrEqual(windowM);
+    expect(city.far).toBe(Math.min(FOG_BANDS[4]!.far, windowM));
+    expect(city.far).toBeGreaterThan(city.near);
   });
 });
 
