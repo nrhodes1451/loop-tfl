@@ -84,6 +84,8 @@ export type StationScene3DProps = {
   showSchematic?: boolean;
   /** London PMTiles surface when the extract is present. */
   usePmtiles?: boolean;
+  /** Archive version keying the immutable tile URLs. */
+  tilesVersion?: string | null;
   /** Left-drag pans the ground instead of orbiting. */
   panMode?: boolean;
 };
@@ -821,6 +823,7 @@ export function StationScene3D({
   showSurface = true,
   showSchematic = true,
   usePmtiles = false,
+  tilesVersion = null,
   panMode = false,
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
@@ -1043,7 +1046,9 @@ export function StationScene3D({
         <FrameCamera frame={frame} reframeKey={reframeKey} />
         {geoScene ? (
           <>
-            {showSurface ? <PmtilesSurface origin={origin} /> : null}
+            {showSurface && tilesVersion ? (
+              <PmtilesSurface origin={origin} tilesVersion={tilesVersion} />
+            ) : null}
             {showSchematic
               ? built.map((row) => {
                   if (!row.placement) return null;

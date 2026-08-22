@@ -35,9 +35,12 @@ function parseRange(
   return { start, end };
 }
 
-async function fileSize(): Promise<number | null> {
+type FileInfo = { size: number; mtimeMs: number };
+
+async function fileInfo(): Promise<FileInfo | null> {
   try {
-    return (await stat(FILE_PATH)).size;
+    const info = await stat(FILE_PATH);
+    return { size: info.size, mtimeMs: info.mtimeMs };
   } catch (err) {
     if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
       return null;
@@ -46,30 +49,56 @@ async function fileSize(): Promise<number | null> {
   }
 }
 
+function etagOf({ size, mtimeMs }: FileInfo): string {
+  return `"${size.toString(16)}-${Math.floor(mtimeMs).toString(16)}"`;
+}
+
+/** A strong validator is what lets a browser store the 206 partials at all. */
+function baseHeaders(info: FileInfo): Record<string, string> {
+  return {
+    "Accept-Ranges": "bytes",
+    "Content-Type": CONTENT_TYPE,
+    "Cache-Control": "public, max-age=3600",
+    ETag: etagOf(info),
+    "Last-Modified": new Date(
+      Math.floor(info.mtimeMs / 1000) * 1000,
+    ).toUTCString(),
+  };
+}
+
+function matchesEtag(header: string | null, etag: string): boolean {
+  if (!header) return false;
+  return header
+    .split(",")
+    .some((tag) => tag.trim() === etag || tag.trim() === "*");
+}
+
 function streamRange(start: number, end: number): ReadableStream {
   const node = createReadStream(FILE_PATH, { start, end });
   return Readable.toWeb(node) as ReadableStream;
 }
 
 export async function HEAD() {
-  const size = await fileSize();
-  if (size == null) return new Response(null, { status: 404 });
+  const info = await fileInfo();
+  if (info == null) return new Response(null, { status: 404 });
   return new Response(null, {
     status: 200,
-    headers: {
-      "Accept-Ranges": "bytes",
-      "Content-Length": String(size),
-      "Content-Type": CONTENT_TYPE,
-      "Cache-Control": "public, max-age=3600",
-    },
+    headers: { ...baseHeaders(info), "Content-Length": String(info.size) },
   });
 }
 
 export async function GET(request: Request) {
-  const size = await fileSize();
-  if (size == null) return new Response("Not found", { status: 404 });
+  const info = await fileInfo();
+  if (info == null) return new Response("Not found", { status: 404 });
+  const { size } = info;
 
   const range = parseRange(request.headers.get("range"), size);
+  if (
+    !range &&
+    matchesEtag(request.headers.get("if-none-match"), etagOf(info))
+  ) {
+    return new Response(null, { status: 304, headers: baseHeaders(info) });
+  }
   if (range === "unsatisfiable") {
     return new Response(null, {
       status: 416,
@@ -83,12 +112,7 @@ export async function GET(request: Request) {
   if (!range) {
     return new Response(streamRange(0, size - 1), {
       status: 200,
-      headers: {
-        "Accept-Ranges": "bytes",
-        "Content-Length": String(size),
-        "Content-Type": CONTENT_TYPE,
-        "Cache-Control": "public, max-age=3600",
-      },
+      headers: { ...baseHeaders(info), "Content-Length": String(size) },
     });
   }
 
@@ -96,11 +120,9 @@ export async function GET(request: Request) {
   return new Response(streamRange(range.start, range.end), {
     status: 206,
     headers: {
-      "Accept-Ranges": "bytes",
+      ...baseHeaders(info),
       "Content-Length": String(length),
       "Content-Range": `bytes ${range.start}-${range.end}/${size}`,
-      "Content-Type": CONTENT_TYPE,
-      "Cache-Control": "public, max-age=3600",
     },
   });
 }

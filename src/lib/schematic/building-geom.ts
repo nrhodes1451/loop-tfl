@@ -123,6 +123,8 @@ export function buildingGeometry(
 ): ExtrudeGeometry {
   const geom = new ExtrudeGeometry(ringToShape(ring), { ...EXTRUDE, depth: height });
   geom.rotateX(-Math.PI / 2);
+  // Nothing samples a texture, and dropping uv keeps more tiles cached.
+  geom.deleteAttribute("uv");
   return geom;
 }
 

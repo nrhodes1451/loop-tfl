@@ -5,7 +5,6 @@
 
 import { VectorTile, type VectorTileFeature } from "@mapbox/vector-tile";
 import { PbfReader } from "pbf";
-import { PMTiles } from "pmtiles";
 import { latLonToEnu, type Aabb2, type LatLon } from "./geo";
 import {
   DEFAULT_BUILDING_HEIGHT_M,
@@ -20,6 +19,8 @@ import {
 } from "./osm";
 
 export const PMTILES_URL = "/api/osm/london.pmtiles";
+/** Archive availability plus the version that keys every tile URL. */
+export const TILES_META_URL = "/api/osm/tiles";
 export const PMTILES_ATTRIBUTION =
   "© OpenStreetMap contributors. Tiles: Protomaps";
 
@@ -77,15 +78,17 @@ const WATERWAY_DETAILS = new Set(["canal", "river"]);
 
 const ROAD_KINDS = new Set(["highway", "major_road", "rail"]);
 
-let archive: PMTiles | null = null;
-
-export function getLondonPmtiles(): PMTiles {
-  archive ??= new PMTiles(PMTILES_URL);
-  return archive;
-}
-
 export function tileKey(tile: TileCoord): string {
   return `${tile.z}/${tile.x}/${tile.y}`;
+}
+
+/**
+ * One immutable URL per tile. The archive version sits in the path so the
+ * browser disk cache serves repeat pans without a request, and a rebuilt
+ * extract lands on fresh URLs.
+ */
+export function tileUrl(tile: TileCoord, version: string): string {
+  return `${TILES_META_URL}/${encodeURIComponent(version)}/${tileKey(tile)}`;
 }
 
 export function lonToTileX(lon: number, z: number): number {
@@ -552,15 +555,16 @@ export function surfaceFromMvt(
   return out;
 }
 
+/** 204 (no such tile) and 404 (no extract) both mean nothing to draw. */
 export async function fetchTileSurface(
   tile: TileCoord,
   origin: LatLon,
-  source: PMTiles = getLondonPmtiles(),
+  version: string,
 ): Promise<TileSurface> {
-  const result = await source.getZxy(tile.z, tile.x, tile.y);
-  if (!result) return emptySurface();
-  const raw = result.data;
-  const bytes =
-    raw instanceof Uint8Array ? raw : new Uint8Array(raw as ArrayBuffer);
+  const res = await fetch(tileUrl(tile, version));
+  if (res.status === 204 || res.status === 404) return emptySurface();
+  if (!res.ok) throw new Error(`Tile ${tileKey(tile)} failed: ${res.status}`);
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  if (bytes.byteLength === 0) return emptySurface();
   return surfaceFromMvt(bytes, tile, origin);
 }

@@ -10,7 +10,7 @@ import type {
   SchematicStationRef,
 } from "@/lib/schematic/types";
 import { lineColorForSchematic } from "@/lib/tokens";
-import { PMTILES_ATTRIBUTION, PMTILES_URL } from "@/lib/schematic/pmtiles";
+import { PMTILES_ATTRIBUTION, TILES_META_URL } from "@/lib/schematic/pmtiles";
 import type { SceneStation } from "./StationScene3D";
 
 const StationScene3D = dynamic(
@@ -204,18 +204,19 @@ export function SchematicPage({
   const [showMap, setShowMap] = useState(true);
   const [showSchematic, setShowSchematic] = useState(true);
   const [panMode, setPanMode] = useState(false);
-  const [pmtilesOk, setPmtilesOk] = useState(false);
+  const [tilesVersion, setTilesVersion] = useState<string | null>(null);
   const resetView = useRef<(() => void) | null>(null);
-  const usePmtiles = pmtilesOk;
+  const usePmtiles = tilesVersion != null;
 
   useEffect(() => {
     let cancelled = false;
-    fetch(PMTILES_URL, { method: "HEAD" })
-      .then((res) => {
-        if (!cancelled) setPmtilesOk(res.ok);
+    fetch(TILES_META_URL)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json: { version?: string } | null) => {
+        if (!cancelled) setTilesVersion(json?.version ?? null);
       })
       .catch(() => {
-        if (!cancelled) setPmtilesOk(false);
+        if (!cancelled) setTilesVersion(null);
       });
     return () => {
       cancelled = true;
@@ -249,6 +250,7 @@ export function SchematicPage({
         showSurface={showMap}
         showSchematic={showSchematic}
         usePmtiles={usePmtiles}
+        tilesVersion={tilesVersion}
         panMode={panMode}
       />
 

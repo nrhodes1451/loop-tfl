@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import vtpbf from "vt-pbf";
 import { CITY_MAX_DISTANCE_M, HUBKGX_ORIGIN } from "./geo";
 import { ringAabb } from "./osm";
@@ -19,6 +19,8 @@ import {
   ringForDistance,
   surfaceFromMvt,
   tilesAround,
+  tileUrl,
+  fetchTileSurface,
   zoomForDistance,
   type TileCoord,
 } from "./pmtiles";
@@ -62,9 +64,12 @@ function fromEast(coords: number[][]) {
 
 type MvtLayers = Parameters<typeof vtpbf.fromGeojsonVt>[0];
 
+function mvtBytes(layers: MvtLayers) {
+  return new Uint8Array(vtpbf.fromGeojsonVt(layers));
+}
+
 function decodeTile(tile: TileCoord, layers: MvtLayers) {
-  const buf = vtpbf.fromGeojsonVt(layers);
-  return surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
+  return surfaceFromMvt(mvtBytes(layers), tile, HUBKGX_ORIGIN);
 }
 
 /** A z15 tile and its eastern neighbour, sharing one vertical edge. */
@@ -439,5 +444,69 @@ describe("surfaceFromMvt tile seams", () => {
     const seam = tileEnuRect(west, HUBKGX_ORIGIN).maxX;
     expect(ringAabb(a.buildings[0]!.ring).maxX).toBe(seam);
     expect(ringAabb(b.buildings[0]!.ring).minX).toBe(seam);
+  });
+});
+
+describe("tileUrl", () => {
+  it("puts the archive version ahead of z/x/y", () => {
+    expect(tileUrl({ z: 15, x: 16368, y: 10891 }, "a1b2c3")).toBe(
+      "/api/osm/tiles/a1b2c3/15/16368/10891",
+    );
+  });
+
+  it("escapes a version that would otherwise change the path", () => {
+    expect(tileUrl({ z: 1, x: 0, y: 0 }, "a/b")).toBe("/api/osm/tiles/a%2Fb/1/0/0");
+  });
+});
+
+describe("fetchTileSurface", () => {
+  const tile: TileCoord = { z: 15, x: 16368, y: 10891 };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  function stubFetch(res: Response) {
+    const fetchMock = vi.fn(async () => res);
+    vi.stubGlobal("fetch", fetchMock);
+    return fetchMock;
+  }
+
+  it("requests the versioned tile URL", async () => {
+    const fetchMock = stubFetch(new Response(null, { status: 204 }));
+    await fetchTileSurface(tile, HUBKGX_ORIGIN, "v9");
+    expect(fetchMock).toHaveBeenCalledWith(tileUrl(tile, "v9"));
+  });
+
+  it("treats 204 as nothing to draw", async () => {
+    stubFetch(new Response(null, { status: 204 }));
+    const surface = await fetchTileSurface(tile, HUBKGX_ORIGIN, "v9");
+    expect(Object.values(surface).every((layer) => layer.length === 0)).toBe(true);
+  });
+
+  it("treats a missing archive as nothing to draw", async () => {
+    stubFetch(new Response("Not found", { status: 404 }));
+    const surface = await fetchTileSurface(tile, HUBKGX_ORIGIN, "v9");
+    expect(Object.values(surface).every((layer) => layer.length === 0)).toBe(true);
+  });
+
+  it("throws on a server error so the tile can be retried", async () => {
+    stubFetch(new Response("Boom", { status: 500 }));
+    await expect(fetchTileSurface(tile, HUBKGX_ORIGIN, "v9")).rejects.toThrow(
+      /15\/16368\/10891/,
+    );
+  });
+
+  it("decodes MVT bytes from a 200", async () => {
+    const bytes = mvtBytes({
+      roads: {
+        features: [
+          { id: 1, type: 2, geometry: [linePath()], tags: { kind: "highway" } },
+        ],
+      },
+    });
+    stubFetch(new Response(bytes, { status: 200 }));
+    const surface = await fetchTileSurface(tile, HUBKGX_ORIGIN, "v9");
+    expect(surface.roads).toHaveLength(1);
   });
 });

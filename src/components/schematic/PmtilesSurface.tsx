@@ -42,8 +42,14 @@ import {
 /** Ground plane in ENU metres — Greater London fits with margin. */
 const GROUND_SIZE_M = 50_000;
 const SAMPLE_EVERY_MS = 120;
-/** One 7×7 window per zoom so pulling out does not evict closer tiles. */
-const MAX_TILES_PER_ZOOM = 49;
+/**
+ * Half a window of pan history beyond the widest 7×7 view, so stepping one
+ * tile no longer evicts the tile just left behind. Kept small on purpose: a
+ * z15 tile is roughly 2 MB of extruded geometry, so this is already ~150 MB
+ * per zoom. Tile bytes come from the browser cache, so an eviction now costs
+ * only decode and extrude.
+ */
+const MAX_TILES_PER_ZOOM = 72;
 
 function noopRaycast() {}
 
@@ -93,20 +99,33 @@ class TileGeomCache {
   }
 
   geom(key: string): SurfaceTileGeom | undefined | null {
-    return this.stored.get(key);
+    const hit = this.stored.get(key);
+    if (hit !== undefined) this.touch(key);
+    return hit;
   }
 
-  private remember(key: string, geom: SurfaceTileGeom | null) {
-    this.stored.set(key, geom);
+  private orderFor(key: string): string[] {
     const z = Number.parseInt(key, 10);
     let order = this.orderByZoom.get(z);
     if (!order) {
       order = [];
       this.orderByZoom.set(z, order);
     }
+    return order;
+  }
+
+  /** Move to the recent end of its zoom's order, so eviction is LRU. */
+  private touch(key: string) {
+    const order = this.orderFor(key);
     const idx = order.indexOf(key);
     if (idx >= 0) order.splice(idx, 1);
     order.push(key);
+  }
+
+  private remember(key: string, geom: SurfaceTileGeom | null) {
+    this.stored.set(key, geom);
+    this.touch(key);
+    const order = this.orderFor(key);
     while (order.length > MAX_TILES_PER_ZOOM) {
       const drop = order.find((k) => !this.keep.has(k));
       if (drop == null) break;
@@ -117,12 +136,16 @@ class TileGeomCache {
     }
   }
 
-  load(tile: TileCoord, origin: LatLon): Promise<SurfaceTileGeom | null> {
+  load(
+    tile: TileCoord,
+    origin: LatLon,
+    version: string,
+  ): Promise<SurfaceTileGeom | null> {
     const key = tileKey(tile);
     if (this.stored.has(key)) return Promise.resolve(this.stored.get(key)!);
     const pending = this.inflight.get(key);
     if (pending) return pending;
-    const next = fetchTileSurface(tile, origin)
+    const next = fetchTileSurface(tile, origin, version)
       .then((features) => {
         this.inflight.delete(key);
         const geom = featuresToTileGeom(features);
@@ -180,7 +203,13 @@ function LayerMesh({
   );
 }
 
-export function PmtilesSurface({ origin }: { origin: LatLon }) {
+export function PmtilesSurface({
+  origin,
+  tilesVersion,
+}: {
+  origin: LatLon;
+  tilesVersion: string;
+}) {
   const controls = useThree((s) => s.controls) as OrbitControlsImpl | null;
   const camera = useThree((s) => s.camera);
   const scene = useThree((s) => s.scene);
@@ -264,7 +293,9 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
     void (async () => {
       const missing = wanted.filter((t) => !cache.has(tileKey(t)));
       if (missing.length > 0) {
-        await Promise.all(missing.map((tile) => cache.load(tile, origin)));
+        await Promise.all(
+          missing.map((tile) => cache.load(tile, origin, tilesVersion)),
+        );
         if (cancelled) return;
         shownRef.current = wanted;
         setShown(wanted);
@@ -273,13 +304,15 @@ export function PmtilesSurface({ origin }: { origin: LatLon }) {
 
       const preload = preloadRef.current.filter((t) => !cache.has(tileKey(t)));
       if (preload.length === 0) return;
-      await Promise.all(preload.map((tile) => cache.load(tile, origin)));
+      await Promise.all(
+        preload.map((tile) => cache.load(tile, origin, tilesVersion)),
+      );
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [cache, wanted]);
+  }, [cache, wanted, tilesVersion]);
 
   useLayoutEffect(() => {
     return () => {
