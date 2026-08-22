@@ -4,6 +4,10 @@
  * Do not import plan/status/topology.
  */
 
+import {
+  SCHEMATIC_LINE_LEVEL,
+  normalizeSchematicLineId,
+} from "./levels";
 import type {
   SchematicEdge,
   SchematicEdgeMode,
@@ -56,34 +60,6 @@ const LINE_DY = 4.4;
 const LEVEL_DX = 6.5;
 const LIFT_OFFSET = 1.4;
 
-/** King's Cross-style depth conventions. Not survey depths. */
-const LINE_LEVEL: Record<string, number> = {
-  circle: -2,
-  "hammersmith-city": -2,
-  metropolitan: -2,
-  district: -2,
-  tram: -2,
-  dlr: -2,
-  "london-overground": -2,
-  overground: -2,
-  liberty: -2,
-  lioness: -2,
-  mildmay: -2,
-  suffragette: -2,
-  weaver: -2,
-  windrush: -2,
-  "national-rail": -2,
-  "elizabeth-line": -3,
-  elizabeth: -3,
-  bakerloo: -4,
-  central: -4,
-  jubilee: -4,
-  "waterloo-city": -4,
-  victoria: -4,
-  piccadilly: -5,
-  northern: -6,
-};
-
 export function physicalPlatformId(servicePlatformId: string): string {
   const i = servicePlatformId.indexOf("::");
   return i === -1 ? servicePlatformId : servicePlatformId.slice(0, i);
@@ -111,7 +87,9 @@ function lineLevel(
   assigned: Map<string, number>,
   used: Set<number>,
 ): number {
-  const known = LINE_LEVEL[lineId];
+  const known =
+    SCHEMATIC_LINE_LEVEL[lineId] ??
+    SCHEMATIC_LINE_LEVEL[normalizeSchematicLineId(lineId)];
   if (known != null) return known;
   const hit = assigned.get(lineId);
   if (hit != null) return hit;
@@ -160,7 +138,7 @@ function osmMapUrl(lat: number, lon: number): string {
 
 export function generateSchematic(input: GenerateStationInput): SchematicStation {
   const unknownAssigned = new Map<string, number>();
-  const usedLevels = new Set<number>(Object.values(LINE_LEVEL));
+  const usedLevels = new Set<number>(Object.values(SCHEMATIC_LINE_LEVEL));
 
   type PhysPlat = {
     physicalId: string;

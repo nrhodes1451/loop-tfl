@@ -4,6 +4,7 @@
  */
 
 import { lineColorForSchematic } from "../tokens";
+import { normalizeSchematicLineId } from "./levels";
 import type {
   SchematicEdge,
   SchematicEdgeMode,
@@ -46,6 +47,8 @@ export type SceneVolume = {
   lineId?: string;
   /** Shafts use a fatter invisible hit volume in the 3D view. */
   pickable: boolean;
+  /** Yaw around the volume centre. Schematic +Z (plan Y) toward world +Z. */
+  rotationY?: number;
 };
 
 export type PolylineRole = "connection" | "outline";
@@ -99,9 +102,11 @@ const LIFT_EDGE: Vec3 = [186, 228, 242];
 
 type Footprint = { wx: number; wy: number; h: number };
 
-const PLATFORM_THIN = 0.56;
-const PLATFORM_LONG = 2.85;
-const PLATFORM_H = 0.4;
+export const PLATFORM_THIN = 0.56;
+export const PLATFORM_LONG = 2.85;
+export const PLATFORM_H = 0.4;
+/** Street slab height. `placeSchematic` pins street tops to Y = 0. */
+export const STREET_H = 0.3;
 
 /**
  * Same-line platforms sit side-by-side: long axis perpendicular to the
@@ -142,7 +147,7 @@ function footprint(node: SchematicNode, nodes: SchematicNode[]): Footprint {
     case "concourse":
       return { wx: 2.05, wy: 1.55, h: 0.48 };
     case "street":
-      return { wx: 1.95, wy: 1.45, h: 0.3 };
+      return { wx: 1.95, wy: 1.45, h: STREET_H };
     case "lift":
       return { wx: 0.44, wy: 0.44, h: 0.5 };
     case "shaft":
@@ -268,12 +273,48 @@ function levelRange(nodes: SchematicNode[]): { minLevel: number; maxLevel: numbe
   return { minLevel, maxLevel };
 }
 
-function boxWire(position: Vec3, size: Vec3): Vec3[] {
+function rotateAroundY(p: Vec3, center: Vec3, rotationY: number): Vec3 {
+  if (!rotationY) return p;
+  const dx = p[0] - center[0];
+  const dz = p[2] - center[2];
+  const c = Math.cos(rotationY);
+  const s = Math.sin(rotationY);
+  return [
+    center[0] + dx * c + dz * s,
+    p[1],
+    center[2] - dx * s + dz * c,
+  ];
+}
+
+export function boxCorners(vol: Pick<SceneVolume, "position" | "size" | "rotationY">): Vec3[] {
+  const [x, y, z] = vol.position;
+  const hw = vol.size[0] / 2;
+  const hh = vol.size[1] / 2;
+  const hd = vol.size[2] / 2;
+  const rot = vol.rotationY ?? 0;
+  const corners: Vec3[] = [];
+  for (const sx of [-1, 1] as const) {
+    for (const sy of [-1, 1] as const) {
+      for (const sz of [-1, 1] as const) {
+        corners.push(
+          rotateAroundY(
+            [x + sx * hw, y + sy * hh, z + sz * hd],
+            vol.position,
+            rot,
+          ),
+        );
+      }
+    }
+  }
+  return corners;
+}
+
+function boxWire(position: Vec3, size: Vec3, rotationY = 0): Vec3[] {
   const [x, y, z] = position;
   const hw = size[0] / 2;
   const hh = size[1] / 2;
   const hd = size[2] / 2;
-  const c: Vec3[] = [
+  const raw: Vec3[] = [
     [x - hw, y - hh, z - hd],
     [x + hw, y - hh, z - hd],
     [x + hw, y - hh, z + hd],
@@ -283,6 +324,7 @@ function boxWire(position: Vec3, size: Vec3): Vec3[] {
     [x + hw, y + hh, z + hd],
     [x - hw, y + hh, z + hd],
   ];
+  const c = raw.map((p) => rotateAroundY(p, position, rotationY));
   const e = [0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7];
   return e.map((i) => c[i]!);
 }
@@ -328,16 +370,7 @@ function computeBounds(volumes: SceneVolume[], polylines: ScenePolyline[]): Scen
   const max: Vec3 = [-Infinity, -Infinity, -Infinity];
   for (const vol of volumes) {
     if (vol.kind === "box") {
-      expandBounds(min, max, [
-        vol.position[0] - vol.size[0] / 2,
-        vol.position[1] - vol.size[1] / 2,
-        vol.position[2] - vol.size[2] / 2,
-      ]);
-      expandBounds(min, max, [
-        vol.position[0] + vol.size[0] / 2,
-        vol.position[1] + vol.size[1] / 2,
-        vol.position[2] + vol.size[2] / 2,
-      ]);
+      for (const p of boxCorners(vol)) expandBounds(min, max, p);
     } else {
       expandBounds(min, max, [
         vol.position[0] - vol.size[0],
@@ -405,7 +438,7 @@ function outlineOf(
 ): ScenePolyline {
   const points =
     vol.kind === "box"
-      ? boxWire(vol.position, vol.size)
+      ? boxWire(vol.position, vol.size, vol.rotationY ?? 0)
       : cylinderWire(vol.position, vol.size[0], vol.size[1], ring, stiles);
   return {
     id: `wire::${vol.id}`,
@@ -537,9 +570,14 @@ function connectionWidth(mode: ScenePolyline["mode"], quality: SceneQuality): nu
 
 export function buildSceneGeometry(
   topology: StationTopology,
-  opts: { quality?: SceneQuality } = {},
+  opts: {
+    quality?: SceneQuality;
+    /** lineId → yaw that aligns a +Z-long platform with the running line. */
+    platformAngles?: Record<string, number>;
+  } = {},
 ): SceneGeometry {
   const quality: SceneQuality = opts.quality ?? "high";
+  const platformAngles = opts.platformAngles;
   const radialSegments = quality === "high" ? 16 : 8;
   const ring = quality === "high" ? 12 : 8;
   const stiles = quality === "high" ? 6 : 4;
@@ -565,7 +603,17 @@ export function buildSceneGeometry(
   });
 
   for (const node of nodes) {
-    const fp = footprint(node, nodes);
+    let fp = footprint(node, nodes);
+    let rotationY: number | undefined;
+    if (node.type === "platform" && node.lineId && platformAngles) {
+      const angle =
+        platformAngles[node.lineId] ??
+        platformAngles[normalizeSchematicLineId(node.lineId)];
+      if (angle != null) {
+        fp = { wx: PLATFORM_THIN, wy: PLATFORM_LONG, h: PLATFORM_H };
+        rotationY = angle;
+      }
+    }
     const position = toWorld(node.x, node.y, node.level);
     const tint = colors(node.type, node.lineId, node.level);
     if (node.type === "lift" || node.type === "shaft") {
@@ -599,6 +647,7 @@ export function buildSceneGeometry(
         liftId: node.liftId,
         lineId: node.lineId,
         pickable: true,
+        ...(rotationY != null ? { rotationY } : {}),
       });
     }
   }

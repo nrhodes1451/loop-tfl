@@ -8,13 +8,15 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { generateSchematic } from "../src/lib/schematic/generate";
-import type { SchematicIndex } from "../src/lib/schematic/types";
+import { buildLineNetwork } from "../src/lib/schematic/lines";
+import type { SchematicIndex, SchematicStation } from "../src/lib/schematic/types";
 import type { NetworkData } from "../src/lib/types";
 
 export async function buildSchematics(): Promise<{
   generated: number;
   skipped: number;
   stations: number;
+  chains: number;
 }> {
   const root = process.cwd();
   const schematicDir = path.join(root, "data", "schematic");
@@ -26,7 +28,13 @@ export async function buildSchematics(): Promise<{
   const overrideIds = new Set<string>();
   const top = await readdir(schematicDir);
   for (const name of top) {
-    if (!name.endsWith(".json") || name === "index.json") continue;
+    if (
+      !name.endsWith(".json") ||
+      name === "index.json" ||
+      name === "lines.json"
+    ) {
+      continue;
+    }
     overrideIds.add(name.slice(0, -".json".length));
   }
 
@@ -67,9 +75,15 @@ export async function buildSchematics(): Promise<{
 
   let generated = 0;
   let skipped = 0;
+  const schematics = new Map<string, SchematicStation>();
   for (const station of network.stations) {
     if (overrideIds.has(station.id)) {
       skipped += 1;
+      const raw = await readFile(
+        path.join(schematicDir, `${station.id}.json`),
+        "utf8",
+      );
+      schematics.set(station.id, JSON.parse(raw) as SchematicStation);
       continue;
     }
     const platforms = platformsByStation.get(station.id) ?? [];
@@ -91,11 +105,13 @@ export async function buildSchematics(): Promise<{
       path.join(generatedDir, `${station.id}.json`),
       JSON.stringify(schematic),
     );
+    schematics.set(station.id, schematic);
     generated += 1;
   }
 
+  const generatedAt = new Date().toISOString();
   const index: SchematicIndex = {
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     stations: [...network.stations]
       .map((s) => ({ id: s.id, name: s.name, lat: s.lat, lon: s.lon }))
       .sort((a, b) => a.name.localeCompare(b.name, "en")),
@@ -105,7 +121,23 @@ export async function buildSchematics(): Promise<{
     JSON.stringify(index, null, 2),
   );
 
-  return { generated, skipped, stations: index.stations.length };
+  const lines = buildLineNetwork({
+    stations: network.stations,
+    edges: network.edges,
+    schematics,
+    generatedAt,
+  });
+  await writeFile(
+    path.join(schematicDir, "lines.json"),
+    JSON.stringify(lines),
+  );
+
+  return {
+    generated,
+    skipped,
+    stations: index.stations.length,
+    chains: lines.chains.length,
+  };
 }
 
 async function fileExists(p: string): Promise<boolean> {
@@ -123,7 +155,7 @@ export async function main() {
   }
   const result = await buildSchematics();
   console.log(
-    `Wrote ${result.generated} generated schematics, skipped ${result.skipped} override(s), index ${result.stations} stations`,
+    `Wrote ${result.generated} generated schematics, skipped ${result.skipped} override(s), index ${result.stations} stations, ${result.chains} line chains`,
   );
 }
 

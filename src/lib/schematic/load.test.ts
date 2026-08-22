@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   clearSchematicCache,
   listSchematicStations,
+  loadLineNetwork,
   loadSchematic,
   loadSchematicsNear,
   SchematicNotFoundError,
@@ -42,6 +43,14 @@ describe("loadSchematic", () => {
     const wide = await loadSchematicsNear(HUBKGX_ORIGIN, 2_000);
     expect(wide.some((s) => s.stationId === "HUBKGX")).toBe(true);
     expect(wide.length).toBeGreaterThanOrEqual(near.length);
+  });
+
+  it("loads the inter-station line network", async () => {
+    clearSchematicCache();
+    const network = await loadLineNetwork();
+    expect(network.chains.length).toBeGreaterThan(50);
+    expect(network.stations.HUBKGX).toBeTruthy();
+    expect(network.angles.HUBKGX?.circle).toBeTypeOf("number");
   });
 
   it("rejects unsafe ids", async () => {

@@ -4,6 +4,7 @@ import {
   LEVEL_SPACING,
   VOLUME_BOTTOM_OPACITY,
   VOLUME_FACE_OPACITY,
+  boxCorners,
   buildSceneGeometry,
   cameraFrame,
   hoverHighlight,
@@ -199,6 +200,25 @@ describe("buildSceneGeometry HUBKGX", () => {
           victoria.position[0],
       ),
     );
+    expect(circle1.rotationY).toBeUndefined();
+  });
+
+  it("aligns platforms to a supplied line bearing with the thin×long footprint", () => {
+    const aligned = buildSceneGeometry(topology, {
+      quality: "high",
+      platformAngles: { circle: Math.PI / 4 },
+    });
+    const plat = aligned.volumes.find((v) => v.lineId === "circle")!;
+    expect(plat.size[0]).toBeCloseTo(0.56);
+    expect(plat.size[2]).toBeCloseTo(2.85);
+    expect(plat.rotationY).toBeCloseTo(Math.PI / 4);
+    const corners = boxCorners(plat);
+    const xs = corners.map((p) => p[0]);
+    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(plat.size[0] + 0.1);
+    expect(aligned.bounds.min[0]).toBeLessThanOrEqual(Math.min(...xs));
+    expect(aligned.bounds.max[0]).toBeGreaterThanOrEqual(Math.max(...xs));
+    const northern = aligned.volumes.find((v) => v.lineId === "northern")!;
+    expect(northern.rotationY).toBeUndefined();
   });
 
   it("distinguishes node types by silhouette", () => {

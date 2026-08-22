@@ -45,6 +45,7 @@ next-env.d.ts
 # derived station schematics (regenerate with npm run build-schematics)
 /data/schematic/generated/
 /data/schematic/index.json
+/data/schematic/lines.json
 
 # London PMTiles extract (npm run fetch-london-pmtiles) — not committed
 /data/osm/london.pmtiles

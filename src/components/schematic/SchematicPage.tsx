@@ -11,6 +11,7 @@ import type {
 } from "@/lib/schematic/types";
 import { lineColorForSchematic } from "@/lib/tokens";
 import { PMTILES_ATTRIBUTION, TILES_META_URL } from "@/lib/schematic/pmtiles";
+import type { LineNetwork } from "@/lib/schematic/lines";
 import type { SceneStation } from "./StationScene3D";
 
 const StationScene3D = dynamic(
@@ -203,8 +204,10 @@ export function SchematicPage({
   const [showLegend, setShowLegend] = useState(true);
   const [showMap, setShowMap] = useState(true);
   const [showSchematic, setShowSchematic] = useState(true);
+  const [showLines, setShowLines] = useState(true);
   const [panMode, setPanMode] = useState(false);
   const [tilesVersion, setTilesVersion] = useState<string | null>(null);
+  const [lineNetwork, setLineNetwork] = useState<LineNetwork | null>(null);
   const resetView = useRef<(() => void) | null>(null);
   const usePmtiles = tilesVersion != null;
 
@@ -217,6 +220,21 @@ export function SchematicPage({
       })
       .catch(() => {
         if (!cancelled) setTilesVersion(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/network/lines")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json: LineNetwork | null) => {
+        if (!cancelled) setLineNetwork(json);
+      })
+      .catch(() => {
+        if (!cancelled) setLineNetwork(null);
       });
     return () => {
       cancelled = true;
@@ -252,6 +270,8 @@ export function SchematicPage({
         usePmtiles={usePmtiles}
         tilesVersion={tilesVersion}
         panMode={panMode}
+        showLines={showLines}
+        lineNetwork={lineNetwork}
       />
 
       <header
@@ -414,6 +434,11 @@ export function SchematicPage({
               checked={showSchematic}
               onChange={setShowSchematic}
               label="Schematic"
+            />
+            <ChromeCheck
+              checked={showLines}
+              onChange={setShowLines}
+              label="Lines"
             />
             <ChromeCheck
               checked={panMode}

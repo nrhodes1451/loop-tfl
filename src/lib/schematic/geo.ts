@@ -4,6 +4,9 @@
  */
 
 import {
+  boxCorners,
+  LEVEL_SPACING,
+  STREET_H,
   makeBounds,
   type SceneBounds,
   type SceneGeometry,
@@ -14,6 +17,14 @@ import {
 export const SCHEMATIC_METRES_PER_UNIT = 4;
 export const SURFACE_SIZE_M = 400;
 export const CUTOUT_PAD_M = 8;
+
+/** World Y of a schematic volume centre after `placeSchematic` pins street tops to 0. */
+export function schematicLevelWorldY(
+  level: number,
+  scale: number = SCHEMATIC_METRES_PER_UNIT,
+): number {
+  return level * LEVEL_SPACING * scale - (STREET_H / 2) * scale;
+}
 /** Orbit ceiling when the London PMTiles surface is active. */
 export const CITY_MAX_DISTANCE_M = 3_000;
 export const CITY_FAR_M = 80_000;
@@ -238,16 +249,8 @@ function expandAabb(aabb: Aabb2, x: number, z: number) {
 }
 
 function volumeLocalCorners(vol: SceneVolume): Vec3[] {
+  if (vol.kind === "box") return boxCorners(vol);
   const [x, y, z] = vol.position;
-  if (vol.kind === "box") {
-    const hw = vol.size[0] / 2;
-    const hh = vol.size[1] / 2;
-    const hd = vol.size[2] / 2;
-    return [
-      [x - hw, y - hh, z - hd],
-      [x + hw, y + hh, z + hd],
-    ];
-  }
   const r = vol.size[0];
   const hh = vol.size[1] / 2;
   return [

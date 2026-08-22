@@ -10,10 +10,12 @@ import {
   NEIGHBOR_LOAD_RADIUS_M,
   type LatLon,
 } from "./geo";
+import type { LineNetwork } from "./lines";
 import type { SchematicIndex, SchematicStation, SchematicStationRef } from "./types";
 
 const stationCache = new Map<string, { mtimeMs: number; data: SchematicStation }>();
 let indexCache: { mtimeMs: number; data: SchematicIndex } | null = null;
+let linesCache: { mtimeMs: number; data: LineNetwork } | null = null;
 
 export class SchematicNotFoundError extends Error {
   constructor(public stationId: string) {
@@ -93,7 +95,18 @@ export async function loadSchematicsNear(
   return Promise.all(hits.map((s) => loadSchematic(s.id)));
 }
 
+export async function loadLineNetwork(): Promise<LineNetwork> {
+  const filePath = path.join(process.cwd(), "data", "schematic", "lines.json");
+  const { mtimeMs } = await stat(filePath);
+  if (linesCache && linesCache.mtimeMs === mtimeMs) return linesCache.data;
+  const raw = await readFile(filePath, "utf8");
+  const data = JSON.parse(raw) as LineNetwork;
+  linesCache = { mtimeMs, data };
+  return data;
+}
+
 export function clearSchematicCache() {
   stationCache.clear();
   indexCache = null;
+  linesCache = null;
 }

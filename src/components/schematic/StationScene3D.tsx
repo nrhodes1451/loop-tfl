@@ -63,7 +63,9 @@ import type {
   SchematicStation,
   SchematicStationRef,
 } from "@/lib/schematic/types";
+import type { LineNetwork } from "@/lib/schematic/lines";
 import { PmtilesSurface } from "./PmtilesSurface";
+import { TubeLayer } from "./TubeLayer";
 
 export type SceneStation = {
   id: string;
@@ -88,6 +90,8 @@ export type StationScene3DProps = {
   tilesVersion?: string | null;
   /** Left-drag pans the ground instead of orbiting. */
   panMode?: boolean;
+  showLines?: boolean;
+  lineNetwork?: LineNetwork | null;
 };
 
 function detectQuality(): SceneQuality {
@@ -212,6 +216,7 @@ function VolumeMesh({
     <group>
       <mesh
         position={volume.position}
+        rotation={[0, volume.rotationY ?? 0, 0]}
         renderOrder={1}
         {...(!volume.pickable ? { raycast: noopRaycast } : {})}
         onPointerOver={volume.pickable ? onOver : undefined}
@@ -813,6 +818,14 @@ function useNearbyStations(
   }, [enabled, extra, focusLat, focusLon, initialById, shown]);
 }
 
+function platformAnglesKey(angles?: Record<string, number>): string {
+  if (!angles) return "";
+  return Object.keys(angles)
+    .sort()
+    .map((k) => `${k}:${angles[k]!.toFixed(5)}`)
+    .join(",");
+}
+
 export function StationScene3D({
   selectedId,
   stations,
@@ -825,6 +838,8 @@ export function StationScene3D({
   usePmtiles = false,
   tilesVersion = null,
   panMode = false,
+  showLines = false,
+  lineNetwork = null,
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
   const stickyHover = useCoarsePointer();
@@ -910,29 +925,37 @@ export function StationScene3D({
   const selectedRow = useMemo(() => {
     const s = stations.find((row) => row.id === selectedId) ?? stations[0];
     if (!s) return null;
-    const geom = buildSceneGeometry(s.topology, { quality });
+    const geom = buildSceneGeometry(s.topology, {
+      quality,
+      platformAngles: lineNetwork?.angles[s.id],
+    });
     const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);
     return {
       station: s,
       geom,
       placement: geoScene ? placeSchematicAt(geom, world) : null,
     };
-  }, [stations, selectedId, quality, geoScene, origin]);
+  }, [stations, selectedId, quality, geoScene, origin, lineNetwork]);
   const built = useMemo(() => {
     const cache = geomCacheRef.current;
     const ids = visibleKey ? visibleKey.split("\0") : [];
-    const keep = new Set(ids.map((id) => `${quality}\0${id}`));
+    const keyOf = (id: string) =>
+      `${quality}\0${id}\0${platformAnglesKey(lineNetwork?.angles[id])}`;
+    const keep = new Set(ids.map(keyOf));
     for (const key of [...cache.keys()]) {
       if (!keep.has(key)) cache.delete(key);
     }
     const rows: BuiltRow[] = [];
     for (const id of ids) {
-      const key = `${quality}\0${id}`;
+      const key = keyOf(id);
       let row = cache.get(key);
       if (!row) {
         const s = loadedById.get(id);
         if (!s) continue;
-        const geom = buildSceneGeometry(s.topology, { quality });
+        const geom = buildSceneGeometry(s.topology, {
+          quality,
+          platformAngles: lineNetwork?.angles[id],
+        });
         const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);
         row = {
           station: s,
@@ -944,7 +967,7 @@ export function StationScene3D({
       rows.push(row);
     }
     return rows;
-  }, [visibleKey, loadedById, quality, geoScene, origin]);
+  }, [visibleKey, loadedById, quality, geoScene, origin, lineNetwork]);
   const frame = useMemo(() => {
     if (!selectedRow) {
       return cameraFrame({
@@ -1048,6 +1071,15 @@ export function StationScene3D({
           <>
             {showSurface && tilesVersion ? (
               <PmtilesSurface origin={origin} tilesVersion={tilesVersion} />
+            ) : null}
+            {showLines && lineNetwork ? (
+              <TubeLayer
+                network={lineNetwork}
+                origin={origin}
+                focus={{ lat: lod.lat, lon: lod.lon }}
+                shown={shown}
+                quality={quality}
+              />
             ) : null}
             {showSchematic
               ? built.map((row) => {
