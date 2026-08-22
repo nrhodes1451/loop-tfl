@@ -176,26 +176,10 @@ export function ringForDistance(
   return Math.min(3, Math.max(1, Math.ceil(span / tileM)));
 }
 
-/** Camera-distance fog bands. Tight when close; stable within each step. */
-export const FOG_BANDS = [
-  { maxDist: 200, near: 160, far: 380 },
-  { maxDist: 500, near: 350, far: 750 },
-  { maxDist: 1_000, near: 700, far: 1_400 },
-  { maxDist: 2_000, near: 1_400, far: 2_600 },
-  { maxDist: Infinity, near: 3_200, far: 5_500 },
-] as const;
-
-function fogBand(distM: number): { near: number; far: number } {
-  for (const band of FOG_BANDS) {
-    if (distM <= band.maxDist) return { near: band.near, far: band.far };
-  }
-  const last = FOG_BANDS[FOG_BANDS.length - 1]!;
-  return { near: last.near, far: last.far };
-}
-
 /**
- * Linear fog: close-in bands hug the view; far is also capped at the
- * tile-window edge so unloaded tiles never pop out of the mist.
+ * Linear fog that tracks camera distance so the ramp stays tight while
+ * zooming. Far is still capped at the tile-window edge so unloaded tiles
+ * never pop out of the mist.
  */
 export function fogRange(
   distM: number,
@@ -204,9 +188,9 @@ export function fogRange(
 ): { near: number; far: number } {
   const ring = ringForDistance(distM, z, lat);
   const windowM = (2 * ring + 1) * tileWidthM(z, lat);
-  const band = fogBand(Number.isFinite(distM) ? distM : Infinity);
-  const far = Math.max(band.near + 50, Math.min(band.far, windowM));
-  const near = Math.max(80, Math.min(band.near, far * 0.65));
+  const d = Number.isFinite(distM) ? distM : windowM;
+  const near = Math.max(80, d * 0.9);
+  const far = Math.max(near + 50, Math.min(d * 2.2, windowM));
   return { near, far };
 }
 

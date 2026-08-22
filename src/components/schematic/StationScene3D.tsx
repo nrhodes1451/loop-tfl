@@ -296,7 +296,13 @@ function GlowLine({
   );
 }
 
-function FrameCamera({ frame }: { frame: CameraFrame }) {
+function FrameCamera({
+  frame,
+  reframeKey,
+}: {
+  frame: CameraFrame;
+  reframeKey: string;
+}) {
   const camera = useThree((s) => s.camera);
   useLayoutEffect(() => {
     camera.position.set(...frame.position);
@@ -309,7 +315,9 @@ function FrameCamera({ frame }: { frame: CameraFrame }) {
       /* eslint-enable react-hooks/immutability */
     }
     camera.updateProjectionMatrix();
-  }, [camera, frame]);
+    /* Station / geo-mode changes only — overlay toggles rebuild `frame`. */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [camera, reframeKey]);
   return null;
 }
 
@@ -475,6 +483,7 @@ function CompassButton({
 
 function SceneControls({
   frame,
+  reframeKey,
   controlsRef,
   panMode,
   panAltitude,
@@ -482,6 +491,7 @@ function SceneControls({
   onDragEnd,
 }: {
   frame: CameraFrame;
+  reframeKey: string;
   controlsRef: RefObject<OrbitControlsImpl | null>;
   panMode: boolean;
   panAltitude: RefObject<{ cam: number; target: number } | null>;
@@ -498,7 +508,9 @@ function SceneControls({
     controls.minDistance = frame.minDistance;
     controls.maxDistance = frame.maxDistance;
     controls.saveState();
-  }, [controlsRef, frame]);
+    /* Station / geo-mode changes only — overlay toggles rebuild `frame`. */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlsRef, reframeKey]);
 
   useLayoutEffect(() => {
     if (!panMode) {
@@ -509,7 +521,9 @@ function SceneControls({
       cam: camera.position.y,
       target: controlsRef.current?.target.y ?? frame.target[1],
     };
-  }, [panMode, camera, controlsRef, frame.target, panAltitude]);
+    /* Capture height when pan mode turns on, not when overlay toggles rebuild `frame`. */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [panMode, camera, controlsRef, panAltitude]);
 
   useEffect(() => {
     const onDown = (e: KeyboardEvent) => {
@@ -568,7 +582,6 @@ function SceneControls({
         ONE: panMode ? TOUCH.PAN : TOUCH.ROTATE,
         TWO: TOUCH.DOLLY_PAN,
       }}
-      target={frame.target}
       minPolarAngle={panMode ? 0.08 : frame.minPolarAngle}
       maxPolarAngle={panMode ? 1.52 : frame.maxPolarAngle}
       minDistance={frame.minDistance}
@@ -925,6 +938,18 @@ export function StationScene3D({
       far: CITY_FAR_M,
     });
   }, [geoScene, selectedRow]);
+  const reframeKey = `${selectedId}:${geoScene ? "geo" : "local"}`;
+  const canvasCamera = useMemo(
+    () => ({
+      position: frame.position,
+      fov: 42,
+      near: 0.1,
+      far: frame.far,
+    }),
+    // Overlay toggles rebuild `frame` with a new object identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [reframeKey],
+  );
 
   const hovered = useMemo(() => {
     if (!hoveredId || !showSchematic) return undefined;
@@ -983,16 +1008,11 @@ export function StationScene3D({
           toneMapping: NoToneMapping,
           outputColorSpace: SRGBColorSpace,
         }}
-        camera={{
-          position: frame.position,
-          fov: 42,
-          near: 0.1,
-          far: frame.far,
-        }}
+        camera={canvasCamera}
         onPointerMissed={() => setHoveredId(null)}
       >
         <color attach="background" args={[SCENE_BACKGROUND]} />
-        <FrameCamera frame={frame} />
+        <FrameCamera frame={frame} reframeKey={reframeKey} />
         {geoScene ? (
           <>
             {showSurface ? <PmtilesSurface origin={origin} /> : null}
@@ -1049,6 +1069,7 @@ export function StationScene3D({
         <CompassTracker controlsRef={controlsRef} roseRef={roseRef} />
         <SceneControls
           frame={frame}
+          reframeKey={reframeKey}
           controlsRef={controlsRef}
           panMode={panMode}
           panAltitude={panAltitude}

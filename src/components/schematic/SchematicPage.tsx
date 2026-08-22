@@ -30,6 +30,8 @@ const TYPE_KEY: { id: string; name: string; shape: "slab" | "platform" | "shaft"
     { id: "shaft", name: "Lift shaft", shape: "shaft" },
   ];
 
+const NO_NEARBY: SchematicStation[] = [];
+
 const LINE_LABELS: Record<string, string> = {
   bakerloo: "Bakerloo",
   central: "Central",
@@ -192,7 +194,7 @@ function toSceneStation(
 export function SchematicPage({
   station,
   stations,
-  nearby = [],
+  nearby = NO_NEARBY,
 }: {
   station: SchematicStation;
   stations: SchematicStationRef[];

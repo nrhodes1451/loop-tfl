@@ -3,7 +3,6 @@ import vtpbf from "vt-pbf";
 import { CITY_MAX_DISTANCE_M, HUBKGX_ORIGIN } from "./geo";
 import { ringAabb } from "./osm";
 import {
-  FOG_BANDS,
   fogRange,
   landZoomForDistance,
   latToTileY,
@@ -118,21 +117,18 @@ describe("ringForDistance", () => {
 });
 
 describe("fogRange", () => {
-  it("uses tight bands when close and steps at 200/500/1k/2k/5k", () => {
+  it("tracks camera distance and caps far at the tile window", () => {
     const close = fogRange(150, 15);
-    expect(close.near).toBe(FOG_BANDS[0]!.near);
-    expect(close.far).toBe(FOG_BANDS[0]!.far);
-    expect(fogRange(200, 15).far).toBe(FOG_BANDS[0]!.far);
-    expect(fogRange(201, 15).far).toBe(FOG_BANDS[1]!.far);
-    expect(fogRange(500, 15).far).toBe(FOG_BANDS[1]!.far);
-    expect(fogRange(1_000, 15).far).toBe(FOG_BANDS[2]!.far);
-    expect(fogRange(2_000, 15).far).toBe(FOG_BANDS[3]!.far);
+    expect(close.near).toBe(150 * 0.9);
+    expect(close.far).toBe(150 * 2.2);
+    expect(fogRange(201, 15).far).toBeGreaterThan(close.far);
+    expect(fogRange(500, 15).near).toBe(500 * 0.9);
 
     const city = fogRange(4_000, 14);
     const windowM =
       (2 * ringForDistance(4_000, 14) + 1) * tileWidthM(14, 51.53);
+    expect(city.near).toBeGreaterThan(close.near);
     expect(city.far).toBeLessThanOrEqual(windowM);
-    expect(city.far).toBe(Math.min(FOG_BANDS[4]!.far, windowM));
     expect(city.far).toBeGreaterThan(city.near);
   });
 });
