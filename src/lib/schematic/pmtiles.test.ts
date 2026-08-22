@@ -192,6 +192,7 @@ describe("surfaceFromMvt", () => {
     const surface = surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
     expect(surface.buildings).toHaveLength(1);
     expect(surface.buildings[0]!.height).toBe(22);
+    expect(surface.buildings[0]!.minHeight).toBe(0);
     expect(surface.buildings[0]!.ring.length).toBeGreaterThanOrEqual(3);
     const aabb = ringAabb(surface.buildings[0]!.ring);
     expect(aabb.maxX).toBeGreaterThan(aabb.minX);
@@ -328,6 +329,98 @@ describe("surfaceFromMvt", () => {
     });
     const surface = surfaceFromMvt(new Uint8Array(buf), tile, HUBKGX_ORIGIN);
     expect(surface.buildings).toHaveLength(0);
+  });
+
+  it("drops building:part=no outlines", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const surface = decodeTile(tile, {
+      buildings: {
+        features: [
+          {
+            id: 1,
+            type: 3,
+            geometry: [box(200, 200, 800, 800)],
+            tags: { kind: "building_part", kind_detail: "no", height: 136 },
+          },
+          {
+            id: 2,
+            type: 3,
+            geometry: [box(300, 300, 500, 500)],
+            tags: { kind: "building_part", kind_detail: "yes", height: 20 },
+          },
+        ],
+      },
+    });
+    expect(surface.buildings).toHaveLength(1);
+    expect(surface.buildings[0]!.height).toBe(20);
+  });
+
+  it("drops a building outline that contains a building_part, keeps a neighbour", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const surface = decodeTile(tile, {
+      buildings: {
+        features: [
+          {
+            id: 1,
+            type: 3,
+            geometry: [box(200, 200, 800, 800)],
+            tags: { kind: "building", height: 41 },
+          },
+          {
+            id: 2,
+            type: 3,
+            geometry: [box(300, 300, 500, 500)],
+            tags: { kind: "building_part", height: 12 },
+          },
+          {
+            id: 3,
+            type: 3,
+            geometry: [box(1200, 200, 1400, 400)],
+            tags: { kind: "building", height: 18 },
+          },
+        ],
+      },
+    });
+    expect(surface.buildings).toHaveLength(2);
+    const heights = surface.buildings.map((b) => b.height).sort((a, b) => a - b);
+    expect(heights).toEqual([12, 18]);
+  });
+
+  it("keeps a building outline when the tile has no parts", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const surface = decodeTile(tile, {
+      buildings: {
+        features: [
+          {
+            id: 1,
+            type: 3,
+            geometry: [box(200, 200, 800, 800)],
+            tags: { kind: "building", height: 22 },
+          },
+        ],
+      },
+    });
+    expect(surface.buildings).toHaveLength(1);
+    expect(surface.buildings[0]!.height).toBe(22);
+  });
+
+  it("reads min_height onto the footprint", () => {
+    const tile = lonLatToTile(HUBKGX_ORIGIN.lon, HUBKGX_ORIGIN.lat, 15);
+    const surface = decodeTile(tile, {
+      buildings: {
+        features: [
+          {
+            id: 1,
+            type: 3,
+            geometry: [box(200, 200, 400, 400)],
+            tags: { height: 135, min_height: 100 },
+          },
+        ],
+      },
+    });
+    expect(surface.buildings).toHaveLength(1);
+    expect(surface.buildings[0]!.height).toBe(135);
+    expect(surface.buildings[0]!.minHeight).toBe(100);
   });
 });
 

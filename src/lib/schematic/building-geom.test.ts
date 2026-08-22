@@ -47,6 +47,29 @@ describe("buildingGeometry normals", () => {
     geom.dispose();
   });
 
+  it("lifts the prism so min_height is the base and height is the roof", () => {
+    const geom = buildingGeometry(
+      [
+        [0, 0],
+        [10, 0],
+        [10, 8],
+        [0, 8],
+      ],
+      135,
+      100,
+    );
+    const pos = geom.getAttribute("position")!;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let i = 0; i < pos.count; i++) {
+      minY = Math.min(minY, pos.getY(i));
+      maxY = Math.max(maxY, pos.getY(i));
+    }
+    expect(minY).toBeCloseTo(100, 5);
+    expect(maxY).toBeCloseTo(135, 5);
+    geom.dispose();
+  });
+
   it("preserves those normals when merging a tile batch", () => {
     const merged = buildingsToGeometry([
       {

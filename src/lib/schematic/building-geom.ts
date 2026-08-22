@@ -75,6 +75,9 @@ const EXTRUDE = {
   curveSegments: 1,
 } as const;
 
+/** Floor for `height - minHeight` so a degenerate slab still has faces. */
+export const MIN_BUILDING_EXTRUDE_M = 0.05;
+
 function parseHexRgb(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
   const n = Number.parseInt(h, 16);
@@ -120,9 +123,13 @@ function ringToShape(ring: [number, number][]): Shape {
 export function buildingGeometry(
   ring: [number, number][],
   height: number,
+  minHeight: number = 0,
 ): ExtrudeGeometry {
-  const geom = new ExtrudeGeometry(ringToShape(ring), { ...EXTRUDE, depth: height });
+  const base = Math.max(0, minHeight);
+  const depth = Math.max(height - base, MIN_BUILDING_EXTRUDE_M);
+  const geom = new ExtrudeGeometry(ringToShape(ring), { ...EXTRUDE, depth });
   geom.rotateX(-Math.PI / 2);
+  if (base > 0) geom.translate(0, base, 0);
   // Nothing samples a texture, and dropping uv keeps more tiles cached.
   geom.deleteAttribute("uv");
   return geom;
@@ -221,13 +228,13 @@ export function mergeBuildingBatch(
 }
 
 export function buildingsToGeometry(
-  buildings: { ring: [number, number][]; height: number }[],
+  buildings: { ring: [number, number][]; height: number; minHeight?: number }[],
 ): BufferGeometry | null {
   const geoms: ExtrudeGeometry[] = [];
   for (const b of buildings) {
     const ring = simplifyRing(b.ring, MIN_RING_EDGE_M);
     if (ring.length < 3) continue;
-    const geom = buildingGeometry(ring, b.height);
+    const geom = buildingGeometry(ring, b.height, b.minHeight ?? 0);
     paintGeometry(geom, buildingColorForHeight(b.height));
     geoms.push(geom);
   }
@@ -271,7 +278,7 @@ export function featuresToTileGeom(features: {
   water: { ring: [number, number][] }[];
   waterways: { path: [number, number][] }[];
   roads: { path: [number, number][]; kind: string }[];
-  buildings: { ring: [number, number][]; height: number }[];
+  buildings: { ring: [number, number][]; height: number; minHeight?: number }[];
 }): SurfaceTileGeom {
   const waterPolys = polygonsToGeometry(features.water);
   const waterLines = ribbonsToGeometry(

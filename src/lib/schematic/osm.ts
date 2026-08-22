@@ -12,6 +12,8 @@ export const MIN_RING_EDGE_M = 2;
 export type OsmBuilding = {
   id: string;
   height: number;
+  /** Metres above ground; 0 when the volume sits on the terrain. */
+  minHeight: number;
   /** ENU metres, [east, north]. */
   ring: [number, number][];
 };
@@ -192,4 +194,35 @@ export function ringAabb(ring: [number, number][]): Aabb2 {
     aabb.maxZ = Math.max(aabb.maxZ, z);
   }
   return aabb;
+}
+
+export function ringCentroid(ring: [number, number][]): [number, number] {
+  let x = 0;
+  let z = 0;
+  for (const p of ring) {
+    x += p[0];
+    z += p[1];
+  }
+  const n = Math.max(1, ring.length);
+  return [x / n, z / n];
+}
+
+/** Ray-cast. Points on an edge may go either way. */
+export function pointInRing(
+  x: number,
+  z: number,
+  ring: [number, number][],
+): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i]![0];
+    const zi = ring[i]![1];
+    const xj = ring[j]![0];
+    const zj = ring[j]![1];
+    if (zi === zj) continue;
+    if ((zi > z) !== (zj > z) && x < ((xj - xi) * (z - zi)) / (zj - zi) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
 }

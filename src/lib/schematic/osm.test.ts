@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Aabb2 } from "./geo";
-import { clipPathToRect, clipRingToRect, ringAabb, simplifyRing } from "./osm";
+import { clipPathToRect, clipRingToRect, pointInRing, ringAabb, ringCentroid, simplifyRing } from "./osm";
 
 const RECT: Aabb2 = { minX: 0, maxX: 100, minZ: 0, maxZ: 100 };
 
@@ -139,5 +139,31 @@ describe("clipPathToRect", () => {
     const east = clipPathToRect(path, right);
     expect(west[0]![west[0]!.length - 1]).toEqual([100, 50]);
     expect(east[0]![0]).toEqual([100, 50]);
+  });
+});
+
+describe("pointInRing", () => {
+  const box: [number, number][] = [
+    [0, 0],
+    [10, 0],
+    [10, 8],
+    [0, 8],
+  ];
+
+  it("counts the centroid as inside and a corner-out point as outside", () => {
+    expect(pointInRing(5, 4, box)).toBe(true);
+    expect(pointInRing(-1, 4, box)).toBe(false);
+    expect(pointInRing(5, 20, box)).toBe(false);
+  });
+});
+
+describe("ringCentroid", () => {
+  it("averages vertices of a rectangle", () => {
+    expect(ringCentroid([
+      [0, 0],
+      [10, 0],
+      [10, 8],
+      [0, 8],
+    ])).toEqual([5, 4]);
   });
 });

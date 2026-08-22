@@ -11,7 +11,9 @@ import {
   MIN_RING_EDGE_M,
   clipPathToRect,
   clipRingToRect,
+  pointInRing,
   ringAabb,
+  ringCentroid,
   simplifyRing,
   type OsmArea,
   type OsmBuilding,
@@ -245,11 +247,22 @@ export function tilesAround(
   return out;
 }
 
-function heightFromProps(props: Record<string, unknown>): number {
-  const raw = props.height ?? props.render_height;
+function finiteMetres(raw: unknown): number | null {
   const n = typeof raw === "number" ? raw : Number.parseFloat(String(raw ?? ""));
   if (Number.isFinite(n) && n > 0) return n;
-  return DEFAULT_BUILDING_HEIGHT_M;
+  return null;
+}
+
+function heightFromProps(props: Record<string, unknown>): number {
+  return (
+    finiteMetres(props.height) ??
+    finiteMetres(props.render_height) ??
+    DEFAULT_BUILDING_HEIGHT_M
+  );
+}
+
+function minHeightFromProps(props: Record<string, unknown>): number {
+  return finiteMetres(props.min_height) ?? 0;
 }
 
 function propTrue(value: unknown): boolean {
@@ -418,6 +431,26 @@ function emptySurface(): TileSurface {
   };
 }
 
+type BuildingRow = {
+  id: string;
+  ring: [number, number][];
+  height: number;
+  minHeight: number;
+  kind: string;
+};
+
+/**
+ * OSM Simple 3D Buildings: once `building:part` volumes exist, the parent
+ * `building=*` outline is 2D-only and must not be extruded.
+ */
+function keepBuildingRow(row: BuildingRow, parts: BuildingRow[]): boolean {
+  if (row.kind !== "building") return true;
+  return !parts.some((part) => {
+    const [x, z] = ringCentroid(part.ring);
+    return pointInRing(x, z, row.ring);
+  });
+}
+
 function featId(
   tile: TileCoord,
   layer: string,
@@ -524,11 +557,15 @@ export function surfaceFromMvt(
   if (tile.z >= PMTILES_BUILDING_LAYER_MIN_ZOOM) {
     const buildings = vt.layers.buildings ?? vt.layers.building;
     if (buildings) {
+      const rows: BuildingRow[] = [];
       for (let i = 0; i < buildings.length; i++) {
         const feat = buildings.feature(i);
         if (feat.type !== 3) continue;
         const props = feat.properties as Record<string, unknown>;
-        if (kindOf(props) === "address") continue;
+        const kind = kindOf(props);
+        if (kind === "address") continue;
+        // `building:part=no` is the explicit "do not extrude" outline.
+        if (kindDetailOf(props) === "no") continue;
         const gj = feat.toGeoJSON(tile.x, tile.y, tile.z);
         if (
           gj.geometry.type !== "Polygon" &&
@@ -536,6 +573,8 @@ export function surfaceFromMvt(
         ) {
           continue;
         }
+        const height = heightFromProps(props);
+        const minHeight = minHeightFromProps(props);
         for (const row of footprintsFromPolygon(
           gj.geometry,
           origin,
@@ -543,11 +582,18 @@ export function surfaceFromMvt(
           rect,
           !reachesTileBuffer(feat),
         )) {
-          out.buildings.push({
-            ...row,
-            height: heightFromProps(props),
-          });
+          rows.push({ ...row, height, minHeight, kind });
         }
+      }
+      const parts = rows.filter((row) => row.kind === "building_part");
+      for (const row of rows) {
+        if (!keepBuildingRow(row, parts)) continue;
+        out.buildings.push({
+          id: row.id,
+          ring: row.ring,
+          height: row.height,
+          minHeight: row.minHeight,
+        });
       }
     }
   }
