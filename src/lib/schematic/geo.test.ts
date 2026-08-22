@@ -2,13 +2,19 @@ import { describe, expect, it } from "vitest";
 import kgxJson from "../../../data/schematic/HUBKGX.json";
 import {
   HUBKGX_ORIGIN,
+  LONDON_BBOX,
+  MAP_PAN_INSET_M,
   NEIGHBOR_LOAD_RADIUS_M,
   SCHEMATIC_METRES_PER_UNIT,
   applyPlacement,
+  clampToAabb2,
   distanceM,
   enuToLatLon,
+  insetAabb,
   latLonToEnu,
   latLonToWorld,
+  londonWorldAabb,
+  mapPanBounds,
   placeSchematic,
   placeSchematicAt,
   schematicWorldOffset,
@@ -132,6 +138,52 @@ describe("latLonToWorld", () => {
   });
 });
 
+describe("mapPanBounds", () => {
+  it("keeps King’s Cross inside the inset extract", () => {
+    const bounds = mapPanBounds(HUBKGX_ORIGIN);
+    const origin = latLonToWorld(
+      HUBKGX_ORIGIN.lat,
+      HUBKGX_ORIGIN.lon,
+      HUBKGX_ORIGIN,
+    );
+    expect(origin.x).toBeGreaterThan(bounds.minX);
+    expect(origin.x).toBeLessThan(bounds.maxX);
+    expect(origin.z).toBeGreaterThan(bounds.minZ);
+    expect(origin.z).toBeLessThan(bounds.maxZ);
+  });
+
+  it("insets each side by MAP_PAN_INSET_M from the extract AABB", () => {
+    const map = londonWorldAabb(HUBKGX_ORIGIN);
+    const pan = mapPanBounds(HUBKGX_ORIGIN);
+    expect(pan.minX).toBeCloseTo(map.minX + MAP_PAN_INSET_M);
+    expect(pan.maxX).toBeCloseTo(map.maxX - MAP_PAN_INSET_M);
+    expect(pan.minZ).toBeCloseTo(map.minZ + MAP_PAN_INSET_M);
+    expect(pan.maxZ).toBeCloseTo(map.maxZ - MAP_PAN_INSET_M);
+  });
+
+  it("clamps a point east of the extract back to map − R", () => {
+    const pan = mapPanBounds(HUBKGX_ORIGIN);
+    const east = latLonToWorld(
+      HUBKGX_ORIGIN.lat,
+      LONDON_BBOX.east + 0.2,
+      HUBKGX_ORIGIN,
+    );
+    const clamped = clampToAabb2(east.x, east.z, pan);
+    expect(clamped.x).toBe(pan.minX);
+    expect(clamped.z).toBeGreaterThanOrEqual(pan.minZ);
+    expect(clamped.z).toBeLessThanOrEqual(pan.maxZ);
+  });
+
+  it("collapses a too-large inset to the AABB centre", () => {
+    const box = { minX: -10, maxX: 10, minZ: -4, maxZ: 4 };
+    const collapsed = insetAabb(box, 100);
+    expect(collapsed.minX).toBe(0);
+    expect(collapsed.maxX).toBe(0);
+    expect(collapsed.minZ).toBe(0);
+    expect(collapsed.maxZ).toBe(0);
+  });
+});
+
 describe("placeSchematicAt", () => {
   const geom = buildSceneGeometry(
     { nodes: station.nodes, edges: station.edges },
@@ -195,8 +247,8 @@ describe("stationsShownAtDistance", () => {
   });
 
   it("uses hysteresis between show and hide distances", () => {
-    expect(stationsShownAtDistance(2_200, true)).toBe(true);
-    expect(stationsShownAtDistance(2_200, false)).toBe(false);
+    expect(stationsShownAtDistance(1_700, true)).toBe(true);
+    expect(stationsShownAtDistance(1_700, false)).toBe(false);
   });
 
   it("loads neighbors in an 800 m window", () => {

@@ -48,11 +48,14 @@ import {
   STATION_LOD_DIST_STEP_M,
   STATION_LOD_MOVE_M,
   STATION_LOD_SAMPLE_MS,
+  clampToAabb2,
   distanceM,
+  mapPanBounds,
   placeSchematicAt,
   schematicWorldOffset,
   stationsShownAtDistance,
   worldToLatLon,
+  type Aabb2,
   type LatLon,
   type SchematicPlacement,
 } from "@/lib/schematic/geo";
@@ -391,6 +394,20 @@ function panByWasd(controls: OrbitControlsImpl, keys: WasdKeys, dt: number) {
   controls.object.position.z += dz;
 }
 
+/** Keep the look-at point inside the map; slide the camera with it. */
+function clampOrbitPan(controls: OrbitControlsImpl, bounds: Aabb2) {
+  const t = controls.target;
+  const p = controls.object.position;
+  const next = clampToAabb2(t.x, t.z, bounds);
+  const dx = next.x - t.x;
+  const dz = next.z - t.z;
+  if (dx === 0 && dz === 0) return;
+  t.x += dx;
+  t.z += dz;
+  p.x += dx;
+  p.z += dz;
+}
+
 function faceNorth(controls: OrbitControlsImpl) {
   const cam = controls.object;
   const offset = cam.position.clone().sub(controls.target);
@@ -487,6 +504,7 @@ function SceneControls({
   controlsRef,
   panMode,
   panAltitude,
+  panBounds,
   onDragStart,
   onDragEnd,
 }: {
@@ -495,6 +513,7 @@ function SceneControls({
   controlsRef: RefObject<OrbitControlsImpl | null>;
   panMode: boolean;
   panAltitude: RefObject<{ cam: number; target: number } | null>;
+  panBounds: Aabb2 | null;
   onDragStart: () => void;
   onDragEnd: () => void;
 }) {
@@ -556,6 +575,7 @@ function SceneControls({
     const controls = controlsRef.current;
     if (!controls) return;
     panByWasd(controls, wasd.current, dt);
+    if (panBounds) clampOrbitPan(controls, panBounds);
     const lock = panAltitude.current;
     if (!lock) return;
     /* Orbit dolly/pan must not change world height in map pan mode. */
@@ -563,7 +583,7 @@ function SceneControls({
     camera.position.y = lock.cam;
     controls.target.y = lock.target;
     /* eslint-enable react-hooks/immutability */
-  });
+  }, -1);
 
   return (
     <OrbitControls
@@ -586,6 +606,10 @@ function SceneControls({
       maxPolarAngle={panMode ? 1.52 : frame.maxPolarAngle}
       minDistance={frame.minDistance}
       maxDistance={frame.maxDistance}
+      onChange={() => {
+        const controls = controlsRef.current;
+        if (controls && panBounds) clampOrbitPan(controls, panBounds);
+      }}
       onStart={onDragStart}
       onEnd={onDragEnd}
     />
@@ -938,6 +962,10 @@ export function StationScene3D({
       far: CITY_FAR_M,
     });
   }, [geoScene, selectedRow]);
+  const panBounds = useMemo(
+    () => (geoScene ? mapPanBounds(origin) : null),
+    [geoScene, origin],
+  );
   const reframeKey = `${selectedId}:${geoScene ? "geo" : "local"}`;
   const canvasCamera = useMemo(
     () => ({
@@ -1073,6 +1101,7 @@ export function StationScene3D({
           controlsRef={controlsRef}
           panMode={panMode}
           panAltitude={panAltitude}
+          panBounds={panBounds}
           onDragStart={() => {
             draggingRef.current = true;
             setIsDragging(true);

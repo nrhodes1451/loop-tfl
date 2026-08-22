@@ -17,6 +17,18 @@ export const CUTOUT_PAD_M = 8;
 /** Orbit ceiling when the London PMTiles surface is active. */
 export const CITY_MAX_DISTANCE_M = 3_000;
 export const CITY_FAR_M = 80_000;
+/**
+ * Greater London PMTiles extract (west, south, east, north).
+ * Keep in sync with `scripts/fetch-london-pmtiles.ts`.
+ */
+export const LONDON_BBOX = {
+  west: -0.55,
+  south: 51.25,
+  east: 0.35,
+  north: 51.72,
+} as const;
+/** Orbit-target inset from the extract edge (map − R). Tinker here. */
+export const MAP_PAN_INSET_M = 4_000;
 /** Fetch radius for in-situ neighbor dollhouses (orbit-target, metres). */
 export const NEIGHBOR_LOAD_RADIUS_M = 800;
 /** Keep cached neighbors until they leave this radius (hysteresis). */
@@ -111,6 +123,58 @@ export function worldToLatLon(
   origin: LatLon,
 ): LatLon {
   return enuToLatLon(-x, z, origin);
+}
+
+/** London extract in scene metres (west = +X, north = +Z). */
+export function londonWorldAabb(origin: LatLon = HUBKGX_ORIGIN): Aabb2 {
+  const sw = latLonToWorld(LONDON_BBOX.south, LONDON_BBOX.west, origin);
+  const se = latLonToWorld(LONDON_BBOX.south, LONDON_BBOX.east, origin);
+  const nw = latLonToWorld(LONDON_BBOX.north, LONDON_BBOX.west, origin);
+  const ne = latLonToWorld(LONDON_BBOX.north, LONDON_BBOX.east, origin);
+  return {
+    minX: Math.min(sw.x, se.x, nw.x, ne.x),
+    maxX: Math.max(sw.x, se.x, nw.x, ne.x),
+    minZ: Math.min(sw.z, se.z, nw.z, ne.z),
+    maxZ: Math.max(sw.z, se.z, nw.z, ne.z),
+  };
+}
+
+/** Shrink an XZ AABB by `insetM` on each side; collapse to the centre if empty. */
+export function insetAabb(aabb: Aabb2, insetM: number): Aabb2 {
+  let minX = aabb.minX + insetM;
+  let maxX = aabb.maxX - insetM;
+  let minZ = aabb.minZ + insetM;
+  let maxZ = aabb.maxZ - insetM;
+  if (minX > maxX) {
+    const mid = (aabb.minX + aabb.maxX) / 2;
+    minX = mid;
+    maxX = mid;
+  }
+  if (minZ > maxZ) {
+    const mid = (aabb.minZ + aabb.maxZ) / 2;
+    minZ = mid;
+    maxZ = mid;
+  }
+  return { minX, maxX, minZ, maxZ };
+}
+
+/** Allowed orbit-target region: extract minus `MAP_PAN_INSET_M`. */
+export function mapPanBounds(
+  origin: LatLon = HUBKGX_ORIGIN,
+  insetM: number = MAP_PAN_INSET_M,
+): Aabb2 {
+  return insetAabb(londonWorldAabb(origin), insetM);
+}
+
+export function clampToAabb2(
+  x: number,
+  z: number,
+  aabb: Aabb2,
+): { x: number; z: number } {
+  return {
+    x: Math.min(aabb.maxX, Math.max(aabb.minX, x)),
+    z: Math.min(aabb.maxZ, Math.max(aabb.minZ, z)),
+  };
 }
 
 /** Planar distance in metres (local tangent at `b`). */

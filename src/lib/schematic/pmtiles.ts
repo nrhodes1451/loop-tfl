@@ -3,13 +3,16 @@
  * Isolated from routing — do not import plan/status/topology.
  */
 
-import { VectorTile } from "@mapbox/vector-tile";
+import { VectorTile, type VectorTileFeature } from "@mapbox/vector-tile";
 import { PbfReader } from "pbf";
 import { PMTiles } from "pmtiles";
-import { latLonToEnu, type LatLon } from "./geo";
+import { latLonToEnu, type Aabb2, type LatLon } from "./geo";
 import {
   DEFAULT_BUILDING_HEIGHT_M,
   MIN_RING_EDGE_M,
+  clipPathToRect,
+  clipRingToRect,
+  ringAabb,
   simplifyRing,
   type OsmArea,
   type OsmBuilding,
@@ -26,6 +29,13 @@ export const PMTILES_MIN_BUILDING_ZOOM = 14;
 /** Footprints are decoded at z13+ (z13 is the pulled-back building zoom). */
 export const PMTILES_BUILDING_LAYER_MIN_ZOOM = 13;
 export const PMTILES_LAND_MIN_ZOOM = 11;
+/**
+ * Every layer is clipped to the tile plus this much overspill, so neighbours
+ * hold overlapping copies of anything near an edge. Drawing both compounds the
+ * translucent surface alpha into a visible grid, hence the clipping below.
+ * Measured at 64/4096 on the London extract.
+ */
+export const PMTILES_TILE_BUFFER_UNITS = 64;
 
 export type TileCoord = { z: number; x: number; y: number };
 
@@ -125,6 +135,24 @@ export function tilePointToLonLat(
     lon: tileToLon(tile.x + fracX, tile.z),
     lat: tileToLat(tile.y + fracY, tile.z),
   };
+}
+
+/**
+ * The tile square in ENU metres. Constant lon maps to constant x and constant
+ * lat to constant z, so the tile stays axis-aligned and the rect is exact.
+ */
+export function tileEnuRect(tile: TileCoord, origin: LatLon): Aabb2 {
+  const min = latLonToEnu(
+    tileToLat(tile.y + 1, tile.z),
+    tileToLon(tile.x, tile.z),
+    origin,
+  );
+  const max = latLonToEnu(
+    tileToLat(tile.y, tile.z),
+    tileToLon(tile.x + 1, tile.z),
+    origin,
+  );
+  return { minX: min.x, maxX: max.x, minZ: min.z, maxZ: max.z };
 }
 
 /**
@@ -239,25 +267,33 @@ function kindDetailOf(props: Record<string, unknown>): string {
   return String(props.kind_detail ?? "");
 }
 
-function ringFromLonLatCoords(
+function enuFromLonLatCoords(
   coords: number[][],
   origin: LatLon,
 ): [number, number][] {
-  const ring: [number, number][] = [];
+  const out: [number, number][] = [];
   for (const c of coords) {
     const lon = c[0];
     const lat = c[1];
     if (lon == null || lat == null) continue;
     const p = latLonToEnu(lat, lon, origin);
-    ring.push([p.x, p.z]);
+    out.push([p.x, p.z]);
   }
-  return simplifyRing(ring, MIN_RING_EDGE_M);
+  return out;
+}
+
+function ringFromLonLatCoords(
+  coords: number[][],
+  origin: LatLon,
+): [number, number][] {
+  return simplifyRing(enuFromLonLatCoords(coords, origin), MIN_RING_EDGE_M);
 }
 
 function ringsFromPolygon(
   geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
   origin: LatLon,
   id: string,
+  rect: Aabb2,
 ): { id: string; ring: [number, number][] }[] {
   const polygons =
     geometry.type === "Polygon"
@@ -268,7 +304,7 @@ function ringsFromPolygon(
   for (const polygon of polygons) {
     const outer = polygon[0];
     if (!outer) continue;
-    const ring = ringFromLonLatCoords(outer, origin);
+    const ring = clipRingToRect(ringFromLonLatCoords(outer, origin), rect);
     if (ring.length < 3) continue;
     out.push({
       id: part === 0 ? id : `${id}/${part}`,
@@ -283,6 +319,7 @@ function pathsFromLine(
   geometry: GeoJSON.LineString | GeoJSON.MultiLineString,
   origin: LatLon,
   id: string,
+  rect: Aabb2,
 ): { id: string; path: [number, number][] }[] {
   const lines =
     geometry.type === "LineString"
@@ -291,11 +328,77 @@ function pathsFromLine(
   const out: { id: string; path: [number, number][] }[] = [];
   let part = 0;
   for (const line of lines) {
-    const path = ringFromLonLatCoords(line, origin);
-    if (path.length < 2) continue;
+    const full = ringFromLonLatCoords(line, origin);
+    if (full.length < 2) continue;
+    for (const path of clipPathToRect(full, rect)) {
+      out.push({
+        id: part === 0 ? id : `${id}/${part}`,
+        path,
+      });
+      part += 1;
+    }
+  }
+  return out;
+}
+
+/**
+ * True when the tile's copy of a feature runs into the buffer bound, meaning it
+ * may be cut off and the whole shape only exists in a neighbour. The bound is a
+ * property of the archive, so every tile tests the same one.
+ */
+function reachesTileBuffer(feat: VectorTileFeature): boolean {
+  const box = feat.bbox();
+  const lo = -PMTILES_TILE_BUFFER_UNITS;
+  const hi = feat.extent + PMTILES_TILE_BUFFER_UNITS;
+  return (
+    (box[0] ?? 0) <= lo ||
+    (box[1] ?? 0) <= lo ||
+    (box[2] ?? 0) >= hi ||
+    (box[3] ?? 0) >= hi
+  );
+}
+
+/**
+ * Which tile owns a footprint that several of them hold whole. Bounds are
+ * order-invariant so every neighbour agrees, and the max sides are exclusive
+ * so exactly one tile claims it.
+ */
+function ownsFootprint(aabb: Aabb2, rect: Aabb2): boolean {
+  const cx = (aabb.minX + aabb.maxX) / 2;
+  const cz = (aabb.minZ + aabb.maxZ) / 2;
+  return cx >= rect.minX && cx < rect.maxX && cz >= rect.minZ && cz < rect.maxZ;
+}
+
+/**
+ * Footprints get an owner rather than a clip, because clipping one would leave
+ * an extrusion wall on the seam and paint the tile grid back in. Truncated
+ * copies fall back to clipping, where neighbours tile the shape between them.
+ */
+function footprintsFromPolygon(
+  geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
+  origin: LatLon,
+  id: string,
+  rect: Aabb2,
+  whole: boolean,
+): { id: string; ring: [number, number][] }[] {
+  const polygons =
+    geometry.type === "Polygon"
+      ? [geometry.coordinates]
+      : geometry.coordinates;
+  const out: { id: string; ring: [number, number][] }[] = [];
+  let part = 0;
+  for (const polygon of polygons) {
+    const outer = polygon[0];
+    if (!outer) continue;
+    const points = enuFromLonLatCoords(outer, origin);
+    if (points.length < 3) continue;
+    if (whole && !ownsFootprint(ringAabb(points), rect)) continue;
+    const simple = simplifyRing(points, MIN_RING_EDGE_M);
+    const ring = whole ? simple : clipRingToRect(simple, rect);
+    if (ring.length < 3) continue;
     out.push({
       id: part === 0 ? id : `${id}/${part}`,
-      path,
+      ring,
     });
     part += 1;
   }
@@ -328,6 +431,7 @@ export function surfaceFromMvt(
 ): TileSurface {
   const out = emptySurface();
   const vt = new VectorTile(new PbfReader(data));
+  const rect = tileEnuRect(tile, origin);
 
   const landuse = vt.layers.landuse;
   if (landuse) {
@@ -345,6 +449,7 @@ export function surfaceFromMvt(
         gj.geometry,
         origin,
         featId(tile, "landuse", feat.id, i),
+        rect,
       )) {
         out.land.push({ ...row, kind });
       }
@@ -368,7 +473,7 @@ export function surfaceFromMvt(
         ) {
           continue;
         }
-        for (const row of ringsFromPolygon(gj.geometry, origin, id)) {
+        for (const row of ringsFromPolygon(gj.geometry, origin, id, rect)) {
           out.water.push({ ...row, kind: kind || "water" });
         }
       } else if (feat.type === 2) {
@@ -379,7 +484,7 @@ export function surfaceFromMvt(
         ) {
           continue;
         }
-        for (const row of pathsFromLine(gj.geometry, origin, id)) {
+        for (const row of pathsFromLine(gj.geometry, origin, id, rect)) {
           out.waterways.push({ ...row, kind: detail });
         }
       }
@@ -406,6 +511,7 @@ export function surfaceFromMvt(
         gj.geometry,
         origin,
         featId(tile, "roads", feat.id, i),
+        rect,
       )) {
         out.roads.push({ ...row, kind });
       }
@@ -427,10 +533,12 @@ export function surfaceFromMvt(
         ) {
           continue;
         }
-        for (const row of ringsFromPolygon(
+        for (const row of footprintsFromPolygon(
           gj.geometry,
           origin,
           featId(tile, "buildings", feat.id, i),
+          rect,
+          !reachesTileBuffer(feat),
         )) {
           out.buildings.push({
             ...row,
