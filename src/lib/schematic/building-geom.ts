@@ -19,8 +19,13 @@ export const BUILDING_COLOR = "#9ec5e8";
 export const BUILDING_COLOR_LOW = "#c5dff0";
 export const BUILDING_COLOR_HIGH = "#6a9ec0";
 export const GROUND_COLOR = "#cceeff";
-export const LAND_COLOR = "#b7e0d0";
-export const WATER_COLOR = "#5b9ec9";
+/**
+ * Park / water sit over the cyan ground at SURFACE_OPACITY, so the source
+ * hexes are a bit greener / bluer than the designed look. Lighting shifts
+ * them; tweak by eye.
+ */
+export const LAND_COLOR = "#92d4a6";
+export const WATER_COLOR = "#3d8ed0";
 export const ROAD_COLOR = "#b0c4d2";
 export const SURFACE_OPACITY = 0.7;
 
