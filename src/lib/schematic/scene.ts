@@ -378,12 +378,12 @@ export function cameraFrame(
   opts: { minDistance?: number; maxDistance?: number; far?: number } = {},
 ): CameraFrame {
   const { center, radius } = bounds;
-  const dist = radius * 2.15;
+  const dist = radius * 6.0;
   /** Same elevation/range as before, but from the south so the view faces +Z (north). */
   const horiz = Math.hypot(0.62, 0.78);
   const position: Vec3 = [
     center[0],
-    center[1] + dist * 0.52,
+    center[1] + dist * 1.1,
     center[2] - dist * horiz,
   ];
   return {
