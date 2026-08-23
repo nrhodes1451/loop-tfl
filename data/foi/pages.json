@@ -16,7 +16,7 @@
       "page": 2,
       "stationId": "940GZZLUERB",
       "stationName": "Edgware Road",
-      "match": "fuzzy",
+      "match": "verified",
       "ocrTitle": "pd PMALIVIN EATWUL ® UJ NT IKE",
       "candidates": []
     },
@@ -97,7 +97,7 @@
       "page": 11,
       "stationId": "HUBPAD",
       "stationName": "Paddington",
-      "match": "fuzzy",
+      "match": "verified",
       "ocrTitle": "LINE PLATFORMS WEST NNN {",
       "candidates": []
     },
@@ -169,7 +169,7 @@
       "page": 1,
       "stationId": "HUBBAN",
       "stationName": "Bank",
-      "match": "fuzzy",
+      "match": "verified",
       "ocrTitle": "Ser fd AU NNAUY Lr NIRS\" JIN INF ISWJL",
       "candidates": []
     },
@@ -332,7 +332,7 @@
       "page": 19,
       "stationId": "HUBTCR",
       "stationName": "Tottenham Court Road",
-      "match": "fuzzy",
+      "match": "verified",
       "ocrTitle": "| SHEE,",
       "candidates": []
     },

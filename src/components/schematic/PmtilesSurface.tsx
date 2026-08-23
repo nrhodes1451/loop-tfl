@@ -182,11 +182,13 @@ function LayerMesh({
   color,
   renderOrder,
   vertexColors = false,
+  depthWrite = false,
 }: {
   geometry: BufferGeometry;
   color: string;
   renderOrder: number;
   vertexColors?: boolean;
+  depthWrite?: boolean;
 }) {
   return (
     <mesh geometry={geometry} renderOrder={renderOrder} raycast={noopRaycast}>
@@ -195,7 +197,7 @@ function LayerMesh({
         vertexColors={vertexColors}
         transparent
         opacity={SURFACE_OPACITY}
-        depthWrite={false}
+        depthWrite={depthWrite}
         onBeforeCompile={wrapLambertCompile}
         customProgramCacheKey={wrapLambertCacheKey}
       />
@@ -382,11 +384,13 @@ export function PmtilesSurface({
             />
           ) : null}
           {row.geom.buildings ? (
+            // 2D layers stack by renderOrder; extruded buildings need the depth buffer.
             <LayerMesh
               geometry={row.geom.buildings}
               color="#ffffff"
               renderOrder={SURFACE_ORDER.buildings}
               vertexColors
+              depthWrite
             />
           ) : null}
         </group>
