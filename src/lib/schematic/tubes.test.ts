@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import kgxJson from "../../../data/schematic/HUBKGX.json";
 import { HUBKGX_ORIGIN, schematicLevelWorldY } from "./geo";
+import { platformWorldY } from "./foi-layout";
 import { schematicLevelForLine } from "./levels";
+import { tubeRadiusM } from "./lu-scale";
 import {
   buildLineNetwork,
   type LineNetwork,
@@ -45,13 +47,15 @@ function toyNetwork(overrides?: Partial<LineNetwork>): LineNetwork {
 }
 
 describe("worldAnchors", () => {
-  it("places Y at the schematic platform centre", () => {
+  it("places Y at the FOI / typical platform centre", () => {
     const network = toyNetwork();
     const anchors = worldAnchors(network, HUBKGX_ORIGIN);
     const a = anchors.get(tubeAnchorKey("A", "victoria"))!;
-    expect(a.y).toBeCloseTo(
+    expect(a.y).toBeCloseTo(platformWorldY("A", "victoria"), 9);
+    expect(a.y).toBeCloseTo(-20, 9);
+    expect(a.y).not.toBeCloseTo(
       schematicLevelWorldY(schematicLevelForLine("victoria")),
-      9,
+      0,
     );
   });
 });
@@ -114,7 +118,10 @@ describe("applyFanout", () => {
     const orig = cBase.get(tubeAnchorKey("A", "circle"))!;
     expect(midX).toBeCloseTo(orig.x, 6);
     expect(midZ).toBeCloseTo(orig.z, 6);
-    expect(Math.hypot(c.x - h.x, c.z - h.z)).toBeCloseTo(4, 5);
+    expect(Math.hypot(c.x - h.x, c.z - h.z)).toBeCloseTo(
+      2 * tubeRadiusM("circle"),
+      5,
+    );
   });
 });
 
@@ -188,6 +195,7 @@ describe("HUBKGX circle anchor Y", () => {
     });
     const anchors = worldAnchors(withNeighbour, HUBKGX_ORIGIN);
     const a = anchors.get(tubeAnchorKey("HUBKGX", "circle"))!;
-    expect(a.y).toBeCloseTo(schematicLevelWorldY(-2), 9);
+    expect(a.y).toBeCloseTo(platformWorldY("HUBKGX", "circle"), 9);
+    expect(a.y).toBeCloseTo(-7, 5);
   });
 });

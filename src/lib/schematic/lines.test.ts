@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import kgxJson from "../../../data/schematic/HUBKGX.json";
+import { platformWorldY } from "./foi-layout";
 import {
   HUBKGX_ORIGIN,
   SCHEMATIC_METRES_PER_UNIT,
@@ -247,16 +248,20 @@ describe("buildLineNetwork from disk", () => {
   });
 });
 
-describe("schematicLevelWorldY", () => {
-  it("matches placed platform centres on HUBKGX", () => {
-    const geom = buildSceneGeometry({
-      nodes: kgx.nodes,
-      edges: kgx.edges,
-    });
+describe("placed HUBKGX platform Y", () => {
+  it("follows FOI metres, not schematicLevelWorldY", () => {
+    const geom = buildSceneGeometry(
+      {
+        nodes: kgx.nodes,
+        edges: kgx.edges,
+      },
+      { stationId: "HUBKGX" },
+    );
     const placed = placeSchematicAt(geom, { x: 0, z: 0 });
     const plat = geom.volumes.find((v) => v.type === "platform")!;
     const worldY = plat.position[1] * placed.scale + placed.position[1];
-    expect(schematicLevelWorldY(plat.level)).toBeCloseTo(worldY, 9);
+    expect(worldY).toBeCloseTo(platformWorldY("HUBKGX", plat.lineId!), 5);
+    expect(schematicLevelWorldY(plat.level)).not.toBeCloseTo(worldY, 0);
     expect(placed.scale).toBe(SCHEMATIC_METRES_PER_UNIT);
   });
 });

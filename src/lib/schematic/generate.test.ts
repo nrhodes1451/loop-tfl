@@ -5,6 +5,7 @@ import {
   platformNodeId,
   type GenerateStationInput,
 } from "./generate";
+import { platformPlanSize } from "./scene";
 
 const sample: GenerateStationInput = {
   id: "HUBTEST",
@@ -148,5 +149,35 @@ describe("generateSchematic", () => {
       ),
     ).toBe(true);
     expect(station.edges.some((e) => e.liftId === "HUBTEST-Lift-1")).toBe(true);
+  });
+
+  it("gives every line the same plan Y so 115 m boxes share one long axis", () => {
+    const plats = station.nodes.filter((n) => n.type === "platform");
+    expect(new Set(plats.map((p) => p.y)).size).toBe(1);
+  });
+
+  it("keeps generated two-line platform AABBs from overlapping in plan", () => {
+    const plats = station.nodes.filter((n) => n.type === "platform");
+    const boxes = plats.map((p) => {
+      const { wx, wy } = platformPlanSize(p, station.nodes);
+      return {
+        minX: p.x - wx / 2,
+        maxX: p.x + wx / 2,
+        minY: p.y - wy / 2,
+        maxY: p.y + wy / 2,
+      };
+    });
+    for (let i = 0; i < boxes.length; i++) {
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i]!;
+        const b = boxes[j]!;
+        const overlap =
+          a.minX < b.maxX &&
+          a.maxX > b.minX &&
+          a.minY < b.maxY &&
+          a.maxY > b.minY;
+        expect(overlap, `${plats[i]!.id} vs ${plats[j]!.id}`).toBe(false);
+      }
+    }
   });
 });

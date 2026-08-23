@@ -14,7 +14,9 @@ import {
   type Vec3,
 } from "./scene";
 
-export const SCHEMATIC_METRES_PER_UNIT = 4;
+import { SCHEMATIC_UNIT_M, schematicLocalYForDepthM as localYForDepthM } from "./lu-scale";
+
+export const SCHEMATIC_METRES_PER_UNIT = SCHEMATIC_UNIT_M;
 export const SURFACE_SIZE_M = 400;
 export const CUTOUT_PAD_M = 8;
 
@@ -24,6 +26,14 @@ export function schematicLevelWorldY(
   scale: number = SCHEMATIC_METRES_PER_UNIT,
 ): number {
   return level * LEVEL_SPACING * scale - (STREET_H / 2) * scale;
+}
+
+/** @see schematicLocalYForDepthM in lu-scale.ts */
+export function schematicLocalYForDepthM(
+  depthM: number,
+  scale: number = SCHEMATIC_METRES_PER_UNIT,
+): number {
+  return localYForDepthM(depthM, STREET_H, scale);
 }
 /** Orbit ceiling when the London PMTiles surface is active. */
 export const CITY_MAX_DISTANCE_M = 3_000;

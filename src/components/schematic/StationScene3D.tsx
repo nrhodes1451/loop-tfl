@@ -936,6 +936,7 @@ export function StationScene3D({
     if (!s) return null;
     const geom = buildSceneGeometry(s.topology, {
       quality,
+      stationId: s.id,
       platformAngles: lineNetwork?.angles[s.id],
     });
     const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);
@@ -963,6 +964,7 @@ export function StationScene3D({
         if (!s) continue;
         const geom = buildSceneGeometry(s.topology, {
           quality,
+          stationId: s.id,
           platformAngles: lineNetwork?.angles[id],
         });
         const world = schematicWorldOffset(s.id, s.lat, s.lon, origin);

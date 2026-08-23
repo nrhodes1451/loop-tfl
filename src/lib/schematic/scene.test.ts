@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 import kgxJson from "../../../data/schematic/HUBKGX.json";
 import {
+  SCHEMATIC_METRES_PER_UNIT,
+  placeSchematicAt,
+  schematicLevelWorldY,
+} from "./geo";
+import {
   LEVEL_SPACING,
+  PLATFORM_LONG,
+  PLATFORM_THIN,
   VOLUME_BOTTOM_OPACITY,
   VOLUME_FACE_OPACITY,
   boxCorners,
@@ -49,19 +56,34 @@ describe("platformPlanSize", () => {
 
   it("places a lone platform long in Y", () => {
     const a = plat("a", "victoria", 0, 0);
-    expect(platformPlanSize(a, [a])).toEqual({ wx: 0.56, wy: 2.85 });
+    expect(platformPlanSize(a, [a])).toEqual({
+      wx: PLATFORM_THIN,
+      wy: PLATFORM_LONG,
+    });
   });
 
   it("orients a pair perpendicular to their offset so they sit in parallel", () => {
     const a = plat("a", "circle", 0, 0);
     const b = plat("b", "circle", 4, 0);
-    expect(platformPlanSize(a, [a, b])).toEqual({ wx: 0.56, wy: 2.85 });
-    expect(platformPlanSize(b, [a, b])).toEqual({ wx: 0.56, wy: 2.85 });
+    expect(platformPlanSize(a, [a, b])).toEqual({
+      wx: PLATFORM_THIN,
+      wy: PLATFORM_LONG,
+    });
+    expect(platformPlanSize(b, [a, b])).toEqual({
+      wx: PLATFORM_THIN,
+      wy: PLATFORM_LONG,
+    });
 
     const c = plat("c", "northern", 0, 0);
     const d = plat("d", "northern", 0, 4);
-    expect(platformPlanSize(c, [c, d])).toEqual({ wx: 2.85, wy: 0.56 });
-    expect(platformPlanSize(d, [c, d])).toEqual({ wx: 2.85, wy: 0.56 });
+    expect(platformPlanSize(c, [c, d])).toEqual({
+      wx: PLATFORM_LONG,
+      wy: PLATFORM_THIN,
+    });
+    expect(platformPlanSize(d, [c, d])).toEqual({
+      wx: PLATFORM_LONG,
+      wy: PLATFORM_THIN,
+    });
   });
 });
 
@@ -95,7 +117,10 @@ describe("schematicEdgeColor", () => {
 });
 
 describe("buildSceneGeometry HUBKGX", () => {
-  const geom = buildSceneGeometry(topology, { quality: "high" });
+  const geom = buildSceneGeometry(topology, {
+    quality: "high",
+    stationId: "HUBKGX",
+  });
   const byId = new Map(station.nodes.map((n) => [n.id, n]));
 
   it("emits one shaft volume and shaft line per lift", () => {
@@ -206,11 +231,12 @@ describe("buildSceneGeometry HUBKGX", () => {
   it("aligns platforms to a supplied line bearing with the thin×long footprint", () => {
     const aligned = buildSceneGeometry(topology, {
       quality: "high",
+      stationId: "HUBKGX",
       platformAngles: { circle: Math.PI / 4 },
     });
     const plat = aligned.volumes.find((v) => v.lineId === "circle")!;
-    expect(plat.size[0]).toBeCloseTo(0.56);
-    expect(plat.size[2]).toBeCloseTo(2.85);
+    expect(plat.size[0]).toBeCloseTo(PLATFORM_THIN);
+    expect(plat.size[2]).toBeCloseTo(PLATFORM_LONG);
     expect(plat.rotationY).toBeCloseTo(Math.PI / 4);
     const corners = boxCorners(plat);
     const xs = corners.map((p) => p[0]);
@@ -379,5 +405,64 @@ describe("cameraFrame", () => {
     });
     expect(frame.maxDistance).toBe(25_000);
     expect(frame.far).toBe(80_000);
+  });
+});
+
+describe("dollhouse scale and FOI depth", () => {
+  const geom = buildSceneGeometry(topology, {
+    quality: "high",
+    stationId: "HUBKGX",
+  });
+  const placed = placeSchematicAt(geom, { x: 0, z: 0 });
+
+  it("makes platform boxes 115 m × 3.5 m after scale", () => {
+    const plat = geom.volumes.find((v) => v.type === "platform")!;
+    const thin = Math.min(plat.size[0], plat.size[2]) * placed.scale;
+    const long = Math.max(plat.size[0], plat.size[2]) * placed.scale;
+    expect(thin).toBeCloseTo(3.5, 5);
+    expect(long).toBeCloseTo(115, 5);
+    expect(PLATFORM_THIN * SCHEMATIC_METRES_PER_UNIT).toBeCloseTo(3.5);
+    expect(PLATFORM_LONG * SCHEMATIC_METRES_PER_UNIT).toBeCloseTo(115);
+  });
+
+  it("places KGX Northern around −27 m and Circle around −7 m", () => {
+    const worldY = (lineId: string) => {
+      const vol = geom.volumes.find((v) => v.lineId === lineId)!;
+      return vol.position[1] * placed.scale + placed.position[1];
+    };
+    expect(worldY("northern")).toBeCloseTo(-27, 5);
+    expect(worldY("circle")).toBeCloseTo(-7, 5);
+  });
+
+  it("uses typical depth when the station has no FOI row, not ~68 m", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "street",
+        type: "street",
+        label: "Street",
+        level: 0,
+        x: 0,
+        y: 0,
+      },
+      {
+        id: "p",
+        type: "platform",
+        label: "Northern",
+        level: -6,
+        x: 0,
+        y: 0,
+        lineId: "northern",
+      },
+    ];
+    const g = buildSceneGeometry(
+      { nodes, edges: [] },
+      { stationId: "NO_SUCH_STATION" },
+    );
+    const at = placeSchematicAt(g, { x: 0, z: 0 });
+    const plat = g.volumes.find((v) => v.type === "platform")!;
+    const worldY = plat.position[1] * at.scale + at.position[1];
+    expect(worldY).toBeCloseTo(-25, 5);
+    expect(worldY).not.toBeCloseTo(schematicLevelWorldY(-6), 0);
+    expect(Math.abs(worldY)).toBeLessThan(40);
   });
 });

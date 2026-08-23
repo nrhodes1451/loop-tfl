@@ -4,7 +4,13 @@
  */
 
 import { lineColorForSchematic } from "../tokens";
+import { platformDepthM } from "./foi-layout";
 import { normalizeSchematicLineId } from "./levels";
+import {
+  PLATFORM_LONG_U,
+  PLATFORM_THIN_U,
+  schematicLocalYForDepthM,
+} from "./lu-scale";
 import type {
   SchematicEdge,
   SchematicEdgeMode,
@@ -102,8 +108,8 @@ const LIFT_EDGE: Vec3 = [186, 228, 242];
 
 type Footprint = { wx: number; wy: number; h: number };
 
-export const PLATFORM_THIN = 0.56;
-export const PLATFORM_LONG = 2.85;
+export const PLATFORM_THIN = PLATFORM_THIN_U;
+export const PLATFORM_LONG = PLATFORM_LONG_U;
 export const PLATFORM_H = 0.4;
 /** Street slab height. `placeSchematic` pins street tops to Y = 0. */
 export const STREET_H = 0.3;
@@ -157,6 +163,37 @@ function footprint(node: SchematicNode, nodes: SchematicNode[]): Footprint {
 
 export function toWorld(x: number, y: number, level: number): Vec3 {
   return [x, level * LEVEL_SPACING, y];
+}
+
+function nodeLocalY(
+  node: SchematicNode,
+  stationId: string | undefined,
+  nodes: SchematicNode[],
+): number {
+  if (node.type === "platform" && node.lineId) {
+    return schematicLocalYForDepthM(
+      platformDepthM(stationId, node.lineId),
+      STREET_H,
+    );
+  }
+  return node.level * LEVEL_SPACING;
+}
+
+function levelLocalY(
+  level: number,
+  stationId: string | undefined,
+  nodes: SchematicNode[],
+): number {
+  const plat = nodes.find(
+    (n) => n.type === "platform" && n.level === level && n.lineId,
+  );
+  if (plat?.lineId) {
+    return schematicLocalYForDepthM(
+      platformDepthM(stationId, plat.lineId),
+      STREET_H,
+    );
+  }
+  return level * LEVEL_SPACING;
 }
 
 function clamp01(t: number): number {
@@ -574,10 +611,13 @@ export function buildSceneGeometry(
     quality?: SceneQuality;
     /** lineId → yaw that aligns a +Z-long platform with the running line. */
     platformAngles?: Record<string, number>;
+    /** Station id for FOI depth lookup. */
+    stationId?: string;
   } = {},
 ): SceneGeometry {
   const quality: SceneQuality = opts.quality ?? "high";
   const platformAngles = opts.platformAngles;
+  const stationId = opts.stationId;
   const radialSegments = quality === "high" ? 16 : 8;
   const ring = quality === "high" ? 12 : 8;
   const stiles = quality === "high" ? 6 : 4;
@@ -614,7 +654,11 @@ export function buildSceneGeometry(
         rotationY = angle;
       }
     }
-    const position = toWorld(node.x, node.y, node.level);
+    const position: Vec3 = [
+      node.x,
+      nodeLocalY(node, stationId, nodes),
+      node.y,
+    ];
     const tint = colors(node.type, node.lineId, node.level);
     if (node.type === "lift" || node.type === "shaft") {
       volumes.push({
@@ -657,12 +701,13 @@ export function buildSceneGeometry(
       if (level === span.node.level) continue;
       const id = `${span.node.id}::cabin::${level}`;
       const fp = footprint(span.node, nodes);
+      const y = levelLocalY(level, stationId, nodes);
       volumes.push({
         id,
         kind: "cylinder",
         type: "lift",
         level,
-        position: toWorld(span.x, span.y, level),
+        position: [span.x, y, span.y],
         size: [fp.wx / 2, fp.h, 0],
         ...colors("lift"),
         ...glassFill,
@@ -674,10 +719,10 @@ export function buildSceneGeometry(
     }
 
     const cabinH = footprint(span.node, nodes).h;
-    const height = Math.max(
-      (span.topLevel - span.botLevel) * LEVEL_SPACING + cabinH,
-      cabinH,
-    );
+    const topY = levelLocalY(span.topLevel, stationId, nodes);
+    const botY = levelLocalY(span.botLevel, stationId, nodes);
+    const height = Math.max(Math.abs(topY - botY) + cabinH, cabinH);
+    const midY = (topY + botY) / 2;
     const midLevel = (span.topLevel + span.botLevel) / 2;
     const shaftId = `shaft::${span.liftId}`;
     volumes.push({
@@ -685,7 +730,7 @@ export function buildSceneGeometry(
       kind: "cylinder",
       type: "shaft",
       level: midLevel,
-      position: toWorld(span.x, span.y, midLevel),
+      position: [span.x, midY, span.y],
       size: [0.12, height, 0],
       ...colors("shaft"),
       ...glassFill,
@@ -695,8 +740,8 @@ export function buildSceneGeometry(
       pickable: true,
     });
 
-    const top = toWorld(span.x, span.y, span.topLevel);
-    const bot = toWorld(span.x, span.y, span.botLevel);
+    const top: Vec3 = [span.x, topY, span.y];
+    const bot: Vec3 = [span.x, botY, span.y];
     polylines.push({
       id: `shaft-line::${span.liftId}`,
       role: "connection",
@@ -719,7 +764,10 @@ export function buildSceneGeometry(
         id: `corridor::${edge.from}::${edge.to}`,
         role: "connection",
         mode: "level",
-        points: [toWorld(from.x, from.y, from.level), toWorld(to.x, to.y, to.level)],
+        points: [
+          [from.x, nodeLocalY(from, stationId, nodes), from.y],
+          [to.x, nodeLocalY(to, stationId, nodes), to.y],
+        ],
         segments: false,
         color: schematicEdgeColor(
           from.type === "platform" || to.type === "platform"
@@ -738,7 +786,10 @@ export function buildSceneGeometry(
         id: `${edge.mode}::${edge.from}::${edge.to}`,
         role: "connection",
         mode: edge.mode,
-        points: [toWorld(from.x, from.y, from.level), toWorld(to.x, to.y, to.level)],
+        points: [
+          [from.x, nodeLocalY(from, stationId, nodes), from.y],
+          [to.x, nodeLocalY(to, stationId, nodes), to.y],
+        ],
         segments: false,
         color: schematicEdgeColor(
           "concourse",
@@ -765,8 +816,8 @@ export function buildSceneGeometry(
       role: "connection",
       mode: "landing",
       points: [
-        toWorld(lift.x, lift.y, other.level),
-        toWorld(other.x, other.y, other.level),
+        [lift.x, levelLocalY(other.level, stationId, nodes), lift.y],
+        [other.x, nodeLocalY(other, stationId, nodes), other.y],
       ],
       segments: false,
       color: schematicEdgeColor("lift"),

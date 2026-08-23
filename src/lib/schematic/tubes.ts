@@ -11,11 +11,10 @@ import {
 } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { SURFACE_ORDER } from "./building-geom";
+import { platformWorldY } from "./foi-layout";
 import {
   NEIGHBOR_UNLOAD_RADIUS_M,
-  SCHEMATIC_METRES_PER_UNIT,
   distanceM,
-  schematicLevelWorldY,
   type LatLon,
 } from "./geo";
 import {
@@ -24,18 +23,20 @@ import {
   type LineNetwork,
 } from "./lines";
 import {
-  PLATFORM_THIN,
+  DEEP_TUBE_DIAMETER_M,
+  tubeRadiusM,
+} from "./lu-scale";
+import {
   schematicEdgeColor,
   schematicFaceColor,
   type SceneQuality,
   type Vec3,
 } from "./scene";
 
-export const TUBE_RADIUS =
-  (PLATFORM_THIN / 2) * SCHEMATIC_METRES_PER_UNIT;
+export const TUBE_RADIUS = DEEP_TUBE_DIAMETER_M / 2;
 export const TUBE_SEGMENT_M = 40;
 export const TUBE_COINCIDENT_M = 1;
-export const TUBE_FANOUT_M = PLATFORM_THIN * SCHEMATIC_METRES_PER_UNIT;
+export const TUBE_FANOUT_M = DEEP_TUBE_DIAMETER_M;
 /** Below the translucent ground so tubes read as underground. */
 export const TUBE_RENDER_ORDER = SURFACE_ORDER.ground - 1;
 
@@ -61,7 +62,6 @@ export function worldAnchors(
 ): Map<TubeAnchorKey, WorldAnchor> {
   const out = new Map<TubeAnchorKey, WorldAnchor>();
   for (const chain of network.chains) {
-    const y = schematicLevelWorldY(chain.level);
     for (const stationId of chain.stationIds) {
       const key = tubeAnchorKey(stationId, chain.lineId);
       if (out.has(key)) continue;
@@ -72,7 +72,11 @@ export function worldAnchors(
         lineAnchor(network.anchors, stationId, chain.lineId),
         origin,
       );
-      out.set(key, { x: xz.x, y, z: xz.z });
+      out.set(key, {
+        x: xz.x,
+        y: platformWorldY(stationId, chain.lineId),
+        z: xz.z,
+      });
     }
   }
   return out;
@@ -117,13 +121,17 @@ export function applyFanout(
       cluster.sort((a, b) => a.lineId.localeCompare(b.lineId));
       const n = cluster.length;
       const mid = (n - 1) / 2;
+      const gap = Math.max(
+        spacingM,
+        ...cluster.map((c) => 2 * tubeRadiusM(c.lineId)),
+      );
       for (let i = 0; i < n; i++) {
         const item = cluster[i]!;
         const angle = network.angles[stationId]?.[item.lineId] ?? 0;
         // Long axis is (sin θ, cos θ); perpendicular in XZ is (cos θ, −sin θ).
         const px = Math.cos(angle);
         const pz = -Math.sin(angle);
-        const shift = (i - mid) * spacingM;
+        const shift = (i - mid) * gap;
         const p = out.get(item.key)!;
         out.set(item.key, {
           x: p.x + px * shift,
@@ -207,7 +215,7 @@ export function buildTubeMeshes(
       const geom = new TubeGeometry(
         curve,
         tubular,
-        TUBE_RADIUS,
+        tubeRadiusM(chain.lineId),
         radial,
         closed,
       );

@@ -56,8 +56,8 @@ export type GenerateStationInput = {
 };
 
 const PLATFORM_DX = 2;
-const LINE_DY = 4.4;
-const LEVEL_DX = 6.5;
+/** ~12 m between line bands so 115 m-long platforms share one Y axis. */
+const LINE_DX = 3;
 const LIFT_OFFSET = 1.4;
 
 export function physicalPlatformId(servicePlatformId: string): string {
@@ -109,21 +109,6 @@ function centroid(points: { x: number; y: number }[]): { x: number; y: number } 
     y += p.y;
   }
   return { x: x / points.length, y: y / points.length };
-}
-
-function offsetToward(
-  from: { x: number; y: number },
-  toward: { x: number; y: number },
-  dist: number,
-): { x: number; y: number } {
-  const dx = toward.x - from.x;
-  const dy = toward.y - from.y;
-  const len = Math.hypot(dx, dy);
-  if (len < 1e-6) return { x: from.x + dist, y: from.y };
-  return {
-    x: from.x + (dx / len) * dist,
-    y: from.y + (dy / len) * dist,
-  };
 }
 
 function snap(n: number): number {
@@ -196,17 +181,13 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
 
   const nodes: SchematicNode[] = [];
   const platformPos = new Map<string, { x: number; y: number; level: number }>();
-  const levelSlot = new Map<number, number>();
-  let lineIndex = 0;
+  let xCursor = 0;
 
   for (const lineId of lineIds) {
     const level = lineLevel(lineId, unknownAssigned, usedLevels);
-    const slot = levelSlot.get(level) ?? 0;
-    levelSlot.set(level, slot + 1);
-    const x0 = slot * LEVEL_DX;
-    const yLine = snap(lineIndex * LINE_DY);
-    lineIndex += 1;
     const plats = byLine.get(lineId) ?? [];
+    const x0 = xCursor;
+    const yLine = 0;
     for (let i = 0; i < plats.length; i++) {
       const phys = plats[i]!;
       const x = snap(x0 + i * PLATFORM_DX);
@@ -221,6 +202,9 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
         lineId: phys.lineId,
       });
     }
+    const lastSpan =
+      plats.length === 0 ? 0 : (plats.length - 1) * PLATFORM_DX + 1;
+    xCursor = snap(x0 + Math.max(LINE_DX, lastSpan));
   }
 
   const hallRaw = centroid([...platformPos.values()]);
@@ -268,8 +252,9 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
       if (pos) served.push(pos);
     }
     const avg = centroid(served.length ? served : [hall]);
-    const posRaw = offsetToward(avg, hall, LIFT_OFFSET);
-    const pos = { x: snap(posRaw.x), y: snap(posRaw.y) };
+    // Offset along Y so lifts are not squeezed into the tight X gaps
+    // between 115 m-long line bands.
+    const pos = { x: snap(avg.x), y: snap(avg.y + LIFT_OFFSET) };
     nodes.push({
       id,
       type: "lift",
