@@ -33,7 +33,7 @@ The 3D view reads tiles one URL at a time rather than range-requesting the archi
 | Live outages | `GET /Disruptions/Lifts/v2` (join on `LiftUniqueId`) |
 | OSM land, water, and buildings (schematic surface) | Greater London PMTiles extract (`npm run fetch-london-pmtiles`), served per-tile from `/api/osm/tiles/[v]/[z]/[x]/[y]` |
 
-Static topology is persisted in `data/network.json` (regenerate with the script below). That file includes undirected graph `edges`, directed `rides`, street↔platform `platformLiftChains`, and platform↔platform `interchangeChains`. Invented station schematics are generated from those chains into `data/schematic/generated/` (`npm run build-schematics`; also run at the end of `refresh-network` and as part of `npm run build`). The same script writes `data/schematic/lines.json` (gitignored): line chains, platform-centroid anchors, and per-station bearings for the 3D tubes. King’s Cross (`data/schematic/HUBKGX.json`) is a hand-authored override. The 3D view overlays OSM land, water, and building footprints from the London PMTiles extract (`data/osm/london.pmtiles`, regenerate with `npm run fetch-london-pmtiles`) when that file is present, and draws inter-station tubes at schematic platform depth (Lines toggle; same zoom window as the station dollhouses). Live disruptions are fetched at runtime via `/api/disruptions` with a ~60s in-memory TTL. There is no fabricated fallback data — if the live feed fails, the UI shows an explicit error and statuses degrade to unknown.
+Static topology is persisted in `data/network.json` (regenerate with the script below). That file includes undirected graph `edges`, directed `rides`, street↔platform `platformLiftChains`, and platform↔platform `interchangeChains`. Invented station schematics are generated from those chains into `data/schematic/generated/` (`npm run build-schematics`; also run at the end of `refresh-network`). The same script writes `data/schematic/lines.json` (gitignored): line chains, platform-centroid anchors, and per-station bearings for the 3D tubes. King’s Cross (`data/schematic/HUBKGX.json`) is a hand-authored override. The 3D view overlays OSM land, water, and building footprints from the London PMTiles extract (`data/osm/london.pmtiles`, regenerate with `npm run fetch-london-pmtiles`) when that file is present, and draws inter-station tubes at schematic platform depth (Lines toggle; same zoom window as the station dollhouses). Live disruptions are fetched at runtime via `/api/disruptions` with a ~60s in-memory TTL. There is no fabricated fallback data — if the live feed fails, the UI shows an explicit error and statuses degrade to unknown.
 
 ## Setup
 
@@ -56,12 +56,17 @@ npm run index-foi-pages   # writes data/foi/pages.json; edit data/foi/pages.over
 
 ```bash
 npm test                  # topology, status derivation, pathfinder, schematic
-npm run build             # regenerates schematics and lines.json, then next build
+npm run build-schematics  # regenerate generated/ + lines.json (local data job)
+npm run build             # next build only — does not invent schematic JSON
 ```
 
 ## Deploy
 
-Hosted on Cloud Run (`loop` in `us-east4`), mapped to `loop.penrose.tools`. From the repo root, with `data/network.json`, `data/schematic/`, and `data/osm/london.pmtiles` present (`npm run fetch-london-pmtiles` if you do not have the extract yet):
+Hosted on Cloud Run (`loop` in `us-east4`), mapped to `loop.penrose.tools`. From the repo root, generate schematic artifacts locally and ensure `data/osm/london.pmtiles` is present (`npm run fetch-london-pmtiles` if you do not have the extract yet):
+
+```bash
+npm run build-schematics
+```
 
 ```bash
 gcloud run deploy loop \
@@ -75,9 +80,9 @@ gcloud run deploy loop \
   --max-instances 5
 ```
 
-`data/osm/london.pmtiles` is gitignored. `.gcloudignore` follows `.gitignore` then un-ignores that file so `--source .` uploads it. Cloud Build does not fetch the extract; if the file is absent at deploy time, `/api/osm/tiles` 404s and the schematic runs without the OSM surface.
+`data/osm/london.pmtiles`, `data/schematic/generated/`, `data/schematic/index.json`, and `data/schematic/lines.json` are gitignored. `.gcloudignore` follows `.gitignore` then un-ignores those paths so `--source .` uploads them. Cloud Build does not fetch PMTiles or regenerate schematics; if they are absent at deploy time, OSM tiles and/or tubes 404.
 
-Cloud Build runs `npm run build` (`build-schematics` then `next build`) and starts with `next start`. `lines.json` is generated in that step, so it does not need to be in the upload. Optional: set `TFL_APP_KEY` on the service for higher TfL rate limits.
+Cloud Build runs `npm run build` (`next build` only) and starts with `next start`. Optional: set `TFL_APP_KEY` on the service for higher TfL rate limits.
 
 Custom domain: Cloud Run domain mapping in `us-east4` plus a Squarespace CNAME `loop` → `ghs.googlehosted.com`. Certificate issuance can take up to 24 hours after the mapping is created.
 

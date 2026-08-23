@@ -3,3 +3,6 @@
 .gcloudignore
 #!include:.gitignore
 !/data/osm/london.pmtiles
+!/data/schematic/generated/
+!/data/schematic/index.json
+!/data/schematic/lines.json

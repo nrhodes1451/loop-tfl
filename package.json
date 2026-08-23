@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "tsx scripts/build-schematics.ts && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "refresh-network": "tsx scripts/refresh-network.ts",
