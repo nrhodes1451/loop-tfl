@@ -20,6 +20,7 @@ import type {
   SchematicNode,
   SchematicStation,
 } from "@/lib/schematic/types";
+import { hoverDepthLabel } from "@/lib/schematic/foi-layout";
 import { LINE_COLORS } from "@/lib/tokens";
 import { platformPlanSize } from "@/lib/schematic/scene";
 
@@ -677,11 +678,14 @@ export function StationIsoView({ station }: { station: SchematicStation }) {
             className="font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px]"
             style={{ color: "#6c727c" }}
           >
-            {hovered.type}
-            {" · "}
-            level {hovered.level}
-            {hovered.liftId ? ` · ${hovered.liftId}` : ""}
-            {hovered.lineId ? ` · ${hovered.lineId}` : ""}
+            {[
+              hovered.type,
+              hoverDepthLabel(station.stationId, hovered, station.nodes),
+              hovered.liftId,
+              hovered.lineId,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </div>
         </div>
       ) : null}

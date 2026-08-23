@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { schematicLevelWorldY } from "./geo";
-import { foiDepthM, platformWorldY } from "./foi-layout";
+import {
+  foiDepthM,
+  formatDepthBelowStreet,
+  hoverDepthLabel,
+  platformWorldY,
+} from "./foi-layout";
 
 describe("FOI platform depths", () => {
   it("reads KGX Northern at 27 m and Circle at 7 m", () => {
@@ -17,5 +22,20 @@ describe("FOI platform depths", () => {
       schematicLevelWorldY(-6),
       0,
     );
+  });
+
+  it("formats hover copy from FOI metres, not schematic level", () => {
+    expect(formatDepthBelowStreet(27)).toBe("27 m below street");
+    expect(formatDepthBelowStreet(15.7)).toBe("15.7 m below street");
+    expect(
+      hoverDepthLabel("HUBKGX", {
+        type: "platform",
+        lineId: "northern",
+        level: -6,
+      }),
+    ).toBe("27 m below street");
+    expect(
+      hoverDepthLabel("HUBKGX", { type: "street", level: 0 }),
+    ).toBeNull();
   });
 });

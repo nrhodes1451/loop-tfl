@@ -63,6 +63,7 @@ import type {
   SchematicStation,
   SchematicStationRef,
 } from "@/lib/schematic/types";
+import { hoverDepthLabel } from "@/lib/schematic/foi-layout";
 import type { LineNetwork } from "@/lib/schematic/lines";
 import { PmtilesSurface } from "./PmtilesSurface";
 import { TubeLayer } from "./TubeLayer";
@@ -1181,11 +1182,18 @@ export function StationScene3D({
             className="font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px]"
             style={{ color: "#8b93a0" }}
           >
-            {hovered.volume.type}
-            {" · "}
-            level {hovered.volume.level}
-            {hovered.volume.liftId ? ` · ${hovered.volume.liftId}` : ""}
-            {hovered.volume.lineId ? ` · ${hovered.volume.lineId}` : ""}
+            {[
+              hovered.volume.type,
+              hoverDepthLabel(
+                hovered.station.id,
+                hovered.volume,
+                hovered.station.topology.nodes,
+              ),
+              hovered.volume.liftId,
+              hovered.volume.lineId,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </div>
         </div>
       ) : null}

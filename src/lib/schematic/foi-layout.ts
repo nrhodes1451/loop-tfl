@@ -47,3 +47,32 @@ export function platformDepthM(stationId: string | undefined, lineId: string): n
 export function platformWorldY(stationId: string | undefined, lineId: string): number {
   return -platformDepthM(stationId, lineId);
 }
+
+/** Tooltip copy for metres below street (FOI or typical). */
+export function formatDepthBelowStreet(metres: number): string {
+  const rounded = Math.round(metres * 10) / 10;
+  const text = Number.isInteger(rounded) ? String(rounded) : String(rounded);
+  return `${text} m below street`;
+}
+
+/**
+ * Depth caption for hover: platforms (and lift cabins at a platform
+ * tier) use FOI/typical metres. Street/ticket hall omit a fake schematic level.
+ */
+export function hoverDepthLabel(
+  stationId: string | undefined,
+  item: { type: string; lineId?: string; level: number },
+  nodes?: ReadonlyArray<{ type: string; level: number; lineId?: string }>,
+): string | null {
+  if (item.lineId) {
+    return formatDepthBelowStreet(platformDepthM(stationId, item.lineId));
+  }
+  if (item.type === "street") return null;
+  const plat = nodes?.find(
+    (n) => n.type === "platform" && n.level === item.level && n.lineId,
+  );
+  if (plat?.lineId) {
+    return formatDepthBelowStreet(platformDepthM(stationId, plat.lineId));
+  }
+  return null;
+}
