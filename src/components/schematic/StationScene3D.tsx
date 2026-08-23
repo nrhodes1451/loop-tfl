@@ -92,6 +92,9 @@ export type StationScene3DProps = {
   panMode?: boolean;
   showLines?: boolean;
   lineNetwork?: LineNetwork | null;
+  /** Compass rose lives in page chrome; this ref is the rotating needle. */
+  roseRef: RefObject<HTMLDivElement | null>;
+  faceNorthRef?: RefObject<(() => void) | null>;
 };
 
 function detectQuality(): SceneQuality {
@@ -445,14 +448,12 @@ function CompassTracker({
   return null;
 }
 
-function CompassButton({
+export function CompassButton({
   roseRef,
   onFaceNorth,
-  raised = false,
 }: {
   roseRef: RefObject<HTMLDivElement | null>;
   onFaceNorth: () => void;
-  raised?: boolean;
 }) {
   return (
     <button
@@ -460,11 +461,7 @@ function CompassButton({
       onClick={onFaceNorth}
       aria-label="Face north"
       title="Face north"
-      className={
-        raised
-          ? "absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(176px,calc(env(safe-area-inset-bottom)+172px))] sm:right-6 sm:bottom-[184px]"
-          : "absolute z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none right-3 bottom-[max(56px,calc(env(safe-area-inset-bottom)+52px))] sm:right-6 sm:bottom-[72px]"
-      }
+      className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border select-none"
       onPointerDown={(e) => e.stopPropagation()}
       style={{
         color: "#e8edf4",
@@ -840,13 +837,14 @@ export function StationScene3D({
   panMode = false,
   showLines = false,
   lineNetwork = null,
+  roseRef,
+  faceNorthRef,
 }: StationScene3DProps) {
   const quality = useQuality(qualityProp);
   const stickyHover = useCoarsePointer();
   const router = useRouter();
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const roseRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [pointer, setPointer] = useState<{
@@ -902,6 +900,17 @@ export function StationScene3D({
       resetRef.current = null;
     };
   }, [resetRef]);
+
+  useLayoutEffect(() => {
+    if (!faceNorthRef) return;
+    faceNorthRef.current = () => {
+      const controls = controlsRef.current;
+      if (controls) faceNorth(controls);
+    };
+    return () => {
+      faceNorthRef.current = null;
+    };
+  }, [faceNorthRef]);
 
   const geoScene = usePmtiles;
   const loadedById = useMemo(() => {
@@ -1150,14 +1159,6 @@ export function StationScene3D({
           }}
         />
       </Canvas>
-      <CompassButton
-        roseRef={roseRef}
-        raised={geoScene}
-        onFaceNorth={() => {
-          const controls = controlsRef.current;
-          if (controls) faceNorth(controls);
-        }}
-      />
       {hovered && tip ? (
         <div
           className="pointer-events-none absolute z-20 max-w-[248px] rounded-lg border px-2.5 py-1.5 text-[12px]"

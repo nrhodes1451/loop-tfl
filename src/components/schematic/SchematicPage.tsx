@@ -24,6 +24,11 @@ const StationScene3D = dynamic(
   },
 );
 
+const CompassButton = dynamic(
+  () => import("./StationScene3D").then((m) => m.CompassButton),
+  { ssr: false },
+);
+
 const TYPE_KEY: { id: string; name: string; shape: "slab" | "platform" | "shaft" }[] =
   [
     { id: "concourse", name: "Concourse", shape: "slab" },
@@ -209,6 +214,8 @@ export function SchematicPage({
   const [tilesVersion, setTilesVersion] = useState<string | null>(null);
   const [lineNetwork, setLineNetwork] = useState<LineNetwork | null>(null);
   const resetView = useRef<(() => void) | null>(null);
+  const roseRef = useRef<HTMLDivElement>(null);
+  const faceNorthRef = useRef<(() => void) | null>(null);
   const usePmtiles = tilesVersion != null;
 
   useEffect(() => {
@@ -272,6 +279,8 @@ export function SchematicPage({
         panMode={panMode}
         showLines={showLines}
         lineNetwork={lineNetwork}
+        roseRef={roseRef}
+        faceNorthRef={faceNorthRef}
       />
 
       <header
@@ -421,37 +430,43 @@ export function SchematicPage({
       ) : null}
 
       <div
-        className="absolute z-20 flex flex-col items-stretch gap-1.5 right-3 bottom-[max(12px,env(safe-area-inset-bottom))] sm:right-6 sm:bottom-[22px]"
+        className="absolute z-20 flex flex-col items-end gap-1.5 right-3 bottom-[max(12px,env(safe-area-inset-bottom))] sm:right-6 sm:bottom-[22px]"
       >
-        {hasMap ? (
-          <>
-            <ChromeCheck
-              checked={showMap}
-              onChange={setShowMap}
-              label="Map"
-            />
-            <ChromeCheck
-              checked={showSchematic}
-              onChange={setShowSchematic}
-              label="Schematic"
-            />
-            <ChromeCheck
-              checked={showLines}
-              onChange={setShowLines}
-              label="Lines"
-            />
-            <ChromeCheck
-              checked={panMode}
-              onChange={setPanMode}
-              label="Pan"
-            />
-          </>
-        ) : null}
-        <ChromeCheck
-          checked={showLegend}
-          onChange={setShowLegend}
-          label="Show legend"
+        <CompassButton
+          roseRef={roseRef}
+          onFaceNorth={() => faceNorthRef.current?.()}
         />
+        <div className="flex flex-col items-stretch gap-1.5">
+          {hasMap ? (
+            <>
+              <ChromeCheck
+                checked={showMap}
+                onChange={setShowMap}
+                label="Map"
+              />
+              <ChromeCheck
+                checked={showSchematic}
+                onChange={setShowSchematic}
+                label="Schematic"
+              />
+              <ChromeCheck
+                checked={showLines}
+                onChange={setShowLines}
+                label="Lines"
+              />
+              <ChromeCheck
+                checked={panMode}
+                onChange={setPanMode}
+                label="Pan"
+              />
+            </>
+          ) : null}
+          <ChromeCheck
+            checked={showLegend}
+            onChange={setShowLegend}
+            label="Show legend"
+          />
+        </div>
       </div>
     </div>
   );
