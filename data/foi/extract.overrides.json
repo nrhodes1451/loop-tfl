@@ -1,0 +1,148 @@
+[
+  {
+    "file": "3d bakerloo stations Redacted.pdf",
+    "page": 4,
+    "confidence": "high",
+    "note": "Embankment table is readable; compass ~105° on the PNG (tilt ±15°)."
+  },
+  {
+    "file": "3d bakerloo stations Redacted.pdf",
+    "page": 16,
+    "northDeg": null,
+    "reviewed": true,
+    "depths": [
+      {
+        "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+        "metres": 33,
+        "lineId": "circle"
+      },
+      {
+        "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+        "metres": 33,
+        "lineId": "district"
+      }
+    ],
+    "confidence": "high",
+    "note": "Printed table says District and Circle 33.0m on a Jubilee/Waterloo sheet (FOI template error). Compass is 270° on this PNG — omitted so it does not disagree with Waterloo sheets 2–3 (~75°)."
+  },
+  {
+    "file": "3d bakerloo stations Redacted.pdf",
+    "page": 17,
+    "confidence": "high",
+    "note": "Waterloo Bakerloo/Northern table is readable; compass ~75° on the PNG."
+  },
+  {
+    "file": "3d central line stations Redacted.pdf",
+    "page": 4,
+    "depths": [
+      { "label": "PLATFORM 1", "metres": 29.9, "lineId": "central" },
+      { "label": "PLATFORM 2", "metres": 22.2, "lineId": "central" }
+    ],
+    "note": "Chancery Lane captions are platform numbers; both are Central line."
+  },
+  {
+    "file": "3d central line stations Redacted.pdf",
+    "page": 6,
+    "depths": [
+      { "label": "CENTRAL LINE PLATFORMS", "metres": 27.4, "lineId": "central" },
+      { "label": "PICCADILLY LINE PLATFORMS", "metres": 33.8, "lineId": "piccadilly" },
+      { "label": "PICCADILLY LINE PLATFORMS", "metres": 39.6, "lineId": "piccadilly" }
+    ],
+    "note": "Dropped disused hostelry tunnel; kept Central and the two distinct Piccadilly depths."
+  },
+  {
+    "file": "3d circle stations Redacted.pdf",
+    "page": 2,
+    "depths": [
+      {
+        "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+        "metres": 8.5,
+        "lineId": "circle"
+      },
+      {
+        "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+        "metres": 8.5,
+        "lineId": "metropolitan"
+      },
+      {
+        "label": "RAILTRACK THAMESLINK PLATFORMS",
+        "metres": 8.5,
+        "lineId": "national-rail"
+      }
+    ],
+    "note": "Barbican Railtrack Thameslink mapped to national-rail."
+  },
+  {
+    "file": "3d circle stations Redacted.pdf",
+    "page": 7,
+    "depths": [
+      {
+        "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+        "metres": 4.3,
+        "lineId": "hammersmith-city"
+      },
+      {
+        "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+        "metres": 4.3,
+        "lineId": "circle"
+      },
+      {
+        "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+        "metres": 4.3,
+        "lineId": "metropolitan"
+      },
+      {
+        "label": "FIRST CAPITAL CONNECT PLATFORMS",
+        "metres": 5.6,
+        "lineId": "national-rail"
+      }
+    ],
+    "note": "Farringdon First Capital Connect mapped to national-rail."
+  },
+  {
+    "file": "3d circle stations Redacted.pdf",
+    "page": 11,
+    "depths": [
+      {
+        "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
+        "metres": 7,
+        "lineId": "circle"
+      },
+      {
+        "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
+        "metres": 7,
+        "lineId": "metropolitan"
+      },
+      { "label": "VICTORIA LINE PLATFORMS", "metres": 15.7, "lineId": "victoria" },
+      { "label": "PICCADILLY LINE PLATFORMS", "metres": 21.3, "lineId": "piccadilly" },
+      { "label": "NORTHERN LINE PLATFORMS", "metres": 27, "lineId": "northern" }
+    ],
+    "note": "Dropped ticket-hall row (not a platform line)."
+  },
+  {
+    "file": "3d circle stations Redacted.pdf",
+    "page": 12,
+    "reviewed": true,
+    "note": "King's Cross sheet 2 has no printed depth table."
+  },
+  {
+    "file": "3d circle stations Redacted.pdf",
+    "page": 14,
+    "reviewed": true,
+    "note": "Moorgate sheet has no printed depth table."
+  },
+  {
+    "file": "3d district stations Redacted.pdf",
+    "page": 2,
+    "confidence": "high",
+    "note": "Bow Road table reads District & Metropolitan 7.0m."
+  },
+  {
+    "file": "3d jubilee stations Redacted.pdf",
+    "page": 6,
+    "northDeg": 135,
+    "reviewed": true,
+    "confidence": "high",
+    "note": "North Greenwich has no metre table (levels only; some labels redacted). Compass N ~135° on the PNG."
+  }
+]

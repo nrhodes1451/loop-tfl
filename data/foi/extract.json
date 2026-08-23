@@ -1,0 +1,2315 @@
+{
+  "generatedAt": "2026-08-23T09:30:36.334Z",
+  "source": "tfl-foi-2015-axonometric",
+  "disclaimer": "Approximate platform depths and drawing north from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
+  "pages": [
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 1,
+      "stationId": "HUBCHX",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Northern Line Platforms",
+          "metres": 19.5,
+          "lineId": "northern"
+        },
+        {
+          "label": "Jubilee Line Platforms",
+          "metres": 26.2,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Charing Cross table lists Northern 19.5m and Jubilee 26.2m; compass N points right on the page (90°)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUERB",
+      "northDeg": 115,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 23.4,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Edgware Road table lists Bakerloo platforms at 23.4m; compass N is about 25° clockwise of drawing-up, 115° on this image."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBEPH",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "Northern Line Platforms",
+          "metres": 18.9,
+          "lineId": "northern"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 23.5,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Elephant & Castle table lists Northern 18.9m and Bakerloo 23.5m; compass N points top-left on the drawing (45° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUEMB",
+      "northDeg": 105,
+      "depths": [
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "district"
+        },
+        {
+          "label": "Northern Line Platforms",
+          "metres": 16.2,
+          "lineId": "northern"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 21,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Embankment axonometric 1 table is clear (5.5 / 16.2 / 21.0m); compass N is about 15° clockwise of drawing-up (105° on this image), with some tilt uncertainty.",
+      "note": "Embankment table is readable; compass ~105° on the PNG (tilt ±15°)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUEMB",
+      "northDeg": 100,
+      "depths": [
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "district"
+        },
+        {
+          "label": "Northern Line Platforms",
+          "metres": 16.2,
+          "lineId": "northern"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 21,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Embankment axonometric 2 table matches 5.5 / 16.2 / 21.0m; compass N is slightly clockwise of drawing-up (100° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUEMB",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "district"
+        },
+        {
+          "label": "Northern Line Platforms",
+          "metres": 16.2,
+          "lineId": "northern"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 21,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Embankment axonometric 3 table lists 5.5 / 16.2 / 21.0m; compass N points to drawing-up (90° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUKPK",
+      "northDeg": 105,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 10,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Kilburn Park table lists Bakerloo platforms at 10.0m; compass N is about 15° clockwise of drawing-up (105° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLULBN",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 17.7,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Lambeth North table lists Bakerloo platforms at 17.7m; compass N points top-left on the drawing (60° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUMVL",
+      "northDeg": 75,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 15.2,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Maida Vale table lists Bakerloo platforms at 15.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 10,
+      "stationId": "HUBMYB",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 25.3,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Marylebone table lists Bakerloo platforms at 25.3m; compass N points to drawing-up (90° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 11,
+      "stationId": "HUBPAD",
+      "northDeg": 180,
+      "depths": [
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.2,
+          "lineId": "circle"
+        },
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.2,
+          "lineId": "district"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 9.7,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Paddington (City) table lists District and Circle 5.2m and Bakerloo 9.7m; compass N points down on this image (180°)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 12,
+      "stationId": "940GZZLUPCC",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 28,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "Piccadilly Line Platforms",
+          "metres": 32.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Piccadilly Circus axonometric 1 table lists Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUPCC",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 28,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "Piccadilly Line Platforms",
+          "metres": 32.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Piccadilly Circus axonometric 2 repeats Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLURGP",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 21.6,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Regent's Park table lists Bakerloo platforms at 21.6m; compass N points to drawing-up (90° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUWKA",
+      "northDeg": 150,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 16.2,
+          "lineId": "bakerloo"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Warwick Avenue table lists Bakerloo platforms at 16.2m; compass N is about 60° clockwise of drawing-up (150° on this image)."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 16,
+      "stationId": "HUBWAT",
+      "northDeg": null,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Waterloo axonometric 1 table appears to list District and Circle at 33.0m (digit 1 vs 3 is uncertain); compass N points down on the drawing (270° on this image).",
+      "note": "Printed table says District and Circle 33.0m on a Jubilee/Waterloo sheet (FOI template error). Compass is 270° on this PNG — omitted so it does not disagree with Waterloo sheets 2–3 (~75°).",
+      "reviewed": true
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 17,
+      "stationId": "HUBWAT",
+      "northDeg": 75,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms (Northbound)",
+          "metres": 19.5,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "Bakerloo Line Platforms (Southbound)",
+          "metres": 16.4,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "Northern Line Platforms",
+          "metres": 21.3,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Waterloo axonometric 2 table lists Bakerloo NB 19.5m, SB 16.4m, Northern 21.3m; compass tilt about 15° from drawing-up is a borderline guess (75° on this image).",
+      "note": "Waterloo Bakerloo/Northern table is readable; compass ~75° on the PNG."
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 18,
+      "stationId": "HUBWAT",
+      "northDeg": 75,
+      "depths": [
+        {
+          "label": "Waterloo & City Line",
+          "metres": 12.2,
+          "lineId": "waterloo-city"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Waterloo axonometric 3 table lists Waterloo & City Line at 12.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image)."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "HUBBAN",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 20.7,
+          "lineId": "central"
+        },
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "district"
+        },
+        {
+          "label": "DOCKLANDS PLATFORMS",
+          "metres": 41.4,
+          "lineId": "dlr"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 30.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUBLG",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 15.9,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBBDS",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 22.2,
+          "lineId": "central"
+        },
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 32,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Bond Street axonometric; N towards top-left; Central 22.2m and Jubilee 32.0m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUCHL",
+      "northDeg": 330,
+      "depths": [
+        {
+          "label": "PLATFORM 1",
+          "metres": 29.9,
+          "lineId": "central"
+        },
+        {
+          "label": "PLATFORM 2",
+          "metres": 22.2,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Chancery Lane axonometric; N about 11 o'clock; Platform 1 29.9m, Platform 2 22.2m.",
+      "note": "Chancery Lane captions are platform numbers; both are Central line."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUGTH",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 12.8,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUHBN",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "central"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 33.8,
+          "lineId": "piccadilly"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 39.6,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Holborn axonometric; N towards top-right; Central 27.4m plus three Piccadilly rows and hostelry.",
+      "note": "Dropped disused hostelry tunnel; kept Central and the two distinct Piccadilly depths."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUHPK",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Holland Park axonometric; N towards top-left; Central platforms 18.3m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLULGT",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 9,
+      "stationId": "HUBLST",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.6,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.6,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 15.8,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Liverpool Street axonometric; N towards bottom-left; Circle & Metropolitan 7.6m, Central 15.8m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUMBA",
+      "northDeg": 345,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 26.2,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Marble Arch axonometric; N slightly left of up; Central platforms 26.2m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 11,
+      "stationId": "940GZZLUMED",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 12,
+      "stationId": "940GZZLUNHG",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.8,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.8,
+          "lineId": "district"
+        },
+        {
+          "label": "CENTRAL LINE WESTBOUND PLATFORM",
+          "metres": 25.9,
+          "lineId": "central"
+        },
+        {
+          "label": "CENTRAL LINE EASTBOUND PLATFORM",
+          "metres": 31.1,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Notting Hill Gate axonometric; N towards top-left; District/Circle 8.8m, Central WB 25.9m, EB 31.1m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUOXC",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "BAKERLOO LINE PLATFORMS",
+          "metres": 23.1,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 23.1,
+          "lineId": "victoria"
+        },
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 24.6,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Oxford Circus upper-levels axonometric; N towards bottom-left; Bakerloo/Victoria 23.1m, Central 24.6m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLUOXC",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "BAKERLOO LINE PLATFORMS",
+          "metres": 23.1,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 23.1,
+          "lineId": "victoria"
+        },
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 24.6,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Oxford Circus platforms axonometric; N towards bottom-left; same depth table as the upper-levels sheet."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUQWY",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 24.4,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLURBG",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Redbridge axonometric; N towards bottom-left; Central platforms 4.3m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 17,
+      "stationId": "HUBSPB",
+      "northDeg": 330,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Shepherd's Bush axonometric; N about 11 o'clock; Central platforms 18.3m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 18,
+      "stationId": "940GZZLUSPU",
+      "northDeg": 180,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORM 1",
+          "metres": 17.5,
+          "lineId": "central"
+        },
+        {
+          "label": "CENTRAL LINE PLATFORM 2",
+          "metres": 22.2,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "St Paul's axonometric; N points down; Platform 1 17.5m, Platform 2 22.2m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 19,
+      "stationId": "HUBTCR",
+      "northDeg": 50,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 26.2,
+          "lineId": "central"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 29.8,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Tottenham Court Road axonometric; N towards top-right; Central 26.2m, Northern 29.8m."
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 20,
+      "stationId": "940GZZLUWSD",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.8,
+          "lineId": "central"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUALD",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Aldgate rose N at 60°; Circle & Metropolitan platforms 7.0m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUBBN",
+      "northDeg": 75,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.5,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "RAILTRACK THAMESLINK PLATFORMS",
+          "metres": 8.5,
+          "lineId": "national-rail"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Barbican rose N at 75°; Circle & Met and Railtrack Thameslink both 8.5m.",
+      "note": "Barbican Railtrack Thameslink mapped to national-rail."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 3,
+      "stationId": "940GZZLUBWT",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Bayswater rose N at 90°; District and Circle platforms 5.0m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 4,
+      "stationId": "HUBCST",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Cannon Street rose N at 90°; District and Circle platforms 6.0m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUERC",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "CIRCLE & HAMMERSMITH LINE PLATFORMS",
+          "metres": 5.1,
+          "lineId": "hammersmith-city"
+        },
+        {
+          "label": "CIRCLE & HAMMERSMITH LINE PLATFORMS",
+          "metres": 5.1,
+          "lineId": "circle"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Edgware Road rose N at 135°; Circle & Hammersmith platforms 5.1m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUESQ",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "metropolitan"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Euston Square rose N at 90°; Circle & Metropolitan platforms 7.3m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 7,
+      "stationId": "HUBZFD",
+      "northDeg": 270,
+      "depths": [
+        {
+          "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+          "metres": 4.3,
+          "lineId": "hammersmith-city"
+        },
+        {
+          "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+          "metres": 4.3,
+          "lineId": "circle"
+        },
+        {
+          "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+          "metres": 4.3,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "FIRST CAPITAL CONNECT PLATFORMS",
+          "metres": 5.6,
+          "lineId": "national-rail"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Farringdon rose N at 270°; Met/Circle/H&C 4.3m, First Capital Connect 5.6m.",
+      "note": "Farringdon First Capital Connect mapped to national-rail."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLUGTR",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 20,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Gloucester Road rose N at 45°; District & Circle 7.0m, Piccadilly 20.0m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUGPS",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "CIRCLE / H & C / MET PLATFORMS",
+          "metres": 6.5,
+          "lineId": "hammersmith-city"
+        },
+        {
+          "label": "CIRCLE / H & C / MET PLATFORMS",
+          "metres": 6.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE / H & C / MET PLATFORMS",
+          "metres": 6.5,
+          "lineId": "metropolitan"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Great Portland Street rose N at 60°; Circle/H&C/Met platforms 6.5m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUHSK",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "High Street Kensington rose N at 45°; District and Circle platforms 4.3m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 11,
+      "stationId": "HUBKGX",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 15.7,
+          "lineId": "victoria"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 21.3,
+          "lineId": "piccadilly"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 27,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "King's Cross rose N at 135°; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m.",
+      "note": "Dropped ticket-hall row (not a platform line)."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 12,
+      "stationId": "HUBKGX",
+      "northDeg": 135,
+      "depths": [],
+      "confidence": "high",
+      "raw": "King's Cross axonometric 2; N towards bottom-right; no printed depth table.",
+      "note": "King's Cross sheet 2 has no printed depth table.",
+      "reviewed": true
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUMSH",
+      "northDeg": 150,
+      "depths": [
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Mansion House axonometric; N about 5 o'clock; District platforms 7.3m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 14,
+      "stationId": "HUBZMG",
+      "northDeg": 45,
+      "depths": [],
+      "confidence": "high",
+      "raw": "Moorgate axonometric; N towards top-right; no printed depth table.",
+      "note": "Moorgate sheet has no printed depth table.",
+      "reviewed": true
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUSSQ",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7.75,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7.75,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Sloane Square axonometric; N towards the right; District and Circle platforms 7.75m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLUSKS",
+      "northDeg": 110,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "district"
+        },
+        {
+          "label": "PICCADILLY LINE EASTBOUND PLATFORM",
+          "metres": 18.9,
+          "lineId": "piccadilly"
+        },
+        {
+          "label": "PICCADILLY LINE WESTBOUND PLATFORM",
+          "metres": 24.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "South Kensington axonometric; N about 4 o'clock; District/Circle 8.2m, Piccadilly EB 18.9m, WB 24.3m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 17,
+      "stationId": "940GZZLUSJP",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5.8,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5.8,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "St James's Park axonometric; N towards the right; District and Circle platforms 5.8m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 18,
+      "stationId": "940GZZLUTMP",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 3.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 3.5,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Temple axonometric; N towards the right; District and Circle platforms 3.5m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 19,
+      "stationId": "940GZZLUTWH",
+      "northDeg": 120,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 20,
+      "stationId": "HUBVIC",
+      "northDeg": 150,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6.4,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6.4,
+          "lineId": "district"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 17.9,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Victoria axonometric; N about 5 o'clock; District/Circle 6.4m, Victoria 17.9m."
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 21,
+      "stationId": "HUBWSM",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only."
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUADE",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "district"
+        },
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "metropolitan"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Aldgate East: N points top-left; table lists District & Metropolitan platforms at 8.2m."
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUBWR",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Bow Road: N top-left; depth table present but metres poorly printed (read as 7.0m).",
+      "note": "Bow Road table reads District & Metropolitan 7.0m."
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 3,
+      "stationId": "940GZZLUECT",
+      "northDeg": 180,
+      "depths": [
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 4.8,
+          "lineId": "district"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 19.8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Earl's Court: rose has N down / S up; District 4.8m and Piccadilly 19.8m."
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUFBY",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 4,
+          "lineId": "district"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box."
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUSGN",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m."
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 6,
+      "stationId": "HUBZWL",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 3.1,
+          "lineId": "district"
+        },
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 3.1,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "EAST LONDON LINE PLATFORMS",
+          "metres": 7.8,
+          "lineId": "london-overground"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Whitechapel: N points top-right; District & Metropolitan 3.1m, East London Line 7.8m."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUBMY",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 15,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 2,
+      "stationId": "HUBZCW",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 15,
+          "lineId": "jubilee"
+        },
+        {
+          "label": "EAST LONDON LINE PLATFORMS",
+          "metres": 8,
+          "lineId": "london-overground"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Canada Water: N points bottom-left; Jubilee 15.0m, East London Line 8.0m."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBCAW",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 23,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Canary Wharf: N points bottom-left; Jubilee platforms 23.0m."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUGPK",
+      "northDeg": 330,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 23.4,
+          "lineId": "victoria"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "piccadilly"
+        },
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 31.1,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Green Park: N about 30° west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 5,
+      "stationId": "HUBLBG",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 27.3,
+          "lineId": "jubilee"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 24.1,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 6,
+      "stationId": "HUBNGW",
+      "northDeg": 135,
+      "depths": [],
+      "confidence": "high",
+      "raw": "North Greenwich: N points down-right; depth table missing or redacted.",
+      "note": "North Greenwich has no metre table (levels only; some labels redacted). Compass N ~135° on the PNG.",
+      "reviewed": true
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUSJW",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 18.6,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLUSWK",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 24,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Southwark: N points bottom-left; table prints Jubilee platforms 24m approx."
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUSWC",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 13.7,
+          "lineId": "jubilee"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Swiss Cottage: N points top-left; Jubilee platforms 13.7m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUAGL",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Angel axonometric: N points right (90°) on the portrait raster; Northern Line platforms 27.4m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUACY",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 19.8,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Archway axonometric: N about 60° on the portrait raster; Northern Line platforms 19.8m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBBAL",
+      "northDeg": 195,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 13.4,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Balham axonometric: N about 195° on the portrait raster; Northern Line platforms 13.4m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUBZP",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 31,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Belsize Park axonometric: N about 45° on the portrait raster; Northern Line platforms 31.0m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUBOR",
+      "northDeg": 110,
+      "depths": [
+        {
+          "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+          "metres": 17,
+          "lineId": "northern"
+        },
+        {
+          "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+          "metres": 19.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Borough axonometric: N about 110° on the portrait raster; SB 17.0m, NB 19.5m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUCTN",
+      "northDeg": 230,
+      "depths": [
+        {
+          "label": "NORTHERN LINE (NORTHBOUND) PLATFORMS",
+          "metres": 14.6,
+          "lineId": "northern"
+        },
+        {
+          "label": "NORTHERN LINE (SOUTHBOUND) PLATFORMS",
+          "metres": 18.3,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Camden Town axonometric: N about 230° on the portrait raster; NB 14.6m, SB 18.3m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUCFM",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 17.3,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Chalk Farm axonometric: N points right (90°) on the portrait raster; Northern Line platforms 17.3m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLUCPC",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 20.1,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Clapham Common axonometric: N about 135° on the portrait raster; Northern Line platforms 20.1m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUCPN",
+      "northDeg": 340,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 15.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Clapham North axonometric: N about 340° on the portrait raster; Northern Line platforms 15.5m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUCPS",
+      "northDeg": 110,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 17.7,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Clapham South axonometric: N about 110° on the portrait raster; Northern Line platforms 17.7m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 11,
+      "stationId": "940GZZLUCSD",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 13.4,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Colliers Wood axonometric: N about 315° on the portrait raster; Northern Line platforms 13.4m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 12,
+      "stationId": "HUBEUS",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE (CHARING CROSS BRANCH) PLATFORMS",
+          "metres": 20.4,
+          "lineId": "northern"
+        },
+        {
+          "label": "NORTHERN LINE (CITY BRANCH) PLATFORMS",
+          "metres": 29.8,
+          "lineId": "northern"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 29.8,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Euston axonometric: N points right (90°) on the portrait raster; CX 20.4m, City 29.8m, Victoria 29.8m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUGDG",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 28.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Goodge Street axonometric: N points right (90°) on the portrait raster; Northern Line platforms 28.5m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLUHTD",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 58.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Hampstead axonometric; north ~45° (top-right); Northern Line platforms 58.5m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUHGT",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 42,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Highgate axonometric; north ~315° (top-left); Northern Line platforms 42.0m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLUKNG",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "NORTHERN LINE (NORTH BOUND)",
+          "metres": 17,
+          "lineId": "northern"
+        },
+        {
+          "label": "NORTHERN LINE (SOUTH BOUND)",
+          "metres": 18.8,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Kennington axonometric; north ~135° (bottom-right); NB 17.0m, SB 18.8m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 17,
+      "stationId": "HUBKTN",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+          "metres": 23.8,
+          "lineId": "northern"
+        },
+        {
+          "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+          "metres": 20.4,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Kentish Town axonometric; north ~225° (bottom-left); SB 23.8m, NB 20.4m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 18,
+      "stationId": "940GZZLULSQ",
+      "northDeg": 215,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "northern"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 32.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Leicester Square axonometric; north ~215°; Northern 27.4m, Piccadilly 32.3m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 19,
+      "stationId": "HUBOLD",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORM",
+          "metres": 15.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Old Street axonometric; north ~45° (top-right); Northern Line platform 15.5m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 20,
+      "stationId": "940GZZLUOVL",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+          "metres": 14.3,
+          "lineId": "northern"
+        },
+        {
+          "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+          "metres": 17.7,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Oval axonometric; north ~315° (top-left); NB 14.3m, SB 17.7m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 21,
+      "stationId": "940GZZLUSWN",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 12.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "South Wimbledon axonometric; north ~315° (top-left); Northern Line platforms 12.5m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 22,
+      "stationId": "940GZZLUSKW",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 14.6,
+          "lineId": "northern"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 14.6,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Stockwell axonometric; north ~315° (top-left); Northern and Victoria both 14.6m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 23,
+      "stationId": "940GZZLUTBC",
+      "northDeg": 30,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 15.9,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Tooting Bec axonometric; north ~30° (top-right); Northern Line platforms 15.9m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 24,
+      "stationId": "940GZZLUTBY",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 12.5,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Tooting Broadway axonometric; north ~225° (bottom-left); Northern Line platforms 12.5m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 25,
+      "stationId": "940GZZLUTFP",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+          "metres": 22,
+          "lineId": "northern"
+        },
+        {
+          "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+          "metres": 25,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Tufnell Park axonometric; north ~135° (bottom-right); NB 22.0m, SB 25.0m."
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 26,
+      "stationId": "940GZZLUWRR",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 22.2,
+          "lineId": "victoria"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 25.6,
+          "lineId": "northern"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Warren Street axonometric; north ~315° (top-left); Victoria 22.2m, Northern 25.6m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUASL",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Arsenal: N at top; Piccadilly platforms 18.3m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUCAR",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 20.7,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Caledonian Road: N bottom-right; Piccadilly platforms 20.7m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "940GZZLUBDS",
+      "northDeg": 30,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 16.5,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Bounds Green: N about 30°; Piccadilly platforms 16.5m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUCGN",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 36,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "HUBFPK",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Finsbury Park: N at top; table lists only Piccadilly platforms 7.3m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUHNX",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "HUBH13",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 14,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Heathrow 1,2,3: N top-right; Piccadilly platforms 14m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "HUBHX4",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE",
+          "metres": 8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Heathrow Terminal 4: N top-right; table row Piccadilly Line 8m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUHWY",
+      "northDeg": 20,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Holloway Road: N about 20°; Piccadilly platforms 18.3m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUHWT",
+      "northDeg": 145,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 4.9,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Hounslow West: N about 145°; Piccadilly platforms 4.9m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 11,
+      "stationId": "940GZZLUHPC",
+      "northDeg": 270,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 21,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Hyde Park Corner: N to the left; Piccadilly platforms 21.0m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 12,
+      "stationId": "940GZZLUKNB",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 22,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Knightsbridge: N to the right; Piccadilly platforms 22.0m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUMRH",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Manor House: N to the right; Piccadilly platforms 7.3m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLURSQ",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Russell Square: N at top; Piccadilly platforms 33.0m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUSGT",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 12.8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Southgate: N about 60°; Piccadilly platforms 12.8m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLUTPN",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 15.2,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Turnpike Lane: N top-right; Piccadilly platforms 15.2m."
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 17,
+      "stationId": "940GZZLUWOG",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 12.8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Wood Green: N top-right; Piccadilly platforms 12.8m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "HUBBHO",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 16.8,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Blackhorse Road: N points top-left; Victoria platforms 16.8m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "HUBBRX",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 17.6,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Brixton: N points top-left; Victoria platforms 17.6m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBHHY",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA & RAILTRACK LINE PLATFORMS",
+          "metres": 17.7,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Highbury & Islington: N points top-left; Victoria & Railtrack platforms 17.7m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUPCO",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 22.5,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Pimlico: N points right; Victoria platforms 22.5m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "HUBSVS",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 18.6,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Seven Sisters: N points up; Victoria platforms 18.6m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "HUBTOM",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 16.8,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Tottenham Hale: N points top-left; Victoria platforms 16.8m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "HUBVXH",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 17.5,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Vauxhall: N points top-left; Victoria platforms 17.5m."
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "HUBWHC",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 16.5,
+          "lineId": "victoria"
+        }
+      ],
+      "confidence": "high",
+      "raw": "Walthamstow Central: N points top-left; Victoria platforms 16.5m."
+    }
+  ]
+}

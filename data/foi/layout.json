@@ -1,0 +1,2364 @@
+{
+  "generatedAt": "2026-08-23T09:30:36.334Z",
+  "source": "tfl-foi-2015-axonometric",
+  "disclaimer": "Approximate platform depths and drawing north from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
+  "stations": [
+    {
+      "stationId": "940GZZLUACY",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 19.8,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUADE",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "district"
+        },
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "metropolitan"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUAGL",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUALD",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUASL",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBBN",
+      "northDeg": 75,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 8.5,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "RAILTRACK THAMESLINK PLATFORMS",
+          "metres": 8.5,
+          "lineId": "national-rail"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBDS",
+      "northDeg": 30,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 16.5,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBLG",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 15.9,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBMY",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 15,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBOR",
+      "northDeg": 110,
+      "depths": [
+        {
+          "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+          "metres": 17,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBWR",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBWT",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUBZP",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 31,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 4
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCAR",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 20.7,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCFM",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 17.3,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 7
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCGN",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 36,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 4
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCHL",
+      "northDeg": 330,
+      "depths": [
+        {
+          "label": "PLATFORM 1",
+          "metres": 29.9,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 4
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCPC",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 20.1,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 8
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCPN",
+      "northDeg": 340,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 15.5,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCPS",
+      "northDeg": 110,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 17.7,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCSD",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 13.4,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 11
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUCTN",
+      "northDeg": 230,
+      "depths": [
+        {
+          "label": "NORTHERN LINE (NORTHBOUND) PLATFORMS",
+          "metres": 14.6,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUECT",
+      "northDeg": 180,
+      "depths": [
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 4.8,
+          "lineId": "district"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 19.8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUEMB",
+      "northDeg": 98.33333333333331,
+      "depths": [
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.5,
+          "lineId": "district"
+        },
+        {
+          "label": "Northern Line Platforms",
+          "metres": 16.2,
+          "lineId": "northern"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 21,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 4
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 5
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUERB",
+      "northDeg": 115,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 23.4,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUERC",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "CIRCLE & HAMMERSMITH LINE PLATFORMS",
+          "metres": 5.1,
+          "lineId": "hammersmith-city"
+        },
+        {
+          "label": "CIRCLE & HAMMERSMITH LINE PLATFORMS",
+          "metres": 5.1,
+          "lineId": "circle"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUESQ",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "metropolitan"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUFBY",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 4,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 4
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUGDG",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 28.5,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 13
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUGPK",
+      "northDeg": 330,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 23.4,
+          "lineId": "victoria"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "piccadilly"
+        },
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 31.1,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 4
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUGPS",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "CIRCLE / H & C / MET PLATFORMS",
+          "metres": 6.5,
+          "lineId": "hammersmith-city"
+        },
+        {
+          "label": "CIRCLE / H & C / MET PLATFORMS",
+          "metres": 6.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE / H & C / MET PLATFORMS",
+          "metres": 6.5,
+          "lineId": "metropolitan"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUGTH",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 12.8,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUGTR",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 20,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 8
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHBN",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "central"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 33.8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHGT",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 42,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 15
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHNX",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHPC",
+      "northDeg": 270,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 21,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 11
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHPK",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 7
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHSK",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHTD",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 58.5,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHWT",
+      "northDeg": 145,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 4.9,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUHWY",
+      "northDeg": 20,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUKNB",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 22,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 12
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUKNG",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "NORTHERN LINE (NORTH BOUND)",
+          "metres": 17,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 16
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUKPK",
+      "northDeg": 105,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 10,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 7
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLULBN",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 17.7,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 8
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLULGT",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 8
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLULSQ",
+      "northDeg": 215,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 27.4,
+          "lineId": "northern"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 32.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 18
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUMBA",
+      "northDeg": 345,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 26.2,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUMED",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 11
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUMRH",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 13
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUMSH",
+      "northDeg": 150,
+      "depths": [
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 13
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUMVL",
+      "northDeg": 75,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 15.2,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUNHG",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.8,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.8,
+          "lineId": "district"
+        },
+        {
+          "label": "CENTRAL LINE WESTBOUND PLATFORM",
+          "metres": 25.9,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 12
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUOVL",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+          "metres": 14.3,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 20
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUOXC",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "BAKERLOO LINE PLATFORMS",
+          "metres": 23.1,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 23.1,
+          "lineId": "victoria"
+        },
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 24.6,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 13
+        },
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUPCC",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 28,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "Piccadilly Line Platforms",
+          "metres": 32.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 12
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 13
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUPCO",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 22.5,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 4
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUQWY",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 24.4,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 15
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLURBG",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 4.3,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 16
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLURGP",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 21.6,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLURSQ",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSGN",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "district"
+        },
+        {
+          "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSGT",
+      "northDeg": 60,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 12.8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 15
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSJP",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5.8,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5.8,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 17
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSJW",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 18.6,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 7
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSKS",
+      "northDeg": 110,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "district"
+        },
+        {
+          "label": "PICCADILLY LINE EASTBOUND PLATFORM",
+          "metres": 18.9,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 16
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSKW",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 14.6,
+          "lineId": "northern"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 14.6,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 22
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSPU",
+      "northDeg": 180,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORM 1",
+          "metres": 17.5,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 18
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSSQ",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7.75,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 7.75,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 15
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSWC",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 13.7,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSWK",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 24,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 8
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUSWN",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 12.5,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 21
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUTBC",
+      "northDeg": 30,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 15.9,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 23
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUTBY",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 12.5,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 24
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUTFP",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+          "metres": 22,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 25
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUTMP",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 3.5,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 3.5,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 18
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUTPN",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 15.2,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 16
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUTWH",
+      "northDeg": 120,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 5,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 19
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUWKA",
+      "northDeg": 150,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 16.2,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 15
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUWOG",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 12.8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 17
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUWRR",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 22.2,
+          "lineId": "victoria"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 25.6,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 26
+        }
+      ]
+    },
+    {
+      "stationId": "940GZZLUWSD",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.8,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 20
+        }
+      ]
+    },
+    {
+      "stationId": "HUBBAL",
+      "northDeg": 195,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 13.4,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "HUBBAN",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 20.7,
+          "lineId": "central"
+        },
+        {
+          "label": "DISTRICT LINE PLATFORMS",
+          "metres": 8.2,
+          "lineId": "district"
+        },
+        {
+          "label": "DOCKLANDS PLATFORMS",
+          "metres": 41.4,
+          "lineId": "dlr"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 30.5,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "HUBBDS",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 22.2,
+          "lineId": "central"
+        },
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 32,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "HUBBHO",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 16.8,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "HUBBRX",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 17.6,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "HUBCAW",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 23,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "HUBCHX",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Northern Line Platforms",
+          "metres": 19.5,
+          "lineId": "northern"
+        },
+        {
+          "label": "Jubilee Line Platforms",
+          "metres": 26.2,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "stationId": "HUBCST",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6,
+          "lineId": "district"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 4
+        }
+      ]
+    },
+    {
+      "stationId": "HUBEPH",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "Northern Line Platforms",
+          "metres": 18.9,
+          "lineId": "northern"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 23.5,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "HUBEUS",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "NORTHERN LINE (CHARING CROSS BRANCH) PLATFORMS",
+          "metres": 20.4,
+          "lineId": "northern"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 29.8,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 12
+        }
+      ]
+    },
+    {
+      "stationId": "HUBFPK",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 7.3,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "stationId": "HUBH13",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 14,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 7
+        }
+      ]
+    },
+    {
+      "stationId": "HUBHHY",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA & RAILTRACK LINE PLATFORMS",
+          "metres": 17.7,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "stationId": "HUBHX4",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "PICCADILLY LINE",
+          "metres": 8,
+          "lineId": "piccadilly"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 8
+        }
+      ]
+    },
+    {
+      "stationId": "HUBKGX",
+      "northDeg": 135,
+      "depths": [
+        {
+          "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "circle"
+        },
+        {
+          "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
+          "metres": 7,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 15.7,
+          "lineId": "victoria"
+        },
+        {
+          "label": "PICCADILLY LINE PLATFORMS",
+          "metres": 21.3,
+          "lineId": "piccadilly"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 27,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 11
+        },
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 12
+        }
+      ]
+    },
+    {
+      "stationId": "HUBKTN",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+          "metres": 23.8,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 17
+        }
+      ]
+    },
+    {
+      "stationId": "HUBLBG",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 27.3,
+          "lineId": "jubilee"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 24.1,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "stationId": "HUBLST",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.6,
+          "lineId": "circle"
+        },
+        {
+          "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+          "metres": 7.6,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 15.8,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "stationId": "HUBMYB",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 25.3,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "stationId": "HUBNGW",
+      "northDeg": 135,
+      "depths": [],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    },
+    {
+      "stationId": "HUBOLD",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "NORTHERN LINE PLATFORM",
+          "metres": 15.5,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 19
+        }
+      ]
+    },
+    {
+      "stationId": "HUBPAD",
+      "northDeg": 180,
+      "depths": [
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.2,
+          "lineId": "circle"
+        },
+        {
+          "label": "District and Circle Line Platforms",
+          "metres": 5.2,
+          "lineId": "district"
+        },
+        {
+          "label": "Bakerloo Line Platforms",
+          "metres": 9.7,
+          "lineId": "bakerloo"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 11
+        }
+      ]
+    },
+    {
+      "stationId": "HUBSPB",
+      "northDeg": 330,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 18.3,
+          "lineId": "central"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 17
+        }
+      ]
+    },
+    {
+      "stationId": "HUBSVS",
+      "northDeg": 0,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 18.6,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "stationId": "HUBTCR",
+      "northDeg": 50,
+      "depths": [
+        {
+          "label": "CENTRAL LINE PLATFORMS",
+          "metres": 26.2,
+          "lineId": "central"
+        },
+        {
+          "label": "NORTHERN LINE PLATFORMS",
+          "metres": 29.8,
+          "lineId": "northern"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 19
+        }
+      ]
+    },
+    {
+      "stationId": "HUBTOM",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 16.8,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    },
+    {
+      "stationId": "HUBVIC",
+      "northDeg": 150,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6.4,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 6.4,
+          "lineId": "district"
+        },
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 17.9,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 20
+        }
+      ]
+    },
+    {
+      "stationId": "HUBVXH",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 17.5,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 7
+        }
+      ]
+    },
+    {
+      "stationId": "HUBWAT",
+      "northDeg": 75,
+      "depths": [
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "circle"
+        },
+        {
+          "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "district"
+        },
+        {
+          "label": "Bakerloo Line Platforms (Northbound)",
+          "metres": 19.5,
+          "lineId": "bakerloo"
+        },
+        {
+          "label": "Northern Line Platforms",
+          "metres": 21.3,
+          "lineId": "northern"
+        },
+        {
+          "label": "Waterloo & City Line",
+          "metres": 12.2,
+          "lineId": "waterloo-city"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 16
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 17
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 18
+        }
+      ]
+    },
+    {
+      "stationId": "HUBWHC",
+      "northDeg": 315,
+      "depths": [
+        {
+          "label": "VICTORIA LINE PLATFORMS",
+          "metres": 16.5,
+          "lineId": "victoria"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 8
+        }
+      ]
+    },
+    {
+      "stationId": "HUBWSM",
+      "northDeg": 90,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 33,
+          "lineId": "jubilee"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 21
+        }
+      ]
+    },
+    {
+      "stationId": "HUBZCW",
+      "northDeg": 225,
+      "depths": [
+        {
+          "label": "JUBILEE LINE PLATFORMS",
+          "metres": 15,
+          "lineId": "jubilee"
+        },
+        {
+          "label": "EAST LONDON LINE PLATFORMS",
+          "metres": 8,
+          "lineId": "london-overground"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "stationId": "HUBZFD",
+      "northDeg": 270,
+      "depths": [
+        {
+          "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+          "metres": 4.3,
+          "lineId": "hammersmith-city"
+        },
+        {
+          "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+          "metres": 4.3,
+          "lineId": "circle"
+        },
+        {
+          "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+          "metres": 4.3,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "FIRST CAPITAL CONNECT PLATFORMS",
+          "metres": 5.6,
+          "lineId": "national-rail"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 7
+        }
+      ]
+    },
+    {
+      "stationId": "HUBZMG",
+      "northDeg": 45,
+      "depths": [],
+      "sources": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 14
+        }
+      ]
+    },
+    {
+      "stationId": "HUBZWL",
+      "northDeg": 45,
+      "depths": [
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 3.1,
+          "lineId": "district"
+        },
+        {
+          "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+          "metres": 3.1,
+          "lineId": "metropolitan"
+        },
+        {
+          "label": "EAST LONDON LINE PLATFORMS",
+          "metres": 7.8,
+          "lineId": "london-overground"
+        }
+      ],
+      "sources": [
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 6
+        }
+      ]
+    }
+  ]
+}

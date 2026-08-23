@@ -12,6 +12,7 @@
     "build-schematics": "tsx scripts/build-schematics.ts",
     "fetch-london-pmtiles": "tsx scripts/fetch-london-pmtiles.ts",
     "index-foi-pages": "tsx scripts/index-foi-pages.ts",
+    "extract-foi-layout": "tsx scripts/extract-foi-layout.ts",
     "test": "vitest run"
   },
   "dependencies": {
