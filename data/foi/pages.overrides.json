@@ -1,0 +1,74 @@
+[
+  {
+    "file": "3d central line stations Redacted.pdf",
+    "page": 6,
+    "stationId": "940GZZLUHBN",
+    "note": "Holborn — title OCR missed the name"
+  },
+  {
+    "file": "3d circle stations Redacted.pdf",
+    "page": 10,
+    "stationId": "940GZZLUHSK",
+    "note": "High Street Kensington"
+  },
+  {
+    "file": "3d circle stations Redacted.pdf",
+    "page": 21,
+    "stationId": "HUBWSM",
+    "note": "Westminster"
+  },
+  {
+    "file": "3d jubilee stations Redacted.pdf",
+    "page": 2,
+    "stationId": "HUBZCW",
+    "note": "Canada Water"
+  },
+  {
+    "file": "3d jubilee stations Redacted.pdf",
+    "page": 3,
+    "stationId": "HUBCAW",
+    "note": "Canary Wharf"
+  },
+  {
+    "file": "3d jubilee stations Redacted.pdf",
+    "page": 5,
+    "stationId": "HUBLBG",
+    "note": "London Bridge — OCR saw Borough High Street / Northern platforms"
+  },
+  {
+    "file": "3d jubilee stations Redacted.pdf",
+    "page": 6,
+    "stationId": "HUBNGW",
+    "note": "North Greenwich"
+  },
+  {
+    "file": "3d northern line stations Redacted.pdf",
+    "page": 12,
+    "stationId": "HUBEUS",
+    "note": "Euston — OCR latched onto CHARING CROSS BRANCH platform labels"
+  },
+  {
+    "file": "3d northern line stations Redacted.pdf",
+    "page": 16,
+    "stationId": "940GZZLUKNG",
+    "note": "Kennington"
+  },
+  {
+    "file": "3d northern line stations Redacted.pdf",
+    "page": 19,
+    "stationId": "HUBOLD",
+    "note": "Old Street — Network Rail platforms sheet"
+  },
+  {
+    "file": "3d piccadilly line stations Redacted.pdf",
+    "page": 7,
+    "stationId": "HUBH13",
+    "note": "Heathrow Terminals 1, 2, 3"
+  },
+  {
+    "file": "3d piccadilly line stations Redacted.pdf",
+    "page": 8,
+    "stationId": "HUBHX4",
+    "note": "Heathrow Terminal 4"
+  }
+]

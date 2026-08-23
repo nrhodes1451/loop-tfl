@@ -1,0 +1,1143 @@
+{
+  "generatedAt": "2026-08-23T07:46:02.954Z",
+  "source": "tfl-foi-2015-axonometric",
+  "pages": [
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 1,
+      "stationId": "HUBCHX",
+      "stationName": "Charing Cross",
+      "match": "exact",
+      "ocrTitle": "BAKERLOO LINE 7",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUERB",
+      "stationName": "Edgware Road",
+      "match": "fuzzy",
+      "ocrTitle": "pd PMALIVIN EATWUL ® UJ NT IKE",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBEPH",
+      "stationName": "Elephant & Castle",
+      "match": "exact",
+      "ocrTitle": "A 8 [4 [»] E",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUEMB",
+      "stationName": "Embankment",
+      "match": "exact",
+      "ocrTitle": "3 BS ) ,, \"XONOMETRIC 2",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUEMB",
+      "stationName": "Embankment",
+      "match": "exact",
+      "ocrTitle": "« STATION LAY e UNCONT",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUEMB",
+      "stationName": "Embankment",
+      "match": "exact",
+      "ocrTitle": "YOANN EATUUL ® UNUUN",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUKPK",
+      "stationName": "Kilburn Park",
+      "match": "exact",
+      "ocrTitle": "A B [4 D E",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLULBN",
+      "stationName": "Lambeth North",
+      "match": "exact",
+      "ocrTitle": "1 TICKET HALL R=",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUMVL",
+      "stationName": "Maida Vale",
+      "match": "exact",
+      "ocrTitle": "A B [4 D E",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 10,
+      "stationId": "HUBMYB",
+      "stationName": "Marylebone",
+      "match": "exact",
+      "ocrTitle": ". A 8 [4 [2] E",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 11,
+      "stationId": "HUBPAD",
+      "stationName": "Paddington",
+      "match": "fuzzy",
+      "ocrTitle": "LINE PLATFORMS WEST NNN {",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 12,
+      "stationId": "940GZZLUPCC",
+      "stationName": "Piccadilly Circus",
+      "match": "exact",
+      "ocrTitle": "7 TO TOWER RECORDS Cc",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUPCC",
+      "stationName": "Piccadilly Circus",
+      "match": "exact",
+      "ocrTitle": "* STATION LAYO ¢ UNCONTRO|",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLURGP",
+      "stationName": "Regent's Park",
+      "match": "exact",
+      "ocrTitle": "e STATION LAYO e UNCONTRO",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUWKA",
+      "stationName": "Warwick Avenue",
+      "match": "exact",
+      "ocrTitle": ". (SOUTH END)",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 16,
+      "stationId": "HUBWAT",
+      "stationName": "Waterloo",
+      "match": "exact",
+      "ocrTitle": "TRACTION SUB-STATION \\) i Ci G",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 17,
+      "stationId": "HUBWAT",
+      "stationName": "Waterloo",
+      "match": "exact",
+      "ocrTitle": "N SHELL CENTRE TICKET HALL",
+      "candidates": []
+    },
+    {
+      "file": "3d bakerloo stations Redacted.pdf",
+      "page": 18,
+      "stationId": "HUBWAT",
+      "stationName": "Waterloo",
+      "match": "exact",
+      "ocrTitle": "H 5 MAIN UNE CONCOURSE",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "HUBBAN",
+      "stationName": "Bank",
+      "match": "fuzzy",
+      "ocrTitle": "Ser fd AU NNAUY Lr NIRS\" JIN INF ISWJL",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUBLG",
+      "stationName": "Bethnal Green",
+      "match": "exact",
+      "ocrTitle": "Sr 8 SNP ANTE BV ASRS T WIINALAJIN",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBBDS",
+      "stationName": "Bond Street",
+      "match": "exact",
+      "ocrTitle": "MEVEF.SELWIL BW. RWI NH. INL AINE AJL.",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUCHL",
+      "stationName": "Chancery Lane",
+      "match": "exact",
+      "ocrTitle": "SAFESRLVIL BEWLYRWIVE ELAR VI \\IWIVIN RE EA(VIN",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUGTH",
+      "stationName": "Gants Hill",
+      "match": "exact",
+      "ocrTitle": "S433 INSEN LE Iw JIN INE ISAJE",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUHBN",
+      "stationName": "Holborn",
+      "match": "override",
+      "ocrTitle": "TA EVENING BIA T WINGAJIN ETS |",
+      "candidates": [],
+      "note": "Holborn — title OCR missed the name"
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUHPK",
+      "stationName": "Holland Park",
+      "match": "exact",
+      "ocrTitle": "TAT EMVEINAIN LMVTAJUI ET UINULUIN EIU",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLULGT",
+      "stationName": "Lancaster Gate",
+      "match": "exact",
+      "ocrTitle": "NSE ANI INE BM) AIS wT AJINALVIIN TE ISVJE",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 9,
+      "stationId": "HUBLST",
+      "stationName": "Liverpool Street",
+      "match": "exact",
+      "ocrTitle": "aE LEAL EN a WR VIVE ELIE VIL (VAIL N Ha iV]",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUMBA",
+      "stationName": "Marble Arch",
+      "match": "exact",
+      "ocrTitle": "NEVINS LEAN) NAAN L|",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 11,
+      "stationId": "940GZZLUMED",
+      "stationName": "Mile End",
+      "match": "exact",
+      "ocrTitle": "(CEVECELIVIL IW a SB VLW EN id INSSAJIN | AJL.",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 12,
+      "stationId": "940GZZLUNHG",
+      "stationName": "Notting Hill Gate",
+      "match": "exact",
+      "ocrTitle": "Sr rs a3 Mr NW Bed NE NANI BT ATTNNS Nil L.",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUOXC",
+      "stationName": "Oxford Circus",
+      "match": "exact",
+      "ocrTitle": "NPSL BENIN LTV PAINE LIN NN SAJL",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLUOXC",
+      "stationName": "Oxford Circus",
+      "match": "exact",
+      "ocrTitle": "P48 ERATE Bd ENS | Bd PNASALIN |",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUQWY",
+      "stationName": "Queensway",
+      "match": "exact",
+      "ocrTitle": "TNS EMERY BATAILLE ® UIN NI",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLURBG",
+      "stationName": "Redbridge",
+      "match": "exact",
+      "ocrTitle": "- PAVUININ LAM TAI Al IN] L",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 17,
+      "stationId": "HUBSPB",
+      "stationName": "Shepherd's Bush",
+      "match": "exact",
+      "ocrTitle": "@ STATION TAY T * ONC NTR Ll",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 18,
+      "stationId": "940GZZLUSPU",
+      "stationName": "St Paul's",
+      "match": "exact",
+      "ocrTitle": ": EANIANIIN LM i= ANAVAWIL BEaNW]",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 19,
+      "stationId": "HUBTCR",
+      "stationName": "Tottenham Court Road",
+      "match": "fuzzy",
+      "ocrTitle": "| SHEE,",
+      "candidates": []
+    },
+    {
+      "file": "3d central line stations Redacted.pdf",
+      "page": 20,
+      "stationId": "940GZZLUWSD",
+      "stationName": "Wanstead",
+      "match": "exact",
+      "ocrTitle": "WE FESELIWIL Wal] i= NAAN FE RAJL.",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUALD",
+      "stationName": "Aldgate",
+      "match": "exact",
+      "ocrTitle": "A B [+4 D A E",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUBBN",
+      "stationName": "Barbican",
+      "match": "exact",
+      "ocrTitle": "A B [+ 2] 13",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 3,
+      "stationId": "940GZZLUBWT",
+      "stationName": "Bayswater",
+      "match": "exact",
+      "ocrTitle": "PLATFORMS",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 4,
+      "stationId": "HUBCST",
+      "stationName": "Cannon Street",
+      "match": "exact",
+      "ocrTitle": "- TATIMNEAYUUL ® UNUUNTRUL",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUERC",
+      "stationName": "Edgware Road",
+      "match": "exact",
+      "ocrTitle": "» STATION LAYQUT  UNCONT",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUESQ",
+      "stationName": "Euston Square",
+      "match": "exact",
+      "ocrTitle": "A 8 [4 [1] €",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 7,
+      "stationId": "HUBZFD",
+      "stationName": "Farringdon",
+      "match": "exact",
+      "ocrTitle": "A B Cc D E",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLUGTR",
+      "stationName": "Gloucester Road",
+      "match": "exact",
+      "ocrTitle": "© ATION LAYOUT ¢ UNCONTROI",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUGPS",
+      "stationName": "Great Portland Street",
+      "match": "exact",
+      "ocrTitle": "A B [4 0 E",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUHSK",
+      "stationName": "High Street Kensington",
+      "match": "override",
+      "ocrTitle": "E {NORTH END)",
+      "candidates": [],
+      "note": "High Street Kensington"
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 11,
+      "stationId": "HUBKGX",
+      "stationName": "King's Cross St Pancras",
+      "match": "exact",
+      "ocrTitle": "6 EASTBOUND TO FARRINGDON [E———",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 12,
+      "stationId": "HUBKGX",
+      "stationName": "King's Cross St Pancras",
+      "match": "exact",
+      "ocrTitle": "8 E=) B",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUMSH",
+      "stationName": "Mansion House",
+      "match": "exact",
+      "ocrTitle": "Tt N",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 14,
+      "stationId": "HUBZMG",
+      "stationName": "Moorgate",
+      "match": "exact",
+      "ocrTitle": "° STATION LAYQUT « UNCON 1",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUSSQ",
+      "stationName": "Sloane Square",
+      "match": "exact",
+      "ocrTitle": ": SIN ND",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLUSKS",
+      "stationName": "South Kensington",
+      "match": "exact",
+      "ocrTitle": "PICCADILLY LINE J 2",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 17,
+      "stationId": "940GZZLUSJP",
+      "stationName": "St James's Park",
+      "match": "exact",
+      "ocrTitle": "® ATION LAYOUT ¢ UNCONTR",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 18,
+      "stationId": "940GZZLUTMP",
+      "stationName": "Temple",
+      "match": "exact",
+      "ocrTitle": "o STATION LAYQUT NTRO!",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 19,
+      "stationId": "940GZZLUTWH",
+      "stationName": "Tower Hill",
+      "match": "exact",
+      "ocrTitle": "E 3 EXIT_TICKE",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 20,
+      "stationId": "HUBVIC",
+      "stationName": "Victoria",
+      "match": "exact",
+      "ocrTitle": "2 STATION LAYQUT  UNCONTROI",
+      "candidates": []
+    },
+    {
+      "file": "3d circle stations Redacted.pdf",
+      "page": 21,
+      "stationId": "HUBWSM",
+      "stationName": "Westminster",
+      "match": "override",
+      "ocrTitle": "APPROXIMATE DEPTH BELOW STREET",
+      "candidates": [],
+      "note": "Westminster"
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUADE",
+      "stationName": "Aldgate East",
+      "match": "exact",
+      "ocrTitle": "A B [3 >) E",
+      "candidates": []
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUBWR",
+      "stationName": "Bow Road",
+      "match": "exact",
+      "ocrTitle": "A 8 Cc D E",
+      "candidates": []
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 3,
+      "stationId": "940GZZLUECT",
+      "stationName": "Earl's Court",
+      "match": "exact",
+      "ocrTitle": "@ STATI NAY oT ® NG NTR LI",
+      "candidates": []
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUFBY",
+      "stationName": "Fulham Broadway",
+      "match": "exact",
+      "ocrTitle": "a3 APPROXIMATE DEPTH BELOW STREET",
+      "candidates": []
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUSGN",
+      "stationName": "Stepney Green",
+      "match": "exact",
+      "ocrTitle": "VOQIATIIINLAYUUL ® UNUGUNTRUL",
+      "candidates": []
+    },
+    {
+      "file": "3d district stations Redacted.pdf",
+      "page": 6,
+      "stationId": "HUBZWL",
+      "stationName": "Whitechapel",
+      "match": "exact",
+      "ocrTitle": "A B [4 D E",
+      "candidates": []
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUBMY",
+      "stationName": "Bermondsey",
+      "match": "exact",
+      "ocrTitle": "A B Cc D 13",
+      "candidates": []
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 2,
+      "stationId": "HUBZCW",
+      "stationName": "Canada Water",
+      "match": "override",
+      "ocrTitle": "JUBTEE TINE PLATFORMS 1 ste —",
+      "candidates": [],
+      "note": "Canada Water"
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBCAW",
+      "stationName": "Canary Wharf",
+      "match": "override",
+      "ocrTitle": "6 TICKET HALL LEVEL aN",
+      "candidates": [],
+      "note": "Canary Wharf"
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUGPK",
+      "stationName": "Green Park",
+      "match": "exact",
+      "ocrTitle": "5 WK AZ Ry i) VICTORIA &",
+      "candidates": []
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 5,
+      "stationId": "HUBLBG",
+      "stationName": "London Bridge",
+      "match": "override",
+      "ocrTitle": "For detalls of specific areas refer to the relevant",
+      "candidates": [],
+      "note": "London Bridge — OCR saw Borough High Street / Northern platforms"
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 6,
+      "stationId": "HUBNGW",
+      "stationName": "North Greenwich",
+      "match": "override",
+      "ocrTitle": "4 LIFT TO TICKET HALL S",
+      "candidates": [],
+      "note": "North Greenwich"
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUSJW",
+      "stationName": "St John's Wood",
+      "match": "exact",
+      "ocrTitle": "A B C o E",
+      "candidates": []
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLUSWK",
+      "stationName": "Southwark",
+      "match": "exact",
+      "ocrTitle": "EUERCENCY ©",
+      "candidates": []
+    },
+    {
+      "file": "3d jubilee stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUSWC",
+      "stationName": "Swiss Cottage",
+      "match": "exact",
+      "ocrTitle": "A B Cc D E",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUAGL",
+      "stationName": "Angel",
+      "match": "exact",
+      "ocrTitle": "A I] [+ 0 E",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUACY",
+      "stationName": "Archway",
+      "match": "exact",
+      "ocrTitle": "A B Cc D E",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBBAL",
+      "stationName": "Balham",
+      "match": "exact",
+      "ocrTitle": "SCONL A 5 AX =",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUBZP",
+      "stationName": "Belsize Park",
+      "match": "exact",
+      "ocrTitle": "A B Cc D £",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "940GZZLUBOR",
+      "stationName": "Borough",
+      "match": "exact",
+      "ocrTitle": "A B c [2] E",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUCTN",
+      "stationName": "Camden Town",
+      "match": "exact",
+      "ocrTitle": "3 ji TO CHALK F,",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "940GZZLUCFM",
+      "stationName": "Chalk Farm",
+      "match": "exact",
+      "ocrTitle": "5 SH",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "940GZZLUCPC",
+      "stationName": "Clapham Common",
+      "match": "exact",
+      "ocrTitle": "2? B 0 N",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUCPN",
+      "stationName": "Clapham North",
+      "match": "exact",
+      "ocrTitle": "= \" [:] c D E",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUCPS",
+      "stationName": "Clapham South",
+      "match": "exact",
+      "ocrTitle": ". TICKET HALE _ . A",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 11,
+      "stationId": "940GZZLUCSD",
+      "stationName": "Colliers Wood",
+      "match": "exact",
+      "ocrTitle": "A B Cc oD £",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 12,
+      "stationId": "HUBEUS",
+      "stationName": "Euston",
+      "match": "override",
+      "ocrTitle": "1% 2 (CHARING CROSS BRANCH) £",
+      "candidates": [],
+      "note": "Euston — OCR latched onto CHARING CROSS BRANCH platform labels"
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUGDG",
+      "stationName": "Goodge Street",
+      "match": "exact",
+      "ocrTitle": "TICKET HALL “©",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLUHTD",
+      "stationName": "Hampstead",
+      "match": "exact",
+      "ocrTitle": "A B [4 D E",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUHGT",
+      "stationName": "Highgate",
+      "match": "exact",
+      "ocrTitle": "TEORMS 1& 2",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLUKNG",
+      "stationName": "Kennington",
+      "match": "override",
+      "ocrTitle": "18 3 (SOUTH END) oo",
+      "candidates": [],
+      "note": "Kennington"
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 17,
+      "stationId": "HUBKTN",
+      "stationName": "Kentish Town",
+      "match": "exact",
+      "ocrTitle": "6 (SOUTH END) )",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 18,
+      "stationId": "940GZZLULSQ",
+      "stationName": "Leicester Square",
+      "match": "exact",
+      "ocrTitle": "o TERE — < J",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 19,
+      "stationId": "HUBOLD",
+      "stationName": "Old Street",
+      "match": "override",
+      "ocrTitle": "PLATFORMS 3 & 4 Zig",
+      "candidates": [],
+      "note": "Old Street — Network Rail platforms sheet"
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 20,
+      "stationId": "940GZZLUOVL",
+      "stationName": "Oval",
+      "match": "exact",
+      "ocrTitle": "Oval",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 21,
+      "stationId": "940GZZLUSWN",
+      "stationName": "South Wimbledon",
+      "match": "exact",
+      "ocrTitle": ": \\ LE",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 22,
+      "stationId": "940GZZLUSKW",
+      "stationName": "Stockwell",
+      "match": "exact",
+      "ocrTitle": "A B Cc 0 E 7",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 23,
+      "stationId": "940GZZLUTBC",
+      "stationName": "Tooting Bec",
+      "match": "exact",
+      "ocrTitle": "A B Cc D E",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 24,
+      "stationId": "940GZZLUTBY",
+      "stationName": "Tooting Broadway",
+      "match": "exact",
+      "ocrTitle": "N TICKET HALL ;",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 25,
+      "stationId": "940GZZLUTFP",
+      "stationName": "Tufnell Park",
+      "match": "exact",
+      "ocrTitle": "Tufnell Park",
+      "candidates": []
+    },
+    {
+      "file": "3d northern line stations Redacted.pdf",
+      "page": 26,
+      "stationId": "940GZZLUWRR",
+      "stationName": "Warren Street",
+      "match": "exact",
+      "ocrTitle": "2 \\ =| NN MACHINE",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "940GZZLUASL",
+      "stationName": "Arsenal",
+      "match": "exact",
+      "ocrTitle": "A B Cc [] E",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "940GZZLUCAR",
+      "stationName": "Caledonian Road",
+      "match": "exact",
+      "ocrTitle": "&§ ES _",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "940GZZLUBDS",
+      "stationName": "Bounds Green",
+      "match": "exact",
+      "ocrTitle": "A B [9 0 E",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUCGN",
+      "stationName": "Covent Garden",
+      "match": "exact",
+      "ocrTitle": "A B [4 2} E",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "HUBFPK",
+      "stationName": "Finsbury Park",
+      "match": "exact",
+      "ocrTitle": "2 TICKET HAI AR ERAN",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "940GZZLUHNX",
+      "stationName": "Hatton Cross",
+      "match": "exact",
+      "ocrTitle": ": 3 8 RON",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "HUBH13",
+      "stationName": "Heathrow Terminals 2 & 3",
+      "match": "override",
+      "ocrTitle": "MEZZANINE LEVEL",
+      "candidates": [],
+      "note": "Heathrow Terminals 1, 2, 3"
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "HUBHX4",
+      "stationName": "Heathrow Terminal 4",
+      "match": "override",
+      "ocrTitle": "TICKET HALL ad",
+      "candidates": [],
+      "note": "Heathrow Terminal 4"
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 9,
+      "stationId": "940GZZLUHWY",
+      "stationName": "Holloway Road",
+      "match": "exact",
+      "ocrTitle": "Holloway Road",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 10,
+      "stationId": "940GZZLUHWT",
+      "stationName": "Hounslow West",
+      "match": "exact",
+      "ocrTitle": "ANY I",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 11,
+      "stationId": "940GZZLUHPC",
+      "stationName": "Hyde Park Corner",
+      "match": "exact",
+      "ocrTitle": "Hyde Park Corner",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 12,
+      "stationId": "940GZZLUKNB",
+      "stationName": "Knightsbridge",
+      "match": "exact",
+      "ocrTitle": "A B Cc 0 E",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 13,
+      "stationId": "940GZZLUMRH",
+      "stationName": "Manor House",
+      "match": "exact",
+      "ocrTitle": "A B Cc D E",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 14,
+      "stationId": "940GZZLURSQ",
+      "stationName": "Russell Square",
+      "match": "exact",
+      "ocrTitle": "Russell Square",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 15,
+      "stationId": "940GZZLUSGT",
+      "stationName": "Southgate",
+      "match": "exact",
+      "ocrTitle": "6 BS NE",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 16,
+      "stationId": "940GZZLUTPN",
+      "stationName": "Turnpike Lane",
+      "match": "exact",
+      "ocrTitle": "53 & FZ",
+      "candidates": []
+    },
+    {
+      "file": "3d piccadilly line stations Redacted.pdf",
+      "page": 17,
+      "stationId": "940GZZLUWOG",
+      "stationName": "Wood Green",
+      "match": "exact",
+      "ocrTitle": "1 AS <",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 1,
+      "stationId": "HUBBHO",
+      "stationName": "Blackhorse Road",
+      "match": "exact",
+      "ocrTitle": "® OITATIVUNLAYUUL © JONTR",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 2,
+      "stationId": "HUBBRX",
+      "stationName": "Brixton",
+      "match": "exact",
+      "ocrTitle": "@ TATION AYO T ° ONCONTR LL",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 3,
+      "stationId": "HUBHHY",
+      "stationName": "Highbury & Islington",
+      "match": "exact",
+      "ocrTitle": "TNS IINEENSEN LY 17 VWIINMAJING",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 4,
+      "stationId": "940GZZLUPCO",
+      "stationName": "Pimlico",
+      "match": "exact",
+      "ocrTitle": "A 8 Cc 0 E",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 5,
+      "stationId": "HUBSVS",
+      "stationName": "Seven Sisters",
+      "match": "exact",
+      "ocrTitle": "A B [+ [5] E",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 6,
+      "stationId": "HUBTOM",
+      "stationName": "Tottenham Hale",
+      "match": "exact",
+      "ocrTitle": "hd PATIJIN LAYY ® UNGWUNIROUL",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 7,
+      "stationId": "HUBVXH",
+      "stationName": "Vauxhall",
+      "match": "exact",
+      "ocrTitle": "CT DIATIWINILAYUUL ® UNU OL",
+      "candidates": []
+    },
+    {
+      "file": "3d victoria line stations Redacted.pdf",
+      "page": 8,
+      "stationId": "HUBWHC",
+      "stationName": "Walthamstow Central",
+      "match": "exact",
+      "ocrTitle": "7 PLATFORM 2",
+      "candidates": []
+    }
+  ]
+}

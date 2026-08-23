@@ -47,6 +47,13 @@ npm run dev
 
 Optional: set `TFL_APP_KEY` (see `.env.example`) for higher rate limits.
 
+FOI axonometric page index (local scans in `data/pdf/`, gitignored):
+
+```bash
+sudo apt install poppler-utils   # pdftoppm; tesseract-ocr optional (script falls back to tesseract.js)
+npm run index-foi-pages   # writes data/foi/pages.json; edit data/foi/pages.overrides.json for misses
+```
+
 ```bash
 npm test                  # topology, status derivation, pathfinder, schematic
 npm run build             # regenerates schematics and lines.json, then next build

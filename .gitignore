@@ -47,6 +47,10 @@ next-env.d.ts
 /data/schematic/index.json
 /data/schematic/lines.json
 
+# TfL FOI axonometric scans and OCR raster cache — not committed
+/data/pdf/
+*.traineddata
+
 # London PMTiles extract (npm run fetch-london-pmtiles) — not committed
 /data/osm/london.pmtiles
 

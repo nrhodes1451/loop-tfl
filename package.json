@@ -11,6 +11,7 @@
     "refresh-network": "tsx scripts/refresh-network.ts",
     "build-schematics": "tsx scripts/build-schematics.ts",
     "fetch-london-pmtiles": "tsx scripts/fetch-london-pmtiles.ts",
+    "index-foi-pages": "tsx scripts/index-foi-pages.ts",
     "test": "vitest run"
   },
   "dependencies": {
@@ -44,7 +45,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "pngjs": "^7.0.0",
     "tailwindcss": "^4",
+    "tesseract.js": "^7.0.0",
     "tsx": "^4.23.9",
     "typescript": "^5",
     "vitest": "^4.1.10",
