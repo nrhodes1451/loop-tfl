@@ -241,7 +241,7 @@ export function SchematicPage({
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/network/lines")
+    fetch("/api/network/lines", { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : null))
       .then((json: LineNetwork | null) => {
         if (!cancelled) setLineNetwork(json);

@@ -77,18 +77,38 @@ export function hoverFoiExtractLabel(
  */
 export function hoverDepthLabel(
   stationId: string | undefined,
-  item: { type: string; lineId?: string; level: number },
-  nodes?: ReadonlyArray<{ type: string; level: number; lineId?: string }>,
+  item: {
+    type: string;
+    lineId?: string;
+    level: number;
+    id?: string;
+    depthM?: number;
+  },
+  nodes?: ReadonlyArray<{
+    type: string;
+    level: number;
+    lineId?: string;
+    id?: string;
+    depthM?: number;
+  }>,
 ): string | null {
+  const fromNode = item.id
+    ? nodes?.find((n) => n.id === item.id)?.depthM
+    : undefined;
+  const depthOverride = item.depthM ?? fromNode;
   if (item.lineId) {
-    return formatDepthBelowStreet(platformDepthM(stationId, item.lineId));
+    return formatDepthBelowStreet(
+      depthOverride ?? platformDepthM(stationId, item.lineId),
+    );
   }
-  if (item.type === "street") return null;
+  if (item.type === "street" || item.type === "stairs") return null;
   const plat = nodes?.find(
     (n) => n.type === "platform" && n.level === item.level && n.lineId,
   );
   if (plat?.lineId) {
-    return formatDepthBelowStreet(platformDepthM(stationId, plat.lineId));
+    return formatDepthBelowStreet(
+      plat.depthM ?? platformDepthM(stationId, plat.lineId),
+    );
   }
   return null;
 }

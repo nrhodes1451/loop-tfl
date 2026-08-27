@@ -204,25 +204,20 @@ export function distanceM(a: LatLon, b: LatLon): number {
   return Math.hypot(p.x, p.z);
 }
 
-/**
- * HUBKGX stays on the TfL StopPoint origin (scene origin).
- * Other stations plant at their schematic / index lat/lon.
- */
+/** Plant a station at lat/lon in the scene, metres from `origin`. */
 export function schematicWorldOffset(
-  stationId: string,
+  _stationId: string,
   lat: number,
   lon: number,
   origin: LatLon = HUBKGX_ORIGIN,
 ): { x: number; z: number } {
-  if (stationId === "HUBKGX") return { x: 0, z: 0 };
   return latLonToWorld(lat, lon, origin);
 }
 
 export function schematicPlacementLatLon(
-  stationId: string,
+  _stationId: string,
   entrance: LatLon,
 ): LatLon {
-  if (stationId === "HUBKGX") return HUBKGX_ORIGIN;
   return entrance;
 }
 

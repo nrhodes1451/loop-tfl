@@ -1,24 +1,33 @@
 import { describe, expect, it } from "vitest";
-import kgxJson from "../../../data/schematic/HUBKGX.json";
+import { CatmullRomCurve3, Vector3 } from "three";
+import { kgxStation } from "./kgx.fixture";
 import { HUBKGX_ORIGIN, schematicLevelWorldY } from "./geo";
 import { platformWorldY } from "./foi-layout";
 import { schematicLevelForLine } from "./levels";
-import { tubeRadiusM } from "./lu-scale";
+import {
+  DEEP_TUBE_DIAMETER_M,
+  PLATFORM_LENGTH_M,
+  PLATFORM_WIDTH_M,
+  tubeRadiusM,
+} from "./lu-scale";
 import {
   buildLineNetwork,
   type LineNetwork,
 } from "./lines";
 import {
+  TUBE_MIN_RADIUS_M,
+  TUBE_SEGMENT_M,
+  alignTrackPair,
   applyFanout,
   buildTubeMeshes,
   clipChainStations,
   disposeTubeMeshes,
+  trackControlPoints,
   tubeAnchorKey,
   worldAnchors,
 } from "./tubes";
-import type { SchematicStation } from "./types";
 
-const kgx = kgxJson as SchematicStation;
+const kgx = kgxStation;
 
 function toyNetwork(overrides?: Partial<LineNetwork>): LineNetwork {
   return {
@@ -34,6 +43,7 @@ function toyNetwork(overrides?: Partial<LineNetwork>): LineNetwork {
       A: { victoria: 0 },
       B: { victoria: 0 },
     },
+    foi: {},
     chains: [
       {
         id: "victoria::0",
@@ -78,15 +88,20 @@ describe("applyFanout", () => {
         },
       ],
       anchors: {
-        A: { victoria: { dx: 2, dz: 0 } },
+        A: {
+          victoria: [
+            { dx: 2, dz: 0 },
+            { dx: 4, dz: 0 },
+          ],
+        },
       },
     });
     const base = worldAnchors(network, HUBKGX_ORIGIN);
     const fanned = applyFanout(network, base, 4, 1);
-    const v = fanned.get(tubeAnchorKey("A", "victoria"))!;
-    const n = fanned.get(tubeAnchorKey("A", "northern"))!;
-    const bv = base.get(tubeAnchorKey("A", "victoria"))!;
-    const bn = base.get(tubeAnchorKey("A", "northern"))!;
+    const v = fanned.get(tubeAnchorKey("A", "victoria", 0))!;
+    const n = fanned.get(tubeAnchorKey("A", "northern", 0))!;
+    const bv = base.get(tubeAnchorKey("A", "victoria", 0))!;
+    const bn = base.get(tubeAnchorKey("A", "northern", 0))!;
     // Distinct platform offset → not coincident, unmoved.
     expect(v.x).toBeCloseTo(bv.x, 8);
     expect(v.z).toBeCloseTo(bv.z, 8);
@@ -154,18 +169,28 @@ describe("clipChainStations", () => {
 describe("buildTubeMeshes", () => {
   it("samples a centreline that starts and ends on the chain anchors", () => {
     const network = toyNetwork();
-    const meshes = buildTubeMeshes(
+    const meshes = buildTubeMeshes(network, HUBKGX_ORIGIN, "low");
+    expect(meshes.filter((m) => m.lineId === "victoria")).toHaveLength(2);
+    const withDefaultRadius = buildTubeMeshes(
       network,
       HUBKGX_ORIGIN,
       network.stations.B!,
       "low",
-      50_000,
     );
-    expect(meshes.length).toBeGreaterThan(0);
-    const victoria = meshes.find((m) => m.lineId === "victoria")!;
+    expect(withDefaultRadius.filter((m) => m.lineId === "victoria")).toHaveLength(2);
+    disposeTubeMeshes(withDefaultRadius);
+    const victoria = meshes.find((m) => m.lineId === "victoria" && m.track === 0)!;
     const anchors = worldAnchors(network, HUBKGX_ORIGIN);
-    const a = anchors.get(tubeAnchorKey("A", "victoria"))!;
-    const c = anchors.get(tubeAnchorKey("C", "victoria"))!;
+    const pts = trackControlPoints(
+      network,
+      "victoria",
+      ["A", "B", "C"],
+      0,
+      anchors,
+      false,
+    );
+    const a = pts[0]!;
+    const c = pts[pts.length - 1]!;
     const first = victoria.centreline[0]!;
     const last = victoria.centreline[victoria.centreline.length - 1]!;
     expect(first[0]).toBeCloseTo(a.x, 5);
@@ -175,6 +200,123 @@ describe("buildTubeMeshes", () => {
     expect(last[1]).toBeCloseTo(c.y, 5);
     expect(last[2]).toBeCloseTo(c.z, 5);
     disposeTubeMeshes(meshes);
+  });
+
+  it("keeps a single mesh for a cut-and-cover line", () => {
+    const network = toyNetwork({
+      chains: [
+        {
+          id: "circle::0",
+          lineId: "circle",
+          level: -2,
+          stationIds: ["A", "B", "C"],
+        },
+      ],
+      angles: { A: { circle: 0 }, B: { circle: 0 } },
+    });
+    const meshes = buildTubeMeshes(network, HUBKGX_ORIGIN, "low");
+    expect(meshes.filter((m) => m.lineId === "circle")).toHaveLength(1);
+    disposeTubeMeshes(meshes);
+  });
+
+  it("aims the local tangent at a FOI station along the platform bearing", () => {
+    const network = toyNetwork({
+      stations: {
+        A: { lat: 51.53, lon: -0.13 },
+        B: { lat: 51.53, lon: -0.12 },
+        C: { lat: 51.53, lon: -0.11 },
+      },
+      angles: {
+        A: { victoria: Math.PI / 2 },
+        B: { victoria: 0 },
+        C: { victoria: Math.PI / 2 },
+      },
+      foi: { B: { victoria: true } },
+    });
+    const anchors = worldAnchors(network, HUBKGX_ORIGIN);
+    const pts = trackControlPoints(
+      network,
+      "victoria",
+      ["A", "B", "C"],
+      0,
+      anchors,
+      false,
+    );
+    const b = anchors.get(tubeAnchorKey("B", "victoria", 0))!;
+    const station = pts.reduce(
+      (best, p) => {
+        const d = Math.hypot(p.x - b.x, p.z - b.z);
+        return d < best.d ? { p, d } : best;
+      },
+      { p: pts[0]!, d: Infinity },
+    ).p;
+    const along = pts
+      .map((p) => Math.hypot(p.x - station.x, p.z - station.z))
+      .filter((s) => s > 1);
+    const nearestEnd = along.reduce(
+      (best, s) =>
+        Math.abs(s - PLATFORM_LENGTH_M / 2) < Math.abs(best - PLATFORM_LENGTH_M / 2)
+          ? s
+          : best,
+      along[0]!,
+    );
+    expect(nearestEnd).toBeCloseTo(PLATFORM_LENGTH_M / 2, 0);
+    expect(along.every((s) => Math.abs(s - TUBE_SEGMENT_M) > 5 || s > 50)).toBe(
+      true,
+    );
+
+    const curve = new CatmullRomCurve3(
+      pts.map((p) => new Vector3(p.x, p.y, p.z)),
+      false,
+      "centripetal",
+    );
+    const tangentAt = (x: number, z: number) => {
+      let bestT = 0.5;
+      let bestD = Infinity;
+      for (let i = 0; i <= 80; i++) {
+        const t = i / 80;
+        const p = curve.getPointAt(t);
+        const d = Math.hypot(p.x - x, p.z - z);
+        if (d < bestD) {
+          bestD = d;
+          bestT = t;
+        }
+      }
+      const tan = curve.getTangentAt(bestT);
+      const heading = Math.atan2(tan.x, tan.z);
+      const folded = Math.abs(heading);
+      return Math.min(folded, Math.PI - folded);
+    };
+    expect(tangentAt(station.x, station.z)).toBeLessThan(0.35);
+    const endZ = station.z + PLATFORM_LENGTH_M / 2;
+    expect(tangentAt(station.x, endZ)).toBeLessThan(0.35);
+    const beyond = PLATFORM_LENGTH_M / 2 + TUBE_SEGMENT_M;
+    // 40 m past the end at R = 200 m → at most ~0.2 rad if the lead-in is working.
+    expect(tangentAt(station.x, station.z + beyond)).toBeLessThan(
+      (TUBE_SEGMENT_M / TUBE_MIN_RADIUS_M) * 1.5,
+    );
+  });
+});
+
+describe("alignTrackPair", () => {
+  it("puts track 1 on the right of the forward direction", () => {
+    const a = { x: 0, y: 0, z: 0 };
+    const b = { x: 10, y: 0, z: 0 };
+    const [left, right] = alignTrackPair(a, b, { x: 0, z: 1 });
+    // forward +Z, right is +X.
+    expect(right.x).toBeGreaterThan(left.x);
+  });
+});
+
+describe("worldAnchors deep-level pair", () => {
+  it("invents two tracks a platform-width plus tunnel apart", () => {
+    const anchors = worldAnchors(toyNetwork(), HUBKGX_ORIGIN);
+    const a0 = anchors.get(tubeAnchorKey("A", "victoria", 0))!;
+    const a1 = anchors.get(tubeAnchorKey("A", "victoria", 1))!;
+    expect(Math.hypot(a1.x - a0.x, a1.z - a0.z)).toBeCloseTo(
+      PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M,
+      5,
+    );
   });
 });
 
@@ -194,7 +336,7 @@ describe("HUBKGX circle anchor Y", () => {
       schematics: new Map([["HUBKGX", kgx]]),
     });
     const anchors = worldAnchors(withNeighbour, HUBKGX_ORIGIN);
-    const a = anchors.get(tubeAnchorKey("HUBKGX", "circle"))!;
+    const a = anchors.get(tubeAnchorKey("HUBKGX", "circle", 0))!;
     expect(a.y).toBeCloseTo(platformWorldY("HUBKGX", "circle"), 9);
     expect(a.y).toBeCloseTo(-7, 5);
   });

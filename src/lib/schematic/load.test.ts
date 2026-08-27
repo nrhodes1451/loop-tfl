@@ -11,15 +11,16 @@ import {
 import { HUBKGX_ORIGIN } from "./geo";
 
 describe("loadSchematic", () => {
-  it("prefers the hand-authored HUBKGX override", async () => {
+  it("loads the generated HUBKGX schematic", async () => {
     clearSchematicCache();
     const station = await loadSchematic("HUBKGX");
     expect(station.stationId).toBe("HUBKGX");
-    expect(station.nodes.some((n) => n.id === "street-wth")).toBe(true);
-    expect(station.entrance.source).toMatch(/\/node\/\d+/);
+    expect(station.nodes.some((n) => n.id === "street")).toBe(true);
+    expect(station.entrance.source).toMatch(/^https:\/\/www\.openstreetmap\.org\//);
+    expect(station.entrance.source).not.toMatch(/\/node\/\d+/);
   });
 
-  it("lists generated stations including the HUBKGX override", async () => {
+  it("lists generated stations including HUBKGX", async () => {
     clearSchematicCache();
     const stations = await listSchematicStations();
     expect(stations.some((s) => s.id === "HUBKGX")).toBe(true);

@@ -103,6 +103,7 @@ export async function loadLineNetwork(): Promise<LineNetwork> {
   if (linesCache && linesCache.mtimeMs === mtimeMs) return linesCache.data;
   const raw = await readFile(filePath, "utf8");
   const data = JSON.parse(raw) as LineNetwork;
+  data.foi ??= {};
   linesCache = { mtimeMs, data };
   return data;
 }

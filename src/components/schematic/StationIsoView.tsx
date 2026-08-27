@@ -21,6 +21,7 @@ import type {
   SchematicStation,
 } from "@/lib/schematic/types";
 import { hoverDepthLabel, hoverFoiExtractLabel } from "@/lib/schematic/foi-layout";
+import { normalizeSchematicLineId } from "@/lib/schematic/levels";
 import { LINE_COLORS } from "@/lib/tokens";
 import { platformPlanSize } from "@/lib/schematic/scene";
 
@@ -472,6 +473,12 @@ export function StationIsoView({ station }: { station: SchematicStation }) {
         const from = byId.get(edge.from);
         const to = byId.get(edge.to);
         if (!from || !to) return [];
+        if (
+          normalizeSchematicLineId(from.lineId ?? "") === "national-rail" ||
+          normalizeSchematicLineId(to.lineId ?? "") === "national-rail"
+        ) {
+          return [];
+        }
         return [
           {
             a: projectIso(from.x, from.y, from.level, ISO),

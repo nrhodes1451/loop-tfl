@@ -173,7 +173,7 @@ function nodeLocalY(
 ): number {
   if (node.type === "platform" && node.lineId) {
     return schematicLocalYForDepthM(
-      platformDepthM(stationId, node.lineId),
+      node.depthM ?? platformDepthM(stationId, node.lineId),
       STREET_H,
     );
   }
@@ -190,7 +190,7 @@ function levelLocalY(
   );
   if (plat?.lineId) {
     return schematicLocalYForDepthM(
-      platformDepthM(stationId, plat.lineId),
+      plat.depthM ?? platformDepthM(stationId, plat.lineId),
       STREET_H,
     );
   }
@@ -539,6 +539,27 @@ export function hoverHighlight(
   return { volumeIds, polylineIds };
 }
 
+export function streetVolumeIds(geom: SceneGeometry): Set<string> {
+  return new Set(
+    geom.volumes.filter((v) => v.type === "street").map((v) => v.id),
+  );
+}
+
+/** True when a dollhouse line is the outline of, or a walk that touches, those volumes. */
+export function polylineTouchesVolumeIds(
+  line: ScenePolyline,
+  ids: Set<string>,
+): boolean {
+  if (ids.size === 0) return false;
+  if (line.volumeId && ids.has(line.volumeId)) return true;
+  if (line.role !== "connection") return false;
+  const parts = line.id.split("::");
+  const rest = parts.slice(1);
+  if (parts[0] === "landing") return rest.slice(1).some((id) => ids.has(id));
+  if (parts[0] === "shaft-line") return false;
+  return rest.some((id) => ids.has(id));
+}
+
 type LiftSpan = {
   liftId: string;
   node: SchematicNode;
@@ -766,6 +787,12 @@ export function buildSceneGeometry(
     const from = byId.get(edge.from);
     const to = byId.get(edge.to);
     if (!from || !to) continue;
+    if (
+      normalizeSchematicLineId(from.lineId ?? "") === "national-rail" ||
+      normalizeSchematicLineId(to.lineId ?? "") === "national-rail"
+    ) {
+      continue;
+    }
 
     if (edge.mode === "level") {
       polylines.push({

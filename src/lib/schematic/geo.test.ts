@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import kgxJson from "../../../data/schematic/HUBKGX.json";
+import { kgxStation } from "./kgx.fixture";
 import {
   HUBKGX_ORIGIN,
   LONDON_BBOX,
@@ -8,7 +8,6 @@ import {
   SCHEMATIC_METRES_PER_UNIT,
   applyPlacement,
   clampToAabb2,
-  distanceM,
   enuToLatLon,
   insetAabb,
   latLonToEnu,
@@ -22,9 +21,8 @@ import {
   worldToLatLon,
 } from "./geo";
 import { buildSceneGeometry } from "./scene";
-import type { SchematicStation } from "./types";
 
-const station = kgxJson as SchematicStation;
+const station = kgxStation;
 
 describe("latLonToEnu", () => {
   it("maps the origin to (0, 0)", () => {
@@ -215,15 +213,14 @@ describe("placeSchematicAt", () => {
     expect(z).toBeCloseTo(world.z, 6);
   });
 
-  it("keeps HUBKGX at the origin even when given its OSM entrance", () => {
+  it("plants HUBKGX at latLonToWorld of its coordinates (the scene origin)", () => {
     const offset = schematicWorldOffset(
       "HUBKGX",
-      station.entrance.lat,
-      station.entrance.lon,
+      HUBKGX_ORIGIN.lat,
+      HUBKGX_ORIGIN.lon,
     );
-    expect(offset.x).toBe(0);
-    expect(offset.z).toBe(0);
-    expect(distanceM(station.entrance, HUBKGX_ORIGIN)).toBeGreaterThan(20);
+    expect(offset.x).toBeCloseTo(0, 9);
+    expect(offset.z).toBeCloseTo(0, 9);
   });
 
   it("plants other stations at latLonToWorld of their coordinates", () => {

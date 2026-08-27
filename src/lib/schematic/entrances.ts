@@ -8,7 +8,6 @@ import { distanceM, latLonToEnu, type LatLon } from "./geo";
 import { ringAabb } from "./osm";
 
 export const ENTRANCE_MATCH_M = 200;
-export const MAX_BUILDING_AABB_M2 = 2500;
 export const DEFAULT_HALL_HEIGHT_M = 7;
 export const MAX_HALL_HEIGHT_M = 16;
 export const STAIR_WIDTH_M = 2.5;
@@ -242,15 +241,15 @@ export function hidesStreetCuboid(row: StationEntrances | undefined): boolean {
 
 type BuildingCand = EntranceBuilding & { area: number };
 
+/** Smallest positive-area ring that shares the entrance node. No size cap. */
 export function pickBuildingForEntrance(
   nodeId: number,
   buildingsByNode: Map<number, EntranceBuilding[]>,
-  maxAreaM2: number = MAX_BUILDING_AABB_M2,
 ): EntranceBuilding | null {
   const cands: BuildingCand[] = [];
   for (const b of buildingsByNode.get(nodeId) ?? []) {
     const area = ringAabbAreaM2(b.ring);
-    if (area <= 0 || area > maxAreaM2) continue;
+    if (area <= 0) continue;
     cands.push({ ...b, area });
   }
   cands.sort((a, b) => a.area - b.area || a.osmWayId - b.osmWayId);
@@ -323,16 +322,52 @@ function indexOsm(osm: OverpassResponse): {
   return { nodes, buildingsByNode, stairsByNode };
 }
 
+export const OSM_HALL_ID_PREFIX = "osm-hall::";
+export const OSM_STAIR_ID_PREFIX = "osm-stairs::";
+
+export function overlayHallId(osmWayId: number): string {
+  return `${OSM_HALL_ID_PREFIX}${osmWayId}`;
+}
+
+export function overlayStairId(osmWayId: number): string {
+  return `${OSM_STAIR_ID_PREFIX}${osmWayId}`;
+}
+
+export type OverlayHallItem = {
+  id: string;
+  stationId: string;
+  osmWayId: number;
+  label: string;
+  ring: [number, number][];
+  height: number;
+};
+
+export type OverlayStairItem = {
+  id: string;
+  stationId: string;
+  osmWayId: number;
+  label: string;
+  path: [number, number][];
+  widthM: number;
+};
+
+export type OverlayHoverVolume = {
+  id: string;
+  label: string;
+  type: string;
+  level: number;
+};
+
 export function overlayGeometries(
   overlay: EntranceOverlayFile,
   origin: LatLon,
   stationIds: Iterable<string>,
 ): {
-  halls: { ring: [number, number][]; height: number }[];
-  stairs: { path: [number, number][]; widthM: number }[];
+  halls: OverlayHallItem[];
+  stairs: OverlayStairItem[];
 } {
-  const halls: { ring: [number, number][]; height: number }[] = [];
-  const stairs: { path: [number, number][]; widthM: number }[] = [];
+  const halls: OverlayHallItem[] = [];
+  const stairs: OverlayStairItem[] = [];
   const seen = new Set<string>();
   for (const id of stationIds) {
     if (seen.has(id)) continue;
@@ -341,18 +376,60 @@ export function overlayGeometries(
     if (!row) continue;
     for (const b of row.buildings) {
       halls.push({
+        id: overlayHallId(b.osmWayId),
+        stationId: id,
+        osmWayId: b.osmWayId,
+        label: b.name?.trim() || "Entrance",
         ring: entranceRingToEnu(b.ring, origin),
         height: hallHeightM(b.height),
       });
     }
     for (const s of row.stairs) {
       stairs.push({
+        id: overlayStairId(s.osmWayId),
+        stationId: id,
+        osmWayId: s.osmWayId,
+        label: "Stairs",
         path: entranceRingToEnu(s.path, origin),
         widthM: STAIR_WIDTH_M,
       });
     }
   }
   return { halls, stairs };
+}
+
+/** Tooltip payload for an OSM hall/stair pick, same fields as a dollhouse volume. */
+export function overlayHoverVolume(
+  overlay: EntranceOverlayFile | null | undefined,
+  stationId: string,
+  volumeId: string,
+): OverlayHoverVolume | null {
+  if (!overlay) return null;
+  const row = overlay.stations[stationId];
+  if (!row) return null;
+  if (volumeId.startsWith(OSM_HALL_ID_PREFIX)) {
+    const wayId = Number(volumeId.slice(OSM_HALL_ID_PREFIX.length));
+    const b = row.buildings.find((x) => x.osmWayId === wayId);
+    if (!b) return null;
+    return {
+      id: volumeId,
+      label: b.name?.trim() || "Entrance",
+      type: "street",
+      level: 0,
+    };
+  }
+  if (volumeId.startsWith(OSM_STAIR_ID_PREFIX)) {
+    const wayId = Number(volumeId.slice(OSM_STAIR_ID_PREFIX.length));
+    const s = row.stairs.find((x) => x.osmWayId === wayId);
+    if (!s) return null;
+    return {
+      id: volumeId,
+      label: "Stairs",
+      type: "stairs",
+      level: 0,
+    };
+  }
+  return null;
 }
 
 export function bakeEntrances(

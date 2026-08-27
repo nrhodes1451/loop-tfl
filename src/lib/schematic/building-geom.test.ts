@@ -8,11 +8,13 @@ import {
   buildingsToGeometry,
   disposeSurfaceTile,
   featuresToTileGeom,
+  hallPickGeometry,
   hallPrismEdges,
   hallsToBottomGeometry,
   ribbonGeometry,
   stairFlightBottomGeometry,
   stairFlightEdges,
+  stairFlightPickGeometry,
   wrapLambertFragment,
 } from "./building-geom";
 
@@ -32,6 +34,40 @@ function parseHexRgb(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
   const n = Number.parseInt(h, 16);
   return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+
+function allFaceNy(geom: {
+  getAttribute: (name: string) => {
+    getX: (i: number) => number;
+    getY: (i: number) => number;
+    getZ: (i: number) => number;
+  };
+  getIndex: () => { count: number; getX: (i: number) => number } | null;
+}): number[] {
+  const pos = geom.getAttribute("position");
+  const idx = geom.getIndex();
+  if (!idx) return [];
+  const out: number[] = [];
+  for (let t = 0; t < idx.count / 3; t++) {
+    const i0 = idx.getX(t * 3);
+    const i1 = idx.getX(t * 3 + 1);
+    const i2 = idx.getX(t * 3 + 2);
+    const e1x = pos.getX(i1) - pos.getX(i0);
+    const e1z = pos.getZ(i1) - pos.getZ(i0);
+    const e2x = pos.getX(i2) - pos.getX(i0);
+    const e2z = pos.getZ(i2) - pos.getZ(i0);
+    out.push(e1z * e2x - e1x * e2z);
+  }
+  return out;
+}
+
+function near(
+  p: { x: number; z: number },
+  x: number,
+  z: number,
+  eps = 1e-5,
+): boolean {
+  return Math.hypot(p.x - x, p.z - z) < eps;
 }
 
 describe("buildingGeometry normals", () => {
@@ -144,25 +180,36 @@ describe("ribbonGeometry", () => {
       8,
     );
     expect(geom).not.toBeNull();
+    expect(allFaceNy(geom!).every((ny) => ny > 0)).toBe(true);
+    geom!.dispose();
+  });
+
+  it("miters a 90° corner so segments share the join", () => {
+    const half = 4;
+    const geom = ribbonGeometry(
+      [
+        [0, 0],
+        [10, 0],
+        [10, 10],
+      ],
+      half * 2,
+    );
+    expect(geom).not.toBeNull();
     const pos = geom!.getAttribute("position")!;
-    const idx = geom!.getIndex()!;
-    expect(idx.count).toBe(6);
-    for (let t = 0; t < 2; t++) {
-      const i0 = idx.getX(t * 3);
-      const i1 = idx.getX(t * 3 + 1);
-      const i2 = idx.getX(t * 3 + 2);
-      const ax = pos.getX(i0);
-      const ay = pos.getY(i0);
-      const az = pos.getZ(i0);
-      const e1x = pos.getX(i1) - ax;
-      const e1y = pos.getY(i1) - ay;
-      const e1z = pos.getZ(i1) - az;
-      const e2x = pos.getX(i2) - ax;
-      const e2y = pos.getY(i2) - ay;
-      const e2z = pos.getZ(i2) - az;
-      const ny = e1z * e2x - e1x * e2z;
-      expect(ny).toBeGreaterThan(0);
-    }
+    expect(pos.count).toBe(8);
+    const endL = { x: pos.getX(2), z: pos.getZ(2) };
+    const endR = { x: pos.getX(3), z: pos.getZ(3) };
+    expect(pos.getX(4)).toBeCloseTo(endL.x, 5);
+    expect(pos.getZ(4)).toBeCloseTo(endL.z, 5);
+    expect(pos.getX(5)).toBeCloseTo(endR.x, 5);
+    expect(pos.getZ(5)).toBeCloseTo(endR.z, 5);
+    const verts = [...Array(pos.count)].map((_, i) => ({
+      x: pos.getX(i),
+      z: pos.getZ(i),
+    }));
+    expect(verts.some((p) => near(p, -10 - half, -half))).toBe(true);
+    expect(verts.some((p) => near(p, -10 + half, half))).toBe(true);
+    expect(allFaceNy(geom!).every((ny) => ny > 0)).toBe(true);
     geom!.dispose();
   });
 });
@@ -251,6 +298,53 @@ describe("hallsToBottomGeometry", () => {
     }
     expect(minY).toBeCloseTo(0, 5);
     expect(maxY).toBeCloseTo(0, 5);
+    geom!.dispose();
+  });
+});
+
+describe("overlay pick volumes", () => {
+  it("extrudes a hall prism for pointer hits", () => {
+    const geom = hallPickGeometry(
+      [
+        [0, 0],
+        [10, 0],
+        [10, 8],
+        [0, 8],
+      ],
+      7,
+    );
+    expect(geom).not.toBeNull();
+    const pos = geom!.getAttribute("position")!;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let i = 0; i < pos.count; i++) {
+      minY = Math.min(minY, pos.getY(i));
+      maxY = Math.max(maxY, pos.getY(i));
+    }
+    expect(minY).toBeCloseTo(0, 5);
+    expect(maxY).toBeCloseTo(7, 5);
+    geom!.dispose();
+  });
+
+  it("covers a stair flight from street to the drop", () => {
+    const geom = stairFlightPickGeometry(
+      [
+        [0, 0],
+        [10, 0],
+      ],
+      2.5,
+      3.2,
+    );
+    expect(geom).not.toBeNull();
+    const pos = geom!.getAttribute("position")!;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let i = 0; i < pos.count; i++) {
+      minY = Math.min(minY, pos.getY(i));
+      maxY = Math.max(maxY, pos.getY(i));
+    }
+    expect(maxY).toBeCloseTo(0, 5);
+    expect(minY).toBeCloseTo(-3.2, 5);
     geom!.dispose();
   });
 });

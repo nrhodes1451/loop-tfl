@@ -30,7 +30,9 @@ import {
   cameraFrame,
   hoverHighlight,
   makeHoverId,
+  polylineTouchesVolumeIds,
   splitHoverId,
+  streetVolumeIds,
   type CameraFrame,
   type HoverHighlight,
   type SceneGeometry,
@@ -67,6 +69,7 @@ import { hoverDepthLabel, hoverFoiExtractLabel } from "@/lib/schematic/foi-layou
 import type { LineNetwork } from "@/lib/schematic/lines";
 import {
   hidesStreetCuboid,
+  overlayHoverVolume,
   type EntranceOverlayFile,
 } from "@/lib/schematic/entrances";
 import { EntranceOverlay } from "./EntranceOverlay";
@@ -650,10 +653,11 @@ function StationMeshes({
   const hoverVolume = (volumeId: string | null) => {
     onHover(volumeId ? makeHoverId(stationId, volumeId) : null);
   };
+  const hiddenStreet = hideStreet ? streetVolumeIds(geom) : new Set<string>();
   return (
     <group>
       {geom.volumes.map((volume) => {
-        if (hideStreet && volume.type === "street") return null;
+        if (hiddenStreet.has(volume.id)) return null;
         return (
           <VolumeMesh
             key={volume.id}
@@ -667,14 +671,17 @@ function StationMeshes({
           />
         );
       })}
-      {geom.polylines.map((line) => (
-        <GlowLine
-          key={line.id}
-          line={line}
-          highlighted={highlight.polylineIds.has(line.id)}
-          dimmed={active && !highlight.polylineIds.has(line.id)}
-        />
-      ))}
+      {geom.polylines.map((line) => {
+        if (polylineTouchesVolumeIds(line, hiddenStreet)) return null;
+        return (
+          <GlowLine
+            key={line.id}
+            line={line}
+            highlighted={highlight.polylineIds.has(line.id)}
+            dimmed={active && !highlight.polylineIds.has(line.id)}
+          />
+        );
+      })}
     </group>
   );
 }
@@ -1052,10 +1059,12 @@ export function StationScene3D({
     const { stationId, volumeId } = splitHoverId(hoveredId);
     const row = built.find((b) => b.station.id === stationId);
     if (!row) return undefined;
-    const volume = row.geom.volumes.find((v) => v.id === volumeId);
+    const volume =
+      row.geom.volumes.find((v) => v.id === volumeId) ??
+      overlayHoverVolume(overlay, stationId, volumeId);
     if (!volume) return undefined;
     return { station: row.station, volume };
-  }, [built, hoveredId, showSchematic]);
+  }, [built, hoveredId, overlay, showSchematic]);
 
   const onWrapPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
     const el = wrapRef.current;
@@ -1119,14 +1128,17 @@ export function StationScene3D({
                 origin={origin}
                 overlay={overlay}
                 stationIds={overlayStationIds}
+                hoveredId={hoveredId}
+                draggingRef={draggingRef}
+                stickyHover={stickyHover}
+                onHover={setHoveredId}
+                onPick={onPickStation}
               />
             ) : null}
             {showLines && lineNetwork ? (
               <TubeLayer
                 network={lineNetwork}
                 origin={origin}
-                focus={{ lat: lod.lat, lon: lod.lon }}
-                shown={shown}
                 quality={quality}
               />
             ) : null}

@@ -298,3 +298,162 @@ describe("generateSchematic FOI placement", () => {
     expect(JSON.stringify(a)).toBe(JSON.stringify(b));
   });
 });
+
+describe("generateSchematic OSM National Rail placement", () => {
+  const placed = generateSchematic({
+    id: "HUBTEST",
+    name: "Test",
+    lat: 51.5,
+    lon: -0.12,
+    platforms: [
+      {
+        id: "HUBTEST-Plat01-NB-victoria::victoria::North",
+        lineId: "victoria",
+        direction: "North",
+        label: "Platform 1 northbound",
+      },
+      {
+        id: "HUBTEST-Plat04-EB-national-rail::national-rail::East",
+        lineId: "national-rail",
+        direction: "East",
+        label: "Platform 4",
+      },
+    ],
+    lifts: [],
+    platformLiftChains: [],
+    interchangeChains: [],
+    placement: [
+      {
+        lineId: "victoria",
+        platformNumbers: [1],
+        eastM: 0,
+        northM: 0,
+        bearingDeg: 90,
+      },
+      {
+        lineId: "national-rail",
+        platformNumbers: [4],
+        eastM: 40,
+        northM: 20,
+        bearingDeg: 0,
+        source: "osm",
+        osmWayId: 99,
+        osmRef: "4",
+        depthM: 0,
+      },
+    ],
+  });
+
+  it("places OSM NR at the geographic offset after hall compensation", () => {
+    const victoria = placed.nodes.find((n) => n.lineId === "victoria")!;
+    const nr = placed.nodes.find((n) => n.lineId === "national-rail")!;
+    expect(victoria.x).toBeCloseTo(0);
+    expect(victoria.y).toBeCloseTo(0);
+    expect(nr.x).toBeCloseTo(-10);
+    expect(nr.y).toBeCloseTo(5);
+    expect(nr.bearingDeg).toBe(0);
+    expect(nr.depthM).toBe(0);
+    expect(nr.osm).toEqual({
+      wayId: 99,
+      eastM: 40,
+      northM: 20,
+      ref: "4",
+    });
+    expect(nr.foi).toBeUndefined();
+  });
+
+  it("does not let OSM NR pull the street centroid", () => {
+    const street = placed.nodes.find((n) => n.id === "street")!;
+    expect(street.x).toBeCloseTo(0);
+    expect(street.y).toBeCloseTo(0);
+  });
+
+  it("leaves unmatched NR on an invented line band", () => {
+    const out = generateSchematic({
+      id: "HUBTEST",
+      name: "Test",
+      lat: 51.5,
+      lon: -0.12,
+      platforms: [
+        {
+          id: "HUBTEST-Plat01-NB-victoria::victoria::North",
+          lineId: "victoria",
+          direction: "North",
+          label: "Platform 1 northbound",
+        },
+        {
+          id: "HUBTEST-Plat09-EB-national-rail::national-rail::East",
+          lineId: "national-rail",
+          direction: "East",
+          label: "Platform 9",
+        },
+      ],
+      lifts: [],
+      platformLiftChains: [],
+      interchangeChains: [],
+      placement: [
+        {
+          lineId: "victoria",
+          platformNumbers: [1],
+          eastM: 0,
+          northM: 0,
+          bearingDeg: 90,
+        },
+      ],
+    });
+    const nr = out.nodes.find((n) => n.lineId === "national-rail")!;
+    expect(nr.osm).toBeUndefined();
+    expect(nr.bearingDeg).toBeUndefined();
+    expect(nr.x).toBeGreaterThan(0);
+    expect(nr.y).toBe(0);
+  });
+
+  it("does not stitch concourse walks to National Rail platforms", () => {
+    const out = generateSchematic({
+      id: "HUBTEST",
+      name: "Test",
+      lat: 51.5,
+      lon: -0.12,
+      platforms: [
+        {
+          id: "HUBTEST-Plat01-NB-victoria::victoria::North",
+          lineId: "victoria",
+          direction: "North",
+          label: "Platform 1 northbound",
+        },
+        {
+          id: "HUBTEST-Plat04-EB-national-rail::national-rail::East",
+          lineId: "national-rail",
+          direction: "East",
+          label: "Platform 4",
+        },
+      ],
+      lifts: [],
+      platformLiftChains: [
+        {
+          platformId: "HUBTEST-Plat01-NB-victoria::victoria::North",
+          liftIds: [],
+          access: "level",
+        },
+        {
+          platformId: "HUBTEST-Plat04-EB-national-rail::national-rail::East",
+          liftIds: [],
+          access: "level",
+        },
+      ],
+      interchangeChains: [],
+    });
+    const nr = out.nodes.find((n) => n.lineId === "national-rail")!;
+    const victoria = out.nodes.find((n) => n.lineId === "victoria")!;
+    expect(
+      out.edges.some((e) => e.from === nr.id || e.to === nr.id),
+    ).toBe(false);
+    expect(
+      out.edges.some(
+        (e) =>
+          (e.from === "concourse" && e.to === victoria.id) ||
+          (e.from === victoria.id && e.to === "concourse"),
+      ),
+    ).toBe(true);
+  });
+});

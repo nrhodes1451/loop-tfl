@@ -1,10 +1,13 @@
 "use client";
 
 import { Line } from "@react-three/drei";
-import { useMemo } from "react";
+import { useMemo, type RefObject } from "react";
+import { type ThreeEvent } from "@react-three/fiber";
 import {
+  hallPickGeometry,
+  hallPrismEdges,
   hallsToBottomGeometry,
-  hallsToLineSegments,
+  stairFlightPickGeometry,
   stairsToBottomGeometry,
   stairsToLineSegments,
 } from "@/lib/schematic/building-geom";
@@ -15,13 +18,17 @@ import {
   STAIR_RISERS,
   overlayGeometries,
   type EntranceOverlayFile,
+  type OverlayHallItem,
+  type OverlayStairItem,
 } from "@/lib/schematic/entrances";
 import {
+  makeHoverId,
   schematicEdgeColor,
+  splitHoverId,
   VOLUME_BOTTOM_OPACITY,
 } from "@/lib/schematic/scene";
 import type { LatLon } from "@/lib/schematic/geo";
-import { DoubleSide } from "three";
+import { DoubleSide, type BufferGeometry } from "three";
 
 // Same queue as VolumeMesh / GlowLine. City buildings write depth later
 // (order 3); painting first lets them composite over the cages the way
@@ -31,39 +38,110 @@ const LINE_ORDER = 2;
 
 function noopRaycast() {}
 
-export function EntranceOverlay({
-  origin,
-  overlay,
-  stationIds,
+function scaledOpacity(
+  base: number,
+  highlighted: boolean,
+  dimmed: boolean,
+): number {
+  if (highlighted) return Math.min(0.42, base * 2.4);
+  if (dimmed) return base * 0.28;
+  return base;
+}
+
+function lineOpacity(highlighted: boolean, dimmed: boolean): number {
+  if (highlighted) return 1;
+  if (dimmed) return 0.22;
+  return 0.95;
+}
+
+function OverlayPickMesh({
+  geometry,
+  draggingRef,
+  stickyHover,
+  onHover,
+  onPick,
 }: {
-  origin: LatLon;
-  overlay: EntranceOverlayFile;
-  stationIds: string[];
+  geometry: BufferGeometry | null;
+  draggingRef: RefObject<boolean>;
+  stickyHover: boolean;
+  onHover: (hit: boolean) => void;
+  onPick?: () => void;
 }) {
-  const { hallPts, hallBottom, stairPts, stairBottom } = useMemo(() => {
-    const { halls, stairs } = overlayGeometries(overlay, origin, stationIds);
-    return {
-      hallPts: hallsToLineSegments(halls),
-      hallBottom: hallsToBottomGeometry(halls),
-      stairPts: stairsToLineSegments(stairs, STAIR_RISERS, STAIR_DROP_M),
-      stairBottom: stairsToBottomGeometry(stairs, STAIR_RISERS, STAIR_DROP_M),
-    };
-  }, [overlay, origin, stationIds]);
+  if (!geometry) return null;
+  const onOver = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+    if (draggingRef.current) return;
+    onHover(true);
+  };
+  const onOut = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+    if (stickyHover) return;
+    onHover(false);
+  };
+  const onTap = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    if (draggingRef.current) return;
+    onHover(true);
+    onPick?.();
+  };
+  return (
+    <mesh
+      geometry={geometry}
+      renderOrder={VOLUME_ORDER}
+      onPointerOver={onOver}
+      onPointerOut={onOut}
+      onClick={onTap}
+    >
+      <meshBasicMaterial
+        transparent
+        opacity={0}
+        depthWrite={false}
+        side={DoubleSide}
+        fog={false}
+      />
+    </mesh>
+  );
+}
 
-  const hallColor = schematicEdgeColor("street");
-
+function OverlayHall({
+  hall,
+  highlighted,
+  dimmed,
+  draggingRef,
+  stickyHover,
+  onHover,
+  onPick,
+}: {
+  hall: OverlayHallItem;
+  highlighted: boolean;
+  dimmed: boolean;
+  draggingRef: RefObject<boolean>;
+  stickyHover: boolean;
+  onHover: (id: string | null) => void;
+  onPick?: () => void;
+}) {
+  const { pts, bottom, pick } = useMemo(
+    () => ({
+      pts: hallPrismEdges(hall.ring, hall.height),
+      bottom: hallsToBottomGeometry([hall]),
+      pick: hallPickGeometry(hall.ring, hall.height),
+    }),
+    [hall],
+  );
+  const color = schematicEdgeColor("street");
+  const hoverId = makeHoverId(hall.stationId, hall.id);
   return (
     <group>
-      {hallBottom ? (
+      {bottom ? (
         <mesh
-          geometry={hallBottom}
+          geometry={bottom}
           renderOrder={VOLUME_ORDER}
           raycast={noopRaycast}
         >
           <meshBasicMaterial
-            color={hallColor}
+            color={color}
             transparent
-            opacity={VOLUME_BOTTOM_OPACITY}
+            opacity={scaledOpacity(VOLUME_BOTTOM_OPACITY, highlighted, dimmed)}
             depthWrite={false}
             side={DoubleSide}
             toneMapped={false}
@@ -71,14 +149,14 @@ export function EntranceOverlay({
           />
         </mesh>
       ) : null}
-      {hallPts.length >= 2 ? (
+      {pts.length >= 2 ? (
         <Line
-          points={hallPts}
+          points={pts}
           segments
-          color={hallColor}
-          lineWidth={STAIR_LINE_WIDTH}
+          color={color}
+          lineWidth={highlighted ? STAIR_LINE_WIDTH * 1.35 : STAIR_LINE_WIDTH}
           transparent
-          opacity={0.95}
+          opacity={lineOpacity(highlighted, dimmed)}
           toneMapped={false}
           frustumCulled={false}
           renderOrder={LINE_ORDER}
@@ -87,16 +165,55 @@ export function EntranceOverlay({
           raycast={noopRaycast}
         />
       ) : null}
-      {stairBottom ? (
+      <OverlayPickMesh
+        geometry={pick}
+        draggingRef={draggingRef}
+        stickyHover={stickyHover}
+        onHover={(hit) => onHover(hit ? hoverId : null)}
+        onPick={onPick}
+      />
+    </group>
+  );
+}
+
+function OverlayStairs({
+  stair,
+  highlighted,
+  dimmed,
+  draggingRef,
+  stickyHover,
+  onHover,
+  onPick,
+}: {
+  stair: OverlayStairItem;
+  highlighted: boolean;
+  dimmed: boolean;
+  draggingRef: RefObject<boolean>;
+  stickyHover: boolean;
+  onHover: (id: string | null) => void;
+  onPick?: () => void;
+}) {
+  const { pts, bottom, pick } = useMemo(
+    () => ({
+      pts: stairsToLineSegments([stair], STAIR_RISERS, STAIR_DROP_M),
+      bottom: stairsToBottomGeometry([stair], STAIR_RISERS, STAIR_DROP_M),
+      pick: stairFlightPickGeometry(stair.path, stair.widthM, STAIR_DROP_M),
+    }),
+    [stair],
+  );
+  const hoverId = makeHoverId(stair.stationId, stair.id);
+  return (
+    <group>
+      {bottom ? (
         <mesh
-          geometry={stairBottom}
+          geometry={bottom}
           renderOrder={VOLUME_ORDER}
           raycast={noopRaycast}
         >
           <meshBasicMaterial
             color={STAIR_COLOR}
             transparent
-            opacity={VOLUME_BOTTOM_OPACITY}
+            opacity={scaledOpacity(VOLUME_BOTTOM_OPACITY, highlighted, dimmed)}
             depthWrite={false}
             side={DoubleSide}
             toneMapped={false}
@@ -104,14 +221,14 @@ export function EntranceOverlay({
           />
         </mesh>
       ) : null}
-      {stairPts.length >= 2 ? (
+      {pts.length >= 2 ? (
         <Line
-          points={stairPts}
+          points={pts}
           segments
           color={STAIR_COLOR}
-          lineWidth={STAIR_LINE_WIDTH}
+          lineWidth={highlighted ? STAIR_LINE_WIDTH * 1.35 : STAIR_LINE_WIDTH}
           transparent
-          opacity={0.95}
+          opacity={lineOpacity(highlighted, dimmed)}
           toneMapped={false}
           frustumCulled={false}
           renderOrder={LINE_ORDER}
@@ -120,6 +237,74 @@ export function EntranceOverlay({
           raycast={noopRaycast}
         />
       ) : null}
+      <OverlayPickMesh
+        geometry={pick}
+        draggingRef={draggingRef}
+        stickyHover={stickyHover}
+        onHover={(hit) => onHover(hit ? hoverId : null)}
+        onPick={onPick}
+      />
+    </group>
+  );
+}
+
+export function EntranceOverlay({
+  origin,
+  overlay,
+  stationIds,
+  hoveredId,
+  draggingRef,
+  stickyHover,
+  onHover,
+  onPick,
+}: {
+  origin: LatLon;
+  overlay: EntranceOverlayFile;
+  stationIds: string[];
+  hoveredId: string | null;
+  draggingRef: RefObject<boolean>;
+  stickyHover: boolean;
+  onHover: (id: string | null) => void;
+  onPick?: (stationId: string) => void;
+}) {
+  const { halls, stairs } = useMemo(
+    () => overlayGeometries(overlay, origin, stationIds),
+    [overlay, origin, stationIds],
+  );
+  const parsed = hoveredId ? splitHoverId(hoveredId) : null;
+
+  return (
+    <group>
+      {halls.map((hall) => {
+        const active = parsed?.stationId === hall.stationId;
+        return (
+          <OverlayHall
+            key={`${hall.stationId}:${hall.id}`}
+            hall={hall}
+            highlighted={active && parsed?.volumeId === hall.id}
+            dimmed={!!parsed && active && parsed.volumeId !== hall.id}
+            draggingRef={draggingRef}
+            stickyHover={stickyHover}
+            onHover={onHover}
+            onPick={onPick ? () => onPick(hall.stationId) : undefined}
+          />
+        );
+      })}
+      {stairs.map((stair) => {
+        const active = parsed?.stationId === stair.stationId;
+        return (
+          <OverlayStairs
+            key={`${stair.stationId}:${stair.id}`}
+            stair={stair}
+            highlighted={active && parsed?.volumeId === stair.id}
+            dimmed={!!parsed && active && parsed.volumeId !== stair.id}
+            draggingRef={draggingRef}
+            stickyHover={stickyHover}
+            onHover={onHover}
+            onPick={onPick ? () => onPick(stair.stationId) : undefined}
+          />
+        );
+      })}
     </group>
   );
 }

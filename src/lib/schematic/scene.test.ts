@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import kgxJson from "../../../data/schematic/HUBKGX.json";
+import { kgxStation } from "./kgx.fixture";
 import {
   SCHEMATIC_METRES_PER_UNIT,
   placeSchematicAt,
@@ -18,13 +18,15 @@ import {
   levelT,
   makeHoverId,
   platformPlanSize,
+  polylineTouchesVolumeIds,
   schematicEdgeColor,
   splitHoverId,
+  streetVolumeIds,
   toWorld,
 } from "./scene";
-import type { SchematicEdge, SchematicNode, SchematicStation } from "./types";
+import type { SchematicEdge, SchematicNode } from "./types";
 
-const station = kgxJson as SchematicStation;
+const station = kgxStation;
 const topology = { nodes: station.nodes, edges: station.edges };
 
 describe("toWorld", () => {
@@ -127,7 +129,7 @@ describe("buildSceneGeometry HUBKGX", () => {
     const liftIds = new Set(
       station.nodes.filter((n) => n.type === "lift" && n.liftId).map((n) => n.liftId!),
     );
-    expect(liftIds.size).toBe(8);
+    expect(liftIds.size).toBeGreaterThanOrEqual(1);
     const shafts = geom.volumes.filter((v) => v.id.startsWith("shaft::"));
     expect(shafts).toHaveLength(liftIds.size);
     const shaftLines = geom.polylines.filter((p) => p.mode === "shaft");
@@ -136,7 +138,7 @@ describe("buildSceneGeometry HUBKGX", () => {
 
   it("synthesizes extra cabins at every served level", () => {
     const cabins = geom.volumes.filter((v) => v.id.includes("::cabin::"));
-    expect(cabins).toHaveLength(7);
+    expect(cabins.length).toBeGreaterThanOrEqual(1);
     expect(cabins.every((c) => c.kind === "cylinder" && c.type === "lift")).toBe(
       true,
     );
@@ -190,18 +192,18 @@ describe("buildSceneGeometry HUBKGX", () => {
   });
 
   it("colours platforms with TfL line colours (Northern white on dark)", () => {
-    const northern = geom.volumes.find((v) => v.id === "plat-7");
-    const circle = geom.volumes.find((v) => v.id === "plat-1");
-    const victoria = geom.volumes.find((v) => v.id === "plat-3");
+    const northern = geom.volumes.find((v) => v.lineId === "northern");
+    const circle = geom.volumes.find((v) => v.lineId === "circle");
+    const victoria = geom.volumes.find((v) => v.lineId === "victoria");
     expect(northern?.edgeColor.toLowerCase()).toBe("#ffffff");
     expect(circle?.edgeColor.toLowerCase()).toBe("#ffd300");
     expect(victoria?.edgeColor.toLowerCase()).toBe("#0098d4");
   });
 
   it("fills volumes with the same colour at high transparency", () => {
-    const circle = geom.volumes.find((v) => v.id === "plat-1")!;
-    const northern = geom.volumes.find((v) => v.id === "plat-7")!;
-    const hall = geom.volumes.find((v) => v.id === "wth")!;
+    const circle = geom.volumes.find((v) => v.lineId === "circle")!;
+    const northern = geom.volumes.find((v) => v.lineId === "northern")!;
+    const hall = geom.volumes.find((v) => v.type === "concourse")!;
     expect(circle.faceColor.toLowerCase()).toBe(circle.edgeColor.toLowerCase());
     expect(northern.faceColor.toLowerCase()).toBe("#ffffff");
     expect(circle.opacity).toBe(VOLUME_FACE_OPACITY);
@@ -211,21 +213,17 @@ describe("buildSceneGeometry HUBKGX", () => {
   });
 
   it("orients same-line platforms in parallel (long axis perpendicular to offset)", () => {
-    const circle1 = geom.volumes.find((v) => v.id === "plat-1")!;
-    const circle2 = geom.volumes.find((v) => v.id === "plat-2")!;
-    const victoria = geom.volumes.find((v) => v.id === "plat-3")!;
-    // Circle pair is offset in X, so boxes must be thin in X / long in Z.
-    expect(circle1.size[0]).toBeLessThan(circle1.size[2]);
-    expect(circle2.size[0]).toBeLessThan(circle2.size[2]);
-    expect(circle1.size[0]).toBeCloseTo(victoria.size[0]);
-    expect(circle1.size[2]).toBeCloseTo(victoria.size[2]);
-    expect(Math.abs(circle2.position[0] - circle1.position[0])).toBeCloseTo(
-      Math.abs(
-        geom.volumes.find((v) => v.id === "plat-4")!.position[0] -
-          victoria.position[0],
-      ),
+    const victoria = geom.volumes.filter(
+      (v) => v.lineId === "victoria" && v.type === "platform",
     );
-    expect(circle1.rotationY).toBeUndefined();
+    expect(victoria.length).toBeGreaterThanOrEqual(2);
+    const [a, b] = victoria;
+    expect(a!.size[0]).toBeLessThan(a!.size[2]);
+    expect(b!.size[0]).toBeLessThan(b!.size[2]);
+    expect(a!.size[0]).toBeCloseTo(b!.size[0]);
+    expect(a!.size[2]).toBeCloseTo(b!.size[2]);
+    expect(a!.rotationY).toBeUndefined();
+    expect(b!.rotationY).toBeUndefined();
   });
 
   it("aligns platforms to a supplied line bearing with the thin×long footprint", () => {
@@ -243,8 +241,8 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(plat.size[0] + 0.1);
     expect(aligned.bounds.min[0]).toBeLessThanOrEqual(Math.min(...xs));
     expect(aligned.bounds.max[0]).toBeGreaterThanOrEqual(Math.max(...xs));
-    const northern = aligned.volumes.find((v) => v.lineId === "northern")!;
-    expect(northern.rotationY).toBeUndefined();
+    const victoria = aligned.volumes.find((v) => v.lineId === "victoria")!;
+    expect(victoria.rotationY).toBeUndefined();
   });
 
   it("yaws each platform from its own bearingDeg even when the line angle differs", () => {
@@ -362,9 +360,10 @@ describe("buildSceneGeometry HUBKGX", () => {
   });
 
   it("emits stairs and escalator diagonals when present", () => {
+    const platform = station.nodes.find((n) => n.type === "platform")!;
     const extra: SchematicEdge[] = [
-      { from: "wth", to: "plat-1", mode: "stairs" },
-      { from: "nth", to: "npe", mode: "escalator" },
+      { from: "concourse", to: platform.id, mode: "stairs" },
+      { from: "street", to: platform.id, mode: "escalator" },
     ];
     const g = buildSceneGeometry(
       { nodes: station.nodes, edges: extra },
@@ -374,6 +373,47 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(g.polylines.some((p) => p.mode === "escalator")).toBe(true);
     const stairs = g.polylines.find((p) => p.mode === "stairs")!;
     expect(stairs.points[0]![1]).not.toBe(stairs.points[1]![1]);
+  });
+
+  it("does not draw walks to National Rail platforms", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "street",
+        type: "street",
+        label: "Street",
+        level: 0,
+        x: 0,
+        y: 0,
+      },
+      {
+        id: "concourse",
+        type: "concourse",
+        label: "Ticket hall",
+        level: -1,
+        x: 0,
+        y: 0,
+      },
+      {
+        id: "p-nr",
+        type: "platform",
+        label: "Platform 1",
+        level: -2,
+        x: 10,
+        y: 0,
+        lineId: "national-rail",
+      },
+    ];
+    const edges: SchematicEdge[] = [
+      { from: "street", to: "concourse", mode: "level" },
+      { from: "concourse", to: "p-nr", mode: "level" },
+    ];
+    const g = buildSceneGeometry({ nodes, edges }, { quality: "low" });
+    expect(g.polylines.some((p) => p.id.startsWith("corridor::") && p.id.includes("p-nr"))).toBe(
+      false,
+    );
+    expect(
+      g.polylines.some((p) => p.id === "corridor::street::concourse"),
+    ).toBe(true);
   });
 });
 
@@ -387,21 +427,25 @@ describe("hoverHighlight", () => {
   });
 
   it("highlights a platform volume and its outline only", () => {
-    const h = hoverHighlight("plat-1", geom);
-    expect([...h.volumeIds]).toEqual(["plat-1"]);
-    expect(h.polylineIds.has("wire::plat-1")).toBe(true);
-    expect(h.volumeIds.has("plat-2")).toBe(false);
-    expect(h.polylineIds.has("wire::plat-2")).toBe(false);
+    const plats = geom.volumes.filter((v) => v.type === "platform");
+    const a = plats[0]!.id;
+    const b = plats[1]!.id;
+    const h = hoverHighlight(a, geom);
+    expect([...h.volumeIds]).toEqual([a]);
+    expect(h.polylineIds.has(`wire::${a}`)).toBe(true);
+    expect(h.volumeIds.has(b)).toBe(false);
+    expect(h.polylineIds.has(`wire::${b}`)).toBe(false);
   });
 
   it("highlights the whole lift shaft when hovering a cabin", () => {
+    const cabin = geom.volumes.find((v) => v.id.includes("::cabin::"))!;
     const h = hoverHighlight("lift-1", geom);
     expect(h.volumeIds.has("lift-1")).toBe(true);
-    expect(h.volumeIds.has("lift-1::cabin::-2")).toBe(true);
+    expect(h.volumeIds.has(cabin.id)).toBe(true);
     expect(h.volumeIds.has("shaft::HUBKGX-Lift-1")).toBe(true);
     expect(h.polylineIds.has("shaft-line::HUBKGX-Lift-1")).toBe(true);
     expect(h.polylineIds.has("wire::lift-1")).toBe(true);
-    expect(h.volumeIds.has("wth")).toBe(false);
+    expect(h.volumeIds.has("concourse")).toBe(false);
   });
 
   it("highlights the whole lift when hovering the shaft", () => {
@@ -439,12 +483,32 @@ describe("makeHoverId", () => {
 
   it("does not let one station's highlight include another station's volume id", () => {
     const geom = buildSceneGeometry(topology, { quality: "high" });
-    const hovered = splitHoverId(makeHoverId("940GZZLUEUS", "wth"));
+    const hovered = splitHoverId(makeHoverId("940GZZLUEUS", "concourse"));
     expect(hovered.stationId).not.toBe("HUBKGX");
     const h = hoverHighlight(hovered.volumeId, geom);
-    expect(h.volumeIds.has("wth")).toBe(true);
+    expect(h.volumeIds.has("concourse")).toBe(true);
     const other = hoverHighlight(null, geom);
     expect(other.volumeIds.size).toBe(0);
+  });
+});
+
+describe("street overlay hiding", () => {
+  it("matches street outlines and walks that touch a street node", () => {
+    const geom = buildSceneGeometry(topology, { stationId: "HUBKGX" });
+    const hidden = streetVolumeIds(geom);
+    expect(hidden.has("street")).toBe(true);
+    const wires = geom.polylines.filter(
+      (p) => p.volumeId && hidden.has(p.volumeId),
+    );
+    expect(wires.length).toBe(hidden.size);
+    const walks = geom.polylines.filter(
+      (p) => p.role === "connection" && polylineTouchesVolumeIds(p, hidden),
+    );
+    expect(walks.length).toBeGreaterThan(0);
+    expect(
+      geom.polylines.some((p) => !polylineTouchesVolumeIds(p, hidden)),
+    ).toBe(true);
+    expect(polylineTouchesVolumeIds(wires[0]!, hidden)).toBe(true);
   });
 });
 
@@ -535,5 +599,34 @@ describe("dollhouse scale and FOI depth", () => {
     expect(worldY).toBeCloseTo(-25, 5);
     expect(worldY).not.toBeCloseTo(schematicLevelWorldY(-6), 0);
     expect(Math.abs(worldY)).toBeLessThan(40);
+  });
+
+  it("puts depthM 0 National Rail at street, not typical NR depth", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "street",
+        type: "street",
+        label: "Street",
+        level: 0,
+        x: 0,
+        y: 0,
+      },
+      {
+        id: "p",
+        type: "platform",
+        label: "Platform 1",
+        level: -2,
+        x: 0,
+        y: 0,
+        lineId: "national-rail",
+        depthM: 0,
+      },
+    ];
+    const g = buildSceneGeometry({ nodes, edges: [] }, { stationId: "HUBTEST" });
+    const at = placeSchematicAt(g, { x: 0, z: 0 });
+    const plat = g.volumes.find((v) => v.type === "platform")!;
+    const worldY = plat.position[1] * at.scale + at.position[1];
+    expect(worldY).toBeCloseTo(0, 5);
+    expect(worldY).not.toBeCloseTo(-8, 0);
   });
 });

@@ -2,10 +2,9 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { NATIONAL_RAIL_RED } from "../tokens";
-import kgxJson from "../../../data/schematic/HUBKGX.json";
+import { kgxStation } from "./kgx.fixture";
 import { HUBKGX_ORIGIN } from "./geo";
 import {
-  MAX_BUILDING_AABB_M2,
   STAIR_COLOR,
   STAIR_DROP_M,
   STAIR_RISERS,
@@ -14,6 +13,9 @@ import {
   hidesStreetCuboid,
   orientStairPath,
   overlayGeometries,
+  overlayHallId,
+  overlayHoverVolume,
+  overlayStairId,
   overpassQuery,
   parseIncline,
   pickBuildingForEntrance,
@@ -23,7 +25,6 @@ import {
 } from "./entrances";
 import { stairsToLineSegments } from "./building-geom";
 import { buildSceneGeometry } from "./scene";
-import type { SchematicStation } from "./types";
 
 /** ~20 m × 16 m hall around the KGX wheelchair entrance. */
 const KGX_HALL: { lat: number; lon: number }[] = [
@@ -43,8 +44,8 @@ const KGX_ROOF: { lat: number; lon: number }[] = [
   { lat: 51.53038, lon: -0.12385 },
 ];
 
-/** ~120 m × 80 m office — over the 2500 m² cap. */
-const HUGE_OFFICE: { lat: number; lon: number }[] = [
+/** ~120 m × 80 m concourse — large on purpose, still a valid hall. */
+const HUGE_HALL: { lat: number; lon: number }[] = [
   { lat: 51.51500, lon: -0.1425 },
   { lat: 51.51500, lon: -0.1408 },
   { lat: 51.51572, lon: -0.1408 },
@@ -111,8 +112,8 @@ const FIXTURE: OverpassResponse = {
       type: "way",
       id: 555,
       nodes: [1002, 20, 21],
-      geometry: HUGE_OFFICE,
-      tags: { building: "yes", name: "Oxford Circus House" },
+      geometry: HUGE_HALL,
+      tags: { building: "train_station", name: "Waterloo Underground concourse" },
     },
     {
       type: "way",
@@ -148,19 +149,19 @@ describe("ringAabbAreaM2", () => {
   it("measures the KGX pavilion as a small hall", () => {
     const area = ringAabbAreaM2(hallAsBuilding().ring);
     expect(area).toBeGreaterThan(50);
-    expect(area).toBeLessThan(MAX_BUILDING_AABB_M2);
+    expect(area).toBeLessThan(500);
   });
 
-  it("puts the Oxford Circus office over the cap", () => {
-    const ring = HUGE_OFFICE.slice(0, -1).map(
+  it("measures a Waterloo-scale concourse as many thousands of m²", () => {
+    const ring = HUGE_HALL.slice(0, -1).map(
       (p) => [p.lat, p.lon] as [number, number],
     );
-    expect(ringAabbAreaM2(ring)).toBeGreaterThan(MAX_BUILDING_AABB_M2);
+    expect(ringAabbAreaM2(ring)).toBeGreaterThan(2500);
   });
 });
 
 describe("pickBuildingForEntrance", () => {
-  it("picks the smallest hall under the AABB cap", () => {
+  it("picks the smallest hall when several share the doorway", () => {
     const larger: EntranceBuilding = {
       osmWayId: 99,
       name: "bigger kiosk",
@@ -179,20 +180,22 @@ describe("pickBuildingForEntrance", () => {
     expect(picked?.name).toMatch(/King's Cross/);
   });
 
-  it("drops a block over the AABB cap", () => {
+  it("keeps a vast concourse when it is the only building on the node", () => {
     const byNode = new Map<number, EntranceBuilding[]>([
       [
         1002,
         [
           {
             osmWayId: 555,
-            name: "Oxford Circus House",
-            ring: HUGE_OFFICE.slice(0, -1).map((p) => [p.lat, p.lon]),
+            name: "Waterloo Underground concourse",
+            ring: HUGE_HALL.slice(0, -1).map((p) => [p.lat, p.lon]),
           },
         ],
       ],
     ]);
-    expect(pickBuildingForEntrance(1002, byNode)).toBeNull();
+    const picked = pickBuildingForEntrance(1002, byNode);
+    expect(picked?.osmWayId).toBe(555);
+    expect(picked?.name).toMatch(/Waterloo/);
   });
 });
 
@@ -208,10 +211,10 @@ describe("bakeEntrances", () => {
     expect(row!.buildings[0]!.ring.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("keeps Oxford Circus stairs and skips the escalator and oversized office", () => {
+  it("keeps Oxford Circus stairs, skips the escalator, and keeps a large hall", () => {
     const row = file.stations["940GZZLUOXC"];
     expect(row).toBeTruthy();
-    expect(row!.buildings).toHaveLength(0);
+    expect(row!.buildings.map((b) => b.osmWayId)).toEqual([555]);
     expect(row!.stairs.map((s) => s.osmWayId)).toEqual([2001]);
     expect(row!.stairs[0]!.path.length).toBeGreaterThanOrEqual(2);
   });
@@ -227,12 +230,38 @@ describe("bakeEntrances", () => {
     expect(hidesStreetCuboid({ buildings: [], stairs: [] })).toBe(false);
   });
 
+  it("builds a ticket-hall-style hover payload for OSM halls and stairs", () => {
+    expect(
+      overlayHoverVolume(file, "HUBKGX", overlayHallId(303377742)),
+    ).toEqual({
+      id: overlayHallId(303377742),
+      label: "King's Cross St. Pancras Underground Station",
+      type: "street",
+      level: 0,
+    });
+    expect(
+      overlayHoverVolume(file, "940GZZLUOXC", overlayStairId(2001)),
+    ).toEqual({
+      id: overlayStairId(2001),
+      label: "Stairs",
+      type: "stairs",
+      level: 0,
+    });
+    expect(overlayHoverVolume(file, "HUBKGX", "street")).toBeNull();
+  });
+
   it("converts rings into the ENU frame used by buildingGeometry", () => {
     const geoms = overlayGeometries(file, HUBKGX_ORIGIN, ["HUBKGX", "940GZZLUOXC"]);
-    expect(geoms.halls).toHaveLength(1);
-    expect(geoms.halls[0]!.height).toBe(8);
-    expect(geoms.halls[0]!.ring.length).toBeGreaterThanOrEqual(3);
+    expect(geoms.halls).toHaveLength(2);
+    const kgxHall = geoms.halls.find((h) => h.stationId === "HUBKGX");
+    expect(kgxHall?.id).toBe(overlayHallId(303377742));
+    expect(kgxHall?.label).toMatch(/King's Cross/);
+    expect(kgxHall?.height).toBe(8);
+    expect(kgxHall?.ring.length).toBeGreaterThanOrEqual(3);
+    expect(geoms.halls.some((h) => h.stationId === "940GZZLUOXC")).toBe(true);
     expect(geoms.stairs).toHaveLength(1);
+    expect(geoms.stairs[0]!.id).toBe(overlayStairId(2001));
+    expect(geoms.stairs[0]!.label).toBe("Stairs");
     expect(geoms.stairs[0]!.widthM).toBe(2.5);
     expect(geoms.stairs[0]!.path.length).toBeGreaterThanOrEqual(2);
     const segs = stairsToLineSegments(geoms.stairs, STAIR_RISERS, STAIR_DROP_M);
@@ -243,7 +272,7 @@ describe("bakeEntrances", () => {
 
 describe("scene geometry vs overlay", () => {
   it("keeps street boxes in schematic topology when overlay is present", () => {
-    const station = kgxJson as SchematicStation;
+    const station = kgxStation;
     const geom = buildSceneGeometry(
       { nodes: station.nodes, edges: station.edges },
       { stationId: station.stationId },
@@ -347,7 +376,8 @@ describe("overlay tokens", () => {
       "utf8",
     );
     expect(src).toContain("stairsToLineSegments");
-    expect(src).toContain("hallsToLineSegments");
+    expect(src).toContain("hallPrismEdges");
+    expect(src).toContain("onPointerOver");
     expect(src).toContain("VOLUME_BOTTOM_OPACITY");
     expect(src).toContain('schematicEdgeColor("street")');
     expect(src).toContain("depthWrite={false}");
@@ -373,5 +403,15 @@ describe("overlay tokens", () => {
     );
     expect(src).toMatch(/label:\s*"Stairs"/);
     expect(src).toContain("NATIONAL_RAIL_RED");
+  });
+
+  it("picks OSM cages through the same hover ids as ticket halls", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/components/schematic/StationScene3D.tsx"),
+      "utf8",
+    );
+    expect(src).toContain("overlayHoverVolume");
+    expect(src).toContain("polylineTouchesVolumeIds");
+    expect(src).toContain("streetVolumeIds");
   });
 });

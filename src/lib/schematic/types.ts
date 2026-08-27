@@ -35,10 +35,21 @@ export type SchematicNode = {
    * north (0–180), from FOI sheets when present.
    */
   bearingDeg?: number;
+  /** Platforms only. Metres below street; overrides FOI/typical when set. */
+  depthM?: number;
   /** Platforms only. FOI mark that produced x/y/bearingDeg, when present. */
   foi?: SchematicFoiPlacement;
+  /** Platforms only. OSM way that produced x/y/bearingDeg, when present. */
+  osm?: SchematicOsmPlacement;
   /** TfL LiftUniqueId when type is lift. */
   liftId?: string;
+};
+
+export type SchematicOsmPlacement = {
+  wayId: number;
+  eastM: number;
+  northM: number;
+  ref?: string;
 };
 
 export type SchematicFoiPlacement = {

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import kgxJson from "../../../data/schematic/HUBKGX.json";
+import { kgxStation } from "./kgx.fixture";
 import { platformWorldY } from "./foi-layout";
 import {
   HUBKGX_ORIGIN,
@@ -13,10 +13,12 @@ import {
 import { generateSchematic, type GenerateStationInput } from "./generate";
 import { schematicLevelForLine } from "./levels";
 import {
+  asTrackPair,
   buildLineNetwork,
   lineAnchor,
   lineAnchorWorld,
   platformAnchorOffset,
+  platformTrackAnchors,
   stationLineAngle,
   streetCentroid,
   walkLineChains,
@@ -25,7 +27,7 @@ import { buildSceneGeometry } from "./scene";
 import type { NetworkData } from "../types";
 import type { SchematicStation } from "./types";
 
-const kgx = kgxJson as SchematicStation;
+const kgx = kgxStation;
 
 const sampleInput: GenerateStationInput = {
   id: "HUBTEST",
@@ -103,6 +105,52 @@ describe("platformAnchorOffset", () => {
       dz: 0,
     });
   });
+
+  it("returns a left/right pair for a deep-level FOI station", () => {
+    const schematic = generateSchematic({
+      ...sampleInput,
+      platforms: [
+        {
+          id: "HUBTEST-Plat01::victoria::North",
+          lineId: "victoria",
+          direction: "North",
+          label: "Platform 1",
+        },
+        {
+          id: "HUBTEST-Plat02::victoria::South",
+          lineId: "victoria",
+          direction: "South",
+          label: "Platform 2",
+        },
+      ],
+      placement: [
+        {
+          lineId: "victoria",
+          platformNumbers: [1, 2],
+          eastM: 40,
+          northM: 10,
+          bearingDeg: 90,
+        },
+      ],
+    });
+    const tracks = platformTrackAnchors(schematic.nodes, "victoria");
+    expect(tracks).toHaveLength(2);
+    expect(Math.hypot(tracks[1]!.dx - tracks[0]!.dx, tracks[1]!.dz - tracks[0]!.dz)).toBeGreaterThan(
+      1,
+    );
+    const network = buildLineNetwork({
+      generatedAt: "test",
+      stations: [
+        { id: "HUBTEST", lat: 51.5, lon: -0.12 },
+        { id: "NEXT", lat: 51.51, lon: -0.12 },
+      ],
+      edges: [{ from: "HUBTEST", to: "NEXT", lineId: "victoria" }],
+      schematics: new Map([["HUBTEST", schematic]]),
+    });
+    const stored = asTrackPair(network.anchors.HUBTEST?.victoria);
+    expect(stored).toHaveLength(2);
+    expect(network.foi.HUBTEST?.victoria).toBe(true);
+  });
 });
 
 describe("stationLineAngle", () => {
@@ -159,8 +207,14 @@ describe("buildLineNetwork", () => {
     expect(network.chains[0]!.stationIds).toEqual(["HUBTEST", "NEXT"]);
   });
 
-  it("omits a zero offset when the platform sits on the street centroid", () => {
-    expect(network.anchors.HUBTEST?.victoria).toBeUndefined();
+  it("stores a split pair when a lone platform sits on the street centroid", () => {
+    const tracks = asTrackPair(network.anchors.HUBTEST?.victoria);
+    expect(tracks).toHaveLength(2);
+    expect((tracks[0]!.dx + tracks[1]!.dx) / 2).toBeCloseTo(0, 5);
+    expect((tracks[0]!.dz + tracks[1]!.dz) / 2).toBeCloseTo(0, 5);
+    expect(
+      Math.hypot(tracks[1]!.dx - tracks[0]!.dx, tracks[1]!.dz - tracks[0]!.dz),
+    ).toBeGreaterThan(1);
   });
 
   it("stores a bearing at both stations", () => {
@@ -245,6 +299,12 @@ describe("buildLineNetwork from disk", () => {
     );
     expect(covered.size).toBe(edgeKeys.size);
     for (const k of edgeKeys) expect(covered.has(k)).toBe(true);
+  });
+
+  it("keeps a single shared offset for a cut-and-cover line", () => {
+    const stored = network.anchors.HUBKGX?.circle;
+    expect(stored).toBeDefined();
+    expect(Array.isArray(stored)).toBe(false);
   });
 
   it("snaps HUBKGX Circle to its platform centroid in world space", () => {

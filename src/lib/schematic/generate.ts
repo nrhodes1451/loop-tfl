@@ -57,6 +57,12 @@ export type GeneratePlacementPlatform = {
   eastM: number;
   northM: number;
   bearingDeg: number;
+  /** Omitted = FOI / sheet-relative. OSM is metres from the station plant. */
+  source?: "foi" | "osm";
+  osmWayId?: number;
+  osmRef?: string;
+  /** Metres below street; OSM surface platforms use 0. */
+  depthM?: number;
   confidence?: "high" | "low";
   caption?: string;
   end?: "north" | "south" | "east" | "west" | null;
@@ -222,23 +228,22 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
   const platformPos = new Map<string, { x: number; y: number; level: number }>();
   const placedIds = new Set<string>();
 
-  const placementByLine = new Map<string, GeneratePlacementPlatform[]>();
+  const foiByLine = new Map<string, GeneratePlacementPlatform[]>();
+  const osmByLine = new Map<string, GeneratePlacementPlatform[]>();
   for (const p of input.placement ?? []) {
     const id = normalizeSchematicLineId(p.lineId);
-    const list = placementByLine.get(id) ?? [];
+    const dest = p.source === "osm" ? osmByLine : foiByLine;
+    const list = dest.get(id) ?? [];
     list.push(p);
-    placementByLine.set(id, list);
+    dest.set(id, list);
   }
 
   const foiXs: number[] = [];
 
-  for (const lineId of lineIds) {
-    const entries =
-      placementByLine.get(normalizeSchematicLineId(lineId)) ??
-      placementByLine.get(lineId);
-    if (!entries?.length) continue;
-    const level = lineLevel(lineId, unknownAssigned, usedLevels);
-    const plats = byLine.get(lineId) ?? [];
+  const assignGroups = (
+    entries: GeneratePlacementPlatform[],
+    plats: PhysPlat[],
+  ): Map<GeneratePlacementPlatform, PhysPlat[]> => {
     const groups = new Map<GeneratePlacementPlatform, PhysPlat[]>();
     for (const phys of plats) {
       const num = platformNumberFromLabel(phys.label, phys.physicalId);
@@ -257,24 +262,63 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     if (groups.size === 0 && entries.length === 1) {
       groups.set(entries[0]!, plats);
     }
-    for (const [entry, group] of groups) {
-      const sorted = [...group].sort((a, b) =>
-        a.physicalId.localeCompare(b.physicalId),
-      );
-      const n = sorted.length;
-      const bearing = undirectedBearingDeg(entry.bearingDeg);
-      const br = (bearing * Math.PI) / 180;
-      const perpE = Math.cos(br);
-      const perpN = Math.sin(br);
-      for (let i = 0; i < n; i++) {
-        const phys = sorted[i]!;
-        const offsetM =
-          (i - (n - 1) / 2) * (PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M);
-        const eastM = entry.eastM + perpE * offsetM;
-        const northM = entry.northM + perpN * offsetM;
-        const x = snap(-eastM / SCHEMATIC_UNIT_M);
-        const y = snap(northM / SCHEMATIC_UNIT_M);
-        platformPos.set(phys.nodeId, { x, y, level });
+    return groups;
+  };
+
+  const osmAssigned = new Set<string>();
+  for (const lineId of lineIds) {
+    const entries =
+      osmByLine.get(normalizeSchematicLineId(lineId)) ?? osmByLine.get(lineId);
+    if (!entries?.length) continue;
+    for (const group of assignGroups(entries, byLine.get(lineId) ?? []).values()) {
+      for (const phys of group) osmAssigned.add(phys.nodeId);
+    }
+  }
+
+  const placeGroup = (
+    entry: GeneratePlacementPlatform,
+    group: PhysPlat[],
+    level: number,
+    hall: { x: number; y: number },
+    recordFoiX: boolean,
+  ) => {
+    const sorted = [...group].sort((a, b) =>
+      a.physicalId.localeCompare(b.physicalId),
+    );
+    const n = sorted.length;
+    const bearing = undirectedBearingDeg(entry.bearingDeg);
+    const br = (bearing * Math.PI) / 180;
+    const perpE = Math.cos(br);
+    const perpN = Math.sin(br);
+    const osmOrigin = entry.source === "osm";
+    for (let i = 0; i < n; i++) {
+      const phys = sorted[i]!;
+      const offsetM =
+        (i - (n - 1) / 2) * (PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M);
+      const eastM = entry.eastM + perpE * offsetM;
+      const northM = entry.northM + perpN * offsetM;
+      const x = snap(-eastM / SCHEMATIC_UNIT_M + hall.x);
+      const y = snap(northM / SCHEMATIC_UNIT_M + hall.y);
+      platformPos.set(phys.nodeId, { x, y, level });
+      const node: SchematicNode = {
+        id: phys.nodeId,
+        type: "platform",
+        label: phys.label,
+        level,
+        x,
+        y,
+        lineId: phys.lineId,
+        bearingDeg: bearing,
+      };
+      if (entry.depthM != null) node.depthM = entry.depthM;
+      if (osmOrigin) {
+        node.osm = {
+          wayId: entry.osmWayId ?? 0,
+          eastM,
+          northM,
+          ...(entry.osmRef != null ? { ref: entry.osmRef } : {}),
+        };
+      } else {
         const foi: SchematicNode["foi"] = {
           confidence: entry.confidence ?? "high",
           caption: entry.caption ?? phys.label,
@@ -289,20 +333,22 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
         if (entry.grid !== undefined) foi.grid = entry.grid;
         if (entry.residual != null) foi.residual = entry.residual;
         if (entry.flags?.length) foi.flags = entry.flags;
-        nodes.push({
-          id: phys.nodeId,
-          type: "platform",
-          label: phys.label,
-          level,
-          x,
-          y,
-          lineId: phys.lineId,
-          bearingDeg: bearing,
-          foi,
-        });
-        placedIds.add(phys.nodeId);
-        foiXs.push(x);
+        node.foi = foi;
       }
+      nodes.push(node);
+      placedIds.add(phys.nodeId);
+      if (recordFoiX) foiXs.push(x);
+    }
+  };
+
+  for (const lineId of lineIds) {
+    const entries =
+      foiByLine.get(normalizeSchematicLineId(lineId)) ?? foiByLine.get(lineId);
+    if (!entries?.length) continue;
+    const level = lineLevel(lineId, unknownAssigned, usedLevels);
+    const groups = assignGroups(entries, byLine.get(lineId) ?? []);
+    for (const [entry, group] of groups) {
+      placeGroup(entry, group, level, { x: 0, y: 0 }, true);
     }
   }
 
@@ -312,7 +358,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
   for (const lineId of lineIds) {
     const level = lineLevel(lineId, unknownAssigned, usedLevels);
     const plats = (byLine.get(lineId) ?? []).filter(
-      (p) => !placedIds.has(p.nodeId),
+      (p) => !placedIds.has(p.nodeId) && !osmAssigned.has(p.nodeId),
     );
     if (plats.length === 0) continue;
     const x0 = xCursor;
@@ -338,6 +384,17 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
 
   const hallRaw = centroid([...platformPos.values()]);
   const hall = { x: snap(hallRaw.x), y: snap(hallRaw.y) };
+
+  for (const lineId of lineIds) {
+    const entries =
+      osmByLine.get(normalizeSchematicLineId(lineId)) ?? osmByLine.get(lineId);
+    if (!entries?.length) continue;
+    const level = lineLevel(lineId, unknownAssigned, usedLevels);
+    const groups = assignGroups(entries, byLine.get(lineId) ?? []);
+    for (const [entry, group] of groups) {
+      placeGroup(entry, group, level, hall, false);
+    }
+  }
   nodes.unshift(
     {
       id: "street",
@@ -414,6 +471,12 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
 
   addEdge("street", "concourse", "level");
 
+  const nrNodes = new Set(
+    [...physicals.values()]
+      .filter((p) => normalizeSchematicLineId(p.lineId) === "national-rail")
+      .map((p) => p.nodeId),
+  );
+
   const stitchLifts = (start: string, liftIds: string[], end: string) => {
     const mids = liftIds
       .map((tfl) => liftNodeByTfl.get(tfl))
@@ -437,7 +500,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
   );
   for (const chain of streetChains) {
     const plat = serviceToNode.get(chain.platformId);
-    if (!plat) continue;
+    if (!plat || nrNodes.has(plat)) continue;
     const access = chain.access ?? "none";
     if (access === "lifts" && chain.liftIds.length > 0) {
       const towardStreet = [...chain.liftIds].reverse();
@@ -455,7 +518,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
   for (const hop of interchanges) {
     const from = serviceToNode.get(hop.fromPlatformId);
     const to = serviceToNode.get(hop.toPlatformId);
-    if (!from || !to) continue;
+    if (!from || !to || nrNodes.has(from) || nrNodes.has(to)) continue;
     if (hop.access === "lifts" && hop.liftIds.length > 0) {
       stitchLifts(from, hop.liftIds, to);
     } else if (hop.access === "level") {

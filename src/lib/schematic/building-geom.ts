@@ -4,6 +4,7 @@
  */
 
 import {
+  BoxGeometry,
   BufferAttribute,
   BufferGeometry,
   ExtrudeGeometry,
@@ -14,6 +15,7 @@ import {
 } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { MIN_RING_EDGE_M, simplifyRing } from "./osm";
+import { stitchRoads } from "./road-graph";
 
 export const BUILDING_COLOR = "#9ec5e8";
 export const BUILDING_COLOR_LOW = "#c5dff0";
@@ -148,60 +150,146 @@ export function polygonGeometry(ring: [number, number][]): BufferGeometry {
   return geom;
 }
 
+type Xz = { x: number; z: number };
+
+type RibbonJoin = {
+  inL: Xz;
+  inR: Xz;
+  outL: Xz;
+  outR: Xz;
+  bevel: boolean;
+};
+
+/** Max miter length as a multiple of half-width; sharper corners bevel. */
+const RIBBON_MITER_LIMIT = 4;
+
+function leftNormal(dir: Xz): Xz {
+  return { x: -dir.z, z: dir.x };
+}
+
+function xzAdd(p: Xz, n: Xz, s: number): Xz {
+  return { x: p.x + n.x * s, z: p.z + n.z * s };
+}
+
+function ribbonJoins(pts: Xz[], half: number): RibbonJoin[] {
+  const dirs: Xz[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i]!;
+    const b = pts[i + 1]!;
+    const dx = b.x - a.x;
+    const dz = b.z - a.z;
+    const len = Math.hypot(dx, dz);
+    dirs.push({ x: dx / len, z: dz / len });
+  }
+  const joins: RibbonJoin[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i]!;
+    const prev = i > 0 ? leftNormal(dirs[i - 1]!) : null;
+    const next = i < dirs.length ? leftNormal(dirs[i]!) : null;
+    if (!prev && next) {
+      const l = xzAdd(p, next, half);
+      const r = xzAdd(p, next, -half);
+      joins.push({ inL: l, inR: r, outL: l, outR: r, bevel: false });
+      continue;
+    }
+    if (prev && !next) {
+      const l = xzAdd(p, prev, half);
+      const r = xzAdd(p, prev, -half);
+      joins.push({ inL: l, inR: r, outL: l, outR: r, bevel: false });
+      continue;
+    }
+    if (!prev || !next) continue;
+    const dot = prev.x * next.x + prev.z * next.z;
+    const denom = 1 + dot;
+    if (denom >= 1e-4) {
+      const ox = ((prev.x + next.x) * half) / denom;
+      const oz = ((prev.z + next.z) * half) / denom;
+      if (Math.hypot(ox, oz) / half <= RIBBON_MITER_LIMIT) {
+        const l = { x: p.x + ox, z: p.z + oz };
+        const r = { x: p.x - ox, z: p.z - oz };
+        joins.push({ inL: l, inR: r, outL: l, outR: r, bevel: false });
+        continue;
+      }
+    }
+    joins.push({
+      inL: xzAdd(p, prev, half),
+      inR: xzAdd(p, prev, -half),
+      outL: xzAdd(p, next, half),
+      outR: xzAdd(p, next, -half),
+      bevel: true,
+    });
+  }
+  return joins;
+}
+
+function ribbonScenePts(path: [number, number][]): Xz[] {
+  const pts: Xz[] = [];
+  for (const [east, north] of path) {
+    const p = { x: -east, z: north };
+    const last = pts[pts.length - 1];
+    if (last && Math.hypot(p.x - last.x, p.z - last.z) < 1e-6) continue;
+    pts.push(p);
+  }
+  return pts;
+}
+
 export function ribbonGeometry(
   path: [number, number][],
   widthM: number,
 ): BufferGeometry | null {
   if (path.length < 2 || widthM <= 0) return null;
+  const pts = ribbonScenePts(path);
+  if (pts.length < 2) return null;
   const half = widthM / 2;
-  const maxSegs = path.length - 1;
-  const positions = new Float32Array(maxSegs * 4 * 3);
-  const normals = new Float32Array(maxSegs * 4 * 3);
+  const joins = ribbonJoins(pts, half);
+  if (joins.length < 2) return null;
+
+  const positions: number[] = [];
   const indices: number[] = [];
-  let v = 0;
-  for (let i = 0; i < path.length - 1; i++) {
-    const a = path[i]!;
-    const b = path[i + 1]!;
-    const ax = -a[0];
-    const az = a[1];
-    const bx = -b[0];
-    const bz = b[1];
-    const dx = bx - ax;
-    const dz = bz - az;
-    const len = Math.hypot(dx, dz);
-    if (len < 1e-6) continue;
-    const px = (-dz / len) * half;
-    const pz = (dx / len) * half;
-    const corners: [number, number, number][] = [
-      [ax + px, 0, az + pz],
-      [ax - px, 0, az - pz],
-      [bx + px, 0, bz + pz],
-      [bx - px, 0, bz - pz],
-    ];
-    const base = v;
-    for (const c of corners) {
-      const o = v * 3;
-      positions[o] = c[0];
-      positions[o + 1] = c[1];
-      positions[o + 2] = c[2];
-      normals[o] = 0;
-      normals[o + 1] = 1;
-      normals[o + 2] = 0;
-      v += 1;
-    }
-    /* Winding must face +Y. (0,1,2)/(1,3,2) points down and FrontSide-culls from above. */
-    indices.push(base, base + 2, base + 1, base + 1, base + 2, base + 3);
+  const push = (p: Xz): number => {
+    const i = positions.length / 3;
+    positions.push(p.x, 0, p.z);
+    return i;
+  };
+  /* Winding must face +Y. (0,1,2)/(1,3,2) on a segment quad points down. */
+  const quad = (aL: Xz, aR: Xz, bL: Xz, bR: Xz) => {
+    const i0 = push(aL);
+    const i1 = push(aR);
+    const i2 = push(bL);
+    const i3 = push(bR);
+    indices.push(i0, i2, i1, i1, i2, i3);
+  };
+  const tri = (a: Xz, b: Xz, c: Xz) => {
+    const ny = (b.z - a.z) * (c.x - a.x) - (b.x - a.x) * (c.z - a.z);
+    const i0 = push(a);
+    const i1 = push(ny >= 0 ? b : c);
+    const i2 = push(ny >= 0 ? c : b);
+    indices.push(i0, i1, i2);
+  };
+
+  for (let i = 0; i < joins.length - 1; i++) {
+    const a = joins[i]!;
+    const b = joins[i + 1]!;
+    quad(a.outL, a.outR, b.inL, b.inR);
   }
-  if (v === 0) return null;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const join = joins[i]!;
+    if (!join.bevel) continue;
+    const prev = { x: pts[i]!.x - pts[i - 1]!.x, z: pts[i]!.z - pts[i - 1]!.z };
+    const next = { x: pts[i + 1]!.x - pts[i]!.x, z: pts[i + 1]!.z - pts[i]!.z };
+    const cross = prev.x * next.z - prev.z * next.x;
+    if (cross >= 0) tri(pts[i]!, join.inR, join.outR);
+    else tri(pts[i]!, join.inL, join.outL);
+  }
+
+  const n = positions.length / 3;
+  const normals = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    normals[i * 3 + 1] = 1;
+  }
   const geom = new BufferGeometry();
-  geom.setAttribute(
-    "position",
-    new Float32BufferAttribute(positions.subarray(0, v * 3), 3),
-  );
-  geom.setAttribute(
-    "normal",
-    new Float32BufferAttribute(normals.subarray(0, v * 3), 3),
-  );
+  geom.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geom.setAttribute("normal", new Float32BufferAttribute(normals, 3));
   geom.setIndex(indices);
   return geom;
 }
@@ -436,6 +524,47 @@ export function hallsToBottomGeometry(
   return mergeGeomBatch(geoms);
 }
 
+/** Invisible prism used to pick a hall cage. */
+export function hallPickGeometry(
+  ring: [number, number][],
+  height: number,
+): BufferGeometry | null {
+  const open = simplifyRing(ring, MIN_RING_EDGE_M);
+  if (open.length < 3 || height <= 0) return null;
+  return buildingGeometry(open, height);
+}
+
+/** Invisible AABB covering a stair flight, for pointer hits. */
+export function stairFlightPickGeometry(
+  path: [number, number][],
+  widthM: number,
+  dropM: number,
+): BufferGeometry | null {
+  if (path.length < 2 || widthM <= 0 || dropM <= 0) return null;
+  const samples = resamplePolyline(path, Math.max(2, path.length));
+  const pts = samples.map(([e, n]) => sceneXZ(e, n));
+  if (pts.length < 2) return null;
+  const half = widthM / 2;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minZ = Infinity;
+  let maxZ = -Infinity;
+  for (let i = 0; i < pts.length; i++) {
+    const c = lrAt(pts, i, half);
+    for (const p of [c.left, c.right]) {
+      minX = Math.min(minX, p[0]);
+      maxX = Math.max(maxX, p[0]);
+      minZ = Math.min(minZ, p[1]);
+      maxZ = Math.max(maxZ, p[1]);
+    }
+  }
+  const sx = Math.max(maxX - minX, 0.2);
+  const sz = Math.max(maxZ - minZ, 0.2);
+  const geom = new BoxGeometry(sx, dropM, sz);
+  geom.translate((minX + maxX) / 2, -dropM / 2, (minZ + maxZ) / 2);
+  return geom;
+}
+
 export function roadWidthM(kind: string): number {
   if (kind === "highway") return ROAD_WIDTH_M.highway;
   if (kind === "major_road") return ROAD_WIDTH_M.major_road;
@@ -489,6 +618,59 @@ export function polygonsToGeometry(
   return mergeGeomBatch(geoms);
 }
 
+export function wedgesToGeometry(
+  wedges: { node: [number, number]; a: [number, number]; b: [number, number] }[],
+): BufferGeometry | null {
+  if (wedges.length === 0) return null;
+  const positions: number[] = [];
+  const indices: number[] = [];
+  const push = (e: number, n: number): number => {
+    const i = positions.length / 3;
+    positions.push(-e, 0, n);
+    return i;
+  };
+  for (const w of wedges) {
+    const i0 = push(w.node[0], w.node[1]);
+    const sx0 = -w.node[0];
+    const sz0 = w.node[1];
+    const sx1 = -w.a[0];
+    const sz1 = w.a[1];
+    const sx2 = -w.b[0];
+    const sz2 = w.b[1];
+    const ny = (sz1 - sz0) * (sx2 - sx0) - (sx1 - sx0) * (sz2 - sz0);
+    const i1 = push(ny >= 0 ? w.a[0] : w.b[0], ny >= 0 ? w.a[1] : w.b[1]);
+    const i2 = push(ny >= 0 ? w.b[0] : w.a[0], ny >= 0 ? w.b[1] : w.a[1]);
+    indices.push(i0, i1, i2);
+  }
+  const n = positions.length / 3;
+  const normals = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) normals[i * 3 + 1] = 1;
+  const geom = new BufferGeometry();
+  geom.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geom.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+  geom.setIndex(indices);
+  return geom;
+}
+
+export function roadsToGeometry(
+  roads: { path: [number, number][]; kind: string }[],
+): BufferGeometry | null {
+  const { ways, wedges } = stitchRoads(
+    roads.map((r) => ({
+      path: r.path,
+      widthM: roadWidthM(r.kind),
+    })),
+  );
+  const geoms: BufferGeometry[] = [];
+  for (const way of ways) {
+    const geom = ribbonGeometry(way.path, way.widthM);
+    if (geom) geoms.push(geom);
+  }
+  const extra = wedgesToGeometry(wedges);
+  if (extra) geoms.push(extra);
+  return mergeGeomBatch(geoms);
+}
+
 export function ribbonsToGeometry(
   lines: { path: [number, number][]; widthM: number }[],
 ): BufferGeometry | null {
@@ -529,12 +711,7 @@ export function featuresToTileGeom(features: {
   return {
     land: polygonsToGeometry(features.land),
     water: mergeGeomBatch(waterParts),
-    roads: ribbonsToGeometry(
-      features.roads.map((r) => ({
-        path: r.path,
-        widthM: roadWidthM(r.kind),
-      })),
-    ),
+    roads: roadsToGeometry(features.roads),
     buildings: buildingsToGeometry(features.buildings),
   };
 }

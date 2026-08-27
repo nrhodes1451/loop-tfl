@@ -39,6 +39,17 @@ describe("FOI platform depths", () => {
       hoverDepthLabel("HUBKGX", { type: "street", level: 0 }),
     ).toBeNull();
     expect(
+      hoverDepthLabel("HUBKGX", { type: "stairs", level: 0 }),
+    ).toBeNull();
+    expect(
+      hoverDepthLabel("HUBTEST", {
+        type: "platform",
+        lineId: "national-rail",
+        level: -2,
+        depthM: 0,
+      }),
+    ).toBe("0 m below street");
+    expect(
       hoverFoiExtractLabel({
         confidence: "low",
         caption: "BAKERLOO LINE PLATFORMS",

@@ -1,6 +1,6 @@
 /**
  * Generate invented schematic JSON for every station in data/network.json.
- * Skips ids that already have a top-level override (e.g. HUBKGX.json).
+ * Skips ids that already have a top-level override.
  *
  * Usage: npm run build-schematics
  */
@@ -8,11 +8,18 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { FoiLayoutFile } from "../src/lib/schematic/foi-extract";
+import { platformDepthM } from "../src/lib/schematic/foi-layout";
 import {
   generateSchematic,
   type GeneratePlacementPlatform,
 } from "../src/lib/schematic/generate";
+import { normalizeSchematicLineId } from "../src/lib/schematic/levels";
 import { buildLineNetwork } from "../src/lib/schematic/lines";
+import {
+  matchOsmNationalRailPlacements,
+  osmPlatformsQuery,
+  parseOsmPlatforms,
+} from "../src/lib/schematic/osm-platforms";
 import type {
   SchematicFoiMark,
   SchematicIndex,
@@ -52,21 +59,23 @@ export async function buildSchematics(): Promise<{
     placementByStation = new Map(
       layout.stations.map((s) => [
         s.stationId,
-        (s.platforms ?? []).map((p) => ({
-          lineId: p.lineId,
-          platformNumbers: p.platformNumbers,
-          eastM: p.eastM,
-          northM: p.northM,
-          bearingDeg: p.bearingDeg,
-          confidence: p.confidence,
-          caption: p.caption,
-          end: p.end,
-          a: p.a,
-          b: p.b,
-          grid: p.grid,
-          residual: p.residual,
-          flags: p.flags,
-        })),
+        (s.platforms ?? [])
+          .filter((p) => normalizeSchematicLineId(p.lineId) !== "national-rail")
+          .map((p) => ({
+            lineId: p.lineId,
+            platformNumbers: p.platformNumbers,
+            eastM: p.eastM,
+            northM: p.northM,
+            bearingDeg: p.bearingDeg,
+            confidence: p.confidence,
+            caption: p.caption,
+            end: p.end,
+            a: p.a,
+            b: p.b,
+            grid: p.grid,
+            residual: p.residual,
+            flags: p.flags,
+          })),
       ]),
     );
     marksByStation = new Map(
@@ -117,6 +126,26 @@ export async function buildSchematics(): Promise<{
     hopsByStation.set(stationId, list);
   }
 
+  let osmFeatures: ReturnType<typeof parseOsmPlatforms> = [];
+  const hasNationalRail = network.platforms.some(
+    (p) => p.lineId === "national-rail",
+  );
+  if (hasNationalRail) {
+    try {
+      const osm = await fetchOverpass(
+        osmPlatformsQuery(
+          networkBbox(
+            network.stations.map((s) => ({ id: s.id, lat: s.lat, lon: s.lon })),
+          ),
+        ),
+      );
+      osmFeatures = parseOsmPlatforms(osm);
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      console.warn(`Skipped OSM National Rail platform bake (${reason})`);
+    }
+  }
+
   await mkdir(generatedDir, { recursive: true });
   const stale = await readdir(generatedDir);
   for (const name of stale) {
@@ -143,6 +172,12 @@ export async function buildSchematics(): Promise<{
     const platformLiftChains = platforms
       .map((p) => chainByPlatform.get(p.id))
       .filter((c): c is NonNullable<typeof c> => !!c);
+    const osmPlacement = matchOsmNationalRailPlacements(
+      osmFeatures,
+      { id: station.id, lat: station.lat, lon: station.lon },
+      platforms,
+      platformDepthM(station.id, "national-rail"),
+    );
     const schematic = generateSchematic({
       id: station.id,
       name: station.name,
@@ -152,7 +187,10 @@ export async function buildSchematics(): Promise<{
       lifts,
       platformLiftChains,
       interchangeChains: hopsByStation.get(station.id) ?? [],
-      placement: placementByStation.get(station.id),
+      placement: [
+        ...(placementByStation.get(station.id) ?? []),
+        ...osmPlacement,
+      ],
       foiMarks: marksByStation.get(station.id),
     });
     await writeFile(

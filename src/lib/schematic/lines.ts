@@ -14,6 +14,12 @@ import {
   normalizeSchematicLineId,
   schematicLevelForLine,
 } from "./levels";
+import {
+  DEEP_TUBE_DIAMETER_M,
+  PLATFORM_WIDTH_M,
+  SCHEMATIC_UNIT_M,
+  isSubsurfaceLine,
+} from "./lu-scale";
 import type { SchematicNode, SchematicStation } from "./types";
 
 export { bearingToRotationY };
@@ -38,13 +44,18 @@ export type LineStation = {
   lon: number;
 };
 
+/** One shared tube, or a left/right pair for deep-level running tunnels. */
+export type LineTrackAnchors = LineAnchor | [LineAnchor, LineAnchor];
+
 export type LineNetwork = {
   generatedAt: string;
   stations: Record<string, LineStation>;
-  /** stationId → lineId → offset. Missing means `{ dx: 0, dz: 0 }`. */
-  anchors: Record<string, Record<string, LineAnchor>>;
+  /** stationId → lineId → offset(s). Missing means `{ dx: 0, dz: 0 }`. */
+  anchors: Record<string, Record<string, LineTrackAnchors>>;
   /** stationId → lineId → rotationY (radians) aligning a +Z-long slab to the line. */
   angles: Record<string, Record<string, number>>;
+  /** stationId → lineId set when `bearingDeg` came from FOI. */
+  foi: Record<string, Record<string, true>>;
   chains: LineChain[];
 };
 
@@ -71,36 +82,125 @@ export function streetCentroid(
   return { x: x / refs.length, y: y / refs.length };
 }
 
-export function platformAnchorOffset(
+function platformsOnLine(
   nodes: SchematicNode[],
   lineId: string,
-): LineAnchor {
+): SchematicNode[] {
   const id = normalizeSchematicLineId(lineId);
-  const plats = nodes.filter(
+  return nodes.filter(
     (n) =>
       n.type === "platform" &&
       n.lineId &&
       normalizeSchematicLineId(n.lineId) === id,
   );
-  if (plats.length === 0) return { dx: 0, dz: 0 };
-  const street = streetCentroid(nodes);
-  let x = 0;
-  let y = 0;
+}
+
+function headingAngle(plats: SchematicNode[]): number {
   for (const p of plats) {
-    x += p.x;
-    y += p.y;
+    if (p.bearingDeg != null) return bearingToRotationY(p.bearingDeg);
   }
-  x /= plats.length;
-  y /= plats.length;
-  return { dx: x - street.x, dz: y - street.y };
+  return 0;
+}
+
+/** +Z-long axis in schematic XZ after `rotationY`. */
+export function headingAxis(rotationY: number): { x: number; z: number } {
+  return { x: Math.sin(rotationY), z: Math.cos(rotationY) };
+}
+
+/** Perpendicular to a +Z-long slab (same as tube fanout). */
+export function headingPerp(rotationY: number): { x: number; z: number } {
+  return { x: Math.cos(rotationY), z: -Math.sin(rotationY) };
+}
+
+export function asTrackPair(value: LineTrackAnchors | undefined): LineAnchor[] {
+  if (value == null) return [{ dx: 0, dz: 0 }];
+  return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * Mean of every platform on the line minus the street centroid.
+ * Subsurface lines keep this single shared offset.
+ */
+export function platformAnchorOffset(
+  nodes: SchematicNode[],
+  lineId: string,
+): LineAnchor {
+  const tracks = platformTrackAnchors(nodes, lineId);
+  if (tracks.length === 1) return tracks[0]!;
+  return {
+    dx: (tracks[0]!.dx + tracks[1]!.dx) / 2,
+    dz: (tracks[0]!.dz + tracks[1]!.dz) / 2,
+  };
+}
+
+/**
+ * Deep-level: two track offsets (left/right along the bearing perpendicular).
+ * Cut-and-cover: one shared offset (the platform centroid).
+ */
+export function platformTrackAnchors(
+  nodes: SchematicNode[],
+  lineId: string,
+): LineAnchor[] {
+  const plats = platformsOnLine(nodes, lineId);
+  const street = streetCentroid(nodes);
+  if (isSubsurfaceLine(lineId)) {
+    if (plats.length === 0) return [{ dx: 0, dz: 0 }];
+    let x = 0;
+    let y = 0;
+    for (const p of plats) {
+      x += p.x;
+      y += p.y;
+    }
+    x /= plats.length;
+    y /= plats.length;
+    return [{ dx: x - street.x, dz: y - street.y }];
+  }
+  if (plats.length === 0) return [{ dx: 0, dz: 0 }, { dx: 0, dz: 0 }];
+  const angle = headingAngle(plats);
+  const perp = headingPerp(angle);
+  const ranked = plats.map((p) => {
+    const dx = p.x - street.x;
+    const dz = p.y - street.y;
+    return { dx, dz, s: dx * perp.x + dz * perp.z };
+  });
+  ranked.sort((a, b) => a.s - b.s || a.dx - b.dx || a.dz - b.dz);
+  if (ranked.length === 1) {
+    const gap = (PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M) / SCHEMATIC_UNIT_M;
+    const a = ranked[0]!;
+    return [
+      { dx: a.dx - 0.5 * gap * perp.x, dz: a.dz - 0.5 * gap * perp.z },
+      { dx: a.dx + 0.5 * gap * perp.x, dz: a.dz + 0.5 * gap * perp.z },
+    ];
+  }
+  const lo = ranked[0]!;
+  const hi = ranked[ranked.length - 1]!;
+  return [
+    { dx: lo.dx, dz: lo.dz },
+    { dx: hi.dx, dz: hi.dz },
+  ];
 }
 
 export function lineAnchor(
   anchors: LineNetwork["anchors"],
   stationId: string,
   lineId: string,
+  track = 0,
 ): LineAnchor {
-  return anchors[stationId]?.[lineId] ?? { dx: 0, dz: 0 };
+  const tracks = asTrackPair(anchors[stationId]?.[lineId]);
+  return tracks[track] ?? tracks[0] ?? { dx: 0, dz: 0 };
+}
+
+export function lineAnchorMean(
+  anchors: LineNetwork["anchors"],
+  stationId: string,
+  lineId: string,
+): LineAnchor {
+  const tracks = asTrackPair(anchors[stationId]?.[lineId]);
+  if (tracks.length === 1) return tracks[0]!;
+  return {
+    dx: (tracks[0]!.dx + tracks[1]!.dx) / 2,
+    dz: (tracks[0]!.dz + tracks[1]!.dz) / 2,
+  };
 }
 
 export function lineAnchorWorld(
@@ -315,6 +415,7 @@ export function buildLineNetwork(input: LineNetworkInput): LineNetwork {
   }
 
   const anchors: LineNetwork["anchors"] = {};
+  const foi: LineNetwork["foi"] = {};
   const stationIds = [...new Set([...Object.keys(stations)])].sort((a, b) =>
     a.localeCompare(b),
   );
@@ -332,17 +433,18 @@ export function buildLineNetwork(input: LineNetworkInput): LineNetwork {
     const lines = lineIdsAt.get(stationId);
     if (!schematic || !lines) continue;
     for (const lineId of [...lines].sort((a, b) => a.localeCompare(b))) {
-      const offset = platformAnchorOffset(schematic.nodes, lineId);
-      if (offset.dx === 0 && offset.dz === 0) continue;
+      const tracks = platformTrackAnchors(schematic.nodes, lineId);
+      const nonzero = tracks.some((t) => t.dx !== 0 || t.dz !== 0);
+      if (!nonzero) continue;
       const row = anchors[stationId] ?? (anchors[stationId] = {});
-      row[lineId] = offset;
+      row[lineId] = tracks.length === 1 ? tracks[0]! : [tracks[0]!, tracks[1]!];
     }
   }
 
   const worldOf = (stationId: string, lineId: string) => {
     const st = stations[stationId];
     if (!st) return { x: 0, z: 0 };
-    return lineAnchorWorld(st, lineAnchor(anchors, stationId, lineId), origin);
+    return lineAnchorWorld(st, lineAnchorMean(anchors, stationId, lineId), origin);
   };
 
   const angles: LineNetwork["angles"] = {};
@@ -364,6 +466,10 @@ export function buildLineNetwork(input: LineNetworkInput): LineNetwork {
       if (angle == null) continue;
       const row = angles[stationId] ?? (angles[stationId] = {});
       row[lineId] = angle;
+      if (foiAngle != null) {
+        const hit = foi[stationId] ?? (foi[stationId] = {});
+        hit[lineId] = true;
+      }
     }
   }
 
@@ -372,6 +478,7 @@ export function buildLineNetwork(input: LineNetworkInput): LineNetwork {
     stations,
     anchors,
     angles,
+    foi,
     chains,
   };
 }

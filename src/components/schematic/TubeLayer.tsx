@@ -6,48 +6,38 @@ import { DoubleSide } from "three";
 import type { LatLon } from "@/lib/schematic/geo";
 import type { LineNetwork } from "@/lib/schematic/lines";
 import {
+  TUBE_FACE_OPACITY,
   TUBE_RENDER_ORDER,
   buildTubeMeshes,
   disposeTubeMeshes,
 } from "@/lib/schematic/tubes";
-import { VOLUME_FACE_OPACITY, type SceneQuality } from "@/lib/schematic/scene";
+import type { SceneQuality } from "@/lib/schematic/scene";
 
 function noopRaycast() {}
 
 export function TubeLayer({
   network,
   origin,
-  focus,
-  shown,
   quality,
 }: {
   network: LineNetwork;
   origin: LatLon;
-  focus: LatLon;
-  shown: boolean;
   quality: SceneQuality;
 }) {
-  const focusLat = focus.lat;
-  const focusLon = focus.lon;
-  const meshes = useMemo(() => {
-    if (!shown) return [];
-    return buildTubeMeshes(
-      network,
-      origin,
-      { lat: focusLat, lon: focusLon },
-      quality,
-    );
-  }, [network, origin, focusLat, focusLon, shown, quality]);
+  const meshes = useMemo(
+    () => buildTubeMeshes(network, origin, quality),
+    [network, origin, quality],
+  );
 
   useLayoutEffect(() => () => disposeTubeMeshes(meshes), [meshes]);
 
-  if (!shown || meshes.length === 0) return null;
+  if (meshes.length === 0) return null;
 
   return (
     <group>
       {meshes.map((mesh) => (
         <mesh
-          key={mesh.lineId}
+          key={`${mesh.lineId}::${mesh.track}`}
           geometry={mesh.geometry}
           renderOrder={TUBE_RENDER_ORDER}
           raycast={noopRaycast}
@@ -55,7 +45,7 @@ export function TubeLayer({
           <meshBasicMaterial
             color={mesh.faceColor}
             transparent
-            opacity={VOLUME_FACE_OPACITY}
+            opacity={TUBE_FACE_OPACITY}
             depthWrite={false}
             side={DoubleSide}
             toneMapped
@@ -66,7 +56,7 @@ export function TubeLayer({
       {meshes.map((mesh) =>
         mesh.centreline.length >= 2 ? (
           <Line
-            key={`${mesh.lineId}-line`}
+            key={`${mesh.lineId}::${mesh.track}-line`}
             points={mesh.centreline}
             segments
             color={mesh.edgeColor}
