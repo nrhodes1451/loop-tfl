@@ -1,6 +1,11 @@
 {
-  "northDeg": 45,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 14 }],
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 14
+    }
+  ],
   "confidence": "high",
-  "raw": "Heathrow 1,2,3: N top-right; Piccadilly platforms 14m."
+  "raw": "Heathrow 1,2,3: N top-right; Piccadilly platforms 14m. northDeg migrated +270 for reading-pose raster."
 }

@@ -1,5 +1,5 @@
 {
-  "northDeg": 90,
+  "northDeg": 315,
   "depths": [
     {
       "label": "Bakerloo Line Platforms",
@@ -10,8 +10,6 @@
       "metres": 32.3
     }
   ],
-  "confidence": "high",
-  "raw": "Piccadilly Circus axonometric 2 repeats Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90\u00b0 on this image).",
   "platforms": [
     {
       "caption": "PLATFORM 1 BAKERLOO NORTHBOUND TO OXFORD CIRCUS",
@@ -19,17 +17,17 @@
       "platformNumbers": [
         1
       ],
+      "end": null,
+      "bearingDeg": 130,
       "a": [
-        0.114,
-        0.5
+        0.08,
+        0.48
       ],
       "b": [
-        0.291,
-        0.388
+        0.28,
+        0.38
       ],
       "grid": "B5",
-      "bearingDeg": 148,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -38,17 +36,17 @@
       "platformNumbers": [
         2
       ],
+      "end": null,
+      "bearingDeg": 130,
       "a": [
-        0.586,
-        0.163
+        0.62,
+        0.28
       ],
       "b": [
-        0.763,
-        0.163
+        0.82,
+        0.18
       ],
-      "grid": "J2",
-      "bearingDeg": 0,
-      "end": null,
+      "grid": "K3",
       "confidence": "high"
     },
     {
@@ -57,17 +55,17 @@
       "platformNumbers": [
         3
       ],
+      "end": null,
+      "bearingDeg": 65,
       "a": [
-        0.173,
-        0.95
+        0.14,
+        0.88
       ],
       "b": [
-        0.35,
-        0.613
+        0.38,
+        0.62
       ],
       "grid": "C9",
-      "bearingDeg": 118,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -76,25 +74,27 @@
       "platformNumbers": [
         4
       ],
+      "end": null,
+      "bearingDeg": 65,
       "a": [
-        0.232,
-        0.838
+        0.22,
+        0.88
       ],
       "b": [
-        0.527,
-        0.388
+        0.46,
+        0.62
       ],
-      "grid": "D8",
-      "bearingDeg": 123,
-      "end": null,
+      "grid": "D9",
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Ticket Hall",
     "at": [
-      0.468,
-      0.163
+      0.48,
+      0.18
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Piccadilly Circus axonometric 2: rose N towards top-left (315). Bakerloo pair bearingDeg 130; Piccadilly pair 65. Depths 28.0 / 32.3m."
 }

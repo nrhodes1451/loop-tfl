@@ -456,7 +456,8 @@ describe("cameraFrame", () => {
     expect(frame.position[1]).toBeGreaterThan(frame.target[1]);
     expect(frame.position[0]).toBeCloseTo(frame.target[0], 6);
     expect(frame.position[2]).toBeLessThan(frame.target[2]);
-    expect(frame.maxPolarAngle).toBeLessThan(Math.PI / 2);
+    expect(frame.minPolarAngle).toBe(0);
+    expect(frame.maxPolarAngle).toBe(Math.PI);
     expect(frame.minDistance).toBeLessThan(frame.maxDistance);
   });
 

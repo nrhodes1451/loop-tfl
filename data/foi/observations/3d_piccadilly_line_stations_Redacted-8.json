@@ -1,6 +1,11 @@
 {
-  "northDeg": 45,
-  "depths": [{ "label": "PICCADILLY LINE", "metres": 8 }],
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE",
+      "metres": 8
+    }
+  ],
   "confidence": "high",
-  "raw": "Heathrow Terminal 4: N top-right; table row Piccadilly Line 8m."
+  "raw": "Heathrow Terminal 4: N top-right; table row Piccadilly Line 8m. northDeg migrated +270 for reading-pose raster."
 }

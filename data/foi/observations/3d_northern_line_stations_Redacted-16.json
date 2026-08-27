@@ -1,5 +1,5 @@
 {
-  "northDeg": 135,
+  "northDeg": 45,
   "depths": [
     {
       "label": "NORTHERN LINE (NORTH BOUND)",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Kennington axonometric; north ~135\u00b0 (bottom-right); NB 17.0m, SB 18.8m."
+  "raw": "Kennington axonometric; north ~135\u00b0 (bottom-right); NB 17.0m, SB 18.8m. northDeg migrated +270 for reading-pose raster."
 }

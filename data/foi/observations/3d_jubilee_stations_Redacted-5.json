@@ -1,5 +1,5 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
     {
       "label": "JUBILEE LINE PLATFORMS",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m."
+  "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m. northDeg migrated +270 for reading-pose raster."
 }

@@ -1,5 +1,5 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
     {
       "label": "NORTHERN LINE NORTHBOUND PLATFORM",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Oval axonometric; north ~315\u00b0 (top-left); NB 14.3m, SB 17.7m."
+  "raw": "Oval axonometric; north ~315\u00b0 (top-left); NB 14.3m, SB 17.7m. northDeg migrated +270 for reading-pose raster."
 }

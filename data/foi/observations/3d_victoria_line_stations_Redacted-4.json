@@ -1,58 +1,39 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
     {
       "label": "VICTORIA LINE PLATFORMS",
       "metres": 22.5
     }
   ],
-  "confidence": "high",
-  "raw": "Pimlico: N points right; Victoria platforms 22.5m.",
   "platforms": [
     {
       "caption": "PLATFORM 2 SOUTHBOUND",
       "lineId": "victoria",
-      "platformNumbers": [
-        2
-      ],
-      "end": "west",
-      "a": [
-        0.221,
-        0.23
-      ],
-      "b": [
-        0.497,
-        0.29
-      ],
-      "grid": "7.5D",
-      "bearingDeg": 12,
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 80,
+      "a": [0.17, 0.625],
+      "b": [0.50, 0.695],
+      "grid": "D6",
       "confidence": "high"
     },
     {
       "caption": "PLATFORM 1 NORTHBOUND",
       "lineId": "victoria",
-      "platformNumbers": [
-        1
-      ],
-      "end": "east",
-      "a": [
-        0.221,
-        0.29
-      ],
-      "b": [
-        0.497,
-        0.41
-      ],
-      "grid": "5H",
-      "bearingDeg": 23,
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 80,
+      "a": [0.17, 0.705],
+      "b": [0.50, 0.775],
+      "grid": "D7",
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Ticket Hall",
-    "at": [
-      0.553,
-      0.59
-    ]
-  }
+    "at": [0.68, 0.48]
+  },
+  "confidence": "high",
+  "raw": "Pimlico reading pose: rose N up (0). Parallel Victoria platforms share bearingDeg 80; corresponding long-axis ends give matching b-a. Depth 22.5m."
 }

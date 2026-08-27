@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T09:09:24.764Z",
+  "generatedAt": "2026-08-27T14:37:15.721Z",
   "source": "tfl-foi-2015-axonometric",
   "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
   "pages": [
@@ -7,7 +7,7 @@
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 1,
       "stationId": "HUBCHX",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "Northern Line Platforms",
@@ -22,13 +22,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Charing Cross table lists Northern 19.5m and Jubilee 26.2m; compass N points right on the page (90°)."
+      "raw": "Charing Cross table lists Northern 19.5m and Jubilee 26.2m; compass N points right on the page (90°). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 2,
       "stationId": "940GZZLUERB",
-      "northDeg": 115,
+      "northDeg": 25,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -38,13 +38,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Edgware Road table lists Bakerloo platforms at 23.4m; compass N is about 25° clockwise of drawing-up, 115° on this image."
+      "raw": "Edgware Road table lists Bakerloo platforms at 23.4m; compass N is about 25° clockwise of drawing-up, 115° on this image. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 3,
       "stationId": "HUBEPH",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "Northern Line Platforms",
@@ -59,13 +59,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Elephant & Castle table lists Northern 18.9m and Bakerloo 23.5m; compass N points top-left on the drawing (45° on this image)."
+      "raw": "Elephant & Castle table lists Northern 18.9m and Bakerloo 23.5m; compass N points top-left on the drawing (45° on this image). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 4,
       "stationId": "940GZZLUEMB",
-      "northDeg": 105,
+      "northDeg": 315,
       "depths": [
         {
           "label": "District and Circle Line Platforms",
@@ -96,14 +96,14 @@
             1
           ],
           "end": "west",
-          "bearingDeg": 108,
+          "bearingDeg": 53,
           "a": [
-            0.232,
-            0.95
+            0.28,
+            0.82
           ],
           "b": [
-            0.527,
-            0.5
+            0.62,
+            0.38
           ],
           "grid": "E8",
           "confidence": "high"
@@ -115,26 +115,26 @@
             2
           ],
           "end": "east",
-          "bearingDeg": 99,
+          "bearingDeg": 53,
           "a": [
-            0.291,
-            0.838
+            0.32,
+            0.76
           ],
           "b": [
-            0.586,
-            0.163
+            0.66,
+            0.32
           ],
-          "grid": "H3",
+          "grid": "F7",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Embankment axonometric 1 table is clear (5.5 / 16.2 / 21.0m); compass N is about 15° clockwise of drawing-up (105° on this image), with some tilt uncertainty.",
+      "raw": "Embankment axonometric 1: rose N towards top-left (315). Parallel District/Circle boxes share bearingDeg 53. Depths 5.5 / 16.2 / 21.0m.",
       "reference": {
         "label": "Ticket Hall (North End)",
         "at": [
-          0.35,
-          0.388
+          0.45,
+          0.42
         ]
       },
       "note": "Embankment table is readable; compass ~105° on the PNG (tilt ±15°)."
@@ -143,7 +143,7 @@
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 5,
       "stationId": "940GZZLUEMB",
-      "northDeg": 100,
+      "northDeg": 315,
       "depths": [
         {
           "label": "District and Circle Line Platforms",
@@ -174,14 +174,14 @@
             1
           ],
           "end": null,
-          "bearingDeg": 112,
+          "bearingDeg": 53,
           "a": [
-            0.232,
-            0.815
+            0.28,
+            0.78
           ],
           "b": [
-            0.586,
-            0.253
+            0.62,
+            0.28
           ],
           "grid": "D8",
           "confidence": "high"
@@ -193,27 +193,27 @@
             2
           ],
           "end": null,
-          "bearingDeg": 111,
+          "bearingDeg": 53,
           "a": [
-            0.35,
-            0.669
+            0.32,
+            0.72
           ],
           "b": [
-            0.674,
-            0.14
+            0.66,
+            0.22
           ],
           "grid": "F6",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Embankment axonometric 2 table matches 5.5 / 16.2 / 21.0m; compass N is slightly clockwise of drawing-up (100° on this image)."
+      "raw": "Embankment axonometric 2: rose N towards top-left (315). Parallel District/Circle boxes share bearingDeg 53. Depths 5.5 / 16.2 / 21.0m."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 6,
       "stationId": "940GZZLUEMB",
-      "northDeg": 90,
+      "northDeg": 315,
       "depths": [
         {
           "label": "District and Circle Line Platforms",
@@ -238,58 +238,20 @@
       ],
       "platforms": [
         {
-          "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
-          "lineId": "bakerloo",
-          "platformNumbers": [
-            5
-          ],
-          "end": null,
-          "bearingDeg": 128,
-          "a": [
-            0.232,
-            0.725
-          ],
-          "b": [
-            0.409,
-            0.5
-          ],
-          "grid": "D7",
-          "confidence": "high"
-        },
-        {
-          "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
-          "lineId": "bakerloo",
-          "platformNumbers": [
-            6
-          ],
-          "end": null,
-          "bearingDeg": 118,
-          "a": [
-            0.232,
-            0.838
-          ],
-          "b": [
-            0.35,
-            0.613
-          ],
-          "grid": "D8",
-          "confidence": "high"
-        },
-        {
           "caption": "NORTHERN LINE PLATFORM 3 NORTHBOUND TO CHARING CROSS",
           "lineId": "northern",
           "platformNumbers": [
             3
           ],
           "end": null,
-          "bearingDeg": 128,
+          "bearingDeg": 127,
           "a": [
-            0.468,
-            0.388
+            0.42,
+            0.42
           ],
           "b": [
-            0.645,
-            0.163
+            0.68,
+            0.22
           ],
           "grid": "H4",
           "confidence": "high"
@@ -301,27 +263,65 @@
             4
           ],
           "end": null,
-          "bearingDeg": 118,
+          "bearingDeg": 127,
           "a": [
-            0.586,
-            0.5
+            0.55,
+            0.48
           ],
           "b": [
-            0.763,
-            0.163
+            0.81,
+            0.28
           ],
           "grid": "J5",
+          "confidence": "high"
+        },
+        {
+          "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 127,
+          "a": [
+            0.22,
+            0.82
+          ],
+          "b": [
+            0.42,
+            0.62
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 127,
+          "a": [
+            0.18,
+            0.74
+          ],
+          "b": [
+            0.38,
+            0.54
+          ],
+          "grid": "C7",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Embankment axonometric 3 table lists 5.5 / 16.2 / 21.0m; compass N points to drawing-up (90° on this image)."
+      "raw": "Embankment axonometric 3: rose N towards top-left (315). Northern and Bakerloo pairs share bearingDeg 127 (same corridor to Waterloo / Charing Cross). Depths 5.5 / 16.2 / 21.0m."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 7,
       "stationId": "940GZZLUKPK",
-      "northDeg": 105,
+      "northDeg": 15,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -331,13 +331,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Kilburn Park table lists Bakerloo platforms at 10.0m; compass N is about 15° clockwise of drawing-up (105° on this image)."
+      "raw": "Kilburn Park table lists Bakerloo platforms at 10.0m; compass N is about 15° clockwise of drawing-up (105° on this image). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 8,
       "stationId": "940GZZLULBN",
-      "northDeg": 60,
+      "northDeg": 330,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -347,13 +347,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Lambeth North table lists Bakerloo platforms at 17.7m; compass N points top-left on the drawing (60° on this image)."
+      "raw": "Lambeth North table lists Bakerloo platforms at 17.7m; compass N points top-left on the drawing (60° on this image). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 9,
       "stationId": "940GZZLUMVL",
-      "northDeg": 75,
+      "northDeg": 345,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -363,13 +363,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Maida Vale table lists Bakerloo platforms at 15.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image)."
+      "raw": "Maida Vale table lists Bakerloo platforms at 15.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 10,
       "stationId": "HUBMYB",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -379,13 +379,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Marylebone table lists Bakerloo platforms at 25.3m; compass N points to drawing-up (90° on this image)."
+      "raw": "Marylebone table lists Bakerloo platforms at 25.3m; compass N points to drawing-up (90° on this image). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 11,
       "stationId": "HUBPAD",
-      "northDeg": 180,
+      "northDeg": 90,
       "depths": [
         {
           "label": "District and Circle Line Platforms",
@@ -405,13 +405,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Paddington (City) table lists District and Circle 5.2m and Bakerloo 9.7m; compass N points down on this image (180°)."
+      "raw": "Paddington (City) table lists District and Circle 5.2m and Bakerloo 9.7m; compass N points down on this image (180°). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 12,
       "stationId": "940GZZLUPCC",
-      "northDeg": 90,
+      "northDeg": 315,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -424,48 +424,13 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [
-        {
-          "caption": "BAKERLOO LINE PLATFORMS",
-          "lineId": "bakerloo",
-          "platformNumbers": [],
-          "end": null,
-          "bearingDeg": 57,
-          "a": [
-            0.35,
-            0.635
-          ],
-          "b": [
-            0.409,
-            0.725
-          ],
-          "grid": "G7",
-          "confidence": "low"
-        },
-        {
-          "caption": "PICCADILLY LINE PLATFORMS",
-          "lineId": "piccadilly",
-          "platformNumbers": [],
-          "end": null,
-          "bearingDeg": 57,
-          "a": [
-            0.368,
-            0.68
-          ],
-          "b": [
-            0.427,
-            0.77
-          ],
-          "grid": "G7",
-          "confidence": "low"
-        }
-      ],
+      "platforms": [],
       "confidence": "high",
-      "raw": "Piccadilly Circus axonometric 1 table lists Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image).",
+      "raw": "Piccadilly Circus axonometric 1 is ticket-hall level; no usable platform boxes. Rose N about 15° west of up (345). Depths 28.0 / 32.3m. Placement is on axonometric 2.",
       "reference": {
         "label": "Ticket Hall",
         "at": [
-          0.291,
+          0.45,
           0.5
         ]
       }
@@ -474,7 +439,7 @@
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 13,
       "stationId": "940GZZLUPCC",
-      "northDeg": 90,
+      "northDeg": 315,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -495,14 +460,14 @@
             1
           ],
           "end": null,
-          "bearingDeg": 148,
+          "bearingDeg": 130,
           "a": [
-            0.114,
-            0.5
+            0.08,
+            0.48
           ],
           "b": [
-            0.291,
-            0.388
+            0.28,
+            0.38
           ],
           "grid": "B5",
           "confidence": "high"
@@ -514,16 +479,16 @@
             2
           ],
           "end": null,
-          "bearingDeg": 0,
+          "bearingDeg": 130,
           "a": [
-            0.586,
-            0.163
+            0.62,
+            0.28
           ],
           "b": [
-            0.763,
-            0.163
+            0.82,
+            0.18
           ],
-          "grid": "J2",
+          "grid": "K3",
           "confidence": "high"
         },
         {
@@ -533,14 +498,14 @@
             3
           ],
           "end": null,
-          "bearingDeg": 118,
+          "bearingDeg": 65,
           "a": [
-            0.173,
-            0.95
+            0.14,
+            0.88
           ],
           "b": [
-            0.35,
-            0.613
+            0.38,
+            0.62
           ],
           "grid": "C9",
           "confidence": "high"
@@ -552,26 +517,26 @@
             4
           ],
           "end": null,
-          "bearingDeg": 123,
+          "bearingDeg": 65,
           "a": [
-            0.232,
-            0.838
+            0.22,
+            0.88
           ],
           "b": [
-            0.527,
-            0.388
+            0.46,
+            0.62
           ],
-          "grid": "D8",
+          "grid": "D9",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Piccadilly Circus axonometric 2 repeats Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image).",
+      "raw": "Piccadilly Circus axonometric 2: rose N towards top-left (315). Bakerloo pair bearingDeg 130; Piccadilly pair 65. Depths 28.0 / 32.3m.",
       "reference": {
         "label": "Ticket Hall",
         "at": [
-          0.468,
-          0.163
+          0.48,
+          0.18
         ]
       }
     },
@@ -579,7 +544,7 @@
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 14,
       "stationId": "940GZZLURGP",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -589,13 +554,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Regent's Park table lists Bakerloo platforms at 21.6m; compass N points to drawing-up (90° on this image)."
+      "raw": "Regent's Park table lists Bakerloo platforms at 21.6m; compass N points to drawing-up (90° on this image). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 15,
       "stationId": "940GZZLUWKA",
-      "northDeg": 150,
+      "northDeg": 60,
       "depths": [
         {
           "label": "Bakerloo Line Platforms",
@@ -605,7 +570,7 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Warwick Avenue table lists Bakerloo platforms at 16.2m; compass N is about 60° clockwise of drawing-up (150° on this image)."
+      "raw": "Warwick Avenue table lists Bakerloo platforms at 16.2m; compass N is about 60° clockwise of drawing-up (150° on this image). northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -632,14 +597,14 @@
             5
           ],
           "end": "south",
-          "bearingDeg": 13,
+          "bearingDeg": 77,
           "a": [
-            0.35,
-            0.725
+            0.32,
+            0.72
           ],
           "b": [
-            0.822,
-            0.838
+            0.78,
+            0.52
           ],
           "grid": "F7",
           "confidence": "high"
@@ -651,26 +616,26 @@
             6
           ],
           "end": "south",
-          "bearingDeg": 13,
+          "bearingDeg": 77,
           "a": [
-            0.368,
-            0.759
+            0.35,
+            0.76
           ],
           "b": [
-            0.84,
-            0.871
+            0.81,
+            0.56
           ],
-          "grid": "F7",
+          "grid": "F8",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Waterloo axonometric 1 table appears to list District and Circle at 33.0m (digit 1 vs 3 is uncertain); compass N points down on the drawing (270° on this image).",
+      "raw": "Waterloo axonometric 1: rose N towards bottom-left (215). Parallel Jubilee boxes share bearingDeg 77 (Westminster–Southwark). Depth table left as previously read.",
       "reference": {
         "label": "Colonnade Ticket Hall",
         "at": [
-          0.173,
-          0.388
+          0.22,
+          0.38
         ]
       },
       "note": "Printed table says District and Circle 33.0m on a Jubilee/Waterloo sheet (FOI template error). Compass is 270° on this PNG — omitted so it does not disagree with Waterloo sheets 2–3 (~75°).",
@@ -680,7 +645,7 @@
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 17,
       "stationId": "HUBWAT",
-      "northDeg": 75,
+      "northDeg": 330,
       "depths": [
         {
           "label": "Bakerloo Line Platforms (Northbound)",
@@ -706,14 +671,14 @@
             4
           ],
           "end": null,
-          "bearingDeg": 31,
+          "bearingDeg": 145,
           "a": [
-            0.291,
-            0.477
+            0.3,
+            0.5
           ],
           "b": [
-            0.527,
-            0.545
+            0.52,
+            0.72
           ],
           "grid": "E5",
           "confidence": "high"
@@ -725,14 +690,14 @@
             3
           ],
           "end": null,
-          "bearingDeg": 59,
+          "bearingDeg": 145,
           "a": [
-            0.291,
-            0.635
+            0.3,
+            0.62
           ],
           "b": [
-            0.527,
-            0.86
+            0.52,
+            0.84
           ],
           "grid": "E7",
           "confidence": "high"
@@ -744,16 +709,16 @@
             2
           ],
           "end": null,
-          "bearingDeg": 52,
+          "bearingDeg": 145,
           "a": [
-            0.291,
-            0.298
+            0.28,
+            0.28
           ],
           "b": [
-            0.468,
-            0.433
+            0.48,
+            0.42
           ],
-          "grid": "E4",
+          "grid": "E3",
           "confidence": "high"
         },
         {
@@ -763,26 +728,26 @@
             1
           ],
           "end": null,
-          "bearingDeg": 61,
+          "bearingDeg": 145,
           "a": [
-            0.409,
-            0.477
+            0.4,
+            0.45
           ],
           "b": [
-            0.586,
-            0.658
+            0.6,
+            0.59
           ],
           "grid": "H5",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Waterloo axonometric 2 table lists Bakerloo NB 19.5m, SB 16.4m, Northern 21.3m; compass tilt about 15° from drawing-up is a borderline guess (75° on this image).",
+      "raw": "Waterloo axonometric 2: rose N about 30° west of up (330). Bakerloo and Northern pairs share bearingDeg 145. Depths 19.5 / 16.4 / 21.3m.",
       "reference": {
         "label": "Shell Centre Ticket Hall",
         "at": [
-          0.173,
-          0.219
+          0.18,
+          0.22
         ]
       },
       "note": "Waterloo Bakerloo/Northern table is readable; compass ~75° on the PNG."
@@ -791,7 +756,7 @@
       "file": "3d bakerloo stations Redacted.pdf",
       "page": 18,
       "stationId": "HUBWAT",
-      "northDeg": 75,
+      "northDeg": 315,
       "depths": [
         {
           "label": "Waterloo & City Line",
@@ -808,26 +773,26 @@
             26
           ],
           "end": null,
-          "bearingDeg": 36,
+          "bearingDeg": 58,
           "a": [
-            0.291,
-            0.477
+            0.32,
+            0.48
           ],
           "b": [
-            0.468,
-            0.545
+            0.5,
+            0.58
           ],
           "grid": "F5",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Waterloo axonometric 3 table lists Waterloo & City Line at 12.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image).",
+      "raw": "Waterloo axonometric 3: rose N towards top-left (315). W&C platforms bearingDeg 58 (towards Bank). Depth 12.2m.",
       "reference": {
         "label": "LUL Main Ticket Hall",
         "at": [
-          0.232,
-          0.275
+          0.28,
+          0.28
         ]
       }
     },
@@ -835,7 +800,7 @@
       "file": "3d central line stations Redacted.pdf",
       "page": 1,
       "stationId": "HUBBAN",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -860,13 +825,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row."
+      "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 2,
       "stationId": "940GZZLUBLG",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -876,13 +841,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m."
+      "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 3,
       "stationId": "HUBBDS",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -897,13 +862,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Bond Street axonometric; N towards top-left; Central 22.2m and Jubilee 32.0m."
+      "raw": "Bond Street axonometric; N towards top-left; Central 22.2m and Jubilee 32.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 4,
       "stationId": "940GZZLUCHL",
-      "northDeg": 330,
+      "northDeg": 240,
       "depths": [
         {
           "label": "PLATFORM 1",
@@ -918,14 +883,14 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Chancery Lane axonometric; N about 11 o'clock; Platform 1 29.9m, Platform 2 22.2m.",
+      "raw": "Chancery Lane axonometric; N about 11 o'clock; Platform 1 29.9m, Platform 2 22.2m. northDeg migrated +270 for reading-pose raster.",
       "note": "Chancery Lane captions are platform numbers; both are Central line."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 5,
       "stationId": "940GZZLUGTH",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -935,13 +900,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m."
+      "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 6,
       "stationId": "940GZZLUHBN",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -961,14 +926,14 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Holborn axonometric; N towards top-right; Central 27.4m plus three Piccadilly rows and hostelry.",
+      "raw": "Holborn axonometric; N towards top-right; Central 27.4m plus three Piccadilly rows and hostelry. northDeg migrated +270 for reading-pose raster.",
       "note": "Dropped disused hostelry tunnel; kept Central and the two distinct Piccadilly depths."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 7,
       "stationId": "940GZZLUHPK",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -978,13 +943,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Holland Park axonometric; N towards top-left; Central platforms 18.3m."
+      "raw": "Holland Park axonometric; N towards top-left; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 8,
       "stationId": "940GZZLULGT",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -994,13 +959,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m."
+      "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 9,
       "stationId": "HUBLST",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
@@ -1020,13 +985,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Liverpool Street axonometric; N towards bottom-left; Circle & Metropolitan 7.6m, Central 15.8m."
+      "raw": "Liverpool Street axonometric; N towards bottom-left; Circle & Metropolitan 7.6m, Central 15.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 10,
       "stationId": "940GZZLUMBA",
-      "northDeg": 345,
+      "northDeg": 255,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -1036,13 +1001,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Marble Arch axonometric; N slightly left of up; Central platforms 26.2m."
+      "raw": "Marble Arch axonometric; N slightly left of up; Central platforms 26.2m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 11,
       "stationId": "940GZZLUMED",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
@@ -1062,13 +1027,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m."
+      "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 12,
       "stationId": "940GZZLUNHG",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1093,13 +1058,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Notting Hill Gate axonometric; N towards top-left; District/Circle 8.8m, Central WB 25.9m, EB 31.1m."
+      "raw": "Notting Hill Gate axonometric; N towards top-left; District/Circle 8.8m, Central WB 25.9m, EB 31.1m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 13,
       "stationId": "940GZZLUOXC",
-      "northDeg": 225,
+      "northDeg": 315,
       "depths": [
         {
           "label": "BAKERLOO LINE PLATFORMS",
@@ -1119,12 +1084,12 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Oxford Circus upper-levels axonometric; N towards bottom-left; Bakerloo/Victoria 23.1m, Central 24.6m. Upper-levels sheet: platform boxes not drawn; access labels only.",
+      "raw": "Oxford Circus upper-levels axonometric: rose N towards top-left (315). Platform boxes are context only; placement is on the platforms sheet. Depths 23.1 / 23.1 / 24.6m.",
       "reference": {
         "label": "Main Ticket Hall",
         "at": [
-          0.468,
-          0.163
+          0.52,
+          0.28
         ]
       }
     },
@@ -1132,7 +1097,7 @@
       "file": "3d central line stations Redacted.pdf",
       "page": 14,
       "stationId": "940GZZLUOXC",
-      "northDeg": 225,
+      "northDeg": 315,
       "depths": [
         {
           "label": "BAKERLOO LINE PLATFORMS",
@@ -1158,14 +1123,14 @@
             1
           ],
           "end": null,
-          "bearingDeg": 173,
+          "bearingDeg": 80,
           "a": [
-            0.114,
-            0.838
+            0.12,
+            0.84
           ],
           "b": [
-            0.291,
-            0.613
+            0.32,
+            0.62
           ],
           "grid": "B8",
           "confidence": "high"
@@ -1177,16 +1142,16 @@
             2
           ],
           "end": null,
-          "bearingDeg": 173,
+          "bearingDeg": 80,
           "a": [
-            0.132,
-            0.871
+            0.14,
+            0.88
           ],
           "b": [
-            0.309,
-            0.646
+            0.34,
+            0.66
           ],
-          "grid": "B8",
+          "grid": "B9",
           "confidence": "high"
         },
         {
@@ -1196,54 +1161,16 @@
             5
           ],
           "end": null,
-          "bearingDeg": 163,
+          "bearingDeg": 8,
           "a": [
-            0.527,
-            0.838
+            0.53,
+            0.8
           ],
           "b": [
-            0.704,
-            0.5
+            0.7,
+            0.48
           ],
           "grid": "I8",
-          "confidence": "high"
-        },
-        {
-          "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO REGENTS PARK",
-          "lineId": "bakerloo",
-          "platformNumbers": [
-            4
-          ],
-          "end": null,
-          "bearingDeg": 156,
-          "a": [
-            0.586,
-            0.838
-          ],
-          "b": [
-            0.763,
-            0.388
-          ],
-          "grid": "J8",
-          "confidence": "high"
-        },
-        {
-          "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO PICCADILLY CIRCUS",
-          "lineId": "bakerloo",
-          "platformNumbers": [
-            3
-          ],
-          "end": null,
-          "bearingDeg": 159,
-          "a": [
-            0.645,
-            0.725
-          ],
-          "b": [
-            0.822,
-            0.331
-          ],
-          "grid": "K7",
           "confidence": "high"
         },
         {
@@ -1253,27 +1180,65 @@
             6
           ],
           "end": null,
-          "bearingDeg": 156,
+          "bearingDeg": 8,
           "a": [
-            0.704,
-            0.725
+            0.7,
+            0.7
           ],
           "b": [
-            0.881,
-            0.275
+            0.87,
+            0.38
           ],
           "grid": "L7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO PICCADILLY CIRCUS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 148,
+          "a": [
+            0.58,
+            0.84
+          ],
+          "b": [
+            0.63,
+            0.48
+          ],
+          "grid": "J8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO REGENTS PARK",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 148,
+          "a": [
+            0.64,
+            0.74
+          ],
+          "b": [
+            0.69,
+            0.38
+          ],
+          "grid": "K7",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Oxford Circus platforms axonometric; N towards bottom-left; same depth table as the upper-levels sheet."
+      "raw": "Oxford Circus platforms sheet: rose N towards top-left (315). Central pair bearingDeg 80; Victoria pair 8; Bakerloo pair 148. Depths 23.1 / 23.1 / 24.6m."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 15,
       "stationId": "940GZZLUQWY",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -1283,13 +1248,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m."
+      "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 16,
       "stationId": "940GZZLURBG",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -1299,13 +1264,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Redbridge axonometric; N towards bottom-left; Central platforms 4.3m."
+      "raw": "Redbridge axonometric; N towards bottom-left; Central platforms 4.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 17,
       "stationId": "HUBSPB",
-      "northDeg": 330,
+      "northDeg": 240,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -1315,13 +1280,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Shepherd's Bush axonometric; N about 11 o'clock; Central platforms 18.3m."
+      "raw": "Shepherd's Bush axonometric; N about 11 o'clock; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 18,
       "stationId": "940GZZLUSPU",
-      "northDeg": 180,
+      "northDeg": 90,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORM 1",
@@ -1336,13 +1301,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "St Paul's axonometric; N points down; Platform 1 17.5m, Platform 2 22.2m."
+      "raw": "St Paul's axonometric; N points down; Platform 1 17.5m, Platform 2 22.2m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 19,
       "stationId": "HUBTCR",
-      "northDeg": 50,
+      "northDeg": 320,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -1357,13 +1322,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Tottenham Court Road axonometric; N towards top-right; Central 26.2m, Northern 29.8m."
+      "raw": "Tottenham Court Road axonometric; N towards top-right; Central 26.2m, Northern 29.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d central line stations Redacted.pdf",
       "page": 20,
       "stationId": "940GZZLUWSD",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "CENTRAL LINE PLATFORMS",
@@ -1373,13 +1338,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m."
+      "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 1,
       "stationId": "940GZZLUALD",
-      "northDeg": 60,
+      "northDeg": 315,
       "depths": [
         {
           "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
@@ -1400,16 +1365,16 @@
             1
           ],
           "end": "south",
-          "bearingDeg": 158,
+          "bearingDeg": 125,
           "a": [
-            0.232,
-            0.838
+            0.22,
+            0.72
           ],
           "b": [
-            0.586,
-            0.388
+            0.55,
+            0.38
           ],
-          "grid": "D8",
+          "grid": "D7",
           "confidence": "high"
         },
         {
@@ -1419,16 +1384,16 @@
             2
           ],
           "end": null,
-          "bearingDeg": 158,
+          "bearingDeg": 125,
           "a": [
-            0.267,
-            0.829
+            0.25,
+            0.7
           ],
           "b": [
-            0.621,
-            0.379
+            0.58,
+            0.36
           ],
-          "grid": "J4",
+          "grid": "E7",
           "confidence": "high"
         },
         {
@@ -1438,16 +1403,16 @@
             3
           ],
           "end": null,
-          "bearingDeg": 158,
+          "bearingDeg": 125,
           "a": [
-            0.302,
-            0.821
+            0.28,
+            0.68
           ],
           "b": [
-            0.656,
-            0.37
+            0.61,
+            0.34
           ],
-          "grid": "J4",
+          "grid": "F6",
           "confidence": "high"
         },
         {
@@ -1457,26 +1422,26 @@
             4
           ],
           "end": "north",
-          "bearingDeg": 158,
+          "bearingDeg": 125,
           "a": [
-            0.337,
-            0.812
+            0.31,
+            0.66
           ],
           "b": [
-            0.691,
-            0.362
+            0.64,
+            0.32
           ],
-          "grid": "J4",
+          "grid": "F6",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Aldgate rose N at 60°; Circle & Metropolitan platforms 7.0m.",
+      "raw": "Aldgate reading pose: rose N towards top-left (315). Four parallel boxes share bearingDeg 125 (northbound to Liverpool Street). Depth 7.0m.",
       "reference": {
         "label": "Ticket Hall",
         "at": [
-          0.291,
-          0.5
+          0.32,
+          0.48
         ]
       }
     },
@@ -1484,7 +1449,7 @@
       "file": "3d circle stations Redacted.pdf",
       "page": 2,
       "stationId": "940GZZLUBBN",
-      "northDeg": 75,
+      "northDeg": 345,
       "depths": [
         {
           "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
@@ -1504,14 +1469,14 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Barbican rose N at 75°; Circle & Met and Railtrack Thameslink both 8.5m.",
+      "raw": "Barbican rose N at 75°; Circle & Met and Railtrack Thameslink both 8.5m. northDeg migrated +270 for reading-pose raster.",
       "note": "Barbican Railtrack Thameslink mapped to national-rail."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 3,
       "stationId": "940GZZLUBWT",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1526,13 +1491,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Bayswater rose N at 90°; District and Circle platforms 5.0m."
+      "raw": "Bayswater rose N at 90°; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 4,
       "stationId": "HUBCST",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1547,13 +1512,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Cannon Street rose N at 90°; District and Circle platforms 6.0m."
+      "raw": "Cannon Street rose N at 90°; District and Circle platforms 6.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 5,
       "stationId": "940GZZLUERC",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [
         {
           "label": "CIRCLE & HAMMERSMITH LINE PLATFORMS",
@@ -1568,13 +1533,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Edgware Road rose N at 135°; Circle & Hammersmith platforms 5.1m."
+      "raw": "Edgware Road rose N at 135°; Circle & Hammersmith platforms 5.1m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 6,
       "stationId": "940GZZLUESQ",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
@@ -1589,13 +1554,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Euston Square rose N at 90°; Circle & Metropolitan platforms 7.3m."
+      "raw": "Euston Square rose N at 90°; Circle & Metropolitan platforms 7.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 7,
       "stationId": "HUBZFD",
-      "northDeg": 270,
+      "northDeg": 180,
       "depths": [
         {
           "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
@@ -1620,14 +1585,14 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Farringdon rose N at 270°; Met/Circle/H&C 4.3m, First Capital Connect 5.6m.",
+      "raw": "Farringdon rose N at 270°; Met/Circle/H&C 4.3m, First Capital Connect 5.6m. northDeg migrated +270 for reading-pose raster.",
       "note": "Farringdon First Capital Connect mapped to national-rail."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 8,
       "stationId": "940GZZLUGTR",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1647,13 +1612,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Gloucester Road rose N at 45°; District & Circle 7.0m, Piccadilly 20.0m."
+      "raw": "Gloucester Road rose N at 45°; District & Circle 7.0m, Piccadilly 20.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 9,
       "stationId": "940GZZLUGPS",
-      "northDeg": 60,
+      "northDeg": 330,
       "depths": [
         {
           "label": "CIRCLE / H & C / MET PLATFORMS",
@@ -1673,13 +1638,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Great Portland Street rose N at 60°; Circle/H&C/Met platforms 6.5m."
+      "raw": "Great Portland Street rose N at 60°; Circle/H&C/Met platforms 6.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 10,
       "stationId": "940GZZLUHSK",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1694,13 +1659,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "High Street Kensington rose N at 45°; District and Circle platforms 4.3m."
+      "raw": "High Street Kensington rose N at 45°; District and Circle platforms 4.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 11,
       "stationId": "HUBKGX",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [
         {
           "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
@@ -1730,18 +1695,18 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "King's Cross rose N at 135°; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m.",
+      "raw": "King's Cross rose N at 135°; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m. northDeg migrated +270 for reading-pose raster.",
       "note": "Dropped ticket-hall row (not a platform line)."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 12,
       "stationId": "HUBKGX",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [],
       "platforms": [],
       "confidence": "high",
-      "raw": "King's Cross axonometric 2; N towards bottom-right; no printed depth table.",
+      "raw": "King's Cross axonometric 2; N towards bottom-right; no printed depth table. northDeg migrated +270 for reading-pose raster.",
       "note": "King's Cross sheet 2 has no printed depth table.",
       "reviewed": true
     },
@@ -1749,7 +1714,7 @@
       "file": "3d circle stations Redacted.pdf",
       "page": 13,
       "stationId": "940GZZLUMSH",
-      "northDeg": 150,
+      "northDeg": 60,
       "depths": [
         {
           "label": "DISTRICT LINE PLATFORMS",
@@ -1759,17 +1724,17 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Mansion House axonometric; N about 5 o'clock; District platforms 7.3m."
+      "raw": "Mansion House axonometric; N about 5 o'clock; District platforms 7.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 14,
       "stationId": "HUBZMG",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [],
       "platforms": [],
       "confidence": "high",
-      "raw": "Moorgate axonometric; N towards top-right; no printed depth table.",
+      "raw": "Moorgate axonometric; N towards top-right; no printed depth table. northDeg migrated +270 for reading-pose raster.",
       "note": "Moorgate sheet has no printed depth table.",
       "reviewed": true
     },
@@ -1777,7 +1742,7 @@
       "file": "3d circle stations Redacted.pdf",
       "page": 15,
       "stationId": "940GZZLUSSQ",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1792,13 +1757,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Sloane Square axonometric; N towards the right; District and Circle platforms 7.75m."
+      "raw": "Sloane Square axonometric; N towards the right; District and Circle platforms 7.75m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 16,
       "stationId": "940GZZLUSKS",
-      "northDeg": 110,
+      "northDeg": 20,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1823,13 +1788,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "South Kensington axonometric; N about 4 o'clock; District/Circle 8.2m, Piccadilly EB 18.9m, WB 24.3m."
+      "raw": "South Kensington axonometric; N about 4 o'clock; District/Circle 8.2m, Piccadilly EB 18.9m, WB 24.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 17,
       "stationId": "940GZZLUSJP",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1844,13 +1809,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "St James's Park axonometric; N towards the right; District and Circle platforms 5.8m."
+      "raw": "St James's Park axonometric; N towards the right; District and Circle platforms 5.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 18,
       "stationId": "940GZZLUTMP",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1865,13 +1830,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Temple axonometric; N towards the right; District and Circle platforms 3.5m."
+      "raw": "Temple axonometric; N towards the right; District and Circle platforms 3.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 19,
       "stationId": "940GZZLUTWH",
-      "northDeg": 120,
+      "northDeg": 30,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1886,13 +1851,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m."
+      "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 20,
       "stationId": "HUBVIC",
-      "northDeg": 150,
+      "northDeg": 60,
       "depths": [
         {
           "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -1912,13 +1877,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Victoria axonometric; N about 5 o'clock; District/Circle 6.4m, Victoria 17.9m."
+      "raw": "Victoria axonometric; N about 5 o'clock; District/Circle 6.4m, Victoria 17.9m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d circle stations Redacted.pdf",
       "page": 21,
       "stationId": "HUBWSM",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -1928,13 +1893,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only."
+      "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d district stations Redacted.pdf",
       "page": 1,
       "stationId": "940GZZLUADE",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
@@ -1949,13 +1914,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Aldgate East: N points top-left; table lists District & Metropolitan platforms at 8.2m."
+      "raw": "Aldgate East: N points top-left; table lists District & Metropolitan platforms at 8.2m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d district stations Redacted.pdf",
       "page": 2,
       "stationId": "940GZZLUBWR",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
@@ -1970,14 +1935,14 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Bow Road: N top-left; depth table present but metres poorly printed (read as 7.0m).",
+      "raw": "Bow Road: N top-left; depth table present but metres poorly printed (read as 7.0m). northDeg migrated +270 for reading-pose raster.",
       "note": "Bow Road table reads District & Metropolitan 7.0m."
     },
     {
       "file": "3d district stations Redacted.pdf",
       "page": 3,
       "stationId": "940GZZLUECT",
-      "northDeg": 180,
+      "northDeg": 0,
       "depths": [
         {
           "label": "DISTRICT LINE PLATFORMS",
@@ -2001,14 +1966,14 @@
           "end": "east",
           "bearingDeg": 70,
           "a": [
-            0.719,
-            0.41
+            0.28,
+            0.5
           ],
           "b": [
-            0.387,
-            0.53
+            0.62,
+            0.3
           ],
-          "grid": "G2",
+          "grid": "E5",
           "confidence": "high"
         },
         {
@@ -2021,14 +1986,14 @@
           "end": null,
           "bearingDeg": 70,
           "a": [
-            0.829,
-            0.47
+            0.35,
+            0.57
           ],
           "b": [
-            0.497,
-            0.59
+            0.69,
+            0.37
           ],
-          "grid": "H3",
+          "grid": "F6",
           "confidence": "high"
         },
         {
@@ -2041,24 +2006,24 @@
           "end": null,
           "bearingDeg": 70,
           "a": [
-            0.94,
-            0.53
+            0.42,
+            0.64
           ],
           "b": [
-            0.608,
-            0.65
+            0.76,
+            0.44
           ],
-          "grid": "I4",
+          "grid": "G7",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Earl's Court: rose has N down / S up; District 4.8m and Piccadilly 19.8m.",
+      "raw": "Earl's Court reading pose: rose N up (0). Parallel District and Piccadilly boxes share bearingDeg 70. Depths 4.8m / 19.8m.",
       "reference": {
         "label": "Earl's Court Road Ticket Hall",
         "at": [
-          0.11,
-          0.53
+          0.65,
+          0.2
         ]
       }
     },
@@ -2066,7 +2031,7 @@
       "file": "3d district stations Redacted.pdf",
       "page": 4,
       "stationId": "940GZZLUFBY",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "DISTRICT LINE PLATFORMS",
@@ -2076,13 +2041,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box."
+      "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d district stations Redacted.pdf",
       "page": 5,
       "stationId": "940GZZLUSGN",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
@@ -2097,13 +2062,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m."
+      "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d district stations Redacted.pdf",
       "page": 6,
       "stationId": "HUBZWL",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
@@ -2123,13 +2088,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Whitechapel: N points top-right; District & Metropolitan 3.1m, East London Line 7.8m."
+      "raw": "Whitechapel: N points top-right; District & Metropolitan 3.1m, East London Line 7.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
       "page": 1,
       "stationId": "940GZZLUBMY",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -2139,13 +2104,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m."
+      "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
       "page": 2,
       "stationId": "HUBZCW",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -2160,13 +2125,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Canada Water: N points bottom-left; Jubilee 15.0m, East London Line 8.0m."
+      "raw": "Canada Water: N points bottom-left; Jubilee 15.0m, East London Line 8.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
       "page": 3,
       "stationId": "HUBCAW",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -2176,13 +2141,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Canary Wharf: N points bottom-left; Jubilee platforms 23.0m."
+      "raw": "Canary Wharf: N points bottom-left; Jubilee platforms 23.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
       "page": 4,
       "stationId": "940GZZLUGPK",
-      "northDeg": 330,
+      "northDeg": 315,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -2208,14 +2173,14 @@
             2
           ],
           "end": null,
-          "bearingDeg": 164,
+          "bearingDeg": 60,
           "a": [
-            0.173,
-            0.163
+            0.22,
+            0.22
           ],
           "b": [
-            0.409,
-            0.388
+            0.48,
+            0.42
           ],
           "grid": "C2",
           "confidence": "high"
@@ -2227,16 +2192,16 @@
             1
           ],
           "end": null,
-          "bearingDeg": 164,
+          "bearingDeg": 60,
           "a": [
-            0.191,
-            0.208
+            0.24,
+            0.26
           ],
           "b": [
-            0.427,
-            0.433
+            0.5,
+            0.46
           ],
-          "grid": "C2",
+          "grid": "C3",
           "confidence": "high"
         },
         {
@@ -2246,16 +2211,16 @@
             3
           ],
           "end": null,
-          "bearingDeg": 68,
+          "bearingDeg": 4,
           "a": [
-            0.055,
-            0.838
+            0.08,
+            0.78
           ],
           "b": [
-            0.232,
-            0.613
+            0.28,
+            0.55
           ],
-          "grid": "A8",
+          "grid": "B8",
           "confidence": "high"
         },
         {
@@ -2265,16 +2230,16 @@
             4
           ],
           "end": null,
-          "bearingDeg": 68,
+          "bearingDeg": 4,
           "a": [
-            0.073,
-            0.871
+            0.1,
+            0.82
           ],
           "b": [
-            0.25,
-            0.646
+            0.3,
+            0.59
           ],
-          "grid": "A8",
+          "grid": "B8",
           "confidence": "high"
         },
         {
@@ -2284,16 +2249,16 @@
             5
           ],
           "end": null,
-          "bearingDeg": 9,
+          "bearingDeg": 135,
           "a": [
-            0.409,
-            0.5
+            0.42,
+            0.55
           ],
           "b": [
-            0.586,
-            0.95
+            0.62,
+            0.78
           ],
-          "grid": "G5",
+          "grid": "G6",
           "confidence": "high"
         },
         {
@@ -2303,26 +2268,26 @@
             6
           ],
           "end": null,
-          "bearingDeg": 9,
+          "bearingDeg": 135,
           "a": [
-            0.433,
-            0.523
+            0.45,
+            0.58
           ],
           "b": [
-            0.61,
-            0.973
+            0.65,
+            0.81
           ],
-          "grid": "G5",
+          "grid": "G6",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Green Park: N about 30° west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m.",
+      "raw": "Green Park reading pose: rose N towards top-left (315). Parallel pairs: Piccadilly 60, Victoria 4, Jubilee 135. Depths 23.4 / 27.4 / 31.1m.",
       "reference": {
         "label": "Ticket Hall",
         "at": [
-          0.055,
-          0.388
+          0.18,
+          0.18
         ]
       }
     },
@@ -2330,7 +2295,7 @@
       "file": "3d jubilee stations Redacted.pdf",
       "page": 5,
       "stationId": "HUBLBG",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -2345,7 +2310,7 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m."
+      "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2355,7 +2320,7 @@
       "depths": [],
       "platforms": [],
       "confidence": "high",
-      "raw": "North Greenwich: N points down-right; depth table missing or redacted.",
+      "raw": "North Greenwich: N points down-right; depth table missing or redacted. northDeg migrated +270 for reading-pose raster.",
       "note": "North Greenwich has no metre table (levels only; some labels redacted). Compass N ~135° on the PNG.",
       "reviewed": true
     },
@@ -2363,7 +2328,7 @@
       "file": "3d jubilee stations Redacted.pdf",
       "page": 7,
       "stationId": "940GZZLUSJW",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -2373,13 +2338,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m."
+      "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
       "page": 8,
       "stationId": "940GZZLUSWK",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -2389,13 +2354,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Southwark: N points bottom-left; table prints Jubilee platforms 24m approx."
+      "raw": "Southwark: N points bottom-left; table prints Jubilee platforms 24m approx. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
       "page": 9,
       "stationId": "940GZZLUSWC",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "JUBILEE LINE PLATFORMS",
@@ -2405,13 +2370,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Swiss Cottage: N points top-left; Jubilee platforms 13.7m."
+      "raw": "Swiss Cottage: N points top-left; Jubilee platforms 13.7m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 1,
       "stationId": "940GZZLUAGL",
-      "northDeg": 90,
+      "northDeg": 315,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2423,16 +2388,18 @@
         {
           "caption": "SOUTHBOUND PLATFORM TO OLD STREET",
           "lineId": "northern",
-          "platformNumbers": [],
+          "platformNumbers": [
+            1
+          ],
           "end": null,
-          "bearingDeg": 136,
+          "bearingDeg": 100,
           "a": [
-            0.586,
-            0.613
+            0.58,
+            0.58
           ],
           "b": [
-            0.822,
-            0.388
+            0.82,
+            0.38
           ],
           "grid": "J6",
           "confidence": "high"
@@ -2444,26 +2411,26 @@
             2
           ],
           "end": null,
-          "bearingDeg": 131,
+          "bearingDeg": 100,
           "a": [
-            0.645,
-            0.725
+            0.64,
+            0.68
           ],
           "b": [
-            0.94,
-            0.388
+            0.88,
+            0.48
           ],
           "grid": "K7",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Angel axonometric: N points right (90°) on the portrait raster; Northern Line platforms 27.4m.",
+      "raw": "Angel reading pose: rose N towards top-left (315). Parallel Northern boxes share bearingDeg 100. Depth 27.4m.",
       "reference": {
         "label": "Ticket Hall",
         "at": [
-          0.173,
-          0.163
+          0.12,
+          0.4
         ]
       }
     },
@@ -2471,7 +2438,7 @@
       "file": "3d northern line stations Redacted.pdf",
       "page": 2,
       "stationId": "940GZZLUACY",
-      "northDeg": 60,
+      "northDeg": 330,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2481,13 +2448,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Archway axonometric: N about 60° on the portrait raster; Northern Line platforms 19.8m."
+      "raw": "Archway axonometric: N about 60° on the portrait raster; Northern Line platforms 19.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 3,
       "stationId": "HUBBAL",
-      "northDeg": 195,
+      "northDeg": 105,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2497,13 +2464,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Balham axonometric: N about 195° on the portrait raster; Northern Line platforms 13.4m."
+      "raw": "Balham axonometric: N about 195° on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 4,
       "stationId": "940GZZLUBZP",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2513,13 +2480,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Belsize Park axonometric: N about 45° on the portrait raster; Northern Line platforms 31.0m."
+      "raw": "Belsize Park axonometric: N about 45° on the portrait raster; Northern Line platforms 31.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 5,
       "stationId": "940GZZLUBOR",
-      "northDeg": 110,
+      "northDeg": 20,
       "depths": [
         {
           "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
@@ -2534,13 +2501,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Borough axonometric: N about 110° on the portrait raster; SB 17.0m, NB 19.5m."
+      "raw": "Borough axonometric: N about 110° on the portrait raster; SB 17.0m, NB 19.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 6,
       "stationId": "940GZZLUCTN",
-      "northDeg": 230,
+      "northDeg": 140,
       "depths": [
         {
           "label": "NORTHERN LINE (NORTHBOUND) PLATFORMS",
@@ -2555,13 +2522,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Camden Town axonometric: N about 230° on the portrait raster; NB 14.6m, SB 18.3m."
+      "raw": "Camden Town axonometric: N about 230° on the portrait raster; NB 14.6m, SB 18.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 7,
       "stationId": "940GZZLUCFM",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2571,13 +2538,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Chalk Farm axonometric: N points right (90°) on the portrait raster; Northern Line platforms 17.3m."
+      "raw": "Chalk Farm axonometric: N points right (90°) on the portrait raster; Northern Line platforms 17.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 8,
       "stationId": "940GZZLUCPC",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2587,13 +2554,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Clapham Common axonometric: N about 135° on the portrait raster; Northern Line platforms 20.1m."
+      "raw": "Clapham Common axonometric: N about 135° on the portrait raster; Northern Line platforms 20.1m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 9,
       "stationId": "940GZZLUCPN",
-      "northDeg": 340,
+      "northDeg": 250,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2603,13 +2570,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Clapham North axonometric: N about 340° on the portrait raster; Northern Line platforms 15.5m."
+      "raw": "Clapham North axonometric: N about 340° on the portrait raster; Northern Line platforms 15.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 10,
       "stationId": "940GZZLUCPS",
-      "northDeg": 110,
+      "northDeg": 20,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2619,13 +2586,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Clapham South axonometric: N about 110° on the portrait raster; Northern Line platforms 17.7m."
+      "raw": "Clapham South axonometric: N about 110° on the portrait raster; Northern Line platforms 17.7m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 11,
       "stationId": "940GZZLUCSD",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2635,13 +2602,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Colliers Wood axonometric: N about 315° on the portrait raster; Northern Line platforms 13.4m."
+      "raw": "Colliers Wood axonometric: N about 315° on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 12,
       "stationId": "HUBEUS",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "NORTHERN LINE (CHARING CROSS BRANCH) PLATFORMS",
@@ -2661,13 +2628,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Euston axonometric: N points right (90°) on the portrait raster; CX 20.4m, City 29.8m, Victoria 29.8m."
+      "raw": "Euston axonometric: N points right (90°) on the portrait raster; CX 20.4m, City 29.8m, Victoria 29.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 13,
       "stationId": "940GZZLUGDG",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2677,13 +2644,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Goodge Street axonometric: N points right (90°) on the portrait raster; Northern Line platforms 28.5m."
+      "raw": "Goodge Street axonometric: N points right (90°) on the portrait raster; Northern Line platforms 28.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 14,
       "stationId": "940GZZLUHTD",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2693,13 +2660,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Hampstead axonometric; north ~45° (top-right); Northern Line platforms 58.5m."
+      "raw": "Hampstead axonometric; north ~45° (top-right); Northern Line platforms 58.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 15,
       "stationId": "940GZZLUHGT",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2709,13 +2676,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Highgate axonometric; north ~315° (top-left); Northern Line platforms 42.0m."
+      "raw": "Highgate axonometric; north ~315° (top-left); Northern Line platforms 42.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 16,
       "stationId": "940GZZLUKNG",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [
         {
           "label": "NORTHERN LINE (NORTH BOUND)",
@@ -2730,13 +2697,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Kennington axonometric; north ~135° (bottom-right); NB 17.0m, SB 18.8m."
+      "raw": "Kennington axonometric; north ~135° (bottom-right); NB 17.0m, SB 18.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 17,
       "stationId": "HUBKTN",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
@@ -2751,13 +2718,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Kentish Town axonometric; north ~225° (bottom-left); SB 23.8m, NB 20.4m."
+      "raw": "Kentish Town axonometric; north ~225° (bottom-left); SB 23.8m, NB 20.4m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 18,
       "stationId": "940GZZLULSQ",
-      "northDeg": 215,
+      "northDeg": 125,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2772,13 +2739,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Leicester Square axonometric; north ~215°; Northern 27.4m, Piccadilly 32.3m."
+      "raw": "Leicester Square axonometric; north ~215°; Northern 27.4m, Piccadilly 32.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 19,
       "stationId": "HUBOLD",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORM",
@@ -2788,13 +2755,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Old Street axonometric; north ~45° (top-right); Northern Line platform 15.5m."
+      "raw": "Old Street axonometric; north ~45° (top-right); Northern Line platform 15.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 20,
       "stationId": "940GZZLUOVL",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "NORTHERN LINE NORTHBOUND PLATFORM",
@@ -2809,13 +2776,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Oval axonometric; north ~315° (top-left); NB 14.3m, SB 17.7m."
+      "raw": "Oval axonometric; north ~315° (top-left); NB 14.3m, SB 17.7m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 21,
       "stationId": "940GZZLUSWN",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2825,13 +2792,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "South Wimbledon axonometric; north ~315° (top-left); Northern Line platforms 12.5m."
+      "raw": "South Wimbledon axonometric; north ~315° (top-left); Northern Line platforms 12.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 22,
       "stationId": "940GZZLUSKW",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2846,13 +2813,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Stockwell axonometric; north ~315° (top-left); Northern and Victoria both 14.6m."
+      "raw": "Stockwell axonometric; north ~315° (top-left); Northern and Victoria both 14.6m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 23,
       "stationId": "940GZZLUTBC",
-      "northDeg": 30,
+      "northDeg": 300,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2862,13 +2829,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Tooting Bec axonometric; north ~30° (top-right); Northern Line platforms 15.9m."
+      "raw": "Tooting Bec axonometric; north ~30° (top-right); Northern Line platforms 15.9m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 24,
       "stationId": "940GZZLUTBY",
-      "northDeg": 225,
+      "northDeg": 135,
       "depths": [
         {
           "label": "NORTHERN LINE PLATFORMS",
@@ -2878,13 +2845,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Tooting Broadway axonometric; north ~225° (bottom-left); Northern Line platforms 12.5m."
+      "raw": "Tooting Broadway axonometric; north ~225° (bottom-left); Northern Line platforms 12.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 25,
       "stationId": "940GZZLUTFP",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [
         {
           "label": "NORTHERN LINE NORTHBOUND PLATFORM",
@@ -2899,13 +2866,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Tufnell Park axonometric; north ~135° (bottom-right); NB 22.0m, SB 25.0m."
+      "raw": "Tufnell Park axonometric; north ~135° (bottom-right); NB 22.0m, SB 25.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d northern line stations Redacted.pdf",
       "page": 26,
       "stationId": "940GZZLUWRR",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -2920,13 +2887,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Warren Street axonometric; north ~315° (top-left); Victoria 22.2m, Northern 25.6m."
+      "raw": "Warren Street axonometric; north ~315° (top-left); Victoria 22.2m, Northern 25.6m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 1,
       "stationId": "940GZZLUASL",
-      "northDeg": 0,
+      "northDeg": 270,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -2936,13 +2903,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Arsenal: N at top; Piccadilly platforms 18.3m."
+      "raw": "Arsenal: N at top; Piccadilly platforms 18.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 2,
       "stationId": "940GZZLUCAR",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -2952,13 +2919,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Caledonian Road: N bottom-right; Piccadilly platforms 20.7m."
+      "raw": "Caledonian Road: N bottom-right; Piccadilly platforms 20.7m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 3,
       "stationId": "940GZZLUBDS",
-      "northDeg": 30,
+      "northDeg": 300,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -2968,13 +2935,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Bounds Green: N about 30°; Piccadilly platforms 16.5m."
+      "raw": "Bounds Green: N about 30°; Piccadilly platforms 16.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 4,
       "stationId": "940GZZLUCGN",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -2990,14 +2957,14 @@
             1
           ],
           "end": null,
-          "bearingDeg": 125,
+          "bearingDeg": 42,
           "a": [
-            0.232,
-            0.894
+            0.22,
+            0.78
           ],
           "b": [
-            0.468,
-            0.556
+            0.48,
+            0.52
           ],
           "grid": "D8",
           "confidence": "high"
@@ -3009,26 +2976,26 @@
             2
           ],
           "end": null,
-          "bearingDeg": 124,
+          "bearingDeg": 42,
           "a": [
-            0.262,
-            0.86
+            0.25,
+            0.74
           ],
           "b": [
-            0.486,
-            0.523
+            0.51,
+            0.48
           ],
           "grid": "D8",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m.",
+      "raw": "Covent Garden reading pose: rose N up (0). Parallel Piccadilly boxes share bearingDeg 42. Depth 36.0m.",
       "reference": {
         "label": "Ticket Hall",
         "at": [
-          0.409,
-          0.444
+          0.42,
+          0.4
         ]
       }
     },
@@ -3036,7 +3003,7 @@
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 5,
       "stationId": "HUBFPK",
-      "northDeg": 0,
+      "northDeg": 270,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3046,13 +3013,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Finsbury Park: N at top; table lists only Piccadilly platforms 7.3m."
+      "raw": "Finsbury Park: N at top; table lists only Piccadilly platforms 7.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 6,
       "stationId": "940GZZLUHNX",
-      "northDeg": 135,
+      "northDeg": 45,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3062,13 +3029,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m."
+      "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 7,
       "stationId": "HUBH13",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3078,13 +3045,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Heathrow 1,2,3: N top-right; Piccadilly platforms 14m."
+      "raw": "Heathrow 1,2,3: N top-right; Piccadilly platforms 14m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 8,
       "stationId": "HUBHX4",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "PICCADILLY LINE",
@@ -3094,13 +3061,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Heathrow Terminal 4: N top-right; table row Piccadilly Line 8m."
+      "raw": "Heathrow Terminal 4: N top-right; table row Piccadilly Line 8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 9,
       "stationId": "940GZZLUHWY",
-      "northDeg": 20,
+      "northDeg": 290,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3110,13 +3077,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Holloway Road: N about 20°; Piccadilly platforms 18.3m."
+      "raw": "Holloway Road: N about 20°; Piccadilly platforms 18.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 10,
       "stationId": "940GZZLUHWT",
-      "northDeg": 145,
+      "northDeg": 55,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3126,13 +3093,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Hounslow West: N about 145°; Piccadilly platforms 4.9m."
+      "raw": "Hounslow West: N about 145°; Piccadilly platforms 4.9m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 11,
       "stationId": "940GZZLUHPC",
-      "northDeg": 270,
+      "northDeg": 180,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3142,13 +3109,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Hyde Park Corner: N to the left; Piccadilly platforms 21.0m."
+      "raw": "Hyde Park Corner: N to the left; Piccadilly platforms 21.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 12,
       "stationId": "940GZZLUKNB",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3158,13 +3125,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Knightsbridge: N to the right; Piccadilly platforms 22.0m."
+      "raw": "Knightsbridge: N to the right; Piccadilly platforms 22.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 13,
       "stationId": "940GZZLUMRH",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3174,13 +3141,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Manor House: N to the right; Piccadilly platforms 7.3m."
+      "raw": "Manor House: N to the right; Piccadilly platforms 7.3m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 14,
       "stationId": "940GZZLURSQ",
-      "northDeg": 0,
+      "northDeg": 270,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3190,13 +3157,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Russell Square: N at top; Piccadilly platforms 33.0m."
+      "raw": "Russell Square: N at top; Piccadilly platforms 33.0m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 15,
       "stationId": "940GZZLUSGT",
-      "northDeg": 60,
+      "northDeg": 330,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3206,13 +3173,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Southgate: N about 60°; Piccadilly platforms 12.8m."
+      "raw": "Southgate: N about 60°; Piccadilly platforms 12.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 16,
       "stationId": "940GZZLUTPN",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3222,13 +3189,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Turnpike Lane: N top-right; Piccadilly platforms 15.2m."
+      "raw": "Turnpike Lane: N top-right; Piccadilly platforms 15.2m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
       "page": 17,
       "stationId": "940GZZLUWOG",
-      "northDeg": 45,
+      "northDeg": 315,
       "depths": [
         {
           "label": "PICCADILLY LINE PLATFORMS",
@@ -3238,13 +3205,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Wood Green: N top-right; Piccadilly platforms 12.8m."
+      "raw": "Wood Green: N top-right; Piccadilly platforms 12.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
       "page": 1,
       "stationId": "HUBBHO",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -3254,13 +3221,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Blackhorse Road: N points top-left; Victoria platforms 16.8m."
+      "raw": "Blackhorse Road: N points top-left; Victoria platforms 16.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
       "page": 2,
       "stationId": "HUBBRX",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -3270,13 +3237,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Brixton: N points top-left; Victoria platforms 17.6m."
+      "raw": "Brixton: N points top-left; Victoria platforms 17.6m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
       "page": 3,
       "stationId": "HUBHHY",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "VICTORIA & RAILTRACK LINE PLATFORMS",
@@ -3286,13 +3253,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Highbury & Islington: N points top-left; Victoria & Railtrack platforms 17.7m."
+      "raw": "Highbury & Islington: N points top-left; Victoria & Railtrack platforms 17.7m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
       "page": 4,
       "stationId": "940GZZLUPCO",
-      "northDeg": 90,
+      "northDeg": 0,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -3307,17 +3274,17 @@
           "platformNumbers": [
             2
           ],
-          "end": "west",
-          "bearingDeg": 12,
+          "end": null,
+          "bearingDeg": 80,
           "a": [
-            0.221,
-            0.23
+            0.17,
+            0.625
           ],
           "b": [
-            0.497,
-            0.29
+            0.5,
+            0.695
           ],
-          "grid": "7.5D",
+          "grid": "D6",
           "confidence": "high"
         },
         {
@@ -3326,27 +3293,27 @@
           "platformNumbers": [
             1
           ],
-          "end": "east",
-          "bearingDeg": 23,
+          "end": null,
+          "bearingDeg": 80,
           "a": [
-            0.221,
-            0.29
+            0.17,
+            0.705
           ],
           "b": [
-            0.497,
-            0.41
+            0.5,
+            0.775
           ],
-          "grid": "5H",
+          "grid": "D7",
           "confidence": "high"
         }
       ],
       "confidence": "high",
-      "raw": "Pimlico: N points right; Victoria platforms 22.5m.",
+      "raw": "Pimlico reading pose: rose N up (0). Parallel Victoria platforms share bearingDeg 80; corresponding long-axis ends give matching b-a. Depth 22.5m.",
       "reference": {
         "label": "Ticket Hall",
         "at": [
-          0.553,
-          0.59
+          0.68,
+          0.48
         ]
       }
     },
@@ -3354,7 +3321,7 @@
       "file": "3d victoria line stations Redacted.pdf",
       "page": 5,
       "stationId": "HUBSVS",
-      "northDeg": 0,
+      "northDeg": 270,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -3364,13 +3331,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Seven Sisters: N points up; Victoria platforms 18.6m."
+      "raw": "Seven Sisters: N points up; Victoria platforms 18.6m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
       "page": 6,
       "stationId": "HUBTOM",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -3380,13 +3347,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Tottenham Hale: N points top-left; Victoria platforms 16.8m."
+      "raw": "Tottenham Hale: N points top-left; Victoria platforms 16.8m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
       "page": 7,
       "stationId": "HUBVXH",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -3396,13 +3363,13 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Vauxhall: N points top-left; Victoria platforms 17.5m."
+      "raw": "Vauxhall: N points top-left; Victoria platforms 17.5m. northDeg migrated +270 for reading-pose raster."
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
       "page": 8,
       "stationId": "HUBWHC",
-      "northDeg": 315,
+      "northDeg": 225,
       "depths": [
         {
           "label": "VICTORIA LINE PLATFORMS",
@@ -3412,7 +3379,7 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Walthamstow Central: N points top-left; Victoria platforms 16.5m."
+      "raw": "Walthamstow Central: N points top-left; Victoria platforms 16.5m. northDeg migrated +270 for reading-pose raster."
     }
   ]
 }

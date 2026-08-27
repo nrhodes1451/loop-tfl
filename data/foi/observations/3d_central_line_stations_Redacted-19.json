@@ -1,9 +1,15 @@
 {
-  "northDeg": 50,
+  "northDeg": 320,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 26.2},
-    {"label": "NORTHERN LINE PLATFORMS", "metres": 29.8}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 26.2
+    },
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 29.8
+    }
   ],
   "confidence": "high",
-  "raw": "Tottenham Court Road axonometric; N towards top-right; Central 26.2m, Northern 29.8m."
+  "raw": "Tottenham Court Road axonometric; N towards top-right; Central 26.2m, Northern 29.8m. northDeg migrated +270 for reading-pose raster."
 }

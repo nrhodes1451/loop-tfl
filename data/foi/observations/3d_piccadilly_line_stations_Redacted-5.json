@@ -1,6 +1,11 @@
 {
-  "northDeg": 0,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 7.3 }],
+  "northDeg": 270,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 7.3
+    }
+  ],
   "confidence": "high",
-  "raw": "Finsbury Park: N at top; table lists only Piccadilly platforms 7.3m."
+  "raw": "Finsbury Park: N at top; table lists only Piccadilly platforms 7.3m. northDeg migrated +270 for reading-pose raster."
 }

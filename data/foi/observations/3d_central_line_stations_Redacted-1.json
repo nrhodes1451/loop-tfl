@@ -1,11 +1,23 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 20.7},
-    {"label": "DISTRICT LINE PLATFORMS", "metres": 8.2},
-    {"label": "DOCKLANDS PLATFORMS", "metres": 41.4},
-    {"label": "NORTHERN LINE PLATFORMS", "metres": 30.5}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 20.7
+    },
+    {
+      "label": "DISTRICT LINE PLATFORMS",
+      "metres": 8.2
+    },
+    {
+      "label": "DOCKLANDS PLATFORMS",
+      "metres": 41.4
+    },
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 30.5
+    }
   ],
   "confidence": "high",
-  "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row."
+  "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row. northDeg migrated +270 for reading-pose raster."
 }

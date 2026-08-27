@@ -1,8 +1,11 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 12.8}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 12.8
+    }
   ],
   "confidence": "high",
-  "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m."
+  "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m. northDeg migrated +270 for reading-pose raster."
 }

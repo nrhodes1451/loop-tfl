@@ -1,5 +1,5 @@
 {
-  "northDeg": 270,
+  "northDeg": 180,
   "depths": [
     {
       "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Farringdon rose N at 270°; Met/Circle/H&C 4.3m, First Capital Connect 5.6m."
+  "raw": "Farringdon rose N at 270\u00b0; Met/Circle/H&C 4.3m, First Capital Connect 5.6m. northDeg migrated +270 for reading-pose raster."
 }

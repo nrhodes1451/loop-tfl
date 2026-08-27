@@ -1,9 +1,15 @@
 {
-  "northDeg": 330,
+  "northDeg": 240,
   "depths": [
-    {"label": "PLATFORM 1", "metres": 29.9},
-    {"label": "PLATFORM 2", "metres": 22.2}
+    {
+      "label": "PLATFORM 1",
+      "metres": 29.9
+    },
+    {
+      "label": "PLATFORM 2",
+      "metres": 22.2
+    }
   ],
   "confidence": "high",
-  "raw": "Chancery Lane axonometric; N about 11 o'clock; Platform 1 29.9m, Platform 2 22.2m."
+  "raw": "Chancery Lane axonometric; N about 11 o'clock; Platform 1 29.9m, Platform 2 22.2m. northDeg migrated +270 for reading-pose raster."
 }

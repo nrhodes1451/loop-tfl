@@ -1,5 +1,5 @@
 {
-  "northDeg": 135,
+  "northDeg": 45,
   "depths": [
     {
       "label": "CIRCLE & HAMMERSMITH LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Edgware Road rose N at 135°; Circle & Hammersmith platforms 5.1m."
+  "raw": "Edgware Road rose N at 135\u00b0; Circle & Hammersmith platforms 5.1m. northDeg migrated +270 for reading-pose raster."
 }

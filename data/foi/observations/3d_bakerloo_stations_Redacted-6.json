@@ -1,5 +1,5 @@
 {
-  "northDeg": 90,
+  "northDeg": 315,
   "depths": [
     {
       "label": "District and Circle Line Platforms",
@@ -14,64 +14,24 @@
       "metres": 21.0
     }
   ],
-  "confidence": "high",
-  "raw": "Embankment axonometric 3 table lists 5.5 / 16.2 / 21.0m; compass N points to drawing-up (90\u00b0 on this image).",
   "platforms": [
-    {
-      "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
-      "lineId": "bakerloo",
-      "platformNumbers": [
-        5
-      ],
-      "a": [
-        0.232,
-        0.725
-      ],
-      "b": [
-        0.409,
-        0.5
-      ],
-      "grid": "D7",
-      "bearingDeg": 128,
-      "end": null,
-      "confidence": "high"
-    },
-    {
-      "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
-      "lineId": "bakerloo",
-      "platformNumbers": [
-        6
-      ],
-      "a": [
-        0.232,
-        0.838
-      ],
-      "b": [
-        0.35,
-        0.613
-      ],
-      "grid": "D8",
-      "bearingDeg": 118,
-      "end": null,
-      "confidence": "high"
-    },
     {
       "caption": "NORTHERN LINE PLATFORM 3 NORTHBOUND TO CHARING CROSS",
       "lineId": "northern",
       "platformNumbers": [
         3
       ],
+      "end": null,
+      "bearingDeg": 127,
       "a": [
-        0.468,
-        0.388
+        0.42,
+        0.42
       ],
       "b": [
-        0.645,
-        0.163
+        0.68,
+        0.22
       ],
       "grid": "H4",
-      "bearingDeg": 128,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -80,18 +40,58 @@
       "platformNumbers": [
         4
       ],
+      "end": null,
+      "bearingDeg": 127,
       "a": [
-        0.586,
-        0.5
+        0.55,
+        0.48
       ],
       "b": [
-        0.763,
-        0.163
+        0.81,
+        0.28
       ],
       "grid": "J5",
-      "bearingDeg": 118,
+      "confidence": "high"
+    },
+    {
+      "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
+      "lineId": "bakerloo",
+      "platformNumbers": [
+        5
+      ],
       "end": null,
+      "bearingDeg": 127,
+      "a": [
+        0.22,
+        0.82
+      ],
+      "b": [
+        0.42,
+        0.62
+      ],
+      "grid": "D8",
+      "confidence": "high"
+    },
+    {
+      "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
+      "lineId": "bakerloo",
+      "platformNumbers": [
+        6
+      ],
+      "end": null,
+      "bearingDeg": 127,
+      "a": [
+        0.18,
+        0.74
+      ],
+      "b": [
+        0.38,
+        0.54
+      ],
+      "grid": "C7",
       "confidence": "high"
     }
-  ]
+  ],
+  "confidence": "high",
+  "raw": "Embankment axonometric 3: rose N towards top-left (315). Northern and Bakerloo pairs share bearingDeg 127 (same corridor to Waterloo / Charing Cross). Depths 5.5 / 16.2 / 21.0m."
 }

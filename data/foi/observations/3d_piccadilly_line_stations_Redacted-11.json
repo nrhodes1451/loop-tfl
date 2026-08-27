@@ -1,6 +1,11 @@
 {
-  "northDeg": 270,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 21.0 }],
+  "northDeg": 180,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 21.0
+    }
+  ],
   "confidence": "high",
-  "raw": "Hyde Park Corner: N to the left; Piccadilly platforms 21.0m."
+  "raw": "Hyde Park Corner: N to the left; Piccadilly platforms 21.0m. northDeg migrated +270 for reading-pose raster."
 }

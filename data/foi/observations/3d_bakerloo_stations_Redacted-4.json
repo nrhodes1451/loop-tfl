@@ -1,5 +1,5 @@
 {
-  "northDeg": 105,
+  "northDeg": 315,
   "depths": [
     {
       "label": "District and Circle Line Platforms",
@@ -14,8 +14,6 @@
       "metres": 21.0
     }
   ],
-  "confidence": "low",
-  "raw": "Embankment axonometric 1 table is clear (5.5 / 16.2 / 21.0m); compass N is about 15\u00b0 clockwise of drawing-up (105\u00b0 on this image), with some tilt uncertainty.",
   "platforms": [
     {
       "caption": "PLATFORM 1 WESTBOUND TO WESTMINSTER",
@@ -24,16 +22,16 @@
         1
       ],
       "end": "west",
+      "bearingDeg": 53,
       "a": [
-        0.232,
-        0.95
+        0.28,
+        0.82
       ],
       "b": [
-        0.527,
-        0.5
+        0.62,
+        0.38
       ],
       "grid": "E8",
-      "bearingDeg": 108,
       "confidence": "high"
     },
     {
@@ -43,24 +41,26 @@
         2
       ],
       "end": "east",
+      "bearingDeg": 53,
       "a": [
-        0.291,
-        0.838
+        0.32,
+        0.76
       ],
       "b": [
-        0.586,
-        0.163
+        0.66,
+        0.32
       ],
-      "grid": "H3",
-      "bearingDeg": 99,
+      "grid": "F7",
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Ticket Hall (North End)",
     "at": [
-      0.35,
-      0.388
+      0.45,
+      0.42
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Embankment axonometric 1: rose N towards top-left (315). Parallel District/Circle boxes share bearingDeg 53. Depths 5.5 / 16.2 / 21.0m."
 }

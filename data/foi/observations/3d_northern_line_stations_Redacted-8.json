@@ -1,5 +1,5 @@
 {
-  "northDeg": 135,
+  "northDeg": 45,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Clapham Common axonometric: N about 135° on the portrait raster; Northern Line platforms 20.1m."
+  "raw": "Clapham Common axonometric: N about 135\u00b0 on the portrait raster; Northern Line platforms 20.1m. northDeg migrated +270 for reading-pose raster."
 }

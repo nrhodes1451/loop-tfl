@@ -1,5 +1,5 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Stockwell axonometric; north ~315\u00b0 (top-left); Northern and Victoria both 14.6m."
+  "raw": "Stockwell axonometric; north ~315\u00b0 (top-left); Northern and Victoria both 14.6m. northDeg migrated +270 for reading-pose raster."
 }

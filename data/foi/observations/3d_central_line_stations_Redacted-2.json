@@ -1,8 +1,11 @@
 {
-  "northDeg": 225,
+  "northDeg": 135,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 15.9}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 15.9
+    }
   ],
   "confidence": "high",
-  "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m."
+  "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m. northDeg migrated +270 for reading-pose raster."
 }

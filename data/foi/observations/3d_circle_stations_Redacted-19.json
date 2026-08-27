@@ -1,8 +1,11 @@
 {
-  "northDeg": 120,
+  "northDeg": 30,
   "depths": [
-    {"label": "DISTRICT AND CIRCLE LINE PLATFORMS", "metres": 5.0}
+    {
+      "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+      "metres": 5.0
+    }
   ],
   "confidence": "high",
-  "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m."
+  "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
 }

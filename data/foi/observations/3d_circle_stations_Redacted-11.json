@@ -1,5 +1,5 @@
 {
-  "northDeg": 135,
+  "northDeg": 45,
   "depths": [
     {
       "label": "TICKET HALL",
@@ -23,5 +23,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "King's Cross rose N at 135°; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m."
+  "raw": "King's Cross rose N at 135\u00b0; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m. northDeg migrated +270 for reading-pose raster."
 }

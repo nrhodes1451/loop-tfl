@@ -64,6 +64,7 @@ export type GeneratePlacementPlatform = {
   b?: [number, number];
   grid?: string | null;
   residual?: number;
+  flags?: string[];
 };
 
 export type GenerateStationInput = {
@@ -287,6 +288,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
         }
         if (entry.grid !== undefined) foi.grid = entry.grid;
         if (entry.residual != null) foi.residual = entry.residual;
+        if (entry.flags?.length) foi.flags = entry.flags;
         nodes.push({
           id: phys.nodeId,
           type: "platform",

@@ -1,5 +1,5 @@
 {
-  "northDeg": 150,
+  "northDeg": 60,
   "depths": [
     {
       "label": "Bakerloo Line Platforms",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Warwick Avenue table lists Bakerloo platforms at 16.2m; compass N is about 60\u00b0 clockwise of drawing-up (150\u00b0 on this image)."
+  "raw": "Warwick Avenue table lists Bakerloo platforms at 16.2m; compass N is about 60\u00b0 clockwise of drawing-up (150\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
 }

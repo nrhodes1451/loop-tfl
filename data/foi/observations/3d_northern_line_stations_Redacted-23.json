@@ -1,5 +1,5 @@
 {
-  "northDeg": 30,
+  "northDeg": 300,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Tooting Bec axonometric; north ~30\u00b0 (top-right); Northern Line platforms 15.9m."
+  "raw": "Tooting Bec axonometric; north ~30\u00b0 (top-right); Northern Line platforms 15.9m. northDeg migrated +270 for reading-pose raster."
 }

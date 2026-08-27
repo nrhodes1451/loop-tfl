@@ -462,8 +462,8 @@ export function cameraFrame(
     position,
     minDistance: opts.minDistance ?? Math.max(4, radius * 0.7),
     maxDistance: opts.maxDistance ?? radius * 5.5,
-    minPolarAngle: 0.22,
-    maxPolarAngle: 1.32,
+    minPolarAngle: 0,
+    maxPolarAngle: Math.PI,
     far: opts.far ?? Math.max(80, radius * 20),
   };
 }

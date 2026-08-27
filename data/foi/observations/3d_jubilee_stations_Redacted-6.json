@@ -1,6 +1,6 @@
 {
-  "northDeg": 135,
+  "northDeg": 45,
   "depths": [],
   "confidence": "low",
-  "raw": "North Greenwich: N points down-right; depth table missing or redacted."
+  "raw": "North Greenwich: N points down-right; depth table missing or redacted. northDeg migrated +270 for reading-pose raster."
 }

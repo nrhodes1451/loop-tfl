@@ -1,5 +1,5 @@
 {
-  "northDeg": 225,
+  "northDeg": 315,
   "depths": [
     {
       "label": "BAKERLOO LINE PLATFORMS",
@@ -14,8 +14,6 @@
       "metres": 24.6
     }
   ],
-  "confidence": "high",
-  "raw": "Oxford Circus platforms axonometric; N towards bottom-left; same depth table as the upper-levels sheet.",
   "platforms": [
     {
       "caption": "PLATFORM 1 CENTRAL WESTBOUND TO BOND STREET",
@@ -23,17 +21,17 @@
       "platformNumbers": [
         1
       ],
+      "end": null,
+      "bearingDeg": 80,
       "a": [
-        0.114,
-        0.838
+        0.12,
+        0.84
       ],
       "b": [
-        0.291,
-        0.613
+        0.32,
+        0.62
       ],
       "grid": "B8",
-      "bearingDeg": 173,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -42,17 +40,17 @@
       "platformNumbers": [
         2
       ],
+      "end": null,
+      "bearingDeg": 80,
       "a": [
-        0.132,
-        0.871
+        0.14,
+        0.88
       ],
       "b": [
-        0.309,
-        0.646
+        0.34,
+        0.66
       ],
-      "grid": "B8",
-      "bearingDeg": 173,
-      "end": null,
+      "grid": "B9",
       "confidence": "high"
     },
     {
@@ -61,55 +59,17 @@
       "platformNumbers": [
         5
       ],
+      "end": null,
+      "bearingDeg": 8,
       "a": [
-        0.527,
-        0.838
+        0.53,
+        0.8
       ],
       "b": [
-        0.704,
-        0.5
+        0.7,
+        0.48
       ],
       "grid": "I8",
-      "bearingDeg": 163,
-      "end": null,
-      "confidence": "high"
-    },
-    {
-      "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO REGENTS PARK",
-      "lineId": "bakerloo",
-      "platformNumbers": [
-        4
-      ],
-      "a": [
-        0.586,
-        0.838
-      ],
-      "b": [
-        0.763,
-        0.388
-      ],
-      "grid": "J8",
-      "bearingDeg": 156,
-      "end": null,
-      "confidence": "high"
-    },
-    {
-      "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO PICCADILLY CIRCUS",
-      "lineId": "bakerloo",
-      "platformNumbers": [
-        3
-      ],
-      "a": [
-        0.645,
-        0.725
-      ],
-      "b": [
-        0.822,
-        0.331
-      ],
-      "grid": "K7",
-      "bearingDeg": 159,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -118,18 +78,58 @@
       "platformNumbers": [
         6
       ],
+      "end": null,
+      "bearingDeg": 8,
       "a": [
-        0.704,
-        0.725
+        0.7,
+        0.7
       ],
       "b": [
-        0.881,
-        0.275
+        0.87,
+        0.38
       ],
       "grid": "L7",
-      "bearingDeg": 156,
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO PICCADILLY CIRCUS",
+      "lineId": "bakerloo",
+      "platformNumbers": [
+        4
+      ],
       "end": null,
+      "bearingDeg": 148,
+      "a": [
+        0.58,
+        0.84
+      ],
+      "b": [
+        0.63,
+        0.48
+      ],
+      "grid": "J8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO REGENTS PARK",
+      "lineId": "bakerloo",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 148,
+      "a": [
+        0.64,
+        0.74
+      ],
+      "b": [
+        0.69,
+        0.38
+      ],
+      "grid": "K7",
       "confidence": "high"
     }
-  ]
+  ],
+  "confidence": "high",
+  "raw": "Oxford Circus platforms sheet: rose N towards top-left (315). Central pair bearingDeg 80; Victoria pair 8; Bakerloo pair 148. Depths 23.1 / 23.1 / 24.6m."
 }

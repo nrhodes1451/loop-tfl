@@ -1,5 +1,5 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
     {
       "label": "JUBILEE LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m."
+  "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m. northDeg migrated +270 for reading-pose raster."
 }

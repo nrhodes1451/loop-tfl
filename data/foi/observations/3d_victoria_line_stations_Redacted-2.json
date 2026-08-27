@@ -1,5 +1,5 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
     {
       "label": "VICTORIA LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Brixton: N points top-left; Victoria platforms 17.6m."
+  "raw": "Brixton: N points top-left; Victoria platforms 17.6m. northDeg migrated +270 for reading-pose raster."
 }

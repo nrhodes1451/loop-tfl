@@ -1,6 +1,11 @@
 {
-  "northDeg": 45,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 15.2 }],
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 15.2
+    }
+  ],
   "confidence": "high",
-  "raw": "Turnpike Lane: N top-right; Piccadilly platforms 15.2m."
+  "raw": "Turnpike Lane: N top-right; Piccadilly platforms 15.2m. northDeg migrated +270 for reading-pose raster."
 }

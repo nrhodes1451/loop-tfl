@@ -1,5 +1,5 @@
 {
-  "northDeg": 225,
+  "northDeg": 135,
   "depths": [
     {
       "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Kentish Town axonometric; north ~225\u00b0 (bottom-left); SB 23.8m, NB 20.4m."
+  "raw": "Kentish Town axonometric; north ~225\u00b0 (bottom-left); SB 23.8m, NB 20.4m. northDeg migrated +270 for reading-pose raster."
 }

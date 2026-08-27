@@ -1,6 +1,11 @@
 {
-  "northDeg": 0,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 33.0 }],
+  "northDeg": 270,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 33.0
+    }
+  ],
   "confidence": "high",
-  "raw": "Russell Square: N at top; Piccadilly platforms 33.0m."
+  "raw": "Russell Square: N at top; Piccadilly platforms 33.0m. northDeg migrated +270 for reading-pose raster."
 }

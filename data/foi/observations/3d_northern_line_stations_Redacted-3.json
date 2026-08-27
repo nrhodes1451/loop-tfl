@@ -1,5 +1,5 @@
 {
-  "northDeg": 195,
+  "northDeg": 105,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Balham axonometric: N about 195° on the portrait raster; Northern Line platforms 13.4m."
+  "raw": "Balham axonometric: N about 195\u00b0 on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
 }

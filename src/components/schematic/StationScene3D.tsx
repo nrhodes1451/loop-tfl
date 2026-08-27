@@ -1220,7 +1220,7 @@ export function StationScene3D({
               : `${hovered.station.name} · ${hovered.volume.label}`}
           </div>
           <div
-            className="font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px]"
+            className="whitespace-pre-line font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px] leading-snug"
             style={{ color: "#8b93a0" }}
           >
             {[
@@ -1239,7 +1239,7 @@ export function StationScene3D({
               hovered.volume.lineId,
             ]
               .filter(Boolean)
-              .join(" · ")}
+              .join("\n")}
           </div>
         </div>
       ) : null}

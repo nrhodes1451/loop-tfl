@@ -1,10 +1,19 @@
 {
-  "northDeg": 110,
+  "northDeg": 20,
   "depths": [
-    {"label": "DISTRICT AND CIRCLE LINE PLATFORMS", "metres": 8.2},
-    {"label": "PICCADILLY LINE EASTBOUND PLATFORM", "metres": 18.9},
-    {"label": "PICCADILLY LINE WESTBOUND PLATFORM", "metres": 24.3}
+    {
+      "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+      "metres": 8.2
+    },
+    {
+      "label": "PICCADILLY LINE EASTBOUND PLATFORM",
+      "metres": 18.9
+    },
+    {
+      "label": "PICCADILLY LINE WESTBOUND PLATFORM",
+      "metres": 24.3
+    }
   ],
   "confidence": "high",
-  "raw": "South Kensington axonometric; N about 4 o'clock; District/Circle 8.2m, Piccadilly EB 18.9m, WB 24.3m."
+  "raw": "South Kensington axonometric; N about 4 o'clock; District/Circle 8.2m, Piccadilly EB 18.9m, WB 24.3m. northDeg migrated +270 for reading-pose raster."
 }

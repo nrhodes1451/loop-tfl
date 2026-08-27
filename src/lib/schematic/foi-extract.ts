@@ -89,6 +89,7 @@ export type FoiStationPlatform = {
   b: [number, number];
   grid: string | null;
   residual: number;
+  flags?: string[];
   sources: { file: string; page: number }[];
 };
 
@@ -139,6 +140,10 @@ export const FOI_EXTRACT_DISCLAIMER =
   "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.";
 
 export const NORTH_AGREE_DEG = 20;
+export const SLOPE_MATCH_DEG = 2;
+export const PARALLEL_DIR_DEG = 10;
+export const BEARING_CONFLICT_DEG = 10;
+export const GEOGRAPHY_GAP_LIMIT = 40;
 
 /** 0 = include `low`; 1 = `high` only. Debug default is 0 so every mark reaches the app. */
 export const PLACEMENT_MIN_CONFIDENCE = 0;
@@ -430,6 +435,9 @@ function mergeStationPlatforms(group: readonly FoiPageExtract[]): {
   const trusted = projected
     .filter((p) => p.items.length > 0)
     .sort((a, b) => {
+      const aOk = a.residual <= PLACEMENT_RESIDUAL_LIMIT ? 0 : 1;
+      const bOk = b.residual <= PLACEMENT_RESIDUAL_LIMIT ? 0 : 1;
+      if (aOk !== bOk) return aOk - bOk;
       if (b.items.length !== a.items.length) return b.items.length - a.items.length;
       if (a.residual !== b.residual) return a.residual - b.residual;
       return `${a.file}\0${a.page}`.localeCompare(`${b.file}\0${b.page}`);
@@ -559,6 +567,137 @@ function collectStationMarks(
   return marks;
 }
 
+export function undirectedAngleGap(a: number, b: number): number {
+  const d = Math.abs(undirectedBearingDeg(a) - undirectedBearingDeg(b));
+  return Math.min(d, 180 - d);
+}
+
+function markSlopeDeg(a: [number, number], b: [number, number]): number | null {
+  const du = b[0] - a[0];
+  const dv = b[1] - a[1];
+  if (Math.hypot(du, dv) <= 1e-6) return null;
+  return undirectedBearingDeg((Math.atan2(dv, du) * 180) / Math.PI);
+}
+
+/** Per-page reasons: bearing copied from a→b, or parallel boxes with disagreeing bearings. */
+export function pageBearingIssues(page: FoiPageExtract): FoiPlacementIssue[] {
+  const marks = (page.platforms ?? []).filter(
+    (m) => m.bearingDeg != null && markSlopeDeg(m.a, m.b) != null,
+  );
+  if (marks.length === 0) return [];
+  const out: FoiPlacementIssue[] = [];
+  const slopeHits = marks.filter((m) => {
+    const slope = markSlopeDeg(m.a, m.b);
+    return slope != null && undirectedAngleGap(m.bearingDeg!, slope) <= SLOPE_MATCH_DEG;
+  });
+  if (slopeHits.length * 2 >= marks.length) {
+    out.push({
+      file: page.file,
+      page: page.page,
+      stationId: page.stationId,
+      reason: "bearing-from-slope",
+    });
+  }
+  let conflict = false;
+  for (let i = 0; i < marks.length; i++) {
+    for (let j = i + 1; j < marks.length; j++) {
+      const sa = markSlopeDeg(marks[i]!.a, marks[i]!.b);
+      const sb = markSlopeDeg(marks[j]!.a, marks[j]!.b);
+      if (sa == null || sb == null) continue;
+      if (undirectedAngleGap(sa, sb) > PARALLEL_DIR_DEG) continue;
+      if (
+        undirectedAngleGap(marks[i]!.bearingDeg!, marks[j]!.bearingDeg!) >
+        BEARING_CONFLICT_DEG
+      ) {
+        conflict = true;
+      }
+    }
+  }
+  if (conflict) {
+    out.push({
+      file: page.file,
+      page: page.page,
+      stationId: page.stationId,
+      reason: "bearing-conflict",
+    });
+  }
+  return out;
+}
+
+export function chordKey(stationId: string, lineId: string): string {
+  return `${stationId}\0${normalizeSchematicLineId(lineId)}`;
+}
+
+/** Neighbour-station chords keyed by stationId + lineId. */
+export type ChordIndex = Record<string, number[]>;
+
+export function geographyIssues(
+  stations: readonly FoiStationLayout[],
+  chords: ChordIndex,
+): FoiPlacementIssue[] {
+  const out: FoiPlacementIssue[] = [];
+  for (const st of stations) {
+    for (const p of st.platforms) {
+      const list = chords[chordKey(st.stationId, p.lineId)] ?? [];
+      if (list.length === 0) continue;
+      const gap = Math.min(
+        ...list.map((c) => undirectedAngleGap(p.bearingDeg, c)),
+      );
+      if (gap <= GEOGRAPHY_GAP_LIMIT) continue;
+      const src = p.sources[0];
+      if (!src) continue;
+      const already = out.some(
+        (i) =>
+          i.file === src.file &&
+          i.page === src.page &&
+          i.reason === "bearing-vs-geography",
+      );
+      if (already) continue;
+      out.push({
+        file: src.file,
+        page: src.page,
+        stationId: st.stationId,
+        reason: "bearing-vs-geography",
+      });
+    }
+  }
+  return out;
+}
+
+export function annotatePlatformFlags(
+  stations: readonly FoiStationLayout[],
+  issues: readonly FoiPlacementIssue[],
+  chords: ChordIndex = {},
+): FoiStationLayout[] {
+  const byPage = new Map<string, string[]>();
+  for (const issue of issues) {
+    const k = `${issue.file}\0${issue.page}`;
+    const list = byPage.get(k) ?? [];
+    if (!list.includes(issue.reason)) list.push(issue.reason);
+    byPage.set(k, list);
+  }
+  return stations.map((st) => ({
+    ...st,
+    platforms: st.platforms.map((p) => {
+      const flags = new Set<string>();
+      for (const src of p.sources) {
+        for (const r of byPage.get(`${src.file}\0${src.page}`) ?? []) {
+          flags.add(r);
+        }
+      }
+      const list = chords[chordKey(st.stationId, p.lineId)] ?? [];
+      if (list.length > 0) {
+        const gap = Math.min(
+          ...list.map((c) => undirectedAngleGap(p.bearingDeg, c)),
+        );
+        if (gap > GEOGRAPHY_GAP_LIMIT) flags.add("bearing-vs-geography");
+      }
+      if (flags.size === 0) return p;
+      return { ...p, flags: [...flags].sort() };
+    }),
+  }));
+}
+
 export function reviewExtract(
   pages: readonly FoiPageExtract[],
   northConflicts: readonly string[] = [],
@@ -586,6 +725,9 @@ export function reviewExtract(
     }
     const extra = byPage.get(`${p.file}\0${p.page}`);
     if (extra) reasons.push(...extra);
+    for (const issue of pageBearingIssues(p)) {
+      if (!reasons.includes(issue.reason)) reasons.push(issue.reason);
+    }
     if (reasons.length > 0) {
       out.push({
         file: p.file,

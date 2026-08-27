@@ -1,13 +1,11 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
     {
       "label": "PICCADILLY LINE PLATFORMS",
       "metres": 36.0
     }
   ],
-  "confidence": "high",
-  "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m.",
   "platforms": [
     {
       "caption": "PLATFORM 1",
@@ -15,17 +13,17 @@
       "platformNumbers": [
         1
       ],
+      "end": null,
+      "bearingDeg": 42,
       "a": [
-        0.232,
-        0.894
+        0.22,
+        0.78
       ],
       "b": [
-        0.468,
-        0.556
+        0.48,
+        0.52
       ],
       "grid": "D8",
-      "bearingDeg": 125,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -34,25 +32,27 @@
       "platformNumbers": [
         2
       ],
+      "end": null,
+      "bearingDeg": 42,
       "a": [
-        0.262,
-        0.86
+        0.25,
+        0.74
       ],
       "b": [
-        0.486,
-        0.523
+        0.51,
+        0.48
       ],
       "grid": "D8",
-      "bearingDeg": 124,
-      "end": null,
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Ticket Hall",
     "at": [
-      0.409,
-      0.444
+      0.42,
+      0.4
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Covent Garden reading pose: rose N up (0). Parallel Piccadilly boxes share bearingDeg 42. Depth 36.0m."
 }

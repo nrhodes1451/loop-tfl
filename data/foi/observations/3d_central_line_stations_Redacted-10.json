@@ -1,8 +1,11 @@
 {
-  "northDeg": 345,
+  "northDeg": 255,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 26.2}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 26.2
+    }
   ],
   "confidence": "high",
-  "raw": "Marble Arch axonometric; N slightly left of up; Central platforms 26.2m."
+  "raw": "Marble Arch axonometric; N slightly left of up; Central platforms 26.2m. northDeg migrated +270 for reading-pose raster."
 }

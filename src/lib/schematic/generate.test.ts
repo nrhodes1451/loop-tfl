@@ -223,6 +223,7 @@ describe("generateSchematic FOI placement", () => {
         a: [0.4, 0.2],
         b: [0.4, 0.55],
         grid: "G4",
+        flags: ["placement-residual"],
       },
       {
         lineId: "circle",
@@ -281,6 +282,7 @@ describe("generateSchematic FOI placement", () => {
     expect(n7.foi?.eastM).toBeDefined();
     expect(n7.foi?.caption).toBe("NORTHERN LINE PLATFORMS 7 & 8");
     expect(n7.foi?.a).toEqual([0.4, 0.2]);
+    expect(n7.foi?.flags).toEqual(["placement-residual"]);
     expect(placed.foiMarks).toHaveLength(2);
     expect(placed.foiMarks?.some((m) => m.confidence === "low" && !m.placed)).toBe(
       true,

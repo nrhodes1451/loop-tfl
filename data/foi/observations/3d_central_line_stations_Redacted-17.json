@@ -1,8 +1,11 @@
 {
-  "northDeg": 330,
+  "northDeg": 240,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 18.3}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 18.3
+    }
   ],
   "confidence": "high",
-  "raw": "Shepherd's Bush axonometric; N about 11 o'clock; Central platforms 18.3m."
+  "raw": "Shepherd's Bush axonometric; N about 11 o'clock; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
 }

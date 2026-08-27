@@ -1,5 +1,5 @@
 {
-  "northDeg": 60,
+  "northDeg": 330,
   "depths": [
     {
       "label": "Bakerloo Line Platforms",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Lambeth North table lists Bakerloo platforms at 17.7m; compass N points top-left on the drawing (60\u00b0 on this image)."
+  "raw": "Lambeth North table lists Bakerloo platforms at 17.7m; compass N points top-left on the drawing (60\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
 }

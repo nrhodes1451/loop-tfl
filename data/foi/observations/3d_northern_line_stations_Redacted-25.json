@@ -1,5 +1,5 @@
 {
-  "northDeg": 135,
+  "northDeg": 45,
   "depths": [
     {
       "label": "NORTHERN LINE NORTHBOUND PLATFORM",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Tufnell Park axonometric; north ~135\u00b0 (bottom-right); NB 22.0m, SB 25.0m."
+  "raw": "Tufnell Park axonometric; north ~135\u00b0 (bottom-right); NB 22.0m, SB 25.0m. northDeg migrated +270 for reading-pose raster."
 }

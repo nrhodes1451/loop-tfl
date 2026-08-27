@@ -1,6 +1,11 @@
 {
-  "northDeg": 20,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 18.3 }],
+  "northDeg": 290,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 18.3
+    }
+  ],
   "confidence": "high",
-  "raw": "Holloway Road: N about 20°; Piccadilly platforms 18.3m."
+  "raw": "Holloway Road: N about 20\u00b0; Piccadilly platforms 18.3m. northDeg migrated +270 for reading-pose raster."
 }

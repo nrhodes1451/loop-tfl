@@ -1,8 +1,11 @@
 {
-  "northDeg": 225,
+  "northDeg": 135,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 18.3}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 18.3
+    }
   ],
   "confidence": "high",
-  "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m."
+  "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
 }

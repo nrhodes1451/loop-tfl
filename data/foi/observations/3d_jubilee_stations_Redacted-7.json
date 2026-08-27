@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "JUBILEE LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m."
+  "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m. northDeg migrated +270 for reading-pose raster."
 }

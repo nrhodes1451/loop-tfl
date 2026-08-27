@@ -1,8 +1,11 @@
 {
-  "northDeg": 225,
+  "northDeg": 135,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 18.8}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 18.8
+    }
   ],
   "confidence": "high",
-  "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m."
+  "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m. northDeg migrated +270 for reading-pose raster."
 }

@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "Northern Line Platforms",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Elephant & Castle table lists Northern 18.9m and Bakerloo 23.5m; compass N points top-left on the drawing (45\u00b0 on this image)."
+  "raw": "Elephant & Castle table lists Northern 18.9m and Bakerloo 23.5m; compass N points top-left on the drawing (45\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
 }

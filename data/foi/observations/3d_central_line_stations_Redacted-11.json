@@ -1,8 +1,11 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
-    {"label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS", "metres": 7.0}
+    {
+      "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
+      "metres": 7.0
+    }
   ],
   "confidence": "high",
-  "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m."
+  "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m. northDeg migrated +270 for reading-pose raster."
 }

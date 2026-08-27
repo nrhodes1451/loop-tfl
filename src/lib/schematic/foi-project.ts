@@ -8,6 +8,8 @@ import { PLATFORM_LENGTH_M } from "./lu-scale";
 
 export const PLACEMENT_RESIDUAL_LIMIT = 0.35;
 export const PLACEMENT_DISAGREE_M = 30;
+/** FOI A4 landscape width / height. Normalised x is stretched vs y. */
+export const SHEET_ASPECT = 841.92 / 595.32;
 
 export type SheetMark = {
   a: [number, number];
@@ -101,7 +103,9 @@ export function isometricImageToPlan(
   const RM01 = rc * M01 - rs * M11;
   const RM10 = rs * M00 + rc * M10;
   const RM11 = rs * M01 + rc * M11;
-  return invert2(RM00, RM01, RM10, RM11) ?? [1, 0, 0, -1];
+  const inv = invert2(RM00, RM01, RM10, RM11) ?? [1, 0, 0, -1];
+  // Consume normalised (u,v): du_iso = du_norm * SHEET_ASPECT.
+  return [inv[0] * SHEET_ASPECT, inv[1], inv[2] * SHEET_ASPECT, inv[3]];
 }
 
 function hasTwoDirections(dirs: [number, number][]): boolean {

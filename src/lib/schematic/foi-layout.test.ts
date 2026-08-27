@@ -46,6 +46,18 @@ describe("FOI platform depths", () => {
         northM: 0,
         grid: "G7",
       }),
-    ).toBe("FOI low · G7 · BAKERLOO LINE PLATFORMS");
+    ).toBe("FOI low\nG7\nBAKERLOO LINE PLATFORMS");
+    expect(
+      hoverFoiExtractLabel({
+        confidence: "high",
+        caption: "PLATFORM 1",
+        eastM: 0,
+        northM: 0,
+        residual: 0.71,
+        flags: ["placement-residual", "bearing-from-slope"],
+      }),
+    ).toBe(
+      "FOI high\nPLATFORM 1\nresidual 0.71\nplacement-residual\nbearing-from-slope",
+    );
   });
 });

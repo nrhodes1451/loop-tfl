@@ -1,6 +1,11 @@
 {
-  "northDeg": 60,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 12.8 }],
+  "northDeg": 330,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 12.8
+    }
+  ],
   "confidence": "high",
-  "raw": "Southgate: N about 60°; Piccadilly platforms 12.8m."
+  "raw": "Southgate: N about 60\u00b0; Piccadilly platforms 12.8m. northDeg migrated +270 for reading-pose raster."
 }

@@ -1,5 +1,5 @@
 {
-  "northDeg": 75,
+  "northDeg": 330,
   "depths": [
     {
       "label": "Bakerloo Line Platforms (Northbound)",
@@ -14,8 +14,6 @@
       "metres": 21.3
     }
   ],
-  "confidence": "low",
-  "raw": "Waterloo axonometric 2 table lists Bakerloo NB 19.5m, SB 16.4m, Northern 21.3m; compass tilt about 15\u00b0 from drawing-up is a borderline guess (75\u00b0 on this image).",
   "platforms": [
     {
       "caption": "BAKERLOO LINE PLATFORM 4",
@@ -23,17 +21,17 @@
       "platformNumbers": [
         4
       ],
+      "end": null,
+      "bearingDeg": 145,
       "a": [
-        0.291,
-        0.477
+        0.3,
+        0.5
       ],
       "b": [
-        0.527,
-        0.545
+        0.52,
+        0.72
       ],
       "grid": "E5",
-      "bearingDeg": 31,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -42,17 +40,17 @@
       "platformNumbers": [
         3
       ],
+      "end": null,
+      "bearingDeg": 145,
       "a": [
-        0.291,
-        0.635
+        0.3,
+        0.62
       ],
       "b": [
-        0.527,
-        0.86
+        0.52,
+        0.84
       ],
       "grid": "E7",
-      "bearingDeg": 59,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -61,17 +59,17 @@
       "platformNumbers": [
         2
       ],
+      "end": null,
+      "bearingDeg": 145,
       "a": [
-        0.291,
-        0.298
+        0.28,
+        0.28
       ],
       "b": [
-        0.468,
-        0.433
+        0.48,
+        0.42
       ],
-      "grid": "E4",
-      "bearingDeg": 52,
-      "end": null,
+      "grid": "E3",
       "confidence": "high"
     },
     {
@@ -80,25 +78,27 @@
       "platformNumbers": [
         1
       ],
+      "end": null,
+      "bearingDeg": 145,
       "a": [
-        0.409,
-        0.477
+        0.4,
+        0.45
       ],
       "b": [
-        0.586,
-        0.658
+        0.6,
+        0.59
       ],
       "grid": "H5",
-      "bearingDeg": 61,
-      "end": null,
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Shell Centre Ticket Hall",
     "at": [
-      0.173,
-      0.219
+      0.18,
+      0.22
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Waterloo axonometric 2: rose N about 30\u00b0 west of up (330). Bakerloo and Northern pairs share bearingDeg 145. Depths 19.5 / 16.4 / 21.3m."
 }

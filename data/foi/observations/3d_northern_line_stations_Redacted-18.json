@@ -1,5 +1,5 @@
 {
-  "northDeg": 215,
+  "northDeg": 125,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Leicester Square axonometric; north ~215\u00b0; Northern 27.4m, Piccadilly 32.3m."
+  "raw": "Leicester Square axonometric; north ~215\u00b0; Northern 27.4m, Piccadilly 32.3m. northDeg migrated +270 for reading-pose raster."
 }

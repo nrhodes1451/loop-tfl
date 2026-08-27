@@ -65,6 +65,7 @@ export async function buildSchematics(): Promise<{
           b: p.b,
           grid: p.grid,
           residual: p.residual,
+          flags: p.flags,
         })),
       ]),
     );

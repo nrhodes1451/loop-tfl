@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  annotatePlatformFlags,
   applyExtractOverrides,
   attachLineIds,
+  geographyIssues,
   lineIdFromCaption,
   lineIdsFromCaption,
   foiSheetStem,
@@ -374,5 +376,125 @@ describe("mergeStationLayouts placement", () => {
       placed: true,
       caption: northernMark.caption,
     });
+  });
+
+  it("anchors on a low-residual sheet instead of the one with more marks", () => {
+    const good: FoiPageExtract = {
+      ...northern,
+      page: 1,
+      platforms: [
+        northernMark,
+        {
+          caption: "VICTORIA LINE PLATFORMS",
+          lineId: "victoria",
+          platformNumbers: [1],
+          end: null,
+          bearingDeg: 90,
+          a: [0.2, 0.5],
+          b: [0.65, 0.5],
+          grid: null,
+          confidence: "high",
+        },
+      ],
+    };
+    const noisy: FoiPageExtract = {
+      ...northern,
+      page: 2,
+      platforms: [
+        northernMark,
+        {
+          caption: "NORTHERN LINE PLATFORMS 7 & 8 (SOUTH END)",
+          lineId: "northern",
+          platformNumbers: [7, 8],
+          end: "south",
+          bearingDeg: 90,
+          a: [0.55, 0.2],
+          b: [0.55, 0.55],
+          grid: null,
+          confidence: "high",
+        },
+        {
+          caption: "VICTORIA LINE PLATFORMS",
+          lineId: "victoria",
+          platformNumbers: [1],
+          end: null,
+          bearingDeg: 90,
+          a: [0.7, 0.2],
+          b: [0.7, 0.55],
+          grid: null,
+          confidence: "high",
+        },
+      ],
+    };
+    const { stations } = mergeStationLayouts([good, noisy]);
+    const northernPlat = stations[0]!.platforms.find(
+      (p) => p.lineId === "northern",
+    )!;
+    expect(northernPlat.sources).toEqual([{ file: northern.file, page: 1 }]);
+    expect(northernPlat.residual).toBeLessThan(0.35);
+  });
+});
+
+describe("bearing review reasons", () => {
+  it("flags a sheet whose bearings match the a→b pixel slope", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      platforms: [
+        {
+          ...northernMark,
+          bearingDeg: 0,
+          a: [0.2, 0.4],
+          b: [0.5, 0.4],
+        },
+      ],
+    };
+    const hit = reviewExtract([page]);
+    expect(hit[0]!.reasons).toContain("bearing-from-slope");
+  });
+
+  it("does not flag a clean rose bearing that is not the pixel slope", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      platforms: [northernMark],
+    };
+    const hit = reviewExtract([page]).find((r) => r.page === northern.page);
+    expect(hit?.reasons ?? []).not.toContain("bearing-from-slope");
+    expect(hit?.reasons ?? []).not.toContain("bearing-conflict");
+  });
+
+  it("flags parallel boxes that were given different bearings", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      platforms: [
+        {
+          ...northernMark,
+          platformNumbers: [7],
+          bearingDeg: 0,
+          a: [0.3, 0.2],
+          b: [0.3, 0.6],
+        },
+        {
+          ...northernMark,
+          caption: "PLATFORM 8",
+          platformNumbers: [8],
+          bearingDeg: 40,
+          a: [0.4, 0.2],
+          b: [0.4, 0.6],
+        },
+      ],
+    };
+    const hit = reviewExtract([page]);
+    expect(hit[0]!.reasons).toContain("bearing-conflict");
+  });
+
+  it("flags a merged platform more than 40° from every neighbour chord", () => {
+    const { stations } = mergeStationLayouts([
+      { ...northern, platforms: [northernMark] },
+    ]);
+    const chords = { [`${northern.stationId}\0northern`]: [90] };
+    const issues = geographyIssues(stations, chords);
+    expect(issues.map((i) => i.reason)).toContain("bearing-vs-geography");
+    const flagged = annotatePlatformFlags(stations, issues, chords);
+    expect(flagged[0]!.platforms[0]!.flags).toContain("bearing-vs-geography");
   });
 });

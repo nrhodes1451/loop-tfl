@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Hampstead axonometric; north ~45\u00b0 (top-right); Northern Line platforms 58.5m."
+  "raw": "Hampstead axonometric; north ~45\u00b0 (top-right); Northern Line platforms 58.5m. northDeg migrated +270 for reading-pose raster."
 }

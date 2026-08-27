@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Gloucester Road rose N at 45°; District & Circle 7.0m, Piccadilly 20.0m."
+  "raw": "Gloucester Road rose N at 45\u00b0; District & Circle 7.0m, Piccadilly 20.0m. northDeg migrated +270 for reading-pose raster."
 }

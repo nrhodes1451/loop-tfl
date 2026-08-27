@@ -675,7 +675,7 @@ export function StationIsoView({ station }: { station: SchematicStation }) {
         >
           <div className="font-medium">{hovered.label}</div>
           <div
-            className="font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px]"
+            className="whitespace-pre-line font-[family-name:var(--font-ibm-plex-mono)] text-[10.5px] leading-snug"
             style={{ color: "#6c727c" }}
           >
             {[
@@ -686,7 +686,7 @@ export function StationIsoView({ station }: { station: SchematicStation }) {
               hovered.lineId,
             ]
               .filter(Boolean)
-              .join(" · ")}
+              .join("\n")}
           </div>
         </div>
       ) : null}

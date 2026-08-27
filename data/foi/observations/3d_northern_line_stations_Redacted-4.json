@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Belsize Park axonometric: N about 45° on the portrait raster; Northern Line platforms 31.0m."
+  "raw": "Belsize Park axonometric: N about 45\u00b0 on the portrait raster; Northern Line platforms 31.0m. northDeg migrated +270 for reading-pose raster."
 }

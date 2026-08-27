@@ -1,5 +1,6 @@
 /**
- * Rasterize the TfL FOI axonometric sheets listed in data/foi/pages.json.
+ * Rasterize the TfL FOI axonometric sheets listed in data/foi/pages.json
+ * into the reading pose (title left-to-right, rose typically up).
  *
  * Usage: npm run foi:render
  *        npm run foi:render -- --force
@@ -8,9 +9,10 @@
  */
 
 import { execFile } from "node:child_process";
-import { access, mkdir, readFile } from "node:fs/promises";
+import { access, mkdir, readFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
+import sharp from "sharp";
 import { foiSheetStem } from "../src/lib/schematic/foi-extract";
 import type { FoiPageIndex } from "../src/lib/schematic/foi-match";
 
@@ -23,6 +25,11 @@ const PAGES_PATH = path.join(ROOT, "data", "foi", "pages.json");
 const DPI = 200;
 /** Long edge of the downscaled sheet that gets read. */
 const VIEW_MAX_EDGE = 1536;
+/**
+ * Extra clockwise rotation after pdftoppm honours PDF /Rotate 270, so the
+ * raster matches the landscape reading pose (title along the top/bottom).
+ */
+export const READING_ROTATION_CW = 270;
 
 export function sheetRasterPaths(
   file: string,
@@ -30,8 +37,8 @@ export function sheetRasterPaths(
 ): { png: string; view: string } {
   const stem = foiSheetStem(file, page);
   return {
-    png: path.join(CACHE_DIR, `${stem}.png`),
-    view: path.join(CACHE_DIR, `${stem}-view.jpg`),
+    png: path.join(CACHE_DIR, `${stem}-read.png`),
+    view: path.join(CACHE_DIR, `${stem}-read.jpg`),
   };
 }
 
@@ -53,46 +60,43 @@ async function fileExists(file: string): Promise<boolean> {
   }
 }
 
-async function rasterizePng(
+async function rasterize(
   pdfPath: string,
   page: number,
-  pngPath: string,
-): Promise<void> {
-  const prefix = pngPath.replace(/\.png$/i, "");
+  tmpPrefix: string,
+  kind: "png" | "jpeg",
+): Promise<string> {
+  const args =
+    kind === "png"
+      ? ["-png", "-r", String(DPI)]
+      : [
+          "-jpeg",
+          "-jpegopt",
+          "quality=80",
+          "-scale-to",
+          String(VIEW_MAX_EDGE),
+        ];
   await execFileAsync("pdftoppm", [
-    "-png",
-    "-r",
-    String(DPI),
+    ...args,
     "-f",
     String(page),
     "-l",
     String(page),
     "-singlefile",
     pdfPath,
-    prefix,
+    tmpPrefix,
   ]);
+  return kind === "png" ? `${tmpPrefix}.png` : `${tmpPrefix}.jpg`;
 }
 
-async function rasterizeView(
-  pdfPath: string,
-  page: number,
-  viewPath: string,
+async function rotateToReadingPose(
+  src: string,
+  dest: string,
 ): Promise<void> {
-  const prefix = viewPath.replace(/\.jpe?g$/i, "");
-  await execFileAsync("pdftoppm", [
-    "-jpeg",
-    "-jpegopt",
-    "quality=80",
-    "-scale-to",
-    String(VIEW_MAX_EDGE),
-    "-f",
-    String(page),
-    "-l",
-    String(page),
-    "-singlefile",
-    pdfPath,
-    prefix,
-  ]);
+  await sharp(src)
+    .rotate(READING_ROTATION_CW)
+    .toFile(dest);
+  await unlink(src);
 }
 
 export async function renderFoiPages(opts: { force?: boolean }): Promise<{
@@ -121,8 +125,17 @@ export async function renderFoiPages(opts: { force?: boolean }): Promise<{
     process.stderr.write(
       `render ${entry.file} p${entry.page} (${i + 1}/${index.pages.length})\n`,
     );
-    if (needPng) await rasterizePng(pdfPath, entry.page, png);
-    if (needView) await rasterizeView(pdfPath, entry.page, view);
+    const stem = foiSheetStem(entry.file, entry.page);
+    if (needPng) {
+      const tmp = path.join(CACHE_DIR, `.tmp-${stem}-png`);
+      const raw = await rasterize(pdfPath, entry.page, tmp, "png");
+      await rotateToReadingPose(raw, png);
+    }
+    if (needView) {
+      const tmp = path.join(CACHE_DIR, `.tmp-${stem}-jpg`);
+      const raw = await rasterize(pdfPath, entry.page, tmp, "jpeg");
+      await rotateToReadingPose(raw, view);
+    }
     rendered += 1;
   }
   return { rendered, skipped, total: index.pages.length };

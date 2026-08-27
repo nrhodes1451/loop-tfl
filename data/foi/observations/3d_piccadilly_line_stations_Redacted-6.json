@@ -1,6 +1,11 @@
 {
-  "northDeg": 135,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 4.3 }],
+  "northDeg": 45,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 4.3
+    }
+  ],
   "confidence": "high",
-  "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m."
+  "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m. northDeg migrated +270 for reading-pose raster."
 }

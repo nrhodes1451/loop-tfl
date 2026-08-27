@@ -1,5 +1,5 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Colliers Wood axonometric: N about 315° on the portrait raster; Northern Line platforms 13.4m."
+  "raw": "Colliers Wood axonometric: N about 315\u00b0 on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
 }

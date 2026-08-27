@@ -1,8 +1,11 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
-    {"label": "JUBILEE LINE PLATFORMS", "metres": 33.0}
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 33.0
+    }
   ],
   "confidence": "high",
-  "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only."
+  "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only. northDeg migrated +270 for reading-pose raster."
 }

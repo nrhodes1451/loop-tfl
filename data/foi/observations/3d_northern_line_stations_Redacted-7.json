@@ -1,5 +1,5 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Chalk Farm axonometric: N points right (90°) on the portrait raster; Northern Line platforms 17.3m."
+  "raw": "Chalk Farm axonometric: N points right (90\u00b0) on the portrait raster; Northern Line platforms 17.3m. northDeg migrated +270 for reading-pose raster."
 }

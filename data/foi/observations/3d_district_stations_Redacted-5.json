@@ -1,5 +1,5 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
     {
       "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m."
+  "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m. northDeg migrated +270 for reading-pose raster."
 }

@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "DISTRICT LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box."
+  "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box. northDeg migrated +270 for reading-pose raster."
 }

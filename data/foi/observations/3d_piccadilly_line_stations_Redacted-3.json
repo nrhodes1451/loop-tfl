@@ -1,6 +1,11 @@
 {
-  "northDeg": 30,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 16.5 }],
+  "northDeg": 300,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 16.5
+    }
+  ],
   "confidence": "high",
-  "raw": "Bounds Green: N about 30°; Piccadilly platforms 16.5m."
+  "raw": "Bounds Green: N about 30\u00b0; Piccadilly platforms 16.5m. northDeg migrated +270 for reading-pose raster."
 }

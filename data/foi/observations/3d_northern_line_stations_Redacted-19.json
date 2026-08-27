@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORM",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Old Street axonometric; north ~45\u00b0 (top-right); Northern Line platform 15.5m."
+  "raw": "Old Street axonometric; north ~45\u00b0 (top-right); Northern Line platform 15.5m. northDeg migrated +270 for reading-pose raster."
 }

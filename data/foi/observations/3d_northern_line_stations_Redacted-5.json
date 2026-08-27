@@ -1,5 +1,5 @@
 {
-  "northDeg": 110,
+  "northDeg": 20,
   "depths": [
     {
       "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Borough axonometric: N about 110° on the portrait raster; SB 17.0m, NB 19.5m."
+  "raw": "Borough axonometric: N about 110\u00b0 on the portrait raster; SB 17.0m, NB 19.5m. northDeg migrated +270 for reading-pose raster."
 }

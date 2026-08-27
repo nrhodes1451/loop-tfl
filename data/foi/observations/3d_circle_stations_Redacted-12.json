@@ -1,6 +1,6 @@
 {
-  "northDeg": 135,
+  "northDeg": 45,
   "depths": [],
   "confidence": "high",
-  "raw": "King's Cross axonometric 2; N towards bottom-right; no printed depth table."
+  "raw": "King's Cross axonometric 2; N towards bottom-right; no printed depth table. northDeg migrated +270 for reading-pose raster."
 }

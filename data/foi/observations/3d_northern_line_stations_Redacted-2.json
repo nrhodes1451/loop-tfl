@@ -1,5 +1,5 @@
 {
-  "northDeg": 60,
+  "northDeg": 330,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Archway axonometric: N about 60° on the portrait raster; Northern Line platforms 19.8m."
+  "raw": "Archway axonometric: N about 60\u00b0 on the portrait raster; Northern Line platforms 19.8m. northDeg migrated +270 for reading-pose raster."
 }

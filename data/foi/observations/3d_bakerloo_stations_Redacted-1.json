@@ -1,5 +1,5 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
     {
       "label": "Northern Line Platforms",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Charing Cross table lists Northern 19.5m and Jubilee 26.2m; compass N points right on the page (90\u00b0)."
+  "raw": "Charing Cross table lists Northern 19.5m and Jubilee 26.2m; compass N points right on the page (90\u00b0). northDeg migrated +270 for reading-pose raster."
 }

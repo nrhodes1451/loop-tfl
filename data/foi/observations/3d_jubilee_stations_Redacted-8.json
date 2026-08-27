@@ -1,5 +1,5 @@
 {
-  "northDeg": 225,
+  "northDeg": 135,
   "depths": [
     {
       "label": "JUBILEE LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Southwark: N points bottom-left; table prints Jubilee platforms 24m approx."
+  "raw": "Southwark: N points bottom-left; table prints Jubilee platforms 24m approx. northDeg migrated +270 for reading-pose raster."
 }

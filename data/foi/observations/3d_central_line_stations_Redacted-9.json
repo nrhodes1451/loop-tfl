@@ -1,9 +1,15 @@
 {
-  "northDeg": 225,
+  "northDeg": 135,
   "depths": [
-    {"label": "CIRCLE & METROPOLITAN LINE PLATFORMS", "metres": 7.6},
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 15.8}
+    {
+      "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+      "metres": 7.6
+    },
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 15.8
+    }
   ],
   "confidence": "high",
-  "raw": "Liverpool Street axonometric; N towards bottom-left; Circle & Metropolitan 7.6m, Central 15.8m."
+  "raw": "Liverpool Street axonometric; N towards bottom-left; Circle & Metropolitan 7.6m, Central 15.8m. northDeg migrated +270 for reading-pose raster."
 }

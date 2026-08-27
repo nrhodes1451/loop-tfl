@@ -65,8 +65,10 @@ export function hoverFoiExtractLabel(
     `FOI ${foi.confidence}`,
     foi.grid,
     foi.caption,
+    foi.residual != null ? `residual ${foi.residual.toFixed(2)}` : null,
+    ...(foi.flags ?? []),
   ].filter((part): part is string => !!part);
-  return parts.join(" · ");
+  return parts.join("\n");
 }
 
 /**

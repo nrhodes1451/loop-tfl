@@ -12,19 +12,27 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   FOI_EXTRACT_DISCLAIMER,
+  annotatePlatformFlags,
   applyExtractOverrides,
+  chordKey,
   foiSheetStem,
+  geographyIssues,
   mergeStationLayouts,
+  pageBearingIssues,
   parseObservedLayout,
   parseObservedPlacement,
   reviewExtract,
+  type ChordIndex,
   type FoiExtractOverride,
   type FoiLayoutFile,
   type FoiPageExtract,
   type FoiPageExtractFile,
   type FoiPlacementIssue,
 } from "../src/lib/schematic/foi-extract";
+import { undirectedBearingDeg } from "../src/lib/schematic/foi-project";
+import { normalizeSchematicLineId } from "../src/lib/schematic/levels";
 import type { FoiPageIndex } from "../src/lib/schematic/foi-match";
+import type { NetworkData } from "../src/lib/types";
 
 const ROOT = process.cwd();
 const FOI_DIR = path.join(ROOT, "data", "foi");
@@ -33,6 +41,7 @@ const PAGES_PATH = path.join(FOI_DIR, "pages.json");
 const EXTRACT_PATH = path.join(FOI_DIR, "extract.json");
 const LAYOUT_PATH = path.join(FOI_DIR, "layout.json");
 const OVERRIDES_PATH = path.join(FOI_DIR, "extract.overrides.json");
+const NETWORK_PATH = path.join(ROOT, "data", "network.json");
 
 export function observationPath(file: string, page: number): string {
   return path.join(OBSERVATIONS_DIR, `${foiSheetStem(file, page)}.json`);
@@ -135,6 +144,56 @@ export async function foiTodo(): Promise<{
   return { entries, total: index.pages.length };
 }
 
+function geodesicBearingDeg(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number {
+  const p1 = (lat1 * Math.PI) / 180;
+  const p2 = (lat2 * Math.PI) / 180;
+  const dlon = ((lon2 - lon1) * Math.PI) / 180;
+  const x = Math.sin(dlon) * Math.cos(p2);
+  const y =
+    Math.cos(p1) * Math.sin(p2) - Math.sin(p1) * Math.cos(p2) * Math.cos(dlon);
+  return ((Math.atan2(x, y) * 180) / Math.PI + 360) % 360;
+}
+
+export function chordIndexFromNetwork(network: NetworkData): ChordIndex {
+  const pos = new Map(network.stations.map((s) => [s.id, s]));
+  const adj = new Map<string, Set<string>>();
+  const add = (from: string, to: string, lineId: string) => {
+    const k = chordKey(from, lineId);
+    const set = adj.get(k) ?? new Set();
+    set.add(to);
+    adj.set(k, set);
+  };
+  for (const e of network.edges) {
+    const lineId = normalizeSchematicLineId(e.lineId);
+    add(e.from, e.to, lineId);
+    add(e.to, e.from, lineId);
+  }
+  const out: ChordIndex = {};
+  for (const [k, tos] of adj) {
+    const sep = k.indexOf("\0");
+    const stationId = k.slice(0, sep);
+    const here = pos.get(stationId);
+    if (!here) continue;
+    const chords: number[] = [];
+    for (const to of tos) {
+      const there = pos.get(to);
+      if (!there) continue;
+      chords.push(
+        undirectedBearingDeg(
+          geodesicBearingDeg(here.lat, here.lon, there.lat, there.lon),
+        ),
+      );
+    }
+    if (chords.length > 0) out[k] = chords;
+  }
+  return out;
+}
+
 export async function buildFoiLayout(): Promise<{
   pages: FoiPageExtract[];
   review: ReturnType<typeof reviewExtract>;
@@ -174,6 +233,20 @@ export async function buildFoiLayout(): Promise<{
   const merged = applyExtractOverrides(pages, overrides);
   const { stations, northConflicts, placementIssues } =
     mergeStationLayouts(merged);
+  const pageIssues = merged.flatMap(pageBearingIssues);
+  let chords: ChordIndex = {};
+  try {
+    const network = JSON.parse(await readFile(NETWORK_PATH, "utf8")) as NetworkData;
+    chords = chordIndexFromNetwork(network);
+  } catch {
+    /* network.json optional for unit tests that call helpers directly */
+  }
+  const geoIssues = geographyIssues(stations, chords);
+  const flagged = annotatePlatformFlags(
+    stations,
+    [...placementIssues, ...pageIssues, ...geoIssues],
+    chords,
+  );
   const generatedAt = new Date().toISOString();
   const extractFile: FoiPageExtractFile = {
     generatedAt,
@@ -185,7 +258,7 @@ export async function buildFoiLayout(): Promise<{
     generatedAt,
     source: "tfl-foi-2015-axonometric",
     disclaimer: FOI_EXTRACT_DISCLAIMER,
-    stations,
+    stations: flagged,
   };
   await writeFile(EXTRACT_PATH, `${JSON.stringify(extractFile, null, 2)}\n`);
   await writeFile(LAYOUT_PATH, `${JSON.stringify(layoutFile, null, 2)}\n`);
@@ -193,6 +266,8 @@ export async function buildFoiLayout(): Promise<{
     pages: merged,
     review: reviewExtract(merged, northConflicts, [
       ...placementIssues,
+      ...pageIssues,
+      ...geoIssues,
       ...readIssues,
     ]),
     missing: readIssues.length,
@@ -211,7 +286,7 @@ export async function main(): Promise<void> {
       console.log(`  ${e.file} p${e.page} ${e.stationId ?? "?"} [${e.reason}]`);
     }
     console.log(
-      `\nRead each sheet from data/pdf/.pages and write ${path.relative(
+      `\nRead each -read.jpg from data/pdf/.pages and write ${path.relative(
         ROOT,
         OBSERVATIONS_DIR,
       )}/<sheet>.json`,

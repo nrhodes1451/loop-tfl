@@ -11,14 +11,19 @@ step in the loop that only the agent can do; the scripts either side of it are
 deterministic and offline.
 
 ```
-npm run foi:render          # pdftoppm → data/pdf/.pages/<sheet>.png and -view.jpg
+npm run foi:render          # pdftoppm + 270° rotate → data/pdf/.pages/<sheet>-read.png and -read.jpg
   read sheets, write data/foi/observations/<sheet>.json
 npm run foi:build           # merge → data/foi/extract.json + layout.json
 npm run foi:build -- --todo # what still needs reading
 ```
 
-Read `data/pdf/.pages/<sheet>-view.jpg` (1536px long edge) rather than the
-200-dpi PNG unless you need to zoom into a table or a compass rose.
+Read `data/pdf/.pages/<sheet>-read.jpg` (1536px long edge, landscape reading pose)
+rather than the 200-dpi PNG unless you need to zoom into a table or a compass
+rose. Do not use a leftover `-view.jpg`; that file is the unrotated raster.
+
+The raster **is** the reading pose. `a`, `b`, `reference.at`, and `northDeg` are
+all measured on that one image. North is up on many sheets (Pimlico) but not
+all, so the rose still has to be read.
 
 ## Observation file
 
@@ -65,7 +70,7 @@ Find:
 2. The drawn compass rose (letter N / north arrow).
 
 Rules:
-- northDeg is clockwise degrees from UP on this image. 0 = north points to the top of the image, 90 = north points to the right, 180 = down, 270 = left. Page rotation is already applied. null if there is no readable compass.
+- northDeg is clockwise degrees from UP on this image. 0 = north points to the top of the image, 90 = north points to the right, 180 = down, 270 = left. null if there is no readable compass.
 - depths: one object per printed table row. label is the caption as printed (e.g. "Northern Line Platforms"). metres is the number only. Do not invent metres. If the table is absent, depths is [].
 - Do not estimate depth from the drawing geometry.
 - confidence is "low" if the table or rose is unreadable, cropped, or you are guessing.
@@ -80,16 +85,26 @@ Rules:
 - One entry per drawn platform box or labelled pair. caption is the printed label.
 - platformNumbers: integers as printed (e.g. PLATFORMS 7 & 8 → [7, 8]). [] if unnumbered.
 - end: which labelled end this box is (north/south/east/west). null if unlabelled.
-- bearingDeg: compass bearing of the platform long axis, clockwise from north as
-  indicated by the drawn rose. 0 = runs north–south, 90 = east–west. Use the rose
-  on THIS sheet. Undirected (0 and 180 are the same). null if you cannot read it.
-- a and b: the two visible ends of that platform box, in normalised page coordinates
-  (0–1, origin top-left, x then y). Page rotation is already applied.
+- bearingDeg: compass bearing of the platform long axis, clockwise from **the
+  drawn rose on this sheet**, not from the page edge and **not from a and b**.
+  0 = runs north–south, 90 = east–west. a/b and bearingDeg are independent
+  observations; the projection fit compares them, so a bearing copied from the
+  pixel slope carries no information. Undirected (0 and 180 are the same).
+  null if you cannot read it.
+- Boxes drawn parallel take the **same** bearingDeg.
+- a and b: corresponding ends of the platform **long axis** (not opposite
+  corners of the isometric parallelogram), in normalised page coordinates
+  (0–1, origin top-left, x then y). Parallel boxes should give near-identical
+  `b − a` vectors.
 - grid: printed grid cell if readable (e.g. "G4"), else null.
 - reference: the ticket hall / street building if clearly drawn, else null.
 - Never invent endpoints or bearings. confidence "low" when redaction, crop, or
   guesswork is involved. Omit a platform rather than fabricate a and b.
 - raw: one short sentence.
+
+Calibration (Pimlico, victoria line stations p4): `northDeg` is 0 (rose points
+up). Both platforms share `bearingDeg` about 80. Their `b − a` vectors are
+near-identical.
 
 ## Working through the queue
 
@@ -97,7 +112,7 @@ Rules:
 name comes from OCR and may be wrong; trust the drawing over the index.
 
 The work is resumable because each sheet is one independent file. Take a batch
-of 10 to 15 sheets, read each `-view.jpg`, write its observation file, then run
+of 10 to 15 sheets, read each `-read.jpg`, write its observation file, then run
 `npm run foi:build -- --todo` to confirm the queue shrank by that many before
 starting the next batch. Never write an observation for a sheet you have not
 looked at.
@@ -114,6 +129,9 @@ After a batch, `npm run foi:build` reports per-page review reasons:
 | `north-disagreement` | sheets for one station disagree on north by more than 20 degrees |
 | `placement-residual` | the projection fit for that sheet is too poor to trust |
 | `placement-disagreement` | sheets place a shared platform more than 30 m apart |
+| `bearing-from-slope` | most marks have bearingDeg copied from the a→b pixel slope |
+| `bearing-conflict` | parallel a→b vectors were given different bearings |
+| `bearing-vs-geography` | merged bearing is more than 40° from every neighbour chord |
 
 A reason is a prompt to re-read the sheet. Where the drawing itself is wrong or
 unreadable and a human has decided the answer, record it in

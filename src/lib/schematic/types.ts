@@ -51,6 +51,7 @@ export type SchematicFoiPlacement = {
   b?: [number, number];
   grid?: string | null;
   residual?: number;
+  flags?: string[];
 };
 
 /** Every FOI sheet mark for this station, including those not used for x/y. */

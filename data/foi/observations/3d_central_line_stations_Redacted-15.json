@@ -1,8 +1,11 @@
 {
-  "northDeg": 315,
+  "northDeg": 225,
   "depths": [
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 24.4}
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 24.4
+    }
   ],
   "confidence": "high",
-  "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m."
+  "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m. northDeg migrated +270 for reading-pose raster."
 }

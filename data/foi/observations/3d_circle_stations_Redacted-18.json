@@ -1,8 +1,11 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
-    {"label": "DISTRICT AND CIRCLE LINE PLATFORMS", "metres": 3.5}
+    {
+      "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+      "metres": 3.5
+    }
   ],
   "confidence": "high",
-  "raw": "Temple axonometric; N towards the right; District and Circle platforms 3.5m."
+  "raw": "Temple axonometric; N towards the right; District and Circle platforms 3.5m. northDeg migrated +270 for reading-pose raster."
 }

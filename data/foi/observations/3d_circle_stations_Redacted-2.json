@@ -1,5 +1,5 @@
 {
-  "northDeg": 75,
+  "northDeg": 345,
   "depths": [
     {
       "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Barbican rose N at 75°; Circle & Met and Railtrack Thameslink both 8.5m."
+  "raw": "Barbican rose N at 75\u00b0; Circle & Met and Railtrack Thameslink both 8.5m. northDeg migrated +270 for reading-pose raster."
 }

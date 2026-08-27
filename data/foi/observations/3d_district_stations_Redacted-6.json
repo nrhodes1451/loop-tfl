@@ -1,5 +1,5 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [
     {
       "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Whitechapel: N points top-right; District & Metropolitan 3.1m, East London Line 7.8m."
+  "raw": "Whitechapel: N points top-right; District & Metropolitan 3.1m, East London Line 7.8m. northDeg migrated +270 for reading-pose raster."
 }

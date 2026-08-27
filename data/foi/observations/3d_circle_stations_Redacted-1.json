@@ -1,13 +1,11 @@
 {
-  "northDeg": 60,
+  "northDeg": 315,
   "depths": [
     {
       "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
       "metres": 7.0
     }
   ],
-  "confidence": "high",
-  "raw": "Aldgate rose N at 60\u00b0; Circle & Metropolitan platforms 7.0m.",
   "platforms": [
     {
       "caption": "PLATFORM 1 SOUTHBOUND CIRCLE LINE",
@@ -16,16 +14,16 @@
         1
       ],
       "end": "south",
+      "bearingDeg": 125,
       "a": [
-        0.232,
-        0.838
+        0.22,
+        0.72
       ],
       "b": [
-        0.586,
-        0.388
+        0.55,
+        0.38
       ],
-      "grid": "D8",
-      "bearingDeg": 158,
+      "grid": "D7",
       "confidence": "high"
     },
     {
@@ -35,16 +33,16 @@
         2
       ],
       "end": null,
+      "bearingDeg": 125,
       "a": [
-        0.267,
-        0.829
+        0.25,
+        0.7
       ],
       "b": [
-        0.621,
-        0.379
+        0.58,
+        0.36
       ],
-      "grid": "J4",
-      "bearingDeg": 158,
+      "grid": "E7",
       "confidence": "high"
     },
     {
@@ -54,16 +52,16 @@
         3
       ],
       "end": null,
+      "bearingDeg": 125,
       "a": [
-        0.302,
-        0.821
+        0.28,
+        0.68
       ],
       "b": [
-        0.656,
-        0.37
+        0.61,
+        0.34
       ],
-      "grid": "J4",
-      "bearingDeg": 158,
+      "grid": "F6",
       "confidence": "high"
     },
     {
@@ -73,24 +71,26 @@
         4
       ],
       "end": "north",
+      "bearingDeg": 125,
       "a": [
-        0.337,
-        0.812
+        0.31,
+        0.66
       ],
       "b": [
-        0.691,
-        0.362
+        0.64,
+        0.32
       ],
-      "grid": "J4",
-      "bearingDeg": 158,
+      "grid": "F6",
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Ticket Hall",
     "at": [
-      0.291,
-      0.5
+      0.32,
+      0.48
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Aldgate reading pose: rose N towards top-left (315). Four parallel boxes share bearingDeg 125 (northbound to Liverpool Street). Depth 7.0m."
 }

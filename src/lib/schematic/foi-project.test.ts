@@ -106,6 +106,23 @@ describe("fitSheetBasis", () => {
     expect(ns.northM).toBeCloseTo(0, 4);
   });
 
+  it("round-trips a known offset through the isometric fallback once aspect is applied", () => {
+    const other = {
+      a: planToImage(40, -half, Aiso, origin),
+      b: planToImage(40, half, Aiso, origin),
+      bearingDeg: 0,
+    };
+    const basis = fitSheetBasis([nsEnds, other], northDeg, origin);
+    expect(basis.mode).toBe("isometric");
+    const hit = imageToPlan(
+      (other.a[0] + other.b[0]) / 2,
+      (other.a[1] + other.b[1]) / 2,
+      basis,
+    );
+    expect(hit.eastM).toBeCloseTo(40, 4);
+    expect(hit.northM).toBeCloseTo(0, 4);
+  });
+
   it("reports a high residual when parallel platforms claim conflicting bearings", () => {
     const other = {
       a: planToImage(20, -half, Aiso, origin),

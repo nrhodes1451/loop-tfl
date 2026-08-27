@@ -1,5 +1,5 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
     {
       "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Euston Square rose N at 90°; Circle & Metropolitan platforms 7.3m."
+  "raw": "Euston Square rose N at 90\u00b0; Circle & Metropolitan platforms 7.3m. northDeg migrated +270 for reading-pose raster."
 }

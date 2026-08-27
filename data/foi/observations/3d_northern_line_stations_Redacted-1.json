@@ -1,29 +1,29 @@
 {
-  "northDeg": 90,
+  "northDeg": 315,
   "depths": [
     {
       "label": "NORTHERN LINE PLATFORMS",
       "metres": 27.4
     }
   ],
-  "confidence": "high",
-  "raw": "Angel axonometric: N points right (90\u00b0) on the portrait raster; Northern Line platforms 27.4m.",
   "platforms": [
     {
       "caption": "SOUTHBOUND PLATFORM TO OLD STREET",
       "lineId": "northern",
-      "platformNumbers": [],
+      "platformNumbers": [
+        1
+      ],
       "end": null,
+      "bearingDeg": 100,
       "a": [
-        0.586,
-        0.613
+        0.58,
+        0.58
       ],
       "b": [
-        0.822,
-        0.388
+        0.82,
+        0.38
       ],
       "grid": "J6",
-      "bearingDeg": 136,
       "confidence": "high"
     },
     {
@@ -33,24 +33,26 @@
         2
       ],
       "end": null,
+      "bearingDeg": 100,
       "a": [
-        0.645,
-        0.725
+        0.64,
+        0.68
       ],
       "b": [
-        0.94,
-        0.388
+        0.88,
+        0.48
       ],
       "grid": "K7",
-      "bearingDeg": 131,
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Ticket Hall",
     "at": [
-      0.173,
-      0.163
+      0.12,
+      0.4
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Angel reading pose: rose N towards top-left (315). Parallel Northern boxes share bearingDeg 100. Depth 27.4m."
 }

@@ -1,5 +1,5 @@
 {
-  "northDeg": 90,
+  "northDeg": 315,
   "depths": [
     {
       "label": "Bakerloo Line Platforms",
@@ -10,49 +10,14 @@
       "metres": 32.3
     }
   ],
-  "confidence": "high",
-  "raw": "Piccadilly Circus axonometric 1 table lists Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90\u00b0 on this image).",
-  "platforms": [
-    {
-      "caption": "BAKERLOO LINE PLATFORMS",
-      "lineId": "bakerloo",
-      "platformNumbers": [],
-      "confidence": "low",
-      "a": [
-        0.35,
-        0.635
-      ],
-      "b": [
-        0.409,
-        0.725
-      ],
-      "grid": "G7",
-      "bearingDeg": 57,
-      "end": null
-    },
-    {
-      "caption": "PICCADILLY LINE PLATFORMS",
-      "lineId": "piccadilly",
-      "platformNumbers": [],
-      "confidence": "low",
-      "a": [
-        0.368,
-        0.68
-      ],
-      "b": [
-        0.427,
-        0.77
-      ],
-      "grid": "G7",
-      "bearingDeg": 57,
-      "end": null
-    }
-  ],
+  "platforms": [],
   "reference": {
     "label": "Ticket Hall",
     "at": [
-      0.291,
+      0.45,
       0.5
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Piccadilly Circus axonometric 1 is ticket-hall level; no usable platform boxes. Rose N about 15\u00b0 west of up (345). Depths 28.0 / 32.3m. Placement is on axonometric 2."
 }

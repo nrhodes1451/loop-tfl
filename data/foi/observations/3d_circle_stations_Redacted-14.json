@@ -1,6 +1,6 @@
 {
-  "northDeg": 45,
+  "northDeg": 315,
   "depths": [],
   "confidence": "high",
-  "raw": "Moorgate axonometric; N towards top-right; no printed depth table."
+  "raw": "Moorgate axonometric; N towards top-right; no printed depth table. northDeg migrated +270 for reading-pose raster."
 }

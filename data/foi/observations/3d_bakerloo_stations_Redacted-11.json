@@ -1,5 +1,5 @@
 {
-  "northDeg": 180,
+  "northDeg": 90,
   "depths": [
     {
       "label": "District and Circle Line Platforms",
@@ -11,5 +11,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Paddington (City) table lists District and Circle 5.2m and Bakerloo 9.7m; compass N points down on this image (180\u00b0)."
+  "raw": "Paddington (City) table lists District and Circle 5.2m and Bakerloo 9.7m; compass N points down on this image (180\u00b0). northDeg migrated +270 for reading-pose raster."
 }

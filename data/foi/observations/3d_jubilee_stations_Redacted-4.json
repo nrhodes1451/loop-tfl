@@ -1,5 +1,5 @@
 {
-  "northDeg": 330,
+  "northDeg": 315,
   "depths": [
     {
       "label": "VICTORIA LINE PLATFORMS",
@@ -14,8 +14,6 @@
       "metres": 31.1
     }
   ],
-  "confidence": "high",
-  "raw": "Green Park: N about 30\u00b0 west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m.",
   "platforms": [
     {
       "caption": "PICCADILLY PLATFORM 2 WESTBOUND TO HYDE PARK CORNER",
@@ -23,17 +21,17 @@
       "platformNumbers": [
         2
       ],
+      "end": null,
+      "bearingDeg": 60,
       "a": [
-        0.173,
-        0.163
+        0.22,
+        0.22
       ],
       "b": [
-        0.409,
-        0.388
+        0.48,
+        0.42
       ],
       "grid": "C2",
-      "bearingDeg": 164,
-      "end": null,
       "confidence": "high"
     },
     {
@@ -42,17 +40,17 @@
       "platformNumbers": [
         1
       ],
+      "end": null,
+      "bearingDeg": 60,
       "a": [
-        0.191,
-        0.208
+        0.24,
+        0.26
       ],
       "b": [
-        0.427,
-        0.433
+        0.5,
+        0.46
       ],
-      "grid": "C2",
-      "bearingDeg": 164,
-      "end": null,
+      "grid": "C3",
       "confidence": "high"
     },
     {
@@ -61,17 +59,17 @@
       "platformNumbers": [
         3
       ],
+      "end": null,
+      "bearingDeg": 4,
       "a": [
-        0.055,
-        0.838
+        0.08,
+        0.78
       ],
       "b": [
-        0.232,
-        0.613
+        0.28,
+        0.55
       ],
-      "grid": "A8",
-      "bearingDeg": 68,
-      "end": null,
+      "grid": "B8",
       "confidence": "high"
     },
     {
@@ -80,17 +78,17 @@
       "platformNumbers": [
         4
       ],
+      "end": null,
+      "bearingDeg": 4,
       "a": [
-        0.073,
-        0.871
+        0.1,
+        0.82
       ],
       "b": [
-        0.25,
-        0.646
+        0.3,
+        0.59
       ],
-      "grid": "A8",
-      "bearingDeg": 68,
-      "end": null,
+      "grid": "B8",
       "confidence": "high"
     },
     {
@@ -99,17 +97,17 @@
       "platformNumbers": [
         5
       ],
+      "end": null,
+      "bearingDeg": 135,
       "a": [
-        0.409,
-        0.5
+        0.42,
+        0.55
       ],
       "b": [
-        0.586,
-        0.95
+        0.62,
+        0.78
       ],
-      "grid": "G5",
-      "bearingDeg": 9,
-      "end": null,
+      "grid": "G6",
       "confidence": "high"
     },
     {
@@ -118,25 +116,27 @@
       "platformNumbers": [
         6
       ],
+      "end": null,
+      "bearingDeg": 135,
       "a": [
-        0.433,
-        0.523
+        0.45,
+        0.58
       ],
       "b": [
-        0.61,
-        0.973
+        0.65,
+        0.81
       ],
-      "grid": "G5",
-      "bearingDeg": 9,
-      "end": null,
+      "grid": "G6",
       "confidence": "high"
     }
   ],
   "reference": {
     "label": "Ticket Hall",
     "at": [
-      0.055,
-      0.388
+      0.18,
+      0.18
     ]
-  }
+  },
+  "confidence": "high",
+  "raw": "Green Park reading pose: rose N towards top-left (315). Parallel pairs: Piccadilly 60, Victoria 4, Jubilee 135. Depths 23.4 / 27.4 / 31.1m."
 }

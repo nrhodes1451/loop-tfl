@@ -1,6 +1,11 @@
 {
-  "northDeg": 90,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 22.0 }],
+  "northDeg": 0,
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 22.0
+    }
+  ],
   "confidence": "high",
-  "raw": "Knightsbridge: N to the right; Piccadilly platforms 22.0m."
+  "raw": "Knightsbridge: N to the right; Piccadilly platforms 22.0m. northDeg migrated +270 for reading-pose raster."
 }

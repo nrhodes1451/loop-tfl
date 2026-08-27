@@ -1,5 +1,5 @@
 {
-  "northDeg": 90,
+  "northDeg": 0,
   "depths": [
     {
       "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
@@ -7,5 +7,5 @@
     }
   ],
   "confidence": "high",
-  "raw": "Bayswater rose N at 90°; District and Circle platforms 5.0m."
+  "raw": "Bayswater rose N at 90\u00b0; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
 }
