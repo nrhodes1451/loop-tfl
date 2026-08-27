@@ -7,5 +7,34 @@
     }
   ],
   "confidence": "high",
-  "raw": "Waterloo axonometric 3 table lists Waterloo & City Line at 12.2m; compass N is about 15\u00b0 counter-clockwise of drawing-up (75\u00b0 on this image)."
+  "raw": "Waterloo axonometric 3 table lists Waterloo & City Line at 12.2m; compass N is about 15\u00b0 counter-clockwise of drawing-up (75\u00b0 on this image).",
+  "platforms": [
+    {
+      "caption": "WATERLOO AND CITY LINE PLATFORMS 25 & 26",
+      "lineId": "waterloo-city",
+      "platformNumbers": [
+        25,
+        26
+      ],
+      "a": [
+        0.291,
+        0.477
+      ],
+      "b": [
+        0.468,
+        0.545
+      ],
+      "grid": "F5",
+      "bearingDeg": 36,
+      "end": null,
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "LUL Main Ticket Hall",
+    "at": [
+      0.232,
+      0.275
+    ]
+  }
 }

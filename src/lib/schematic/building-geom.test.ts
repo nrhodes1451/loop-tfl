@@ -9,6 +9,7 @@ import {
   disposeSurfaceTile,
   featuresToTileGeom,
   ribbonGeometry,
+  stairRibbonGeometry,
   wrapLambertFragment,
 } from "./building-geom";
 
@@ -128,6 +129,28 @@ describe("ribbonGeometry", () => {
     expect(geom).not.toBeNull();
     expect(geom!.getAttribute("position")!.count).toBe(4);
     expect(geom!.getIndex()!.count).toBe(6);
+    geom!.dispose();
+  });
+});
+
+describe("stairRibbonGeometry", () => {
+  it("builds a kerb with a +Y top so a camera above can see it", () => {
+    const geom = stairRibbonGeometry(
+      [
+        [0, 0],
+        [10, 0],
+      ],
+      2.5,
+      0.6,
+    );
+    expect(geom).not.toBeNull();
+    const pos = geom!.getAttribute("position")!;
+    let maxY = -Infinity;
+    for (let i = 0; i < pos.count; i++) maxY = Math.max(maxY, pos.getY(i));
+    expect(maxY).toBeCloseTo(0.6, 5);
+    expect(uniqueNormals(geom!).some((n) => n.startsWith("0.000,1.000,"))).toBe(
+      true,
+    );
     geom!.dispose();
   });
 });

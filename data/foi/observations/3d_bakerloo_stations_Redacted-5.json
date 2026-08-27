@@ -15,5 +15,45 @@
     }
   ],
   "confidence": "high",
-  "raw": "Embankment axonometric 2 table matches 5.5 / 16.2 / 21.0m; compass N is slightly clockwise of drawing-up (100\u00b0 on this image)."
+  "raw": "Embankment axonometric 2 table matches 5.5 / 16.2 / 21.0m; compass N is slightly clockwise of drawing-up (100\u00b0 on this image).",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO WESTMINSTER",
+      "lineId": "district",
+      "platformNumbers": [
+        1
+      ],
+      "a": [
+        0.232,
+        0.815
+      ],
+      "b": [
+        0.586,
+        0.253
+      ],
+      "grid": "D8",
+      "bearingDeg": 112,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO TEMPLE",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "a": [
+        0.35,
+        0.669
+      ],
+      "b": [
+        0.674,
+        0.14
+      ],
+      "grid": "F6",
+      "bearingDeg": 111,
+      "end": null,
+      "confidence": "high"
+    }
+  ]
 }

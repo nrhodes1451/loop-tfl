@@ -1,6 +1,58 @@
 {
   "northDeg": 90,
-  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 36.0 }],
+  "depths": [
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 36.0
+    }
+  ],
   "confidence": "high",
-  "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m."
+  "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "a": [
+        0.232,
+        0.894
+      ],
+      "b": [
+        0.468,
+        0.556
+      ],
+      "grid": "D8",
+      "bearingDeg": 125,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "a": [
+        0.262,
+        0.86
+      ],
+      "b": [
+        0.486,
+        0.523
+      ],
+      "grid": "D8",
+      "bearingDeg": 124,
+      "end": null,
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.409,
+      0.444
+    ]
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T10:37:37.567Z",
+  "generatedAt": "2026-08-27T09:09:24.764Z",
   "source": "tfl-foi-2015-axonometric",
   "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
   "pages": [
@@ -88,9 +88,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO WESTMINSTER",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 108,
+          "a": [
+            0.232,
+            0.95
+          ],
+          "b": [
+            0.527,
+            0.5
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO TEMPLE",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 99,
+          "a": [
+            0.291,
+            0.838
+          ],
+          "b": [
+            0.586,
+            0.163
+          ],
+          "grid": "H3",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
       "raw": "Embankment axonometric 1 table is clear (5.5 / 16.2 / 21.0m); compass N is about 15° clockwise of drawing-up (105° on this image), with some tilt uncertainty.",
+      "reference": {
+        "label": "Ticket Hall (North End)",
+        "at": [
+          0.35,
+          0.388
+        ]
+      },
       "note": "Embankment table is readable; compass ~105° on the PNG (tilt ±15°)."
     },
     {
@@ -120,7 +166,46 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO WESTMINSTER",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 112,
+          "a": [
+            0.232,
+            0.815
+          ],
+          "b": [
+            0.586,
+            0.253
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO TEMPLE",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 111,
+          "a": [
+            0.35,
+            0.669
+          ],
+          "b": [
+            0.674,
+            0.14
+          ],
+          "grid": "F6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
       "raw": "Embankment axonometric 2 table matches 5.5 / 16.2 / 21.0m; compass N is slightly clockwise of drawing-up (100° on this image)."
     },
@@ -151,7 +236,84 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 128,
+          "a": [
+            0.232,
+            0.725
+          ],
+          "b": [
+            0.409,
+            0.5
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        },
+        {
+          "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 118,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.35,
+            0.613
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN LINE PLATFORM 3 NORTHBOUND TO CHARING CROSS",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 128,
+          "a": [
+            0.468,
+            0.388
+          ],
+          "b": [
+            0.645,
+            0.163
+          ],
+          "grid": "H4",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN LINE PLATFORM 4 SOUTHBOUND TO WATERLOO",
+          "lineId": "northern",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 118,
+          "a": [
+            0.586,
+            0.5
+          ],
+          "b": [
+            0.763,
+            0.163
+          ],
+          "grid": "J5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
       "raw": "Embankment axonometric 3 table lists 5.5 / 16.2 / 21.0m; compass N points to drawing-up (90° on this image)."
     },
@@ -262,9 +424,51 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "BAKERLOO LINE PLATFORMS",
+          "lineId": "bakerloo",
+          "platformNumbers": [],
+          "end": null,
+          "bearingDeg": 57,
+          "a": [
+            0.35,
+            0.635
+          ],
+          "b": [
+            0.409,
+            0.725
+          ],
+          "grid": "G7",
+          "confidence": "low"
+        },
+        {
+          "caption": "PICCADILLY LINE PLATFORMS",
+          "lineId": "piccadilly",
+          "platformNumbers": [],
+          "end": null,
+          "bearingDeg": 57,
+          "a": [
+            0.368,
+            0.68
+          ],
+          "b": [
+            0.427,
+            0.77
+          ],
+          "grid": "G7",
+          "confidence": "low"
+        }
+      ],
       "confidence": "high",
-      "raw": "Piccadilly Circus axonometric 1 table lists Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image)."
+      "raw": "Piccadilly Circus axonometric 1 table lists Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image).",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.291,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -283,9 +487,93 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 BAKERLOO NORTHBOUND TO OXFORD CIRCUS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 148,
+          "a": [
+            0.114,
+            0.5
+          ],
+          "b": [
+            0.291,
+            0.388
+          ],
+          "grid": "B5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 BAKERLOO SOUTHBOUND TO CHARING CROSS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.586,
+            0.163
+          ],
+          "b": [
+            0.763,
+            0.163
+          ],
+          "grid": "J2",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 PICCADILLY EASTBOUND TO LEICESTER SQUARE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 118,
+          "a": [
+            0.173,
+            0.95
+          ],
+          "b": [
+            0.35,
+            0.613
+          ],
+          "grid": "C9",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 PICCADILLY WESTBOUND TO GREEN PARK",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 123,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.527,
+            0.388
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Piccadilly Circus axonometric 2 repeats Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image)."
+      "raw": "Piccadilly Circus axonometric 2 repeats Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90° on this image).",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.468,
+          0.163
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -336,9 +624,55 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "JUBILEE LINE PLATFORM 5",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            5
+          ],
+          "end": "south",
+          "bearingDeg": 13,
+          "a": [
+            0.35,
+            0.725
+          ],
+          "b": [
+            0.822,
+            0.838
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE LINE PLATFORM 6",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            6
+          ],
+          "end": "south",
+          "bearingDeg": 13,
+          "a": [
+            0.368,
+            0.759
+          ],
+          "b": [
+            0.84,
+            0.871
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
       "raw": "Waterloo axonometric 1 table appears to list District and Circle at 33.0m (digit 1 vs 3 is uncertain); compass N points down on the drawing (270° on this image).",
+      "reference": {
+        "label": "Colonnade Ticket Hall",
+        "at": [
+          0.173,
+          0.388
+        ]
+      },
       "note": "Printed table says District and Circle 33.0m on a Jubilee/Waterloo sheet (FOI template error). Compass is 270° on this PNG — omitted so it does not disagree with Waterloo sheets 2–3 (~75°).",
       "reviewed": true
     },
@@ -364,9 +698,93 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "BAKERLOO LINE PLATFORM 4",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 31,
+          "a": [
+            0.291,
+            0.477
+          ],
+          "b": [
+            0.527,
+            0.545
+          ],
+          "grid": "E5",
+          "confidence": "high"
+        },
+        {
+          "caption": "BAKERLOO LINE PLATFORM 3",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 59,
+          "a": [
+            0.291,
+            0.635
+          ],
+          "b": [
+            0.527,
+            0.86
+          ],
+          "grid": "E7",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN LINE PLATFORM 2",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 52,
+          "a": [
+            0.291,
+            0.298
+          ],
+          "b": [
+            0.468,
+            0.433
+          ],
+          "grid": "E4",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN LINE PLATFORM 1",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 61,
+          "a": [
+            0.409,
+            0.477
+          ],
+          "b": [
+            0.586,
+            0.658
+          ],
+          "grid": "H5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
       "raw": "Waterloo axonometric 2 table lists Bakerloo NB 19.5m, SB 16.4m, Northern 21.3m; compass tilt about 15° from drawing-up is a borderline guess (75° on this image).",
+      "reference": {
+        "label": "Shell Centre Ticket Hall",
+        "at": [
+          0.173,
+          0.219
+        ]
+      },
       "note": "Waterloo Bakerloo/Northern table is readable; compass ~75° on the PNG."
     },
     {
@@ -381,9 +799,37 @@
           "lineId": "waterloo-city"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "WATERLOO AND CITY LINE PLATFORMS 25 & 26",
+          "lineId": "waterloo-city",
+          "platformNumbers": [
+            25,
+            26
+          ],
+          "end": null,
+          "bearingDeg": 36,
+          "a": [
+            0.291,
+            0.477
+          ],
+          "b": [
+            0.468,
+            0.545
+          ],
+          "grid": "F5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Waterloo axonometric 3 table lists Waterloo & City Line at 12.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image)."
+      "raw": "Waterloo axonometric 3 table lists Waterloo & City Line at 12.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image).",
+      "reference": {
+        "label": "LUL Main Ticket Hall",
+        "at": [
+          0.232,
+          0.275
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -673,7 +1119,14 @@
       ],
       "platforms": [],
       "confidence": "high",
-      "raw": "Oxford Circus upper-levels axonometric; N towards bottom-left; Bakerloo/Victoria 23.1m, Central 24.6m."
+      "raw": "Oxford Circus upper-levels axonometric; N towards bottom-left; Bakerloo/Victoria 23.1m, Central 24.6m. Upper-levels sheet: platform boxes not drawn; access labels only.",
+      "reference": {
+        "label": "Main Ticket Hall",
+        "at": [
+          0.468,
+          0.163
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -697,7 +1150,122 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 CENTRAL WESTBOUND TO BOND STREET",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 173,
+          "a": [
+            0.114,
+            0.838
+          ],
+          "b": [
+            0.291,
+            0.613
+          ],
+          "grid": "B8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 CENTRAL EASTBOUND TO TOTTENHAM COURT ROAD",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 173,
+          "a": [
+            0.132,
+            0.871
+          ],
+          "b": [
+            0.309,
+            0.646
+          ],
+          "grid": "B8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 5 VICTORIA SOUTHBOUND TO GREEN PARK",
+          "lineId": "victoria",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 163,
+          "a": [
+            0.527,
+            0.838
+          ],
+          "b": [
+            0.704,
+            0.5
+          ],
+          "grid": "I8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO REGENTS PARK",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 156,
+          "a": [
+            0.586,
+            0.838
+          ],
+          "b": [
+            0.763,
+            0.388
+          ],
+          "grid": "J8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO PICCADILLY CIRCUS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 159,
+          "a": [
+            0.645,
+            0.725
+          ],
+          "b": [
+            0.822,
+            0.331
+          ],
+          "grid": "K7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 6 VICTORIA NORTHBOUND TO WARREN STREET",
+          "lineId": "victoria",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 156,
+          "a": [
+            0.704,
+            0.725
+          ],
+          "b": [
+            0.881,
+            0.275
+          ],
+          "grid": "L7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
       "raw": "Oxford Circus platforms axonometric; N towards bottom-left; same depth table as the upper-levels sheet."
     },
@@ -824,9 +1392,93 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 SOUTHBOUND CIRCLE LINE",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": "south",
+          "bearingDeg": 158,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.586,
+            0.388
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 NORTHBOUND CIRCLE & METROPOLITAN",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 158,
+          "a": [
+            0.267,
+            0.829
+          ],
+          "b": [
+            0.621,
+            0.379
+          ],
+          "grid": "J4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND METROPOLITAN & CIRCLE",
+          "lineId": "metropolitan",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 158,
+          "a": [
+            0.302,
+            0.821
+          ],
+          "b": [
+            0.656,
+            0.37
+          ],
+          "grid": "J4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 NORTHBOUND METROPOLITAN LINE",
+          "lineId": "metropolitan",
+          "platformNumbers": [
+            4
+          ],
+          "end": "north",
+          "bearingDeg": 158,
+          "a": [
+            0.337,
+            0.812
+          ],
+          "b": [
+            0.691,
+            0.362
+          ],
+          "grid": "J4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Aldgate rose N at 60°; Circle & Metropolitan platforms 7.0m."
+      "raw": "Aldgate rose N at 60°; Circle & Metropolitan platforms 7.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.291,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1338,9 +1990,77 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "DISTRICT PLATFORMS 1 & 2",
+          "lineId": "district",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 70,
+          "a": [
+            0.719,
+            0.41
+          ],
+          "b": [
+            0.387,
+            0.53
+          ],
+          "grid": "G2",
+          "confidence": "high"
+        },
+        {
+          "caption": "DISTRICT PLATFORMS 3 & 4",
+          "lineId": "district",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 70,
+          "a": [
+            0.829,
+            0.47
+          ],
+          "b": [
+            0.497,
+            0.59
+          ],
+          "grid": "H3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PICCADILLY PLATFORMS 5 & 6",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": null,
+          "bearingDeg": 70,
+          "a": [
+            0.94,
+            0.53
+          ],
+          "b": [
+            0.608,
+            0.65
+          ],
+          "grid": "I4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Earl's Court: rose has N down / S up; District 4.8m and Piccadilly 19.8m."
+      "raw": "Earl's Court: rose has N down / S up; District 4.8m and Piccadilly 19.8m.",
+      "reference": {
+        "label": "Earl's Court Road Ticket Hall",
+        "at": [
+          0.11,
+          0.53
+        ]
+      }
     },
     {
       "file": "3d district stations Redacted.pdf",
@@ -1480,9 +2200,131 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PICCADILLY PLATFORM 2 WESTBOUND TO HYDE PARK CORNER",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 164,
+          "a": [
+            0.173,
+            0.163
+          ],
+          "b": [
+            0.409,
+            0.388
+          ],
+          "grid": "C2",
+          "confidence": "high"
+        },
+        {
+          "caption": "PICCADILLY PLATFORM 1 EASTBOUND TO PICCADILLY CIRCUS",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 164,
+          "a": [
+            0.191,
+            0.208
+          ],
+          "b": [
+            0.427,
+            0.433
+          ],
+          "grid": "C2",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA PLATFORM 3 NORTHBOUND TO OXFORD CIRCUS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 68,
+          "a": [
+            0.055,
+            0.838
+          ],
+          "b": [
+            0.232,
+            0.613
+          ],
+          "grid": "A8",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA PLATFORM 4 SOUTHBOUND TO VICTORIA",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 68,
+          "a": [
+            0.073,
+            0.871
+          ],
+          "b": [
+            0.25,
+            0.646
+          ],
+          "grid": "A8",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE PLATFORM 5 NORTHBOUND TO BOND STREET",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 9,
+          "a": [
+            0.409,
+            0.5
+          ],
+          "b": [
+            0.586,
+            0.95
+          ],
+          "grid": "G5",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE PLATFORM 6 SOUTHBOUND TO WESTMINSTER",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 9,
+          "a": [
+            0.433,
+            0.523
+          ],
+          "b": [
+            0.61,
+            0.973
+          ],
+          "grid": "G5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Green Park: N about 30° west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m."
+      "raw": "Green Park: N about 30° west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.055,
+          0.388
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -1577,9 +2419,53 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "SOUTHBOUND PLATFORM TO OLD STREET",
+          "lineId": "northern",
+          "platformNumbers": [],
+          "end": null,
+          "bearingDeg": 136,
+          "a": [
+            0.586,
+            0.613
+          ],
+          "b": [
+            0.822,
+            0.388
+          ],
+          "grid": "J6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 NORTHBOUND TO KINGS CROSS",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 131,
+          "a": [
+            0.645,
+            0.725
+          ],
+          "b": [
+            0.94,
+            0.388
+          ],
+          "grid": "K7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Angel axonometric: N points right (90°) on the portrait raster; Northern Line platforms 27.4m."
+      "raw": "Angel axonometric: N points right (90°) on the portrait raster; Northern Line platforms 27.4m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.173,
+          0.163
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2096,9 +2982,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 125,
+          "a": [
+            0.232,
+            0.894
+          ],
+          "b": [
+            0.468,
+            0.556
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 124,
+          "a": [
+            0.262,
+            0.86
+          ],
+          "b": [
+            0.486,
+            0.523
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m."
+      "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.409,
+          0.444
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -2368,9 +3300,55 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 12,
+          "a": [
+            0.221,
+            0.23
+          ],
+          "b": [
+            0.497,
+            0.29
+          ],
+          "grid": "7.5D",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 NORTHBOUND",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 23,
+          "a": [
+            0.221,
+            0.29
+          ],
+          "b": [
+            0.497,
+            0.41
+          ],
+          "grid": "5H",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Pimlico: N points right; Victoria platforms 22.5m."
+      "raw": "Pimlico: N points right; Victoria platforms 22.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.553,
+          0.59
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",

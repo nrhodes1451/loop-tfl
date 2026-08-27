@@ -46,6 +46,7 @@ next-env.d.ts
 /data/schematic/generated/
 /data/schematic/index.json
 /data/schematic/lines.json
+/data/schematic/entrances.json
 
 # TfL FOI axonometric scans and OCR raster cache — not committed
 /data/pdf/

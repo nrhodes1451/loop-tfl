@@ -4,6 +4,7 @@ import {
   foiDepthM,
   formatDepthBelowStreet,
   hoverDepthLabel,
+  hoverFoiExtractLabel,
   platformWorldY,
 } from "./foi-layout";
 
@@ -37,5 +38,14 @@ describe("FOI platform depths", () => {
     expect(
       hoverDepthLabel("HUBKGX", { type: "street", level: 0 }),
     ).toBeNull();
+    expect(
+      hoverFoiExtractLabel({
+        confidence: "low",
+        caption: "BAKERLOO LINE PLATFORMS",
+        eastM: 0,
+        northM: 0,
+        grid: "G7",
+      }),
+    ).toBe("FOI low · G7 · BAKERLOO LINE PLATFORMS");
   });
 });

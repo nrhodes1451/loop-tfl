@@ -7,6 +7,7 @@
 import layoutJson from "../../../data/foi/layout.json";
 import type { FoiLayoutFile } from "./foi-extract";
 import { normalizeSchematicLineId } from "./levels";
+import type { SchematicFoiPlacement } from "./types";
 import { typicalDepthM } from "./lu-scale";
 
 const file = layoutJson as FoiLayoutFile;
@@ -53,6 +54,19 @@ export function formatDepthBelowStreet(metres: number): string {
   const rounded = Math.round(metres * 10) / 10;
   const text = Number.isInteger(rounded) ? String(rounded) : String(rounded);
   return `${text} m below street`;
+}
+
+/** Hover line for the FOI mark that placed a platform (confidence, grid, caption). */
+export function hoverFoiExtractLabel(
+  foi: SchematicFoiPlacement | undefined,
+): string | null {
+  if (!foi) return null;
+  const parts = [
+    `FOI ${foi.confidence}`,
+    foi.grid,
+    foi.caption,
+  ].filter((part): part is string => !!part);
+  return parts.join(" · ");
 }
 
 /**

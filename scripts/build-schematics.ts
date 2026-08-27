@@ -8,16 +8,33 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { FoiLayoutFile } from "../src/lib/schematic/foi-extract";
-import { generateSchematic } from "../src/lib/schematic/generate";
+import {
+  generateSchematic,
+  type GeneratePlacementPlatform,
+} from "../src/lib/schematic/generate";
 import { buildLineNetwork } from "../src/lib/schematic/lines";
-import type { SchematicIndex, SchematicStation } from "../src/lib/schematic/types";
+import type {
+  SchematicFoiMark,
+  SchematicIndex,
+  SchematicStation,
+} from "../src/lib/schematic/types";
 import type { NetworkData } from "../src/lib/types";
+import {
+  OVERPASS_ENDPOINTS,
+  bakeEntrances,
+  networkBbox,
+  overpassQuery,
+  type OverpassResponse,
+} from "../src/lib/schematic/entrances";
+
+const OVERPASS_TIMEOUT_MS = 200_000;
 
 export async function buildSchematics(): Promise<{
   generated: number;
   skipped: number;
   stations: number;
   chains: number;
+  entrances: number;
 }> {
   const root = process.cwd();
   const schematicDir = path.join(root, "data", "schematic");
@@ -26,16 +43,8 @@ export async function buildSchematics(): Promise<{
 
   const network = JSON.parse(await readFile(networkPath, "utf8")) as NetworkData;
 
-  let placementByStation = new Map<
-    string,
-    {
-      lineId: string;
-      platformNumbers: number[];
-      eastM: number;
-      northM: number;
-      bearingDeg: number;
-    }[]
-  >();
+  let placementByStation = new Map<string, GeneratePlacementPlatform[]>();
+  let marksByStation = new Map<string, SchematicFoiMark[]>();
   try {
     const layout = JSON.parse(
       await readFile(path.join(root, "data", "foi", "layout.json"), "utf8"),
@@ -49,8 +58,18 @@ export async function buildSchematics(): Promise<{
           eastM: p.eastM,
           northM: p.northM,
           bearingDeg: p.bearingDeg,
+          confidence: p.confidence,
+          caption: p.caption,
+          end: p.end,
+          a: p.a,
+          b: p.b,
+          grid: p.grid,
+          residual: p.residual,
         })),
       ]),
+    );
+    marksByStation = new Map(
+      layout.stations.map((s) => [s.stationId, s.marks ?? []]),
     );
   } catch {
     /* layout.json is optional — generated stations then use line bands */
@@ -62,7 +81,8 @@ export async function buildSchematics(): Promise<{
     if (
       !name.endsWith(".json") ||
       name === "index.json" ||
-      name === "lines.json"
+      name === "lines.json" ||
+      name === "entrances.json"
     ) {
       continue;
     }
@@ -132,6 +152,7 @@ export async function buildSchematics(): Promise<{
       platformLiftChains,
       interchangeChains: hopsByStation.get(station.id) ?? [],
       placement: placementByStation.get(station.id),
+      foiMarks: marksByStation.get(station.id),
     });
     await writeFile(
       path.join(generatedDir, `${station.id}.json`),
@@ -164,12 +185,63 @@ export async function buildSchematics(): Promise<{
     JSON.stringify(lines),
   );
 
+  const entranceCount = await bakeEntranceOverlay(
+    schematicDir,
+    network.stations.map((s) => ({ id: s.id, lat: s.lat, lon: s.lon })),
+    generatedAt,
+  );
+
   return {
     generated,
     skipped,
     stations: index.stations.length,
     chains: lines.chains.length,
+    entrances: entranceCount,
   };
+}
+
+async function fetchOverpass(query: string): Promise<OverpassResponse> {
+  let lastErr: unknown;
+  for (const url of OVERPASS_ENDPOINTS) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "tubenet/0.1 (schematic entrance bake)",
+        },
+        body: new URLSearchParams({ data: query }),
+        signal: AbortSignal.timeout(OVERPASS_TIMEOUT_MS),
+      });
+      if (!res.ok) {
+        lastErr = new Error(`${url} ${res.status}`);
+        continue;
+      }
+      return (await res.json()) as OverpassResponse;
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Overpass request failed");
+}
+
+async function bakeEntranceOverlay(
+  schematicDir: string,
+  stations: { id: string; lat: number; lon: number }[],
+  generatedAt: string,
+): Promise<number> {
+  const outPath = path.join(schematicDir, "entrances.json");
+  try {
+    const osm = await fetchOverpass(overpassQuery(networkBbox(stations)));
+    const file = bakeEntrances(osm, stations, generatedAt);
+    await writeFile(outPath, JSON.stringify(file));
+    return Object.keys(file.stations).length;
+  } catch (err) {
+    const reason = err instanceof Error ? err.message : String(err);
+    console.warn(`Skipped entrance overlay bake (${reason})`);
+    return 0;
+  }
 }
 
 async function fileExists(p: string): Promise<boolean> {
@@ -187,7 +259,7 @@ export async function main() {
   }
   const result = await buildSchematics();
   console.log(
-    `Wrote ${result.generated} generated schematics, skipped ${result.skipped} override(s), index ${result.stations} stations, ${result.chains} line chains`,
+    `Wrote ${result.generated} generated schematics, skipped ${result.skipped} override(s), index ${result.stations} stations, ${result.chains} line chains, ${result.entrances} entrance overlay(s)`,
   );
 }
 

@@ -63,8 +63,13 @@ import type {
   SchematicStation,
   SchematicStationRef,
 } from "@/lib/schematic/types";
-import { hoverDepthLabel } from "@/lib/schematic/foi-layout";
+import { hoverDepthLabel, hoverFoiExtractLabel } from "@/lib/schematic/foi-layout";
 import type { LineNetwork } from "@/lib/schematic/lines";
+import {
+  hidesStreetCuboid,
+  type EntranceOverlayFile,
+} from "@/lib/schematic/entrances";
+import { EntranceOverlay } from "./EntranceOverlay";
 import { PmtilesSurface } from "./PmtilesSurface";
 import { TubeLayer } from "./TubeLayer";
 
@@ -628,6 +633,7 @@ function StationMeshes({
   active,
   draggingRef,
   stickyHover,
+  hideStreet,
   onHover,
   onPick,
 }: {
@@ -637,6 +643,7 @@ function StationMeshes({
   active: boolean;
   draggingRef: RefObject<boolean>;
   stickyHover: boolean;
+  hideStreet: boolean;
   onHover: (id: string | null) => void;
   onPick?: (stationId: string) => void;
 }) {
@@ -645,18 +652,21 @@ function StationMeshes({
   };
   return (
     <group>
-      {geom.volumes.map((volume) => (
-        <VolumeMesh
-          key={volume.id}
-          volume={volume}
-          highlighted={highlight.volumeIds.has(volume.id)}
-          dimmed={active && !highlight.volumeIds.has(volume.id)}
-          draggingRef={draggingRef}
-          stickyHover={stickyHover}
-          onHover={hoverVolume}
-          onPick={onPick ? () => onPick(stationId) : undefined}
-        />
-      ))}
+      {geom.volumes.map((volume) => {
+        if (hideStreet && volume.type === "street") return null;
+        return (
+          <VolumeMesh
+            key={volume.id}
+            volume={volume}
+            highlighted={highlight.volumeIds.has(volume.id)}
+            dimmed={active && !highlight.volumeIds.has(volume.id)}
+            draggingRef={draggingRef}
+            stickyHover={stickyHover}
+            onHover={hoverVolume}
+            onPick={onPick ? () => onPick(stationId) : undefined}
+          />
+        );
+      })}
       {geom.polylines.map((line) => (
         <GlowLine
           key={line.id}
@@ -866,6 +876,7 @@ export function StationScene3D({
   });
   const [lodForId, setLodForId] = useState(selectedId);
   const [shown, setShown] = useState(true);
+  const [overlay, setOverlay] = useState<EntranceOverlayFile | null>(null);
   const geomCacheRef = useRef(new Map<string, BuiltRow>());
   const panAltitude = useRef<{ cam: number; target: number } | null>(null);
   const selectedSeed = stations.find((s) => s.id === selectedId) ?? stations[0];
@@ -912,6 +923,21 @@ export function StationScene3D({
       faceNorthRef.current = null;
     };
   }, [faceNorthRef]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/schematic/entrances")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json: EntranceOverlayFile | null) => {
+        if (!cancelled) setOverlay(json);
+      })
+      .catch(() => {
+        if (!cancelled) setOverlay(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const geoScene = usePmtiles;
   const loadedById = useMemo(() => {
@@ -980,6 +1006,10 @@ export function StationScene3D({
     }
     return rows;
   }, [visibleKey, loadedById, quality, geoScene, origin, lineNetwork]);
+  const overlayStationIds = useMemo(
+    () => built.map((row) => row.station.id),
+    [built],
+  );
   const frame = useMemo(() => {
     if (!selectedRow) {
       return cameraFrame({
@@ -1084,6 +1114,13 @@ export function StationScene3D({
             {showSurface && tilesVersion ? (
               <PmtilesSurface origin={origin} tilesVersion={tilesVersion} />
             ) : null}
+            {overlay ? (
+              <EntranceOverlay
+                origin={origin}
+                overlay={overlay}
+                stationIds={overlayStationIds}
+              />
+            ) : null}
             {showLines && lineNetwork ? (
               <TubeLayer
                 network={lineNetwork}
@@ -1115,6 +1152,9 @@ export function StationScene3D({
                         active={thisHover}
                         draggingRef={draggingRef}
                         stickyHover={stickyHover}
+                        hideStreet={hidesStreetCuboid(
+                          overlay?.stations[row.station.id],
+                        )}
                         onHover={setHoveredId}
                         onPick={onPickStation}
                       />
@@ -1140,6 +1180,7 @@ export function StationScene3D({
             active={hoveredId !== null}
             draggingRef={draggingRef}
             stickyHover={stickyHover}
+            hideStreet={false}
             onHover={setHoveredId}
           />
         ) : null}
@@ -1188,6 +1229,11 @@ export function StationScene3D({
                 hovered.station.id,
                 hovered.volume,
                 hovered.station.topology.nodes,
+              ),
+              hoverFoiExtractLabel(
+                hovered.station.topology.nodes.find(
+                  (n) => n.id === hovered.volume.id,
+                )?.foi,
               ),
               hovered.volume.liftId,
               hovered.volume.lineId,

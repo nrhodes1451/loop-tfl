@@ -15,5 +15,128 @@
     }
   ],
   "confidence": "high",
-  "raw": "Green Park: N about 30° west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m."
+  "raw": "Green Park: N about 30\u00b0 west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m.",
+  "platforms": [
+    {
+      "caption": "PICCADILLY PLATFORM 2 WESTBOUND TO HYDE PARK CORNER",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "a": [
+        0.173,
+        0.163
+      ],
+      "b": [
+        0.409,
+        0.388
+      ],
+      "grid": "C2",
+      "bearingDeg": 164,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "PICCADILLY PLATFORM 1 EASTBOUND TO PICCADILLY CIRCUS",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "a": [
+        0.191,
+        0.208
+      ],
+      "b": [
+        0.427,
+        0.433
+      ],
+      "grid": "C2",
+      "bearingDeg": 164,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "VICTORIA PLATFORM 3 NORTHBOUND TO OXFORD CIRCUS",
+      "lineId": "victoria",
+      "platformNumbers": [
+        3
+      ],
+      "a": [
+        0.055,
+        0.838
+      ],
+      "b": [
+        0.232,
+        0.613
+      ],
+      "grid": "A8",
+      "bearingDeg": 68,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "VICTORIA PLATFORM 4 SOUTHBOUND TO VICTORIA",
+      "lineId": "victoria",
+      "platformNumbers": [
+        4
+      ],
+      "a": [
+        0.073,
+        0.871
+      ],
+      "b": [
+        0.25,
+        0.646
+      ],
+      "grid": "A8",
+      "bearingDeg": 68,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "JUBILEE PLATFORM 5 NORTHBOUND TO BOND STREET",
+      "lineId": "jubilee",
+      "platformNumbers": [
+        5
+      ],
+      "a": [
+        0.409,
+        0.5
+      ],
+      "b": [
+        0.586,
+        0.95
+      ],
+      "grid": "G5",
+      "bearingDeg": 9,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "JUBILEE PLATFORM 6 SOUTHBOUND TO WESTMINSTER",
+      "lineId": "jubilee",
+      "platformNumbers": [
+        6
+      ],
+      "a": [
+        0.433,
+        0.523
+      ],
+      "b": [
+        0.61,
+        0.973
+      ],
+      "grid": "G5",
+      "bearingDeg": 9,
+      "end": null,
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.055,
+      0.388
+    ]
+  }
 }

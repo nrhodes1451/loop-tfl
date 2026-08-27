@@ -4,6 +4,7 @@
  */
 
 import {
+  BoxGeometry,
   BufferAttribute,
   BufferGeometry,
   ExtrudeGeometry,
@@ -203,6 +204,49 @@ export function ribbonGeometry(
   );
   geom.setIndex(indices);
   return geom;
+}
+
+/**
+ * Solid kerb along an ENU path (east, north). Unlike `ribbonGeometry` this
+ * has outward-facing walls so a camera above the ground sees the top.
+ */
+export function stairRibbonGeometry(
+  path: [number, number][],
+  widthM: number,
+  heightM: number,
+): BufferGeometry | null {
+  if (path.length < 2 || widthM <= 0 || heightM <= 0) return null;
+  const geoms: BufferGeometry[] = [];
+  for (let i = 0; i < path.length - 1; i++) {
+    const a = path[i]!;
+    const b = path[i + 1]!;
+    const ax = -a[0];
+    const az = a[1];
+    const bx = -b[0];
+    const bz = b[1];
+    const dx = bx - ax;
+    const dz = bz - az;
+    const len = Math.hypot(dx, dz);
+    if (len < 0.15) continue;
+    const box = new BoxGeometry(widthM, heightM, len);
+    box.rotateY(Math.atan2(dx, dz));
+    box.translate((ax + bx) / 2, heightM / 2, (az + bz) / 2);
+    box.deleteAttribute("uv");
+    geoms.push(box);
+  }
+  return mergeGeomBatch(geoms);
+}
+
+export function stairsToGeometry(
+  lines: { path: [number, number][]; widthM: number }[],
+  heightM: number,
+): BufferGeometry | null {
+  const geoms: BufferGeometry[] = [];
+  for (const line of lines) {
+    const geom = stairRibbonGeometry(line.path, line.widthM, heightM);
+    if (geom) geoms.push(geom);
+  }
+  return mergeGeomBatch(geoms);
 }
 
 export function roadWidthM(kind: string): number {

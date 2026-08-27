@@ -10,12 +10,14 @@ import {
   NEIGHBOR_LOAD_RADIUS_M,
   type LatLon,
 } from "./geo";
+import type { EntranceOverlayFile } from "./entrances";
 import type { LineNetwork } from "./lines";
 import type { SchematicIndex, SchematicStation, SchematicStationRef } from "./types";
 
 const stationCache = new Map<string, { mtimeMs: number; data: SchematicStation }>();
 let indexCache: { mtimeMs: number; data: SchematicIndex } | null = null;
 let linesCache: { mtimeMs: number; data: LineNetwork } | null = null;
+let overlayCache: { mtimeMs: number; data: EntranceOverlayFile } | null = null;
 
 export class SchematicNotFoundError extends Error {
   constructor(public stationId: string) {
@@ -105,8 +107,29 @@ export async function loadLineNetwork(): Promise<LineNetwork> {
   return data;
 }
 
+/** OSM pavilion / stairs overlay. `null` when the bake file is missing. */
+export async function loadEntranceOverlay(): Promise<EntranceOverlayFile | null> {
+  const filePath = path.join(
+    process.cwd(),
+    "data",
+    "schematic",
+    "entrances.json",
+  );
+  const hit = await readJsonIfExists<EntranceOverlayFile>(filePath);
+  if (!hit) {
+    overlayCache = null;
+    return null;
+  }
+  if (overlayCache && overlayCache.mtimeMs === hit.mtimeMs) {
+    return overlayCache.data;
+  }
+  overlayCache = hit;
+  return hit.data;
+}
+
 export function clearSchematicCache() {
   stationCache.clear();
   indexCache = null;
   linesCache = null;
+  overlayCache = null;
 }

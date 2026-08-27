@@ -15,5 +15,90 @@
     }
   ],
   "confidence": "low",
-  "raw": "Waterloo axonometric 2 table lists Bakerloo NB 19.5m, SB 16.4m, Northern 21.3m; compass tilt about 15\u00b0 from drawing-up is a borderline guess (75\u00b0 on this image)."
+  "raw": "Waterloo axonometric 2 table lists Bakerloo NB 19.5m, SB 16.4m, Northern 21.3m; compass tilt about 15\u00b0 from drawing-up is a borderline guess (75\u00b0 on this image).",
+  "platforms": [
+    {
+      "caption": "BAKERLOO LINE PLATFORM 4",
+      "lineId": "bakerloo",
+      "platformNumbers": [
+        4
+      ],
+      "a": [
+        0.291,
+        0.477
+      ],
+      "b": [
+        0.527,
+        0.545
+      ],
+      "grid": "E5",
+      "bearingDeg": 31,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "BAKERLOO LINE PLATFORM 3",
+      "lineId": "bakerloo",
+      "platformNumbers": [
+        3
+      ],
+      "a": [
+        0.291,
+        0.635
+      ],
+      "b": [
+        0.527,
+        0.86
+      ],
+      "grid": "E7",
+      "bearingDeg": 59,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "NORTHERN LINE PLATFORM 2",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "a": [
+        0.291,
+        0.298
+      ],
+      "b": [
+        0.468,
+        0.433
+      ],
+      "grid": "E4",
+      "bearingDeg": 52,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "NORTHERN LINE PLATFORM 1",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "a": [
+        0.409,
+        0.477
+      ],
+      "b": [
+        0.586,
+        0.658
+      ],
+      "grid": "H5",
+      "bearingDeg": 61,
+      "end": null,
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Shell Centre Ticket Hall",
+    "at": [
+      0.173,
+      0.219
+    ]
+  }
 }

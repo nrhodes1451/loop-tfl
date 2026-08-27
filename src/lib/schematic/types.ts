@@ -35,8 +35,41 @@ export type SchematicNode = {
    * north (0–180), from FOI sheets when present.
    */
   bearingDeg?: number;
+  /** Platforms only. FOI mark that produced x/y/bearingDeg, when present. */
+  foi?: SchematicFoiPlacement;
   /** TfL LiftUniqueId when type is lift. */
   liftId?: string;
+};
+
+export type SchematicFoiPlacement = {
+  confidence: "high" | "low";
+  caption: string;
+  eastM: number;
+  northM: number;
+  end?: "north" | "south" | "east" | "west" | null;
+  a?: [number, number];
+  b?: [number, number];
+  grid?: string | null;
+  residual?: number;
+};
+
+/** Every FOI sheet mark for this station, including those not used for x/y. */
+export type SchematicFoiMark = {
+  file: string;
+  page: number;
+  caption: string;
+  lineId: string | null;
+  platformNumbers: number[];
+  end: "north" | "south" | "east" | "west" | null;
+  bearingDeg: number | null;
+  a: [number, number];
+  b: [number, number];
+  grid: string | null;
+  confidence: "high" | "low";
+  eastM: number | null;
+  northM: number | null;
+  residual: number | null;
+  placed: boolean;
 };
 
 export type SchematicEdge = {
@@ -55,6 +88,8 @@ export type SchematicStation = {
   edges: SchematicEdge[];
   /** Optional layout notes (CULG sanity-check, etc.). Not for routing. */
   notes?: string;
+  /** All FOI marks for this station, including unused / low-confidence. */
+  foiMarks?: SchematicFoiMark[];
 };
 
 export type SchematicStationRef = {

@@ -36,6 +36,11 @@ export function undirectedBearingDeg(deg: number): number {
   return d;
 }
 
+/** FOI undirected bearing → rotationY that maps a +Z-long slab onto the line. */
+export function bearingToRotationY(bearingDeg: number): number {
+  return -((bearingDeg * Math.PI) / 180);
+}
+
 /** Unit plan vector (east, north) for a compass bearing clockwise from north. */
 export function planDir(bearingDeg: number): [number, number] {
   const r = (bearingDeg * Math.PI) / 180;

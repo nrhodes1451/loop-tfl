@@ -247,6 +247,76 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(northern.rotationY).toBeUndefined();
   });
 
+  it("yaws each platform from its own bearingDeg even when the line angle differs", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "p12",
+        type: "platform",
+        label: "Platform 2",
+        level: -1,
+        x: 0,
+        y: 0,
+        lineId: "victoria",
+        bearingDeg: 12,
+      },
+      {
+        id: "p23",
+        type: "platform",
+        label: "Platform 1",
+        level: -1,
+        x: 2,
+        y: 0,
+        lineId: "victoria",
+        bearingDeg: 23,
+      },
+    ];
+    const out = buildSceneGeometry(
+      { nodes, edges: [] },
+      { platformAngles: { victoria: Math.PI / 2 } },
+    );
+    const a = out.volumes.find((v) => v.id === "p12")!;
+    const b = out.volumes.find((v) => v.id === "p23")!;
+    expect(a.rotationY).toBeCloseTo((-12 * Math.PI) / 180);
+    expect(b.rotationY).toBeCloseTo((-23 * Math.PI) / 180);
+    expect(a.size[0]).toBeCloseTo(PLATFORM_THIN);
+    expect(a.size[2]).toBeCloseTo(PLATFORM_LONG);
+  });
+
+  it("falls back to the line angle when a platform has no bearingDeg", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "p-foi",
+        type: "platform",
+        label: "Platform 1",
+        level: -1,
+        x: 0,
+        y: 0,
+        lineId: "victoria",
+        bearingDeg: 12,
+      },
+      {
+        id: "p-geo",
+        type: "platform",
+        label: "Platform 2",
+        level: -1,
+        x: 2,
+        y: 0,
+        lineId: "victoria",
+      },
+    ];
+    const line = Math.PI / 3;
+    const out = buildSceneGeometry(
+      { nodes, edges: [] },
+      { platformAngles: { victoria: line } },
+    );
+    expect(out.volumes.find((v) => v.id === "p-foi")!.rotationY).toBeCloseTo(
+      (-12 * Math.PI) / 180,
+    );
+    expect(out.volumes.find((v) => v.id === "p-geo")!.rotationY).toBeCloseTo(
+      line,
+    );
+  });
+
   it("distinguishes node types by silhouette", () => {
     const concourse = geom.volumes.find((v) => v.type === "concourse");
     const platform = geom.volumes.find((v) => v.type === "platform");

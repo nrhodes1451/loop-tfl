@@ -82,7 +82,34 @@ export type FoiStationPlatform = {
   eastM: number;
   northM: number;
   bearingDeg: number;
+  confidence: FoiConfidence;
+  caption: string;
+  end: FoiPlatformEnd | null;
+  a: [number, number];
+  b: [number, number];
+  grid: string | null;
+  residual: number;
   sources: { file: string; page: number }[];
+};
+
+/** Every observation mark for a station, including those not used for x/y. */
+export type FoiStationMark = {
+  file: string;
+  page: number;
+  caption: string;
+  lineId: string | null;
+  platformNumbers: number[];
+  end: FoiPlatformEnd | null;
+  bearingDeg: number | null;
+  a: [number, number];
+  b: [number, number];
+  grid: string | null;
+  confidence: FoiConfidence;
+  eastM: number | null;
+  northM: number | null;
+  residual: number | null;
+  /** True when this mark is the one baked into `platforms` / node x/y. */
+  placed: boolean;
 };
 
 export type FoiStationLayout = {
@@ -90,6 +117,7 @@ export type FoiStationLayout = {
   northDeg: number | null;
   depths: FoiDepth[];
   platforms: FoiStationPlatform[];
+  marks: FoiStationMark[];
   sources: { file: string; page: number }[];
 };
 
@@ -111,6 +139,13 @@ export const FOI_EXTRACT_DISCLAIMER =
   "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.";
 
 export const NORTH_AGREE_DEG = 20;
+
+/** 0 = include `low`; 1 = `high` only. Debug default is 0 so every mark reaches the app. */
+export const PLACEMENT_MIN_CONFIDENCE = 0;
+
+export function foiConfidenceRank(c: FoiConfidence): number {
+  return c === "high" ? 1 : 0;
+}
 
 /**
  * Stem shared by one sheet's raster and its observation file, e.g.
@@ -294,7 +329,7 @@ export function mergeStationLayouts(
       }
     }
 
-    const { platforms, issues } = mergeStationPlatforms(group);
+    const { platforms, issues, marks } = mergeStationPlatforms(group);
     placementIssues.push(...issues);
 
     stations.push({
@@ -302,6 +337,7 @@ export function mergeStationLayouts(
       northDeg,
       depths: [...byKey.values()],
       platforms,
+      marks,
       sources: group.map((p) => ({ file: p.file, page: p.page })),
     });
   }
@@ -315,7 +351,7 @@ function platformKey(lineId: string, numbers: number[]): string {
 
 function usableMarks(page: FoiPageExtract): FoiPlatformMark[] {
   return (page.platforms ?? []).filter((m) => {
-    if (m.confidence === "low") return false;
+    if (foiConfidenceRank(m.confidence) < PLACEMENT_MIN_CONFIDENCE) return false;
     if (m.bearingDeg == null || m.lineId == null) return false;
     const du = m.b[0] - m.a[0];
     const dv = m.b[1] - m.a[1];
@@ -323,28 +359,30 @@ function usableMarks(page: FoiPageExtract): FoiPlatformMark[] {
   });
 }
 
+type ProjectedMark = {
+  mark: FoiPlatformMark;
+  eastM: number;
+  northM: number;
+  bearingDeg: number;
+  file: string;
+  page: number;
+  residual: number;
+};
+
+type PageProj = {
+  file: string;
+  page: number;
+  stationId: string | null;
+  residual: number;
+  items: ProjectedMark[];
+};
+
 function mergeStationPlatforms(group: readonly FoiPageExtract[]): {
   platforms: FoiStationPlatform[];
   issues: FoiPlacementIssue[];
+  marks: FoiStationMark[];
 } {
   const issues: FoiPlacementIssue[] = [];
-  type Item = {
-    mark: FoiPlatformMark;
-    eastM: number;
-    northM: number;
-    bearingDeg: number;
-    file: string;
-    page: number;
-    residual: number;
-  };
-  type PageProj = {
-    file: string;
-    page: number;
-    stationId: string | null;
-    residual: number;
-    items: Item[];
-  };
-
   const projected: PageProj[] = [];
   for (const page of group) {
     const marks = usableMarks(page);
@@ -367,7 +405,7 @@ function mergeStationPlatforms(group: readonly FoiPageExtract[]): {
         reason: "placement-residual",
       });
     }
-    const items: Item[] = marks.map((m) => {
+    const items: ProjectedMark[] = marks.map((m) => {
       const [u, v] = markCentre(m);
       const p = imageToPlan(u, v, basis);
       return {
@@ -399,10 +437,12 @@ function mergeStationPlatforms(group: readonly FoiPageExtract[]): {
 
   const placed = new Map<string, FoiStationPlatform>();
   const anchor = trusted[0];
-  if (!anchor) return { platforms: [], issues };
+  if (!anchor) {
+    return { platforms: [], issues, marks: collectStationMarks(group, [], placed) };
+  }
 
   const toStation = (
-    item: Item,
+    item: ProjectedMark,
     dx = 0,
     dy = 0,
   ): FoiStationPlatform => ({
@@ -411,6 +451,13 @@ function mergeStationPlatforms(group: readonly FoiPageExtract[]): {
     eastM: item.eastM + dx,
     northM: item.northM + dy,
     bearingDeg: item.bearingDeg,
+    confidence: item.mark.confidence,
+    caption: item.mark.caption,
+    end: item.mark.end,
+    a: item.mark.a,
+    b: item.mark.b,
+    grid: item.mark.grid,
+    residual: item.residual,
     sources: [{ file: item.file, page: item.page }],
   });
 
@@ -462,7 +509,54 @@ function mergeStationPlatforms(group: readonly FoiPageExtract[]): {
     if (c !== 0) return c;
     return a.platformNumbers.join(",").localeCompare(b.platformNumbers.join(","));
   });
-  return { platforms, issues };
+  return {
+    platforms,
+    issues,
+    marks: collectStationMarks(group, projected, placed),
+  };
+}
+
+function collectStationMarks(
+  group: readonly FoiPageExtract[],
+  projected: readonly PageProj[],
+  placed: Map<string, FoiStationPlatform>,
+): FoiStationMark[] {
+  const itemsByPage = new Map<string, ProjectedMark[]>();
+  for (const page of projected) {
+    itemsByPage.set(`${page.file}\0${page.page}`, page.items);
+  }
+  const marks: FoiStationMark[] = [];
+  for (const page of group) {
+    const items = itemsByPage.get(`${page.file}\0${page.page}`) ?? [];
+    for (const m of page.platforms ?? []) {
+      const item = items.find((i) => i.mark === m);
+      const k =
+        m.lineId != null ? platformKey(m.lineId, m.platformNumbers) : null;
+      const winner = k ? placed.get(k) : undefined;
+      const placedHere =
+        item != null &&
+        winner != null &&
+        winner.sources.some((s) => s.file === item.file && s.page === item.page);
+      marks.push({
+        file: page.file,
+        page: page.page,
+        caption: m.caption,
+        lineId: m.lineId,
+        platformNumbers: [...m.platformNumbers],
+        end: m.end,
+        bearingDeg: m.bearingDeg,
+        a: m.a,
+        b: m.b,
+        grid: m.grid,
+        confidence: m.confidence,
+        eastM: item?.eastM ?? null,
+        northM: item?.northM ?? null,
+        residual: item?.residual ?? null,
+        placed: placedHere,
+      });
+    }
+  }
+  return marks;
 }
 
 export function reviewExtract(

@@ -11,5 +11,74 @@
     }
   ],
   "confidence": "high",
-  "raw": "Earl's Court: rose has N down / S up; District 4.8m and Piccadilly 19.8m."
+  "raw": "Earl's Court: rose has N down / S up; District 4.8m and Piccadilly 19.8m.",
+  "platforms": [
+    {
+      "caption": "DISTRICT PLATFORMS 1 & 2",
+      "lineId": "district",
+      "platformNumbers": [
+        1,
+        2
+      ],
+      "end": "east",
+      "a": [
+        0.719,
+        0.41
+      ],
+      "b": [
+        0.387,
+        0.53
+      ],
+      "grid": "G2",
+      "bearingDeg": 70,
+      "confidence": "high"
+    },
+    {
+      "caption": "DISTRICT PLATFORMS 3 & 4",
+      "lineId": "district",
+      "platformNumbers": [
+        3,
+        4
+      ],
+      "a": [
+        0.829,
+        0.47
+      ],
+      "b": [
+        0.497,
+        0.59
+      ],
+      "grid": "H3",
+      "bearingDeg": 70,
+      "end": null,
+      "confidence": "high"
+    },
+    {
+      "caption": "PICCADILLY PLATFORMS 5 & 6",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        5,
+        6
+      ],
+      "a": [
+        0.94,
+        0.53
+      ],
+      "b": [
+        0.608,
+        0.65
+      ],
+      "grid": "I4",
+      "bearingDeg": 70,
+      "end": null,
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Earl's Court Road Ticket Hall",
+    "at": [
+      0.11,
+      0.53
+    ]
+  }
 }

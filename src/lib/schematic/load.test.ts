@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   clearSchematicCache,
   listSchematicStations,
+  loadEntranceOverlay,
   loadLineNetwork,
   loadSchematic,
   loadSchematicsNear,
@@ -57,5 +58,16 @@ describe("loadSchematic", () => {
     await expect(loadSchematic("../network")).rejects.toBeInstanceOf(
       SchematicNotFoundError,
     );
+  });
+
+  it("returns null when the entrance overlay bake is missing", async () => {
+    clearSchematicCache();
+    const overlay = await loadEntranceOverlay();
+    if (overlay == null) {
+      expect(overlay).toBeNull();
+      return;
+    }
+    expect(overlay.stations).toBeTypeOf("object");
+    expect(overlay.generatedAt).toBeTypeOf("string");
   });
 });

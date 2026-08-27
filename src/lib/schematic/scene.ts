@@ -5,6 +5,7 @@
 
 import { lineColorForSchematic } from "../tokens";
 import { platformDepthM } from "./foi-layout";
+import { bearingToRotationY } from "./foi-project";
 import { normalizeSchematicLineId } from "./levels";
 import {
   PLATFORM_LONG_U,
@@ -645,10 +646,17 @@ export function buildSceneGeometry(
   for (const node of nodes) {
     let fp = footprint(node, nodes);
     let rotationY: number | undefined;
-    if (node.type === "platform" && node.lineId && platformAngles) {
-      const angle =
-        platformAngles[node.lineId] ??
-        platformAngles[normalizeSchematicLineId(node.lineId)];
+    if (node.type === "platform") {
+      const fromNode =
+        node.bearingDeg != null
+          ? bearingToRotationY(node.bearingDeg)
+          : undefined;
+      const fromLine =
+        node.lineId && platformAngles
+          ? (platformAngles[node.lineId] ??
+            platformAngles[normalizeSchematicLineId(node.lineId)])
+          : undefined;
+      const angle = fromNode ?? fromLine;
       if (angle != null) {
         fp = { wx: PLATFORM_THIN, wy: PLATFORM_LONG, h: PLATFORM_H };
         rotationY = angle;

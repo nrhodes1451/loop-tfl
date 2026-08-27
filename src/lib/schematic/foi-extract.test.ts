@@ -346,5 +346,33 @@ describe("mergeStationLayouts placement", () => {
       "northern",
       "victoria",
     ]);
+    const bakerlooMarkOut = stations[0]!.marks.find((m) => m.lineId === "bakerloo");
+    expect(bakerlooMarkOut).toMatchObject({
+      placed: false,
+      confidence: "high",
+      caption: "BAKERLOO LINE PLATFORMS",
+    });
+    expect(bakerlooMarkOut!.a).toEqual([0.2, 0.5]);
+    expect(bakerlooMarkOut!.eastM).not.toBeNull();
+  });
+
+  it("keeps a low-confidence mark when the floor is 0", () => {
+    const lowMark = {
+      ...northernMark,
+      confidence: "low" as const,
+    };
+    const { stations } = mergeStationLayouts([
+      { ...northern, platforms: [lowMark] },
+    ]);
+    expect(stations[0]!.platforms).toHaveLength(1);
+    expect(stations[0]!.platforms[0]!.confidence).toBe("low");
+    expect(stations[0]!.platforms[0]!.caption).toBe(northernMark.caption);
+    expect(stations[0]!.platforms[0]!.a).toEqual(northernMark.a);
+    expect(stations[0]!.marks).toHaveLength(1);
+    expect(stations[0]!.marks[0]).toMatchObject({
+      confidence: "low",
+      placed: true,
+      caption: northernMark.caption,
+    });
   });
 });

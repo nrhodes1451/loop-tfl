@@ -1,0 +1,325 @@
+/**
+ * OSM street-entrance overlay: shared-node building footprints and steps.
+ * Isolated from routing — do not import plan/status/topology.
+ */
+
+import { NATIONAL_RAIL_RED } from "../tokens";
+import { distanceM, latLonToEnu, type LatLon } from "./geo";
+import { ringAabb } from "./osm";
+
+export const ENTRANCE_MATCH_M = 200;
+export const MAX_BUILDING_AABB_M2 = 2500;
+export const DEFAULT_HALL_HEIGHT_M = 7;
+export const MAX_HALL_HEIGHT_M = 16;
+export const STAIR_WIDTH_M = 2.5;
+/** Sit the kerb just above the OSM ground so it does not z-fight. */
+export const STAIR_Y_M = 0.04;
+/** Tall enough to read from the default south-looking camera. */
+export const STAIR_HEIGHT_M = 0.6;
+export const STAIR_COLOR = NATIONAL_RAIL_RED;
+
+export const OVERPASS_ENDPOINTS = [
+  "https://overpass.openstreetmap.fr/api/interpreter",
+  "https://overpass-api.de/api/interpreter",
+] as const;
+
+/** [lat, lon] */
+export type LatLonPair = [number, number];
+
+export type EntranceBuilding = {
+  osmWayId: number;
+  name?: string;
+  height?: number;
+  ring: LatLonPair[];
+};
+
+export type EntranceStairs = {
+  osmWayId: number;
+  path: LatLonPair[];
+};
+
+export type StationEntrances = {
+  buildings: EntranceBuilding[];
+  stairs: EntranceStairs[];
+};
+
+export type EntranceOverlayFile = {
+  generatedAt: string;
+  stations: Record<string, StationEntrances>;
+};
+
+export type OverpassNode = {
+  type: "node";
+  id: number;
+  lat: number;
+  lon: number;
+  tags?: Record<string, string>;
+};
+
+export type OverpassWay = {
+  type: "way";
+  id: number;
+  nodes?: number[];
+  geometry?: { lat: number; lon: number }[];
+  tags?: Record<string, string>;
+};
+
+export type OverpassResponse = {
+  elements?: (OverpassNode | OverpassWay | { type: string })[];
+};
+
+export type EntranceStationRef = {
+  id: string;
+  lat: number;
+  lon: number;
+};
+
+export function overpassQuery(bbox: {
+  south: number;
+  west: number;
+  north: number;
+  east: number;
+}): string {
+  const { south, west, north, east } = bbox;
+  return `[out:json][timeout:180];
+(
+  node["railway"="subway_entrance"](${south},${west},${north},${east});
+  node["railway"="train_station_entrance"](${south},${west},${north},${east});
+)->.ent;
+.ent out;
+way(bn.ent)["building"];
+out geom;
+way(bn.ent)["highway"];
+out geom;
+`;
+}
+
+export function networkBbox(
+  stations: EntranceStationRef[],
+  padDeg: number = 0.02,
+): { south: number; west: number; north: number; east: number } {
+  let south = Infinity;
+  let west = Infinity;
+  let north = -Infinity;
+  let east = -Infinity;
+  for (const s of stations) {
+    if (!Number.isFinite(s.lat) || !Number.isFinite(s.lon)) continue;
+    south = Math.min(south, s.lat);
+    north = Math.max(north, s.lat);
+    west = Math.min(west, s.lon);
+    east = Math.max(east, s.lon);
+  }
+  if (!Number.isFinite(south)) {
+    return { south: 51.33, west: -0.98, north: 51.72, east: 0.34 };
+  }
+  return {
+    south: south - padDeg,
+    west: west - padDeg,
+    north: north + padDeg,
+    east: east + padDeg,
+  };
+}
+
+function dropClosingDuplicate(ring: LatLonPair[]): LatLonPair[] {
+  if (ring.length < 2) return ring;
+  const first = ring[0]!;
+  const last = ring[ring.length - 1]!;
+  if (first[0] === last[0] && first[1] === last[1]) return ring.slice(0, -1);
+  return ring;
+}
+
+function pairList(
+  geometry: { lat: number; lon: number }[] | undefined,
+): LatLonPair[] {
+  if (!geometry) return [];
+  const out: LatLonPair[] = [];
+  for (const p of geometry) {
+    if (!Number.isFinite(p.lat) || !Number.isFinite(p.lon)) continue;
+    out.push([p.lat, p.lon]);
+  }
+  return out;
+}
+
+export function ringAabbAreaM2(ring: LatLonPair[]): number {
+  if (ring.length < 3) return 0;
+  const origin: LatLon = { lat: ring[0]![0], lon: ring[0]![1] };
+  const enu: [number, number][] = ring.map(([lat, lon]) => {
+    const p = latLonToEnu(lat, lon, origin);
+    return [p.x, p.z];
+  });
+  const aabb = ringAabb(enu);
+  const w = aabb.maxX - aabb.minX;
+  const d = aabb.maxZ - aabb.minZ;
+  if (!Number.isFinite(w) || !Number.isFinite(d) || w < 0 || d < 0) return 0;
+  return w * d;
+}
+
+export function hallHeightM(raw: number | undefined): number {
+  if (raw == null || !Number.isFinite(raw) || raw <= 0) {
+    return DEFAULT_HALL_HEIGHT_M;
+  }
+  return Math.min(MAX_HALL_HEIGHT_M, Math.max(4, raw));
+}
+
+function parseHeight(tags: Record<string, string> | undefined): number | undefined {
+  if (!tags?.height) return undefined;
+  const n = Number.parseFloat(tags.height);
+  if (!Number.isFinite(n) || n <= 0) return undefined;
+  return n;
+}
+
+function isEntranceNode(el: OverpassNode): boolean {
+  const railway = el.tags?.railway;
+  return railway === "subway_entrance" || railway === "train_station_entrance";
+}
+
+function isConveying(tags: Record<string, string> | undefined): boolean {
+  const v = tags?.conveying;
+  return v != null && v !== "" && v !== "no";
+}
+
+export function entranceRingToEnu(
+  ring: LatLonPair[],
+  origin: LatLon,
+): [number, number][] {
+  return ring.map(([lat, lon]) => {
+    const p = latLonToEnu(lat, lon, origin);
+    return [p.x, p.z];
+  });
+}
+
+export function hidesStreetCuboid(row: StationEntrances | undefined): boolean {
+  if (!row) return false;
+  return row.buildings.length > 0 || row.stairs.length > 0;
+}
+
+type BuildingCand = EntranceBuilding & { area: number };
+
+export function pickBuildingForEntrance(
+  nodeId: number,
+  buildingsByNode: Map<number, EntranceBuilding[]>,
+  maxAreaM2: number = MAX_BUILDING_AABB_M2,
+): EntranceBuilding | null {
+  const cands: BuildingCand[] = [];
+  for (const b of buildingsByNode.get(nodeId) ?? []) {
+    const area = ringAabbAreaM2(b.ring);
+    if (area <= 0 || area > maxAreaM2) continue;
+    cands.push({ ...b, area });
+  }
+  cands.sort((a, b) => a.area - b.area || a.osmWayId - b.osmWayId);
+  const best = cands[0];
+  if (!best) return null;
+  const { area: _area, ...rest } = best;
+  return rest;
+}
+
+function indexOsm(osm: OverpassResponse): {
+  nodes: OverpassNode[];
+  buildingsByNode: Map<number, EntranceBuilding[]>;
+  stairsByNode: Map<number, EntranceStairs[]>;
+} {
+  const nodes: OverpassNode[] = [];
+  const buildingsByNode = new Map<number, EntranceBuilding[]>();
+  const stairsByNode = new Map<number, EntranceStairs[]>();
+
+  const push = <T,>(map: Map<number, T[]>, nodeId: number, row: T) => {
+    const list = map.get(nodeId) ?? [];
+    list.push(row);
+    map.set(nodeId, list);
+  };
+
+  for (const el of osm.elements ?? []) {
+    if (el.type === "node") {
+      const node = el as OverpassNode;
+      if (isEntranceNode(node)) nodes.push(node);
+      continue;
+    }
+    if (el.type !== "way") continue;
+    const way = el as OverpassWay;
+    const tags = way.tags ?? {};
+    const nodeIds = way.nodes ?? [];
+    if (tags.building) {
+      if (tags.building === "roof") continue;
+      const ring = dropClosingDuplicate(pairList(way.geometry));
+      if (ring.length < 3) continue;
+      const row: EntranceBuilding = {
+        osmWayId: way.id,
+        name: tags.name || undefined,
+        height: parseHeight(tags),
+        ring,
+      };
+      for (const nid of nodeIds) push(buildingsByNode, nid, row);
+      continue;
+    }
+    if (tags.highway === "steps" && !isConveying(tags)) {
+      const path = dropClosingDuplicate(pairList(way.geometry));
+      if (path.length < 2) continue;
+      const row: EntranceStairs = { osmWayId: way.id, path };
+      for (const nid of nodeIds) push(stairsByNode, nid, row);
+    }
+  }
+
+  return { nodes, buildingsByNode, stairsByNode };
+}
+
+export function overlayGeometries(
+  overlay: EntranceOverlayFile,
+  origin: LatLon,
+  stationIds: Iterable<string>,
+): {
+  halls: { ring: [number, number][]; height: number }[];
+  stairs: { path: [number, number][]; widthM: number }[];
+} {
+  const halls: { ring: [number, number][]; height: number }[] = [];
+  const stairs: { path: [number, number][]; widthM: number }[] = [];
+  const seen = new Set<string>();
+  for (const id of stationIds) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const row = overlay.stations[id];
+    if (!row) continue;
+    for (const b of row.buildings) {
+      halls.push({
+        ring: entranceRingToEnu(b.ring, origin),
+        height: hallHeightM(b.height),
+      });
+    }
+    for (const s of row.stairs) {
+      stairs.push({
+        path: entranceRingToEnu(s.path, origin),
+        widthM: STAIR_WIDTH_M,
+      });
+    }
+  }
+  return { halls, stairs };
+}
+
+export function bakeEntrances(
+  osm: OverpassResponse,
+  stations: EntranceStationRef[],
+  generatedAt: string = new Date().toISOString(),
+): EntranceOverlayFile {
+  const { nodes, buildingsByNode, stairsByNode } = indexOsm(osm);
+  const out: Record<string, StationEntrances> = {};
+
+  for (const station of stations) {
+    if (!Number.isFinite(station.lat) || !Number.isFinite(station.lon)) continue;
+    const buildings = new Map<number, EntranceBuilding>();
+    const stairs = new Map<number, EntranceStairs>();
+    for (const node of nodes) {
+      if (distanceM(station, node) > ENTRANCE_MATCH_M) continue;
+      const building = pickBuildingForEntrance(node.id, buildingsByNode);
+      if (building) buildings.set(building.osmWayId, building);
+      for (const step of stairsByNode.get(node.id) ?? []) {
+        stairs.set(step.osmWayId, step);
+      }
+    }
+    if (buildings.size === 0 && stairs.size === 0) continue;
+    out[station.id] = {
+      buildings: [...buildings.values()].sort((a, b) => a.osmWayId - b.osmWayId),
+      stairs: [...stairs.values()].sort((a, b) => a.osmWayId - b.osmWayId),
+    };
+  }
+
+  return { generatedAt, stations: out };
+}

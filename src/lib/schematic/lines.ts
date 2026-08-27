@@ -9,11 +9,14 @@ import {
   latLonToWorld,
   type LatLon,
 } from "./geo";
+import { bearingToRotationY } from "./foi-project";
 import {
   normalizeSchematicLineId,
   schematicLevelForLine,
 } from "./levels";
 import type { SchematicNode, SchematicStation } from "./types";
+
+export { bearingToRotationY };
 
 export type LineAnchor = {
   /** Schematic-plan offset from the street centroid. x → world X, y → world Z. */
@@ -262,7 +265,7 @@ export function stationLineAngle(
   return Math.atan2(tx, tz);
 }
 
-/** FOI undirected bearing → rotationY that maps a +Z-long slab onto the line. */
+/** First FOI bearing on this line at the station, or null. Per-line fallback. */
 export function foiBearingAngle(
   schematic: SchematicStation | undefined,
   lineId: string,
@@ -272,7 +275,7 @@ export function foiBearingAngle(
   for (const n of schematic.nodes) {
     if (n.type !== "platform" || n.bearingDeg == null || !n.lineId) continue;
     if (normalizeSchematicLineId(n.lineId) !== id) continue;
-    return -((n.bearingDeg * Math.PI) / 180);
+    return bearingToRotationY(n.bearingDeg);
   }
   return null;
 }

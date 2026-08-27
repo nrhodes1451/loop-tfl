@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "low",
-  "raw": "Waterloo axonometric 1 table appears to list District and Circle at 33.0m (digit 1 vs 3 is uncertain); compass N points down on the drawing (270\u00b0 on this image)."
+  "raw": "Waterloo axonometric 1 table appears to list District and Circle at 33.0m (digit 1 vs 3 is uncertain); compass N points down on the drawing (270\u00b0 on this image).",
+  "platforms": [
+    {
+      "caption": "JUBILEE LINE PLATFORM 5",
+      "lineId": "jubilee",
+      "platformNumbers": [
+        5
+      ],
+      "end": "south",
+      "a": [
+        0.35,
+        0.725
+      ],
+      "b": [
+        0.822,
+        0.838
+      ],
+      "grid": "F7",
+      "bearingDeg": 13,
+      "confidence": "high"
+    },
+    {
+      "caption": "JUBILEE LINE PLATFORM 6",
+      "lineId": "jubilee",
+      "platformNumbers": [
+        6
+      ],
+      "end": "south",
+      "a": [
+        0.368,
+        0.759
+      ],
+      "b": [
+        0.84,
+        0.871
+      ],
+      "grid": "F7",
+      "bearingDeg": 13,
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Colonnade Ticket Hall",
+    "at": [
+      0.173,
+      0.388
+    ]
+  }
 }

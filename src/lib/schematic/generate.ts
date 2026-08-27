@@ -17,6 +17,7 @@ import {
 import type {
   SchematicEdge,
   SchematicEdgeMode,
+  SchematicFoiMark,
   SchematicNode,
   SchematicStation,
 } from "./types";
@@ -56,6 +57,13 @@ export type GeneratePlacementPlatform = {
   eastM: number;
   northM: number;
   bearingDeg: number;
+  confidence?: "high" | "low";
+  caption?: string;
+  end?: "north" | "south" | "east" | "west" | null;
+  a?: [number, number];
+  b?: [number, number];
+  grid?: string | null;
+  residual?: number;
 };
 
 export type GenerateStationInput = {
@@ -69,6 +77,8 @@ export type GenerateStationInput = {
   interchangeChains: GenerateInterchange[];
   /** FOI plan offsets; omitted → alphabetical line bands. */
   placement?: GeneratePlacementPlatform[];
+  /** All FOI marks (including unused); copied onto the schematic JSON. */
+  foiMarks?: SchematicFoiMark[];
 };
 
 const PLATFORM_DX = 2;
@@ -264,6 +274,19 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
         const x = snap(-eastM / SCHEMATIC_UNIT_M);
         const y = snap(northM / SCHEMATIC_UNIT_M);
         platformPos.set(phys.nodeId, { x, y, level });
+        const foi: SchematicNode["foi"] = {
+          confidence: entry.confidence ?? "high",
+          caption: entry.caption ?? phys.label,
+          eastM,
+          northM,
+        };
+        if (entry.end !== undefined) foi.end = entry.end;
+        if (entry.a && entry.b) {
+          foi.a = entry.a;
+          foi.b = entry.b;
+        }
+        if (entry.grid !== undefined) foi.grid = entry.grid;
+        if (entry.residual != null) foi.residual = entry.residual;
         nodes.push({
           id: phys.nodeId,
           type: "platform",
@@ -273,6 +296,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
           y,
           lineId: phys.lineId,
           bearingDeg: bearing,
+          foi,
         });
         placedIds.add(phys.nodeId);
         foiXs.push(x);
@@ -437,7 +461,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     }
   }
 
-  return {
+  const out: SchematicStation = {
     stationId: input.id,
     name: input.name,
     disclaimer: GENERATED_DISCLAIMER,
@@ -452,4 +476,6 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     nodes,
     edges,
   };
+  if (input.foiMarks?.length) out.foiMarks = input.foiMarks;
+  return out;
 }

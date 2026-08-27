@@ -7,5 +7,50 @@
     }
   ],
   "confidence": "high",
-  "raw": "Angel axonometric: N points right (90°) on the portrait raster; Northern Line platforms 27.4m."
+  "raw": "Angel axonometric: N points right (90\u00b0) on the portrait raster; Northern Line platforms 27.4m.",
+  "platforms": [
+    {
+      "caption": "SOUTHBOUND PLATFORM TO OLD STREET",
+      "lineId": "northern",
+      "platformNumbers": [],
+      "end": null,
+      "a": [
+        0.586,
+        0.613
+      ],
+      "b": [
+        0.822,
+        0.388
+      ],
+      "grid": "J6",
+      "bearingDeg": 136,
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 NORTHBOUND TO KINGS CROSS",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "a": [
+        0.645,
+        0.725
+      ],
+      "b": [
+        0.94,
+        0.388
+      ],
+      "grid": "K7",
+      "bearingDeg": 131,
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.173,
+      0.163
+    ]
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T10:37:37.567Z",
+  "generatedAt": "2026-08-27T09:09:24.764Z",
   "source": "tfl-foi-2015-axonometric",
   "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
   "stations": [
@@ -14,6 +14,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -37,6 +38,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -54,7 +56,112 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "northern",
+          "platformNumbers": [],
+          "eastM": 189.5533929831085,
+          "northM": 87.78230742108306,
+          "bearingDeg": 136,
+          "confidence": "high",
+          "caption": "SOUTHBOUND PLATFORM TO OLD STREET",
+          "end": null,
+          "a": [
+            0.586,
+            0.613
+          ],
+          "b": [
+            0.822,
+            0.388
+          ],
+          "grid": "J6",
+          "residual": 1.0151941361418613,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": 221.10793215230734,
+          "northM": 102.45038498591617,
+          "bearingDeg": 131,
+          "confidence": "high",
+          "caption": "PLATFORM 2 NORTHBOUND TO KINGS CROSS",
+          "end": null,
+          "a": [
+            0.645,
+            0.725
+          ],
+          "b": [
+            0.94,
+            0.388
+          ],
+          "grid": "K7",
+          "residual": 1.0151941361418613,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 1,
+          "caption": "SOUTHBOUND PLATFORM TO OLD STREET",
+          "lineId": "northern",
+          "platformNumbers": [],
+          "end": null,
+          "bearingDeg": 136,
+          "a": [
+            0.586,
+            0.613
+          ],
+          "b": [
+            0.822,
+            0.388
+          ],
+          "grid": "J6",
+          "confidence": "high",
+          "eastM": 189.5533929831085,
+          "northM": 87.78230742108306,
+          "residual": 1.0151941361418613,
+          "placed": true
+        },
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 1,
+          "caption": "PLATFORM 2 NORTHBOUND TO KINGS CROSS",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 131,
+          "a": [
+            0.645,
+            0.725
+          ],
+          "b": [
+            0.94,
+            0.388
+          ],
+          "grid": "K7",
+          "confidence": "high",
+          "eastM": 221.10793215230734,
+          "northM": 102.45038498591617,
+          "residual": 1.0151941361418613,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -77,7 +184,222 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": 20.30301485768772,
+          "northM": -6.686379946912604,
+          "bearingDeg": 158,
+          "confidence": "high",
+          "caption": "PLATFORM 1 SOUTHBOUND CIRCLE LINE",
+          "end": "south",
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.586,
+            0.388
+          ],
+          "grid": "D8",
+          "residual": 0.9076918459239948,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        },
+        {
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": 26.32509553581544,
+          "northM": -2.3342689319035372,
+          "bearingDeg": 158,
+          "confidence": "high",
+          "caption": "PLATFORM 2 NORTHBOUND CIRCLE & METROPOLITAN",
+          "end": null,
+          "a": [
+            0.267,
+            0.829
+          ],
+          "b": [
+            0.621,
+            0.379
+          ],
+          "grid": "J4",
+          "residual": 0.9076918459239948,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        },
+        {
+          "lineId": "metropolitan",
+          "platformNumbers": [
+            3
+          ],
+          "eastM": 32.34717621394315,
+          "northM": 1.9433381566641348,
+          "bearingDeg": 158,
+          "confidence": "high",
+          "caption": "PLATFORM 3 NORTHBOUND METROPOLITAN & CIRCLE",
+          "end": null,
+          "a": [
+            0.302,
+            0.821
+          ],
+          "b": [
+            0.656,
+            0.37
+          ],
+          "grid": "J4",
+          "residual": 0.9076918459239948,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        },
+        {
+          "lineId": "metropolitan",
+          "platformNumbers": [
+            4
+          ],
+          "eastM": 38.36925689207087,
+          "northM": 6.220945245231789,
+          "bearingDeg": 158,
+          "confidence": "high",
+          "caption": "PLATFORM 4 NORTHBOUND METROPOLITAN LINE",
+          "end": "north",
+          "a": [
+            0.337,
+            0.812
+          ],
+          "b": [
+            0.691,
+            0.362
+          ],
+          "grid": "J4",
+          "residual": 0.9076918459239948,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 1,
+          "caption": "PLATFORM 1 SOUTHBOUND CIRCLE LINE",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": "south",
+          "bearingDeg": 158,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.586,
+            0.388
+          ],
+          "grid": "D8",
+          "confidence": "high",
+          "eastM": 20.30301485768772,
+          "northM": -6.686379946912604,
+          "residual": 0.9076918459239948,
+          "placed": true
+        },
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 1,
+          "caption": "PLATFORM 2 NORTHBOUND CIRCLE & METROPOLITAN",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 158,
+          "a": [
+            0.267,
+            0.829
+          ],
+          "b": [
+            0.621,
+            0.379
+          ],
+          "grid": "J4",
+          "confidence": "high",
+          "eastM": 26.32509553581544,
+          "northM": -2.3342689319035372,
+          "residual": 0.9076918459239948,
+          "placed": true
+        },
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 1,
+          "caption": "PLATFORM 3 NORTHBOUND METROPOLITAN & CIRCLE",
+          "lineId": "metropolitan",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 158,
+          "a": [
+            0.302,
+            0.821
+          ],
+          "b": [
+            0.656,
+            0.37
+          ],
+          "grid": "J4",
+          "confidence": "high",
+          "eastM": 32.34717621394315,
+          "northM": 1.9433381566641348,
+          "residual": 0.9076918459239948,
+          "placed": true
+        },
+        {
+          "file": "3d circle stations Redacted.pdf",
+          "page": 1,
+          "caption": "PLATFORM 4 NORTHBOUND METROPOLITAN LINE",
+          "lineId": "metropolitan",
+          "platformNumbers": [
+            4
+          ],
+          "end": "north",
+          "bearingDeg": 158,
+          "a": [
+            0.337,
+            0.812
+          ],
+          "b": [
+            0.691,
+            0.362
+          ],
+          "grid": "J4",
+          "confidence": "high",
+          "eastM": 38.36925689207087,
+          "northM": 6.220945245231789,
+          "residual": 0.9076918459239948,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -96,6 +418,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -124,6 +447,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -142,6 +466,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -160,6 +485,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -178,6 +504,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -196,6 +523,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -219,6 +547,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -242,6 +571,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -260,6 +590,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -278,6 +609,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -296,6 +628,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -313,7 +646,116 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": 27.8466100512883,
+          "northM": -59.675800134136416,
+          "bearingDeg": 125,
+          "confidence": "high",
+          "caption": "PLATFORM 1",
+          "end": null,
+          "a": [
+            0.232,
+            0.894
+          ],
+          "b": [
+            0.468,
+            0.556
+          ],
+          "grid": "D8",
+          "residual": 1.0034638894828363,
+          "sources": [
+            {
+              "file": "3d piccadilly line stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        },
+        {
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": 29.103260458044893,
+          "northM": -47.984983388548024,
+          "bearingDeg": 124,
+          "confidence": "high",
+          "caption": "PLATFORM 2",
+          "end": null,
+          "a": [
+            0.262,
+            0.86
+          ],
+          "b": [
+            0.486,
+            0.523
+          ],
+          "grid": "D8",
+          "residual": 1.0034638894828363,
+          "sources": [
+            {
+              "file": "3d piccadilly line stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 4,
+          "caption": "PLATFORM 1",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 125,
+          "a": [
+            0.232,
+            0.894
+          ],
+          "b": [
+            0.468,
+            0.556
+          ],
+          "grid": "D8",
+          "confidence": "high",
+          "eastM": 27.8466100512883,
+          "northM": -59.675800134136416,
+          "residual": 1.0034638894828363,
+          "placed": true
+        },
+        {
+          "file": "3d piccadilly line stations Redacted.pdf",
+          "page": 4,
+          "caption": "PLATFORM 2",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 124,
+          "a": [
+            0.262,
+            0.86
+          ],
+          "b": [
+            0.486,
+            0.523
+          ],
+          "grid": "D8",
+          "confidence": "high",
+          "eastM": 29.103260458044893,
+          "northM": -47.984983388548024,
+          "residual": 1.0034638894828363,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -332,6 +774,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -350,6 +793,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -368,6 +812,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -386,6 +831,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -404,6 +850,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -422,6 +869,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -444,7 +892,175 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "district",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "eastM": -113.54353670423001,
+          "northM": 70.39380842008046,
+          "bearingDeg": 70,
+          "confidence": "high",
+          "caption": "DISTRICT PLATFORMS 1 & 2",
+          "end": "east",
+          "a": [
+            0.719,
+            0.41
+          ],
+          "b": [
+            0.387,
+            0.53
+          ],
+          "grid": "G2",
+          "residual": 0.5672221256372534,
+          "sources": [
+            {
+              "file": "3d district stations Redacted.pdf",
+              "page": 3
+            }
+          ]
+        },
+        {
+          "lineId": "district",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "eastM": -114.80513753244209,
+          "northM": 114.80513753244213,
+          "bearingDeg": 70,
+          "confidence": "high",
+          "caption": "DISTRICT PLATFORMS 3 & 4",
+          "end": null,
+          "a": [
+            0.829,
+            0.47
+          ],
+          "b": [
+            0.497,
+            0.59
+          ],
+          "grid": "H3",
+          "residual": 0.5672221256372534,
+          "sources": [
+            {
+              "file": "3d district stations Redacted.pdf",
+              "page": 3
+            }
+          ]
+        },
+        {
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "eastM": -116.27434258765676,
+          "northM": 159.42407087180638,
+          "bearingDeg": 70,
+          "confidence": "high",
+          "caption": "PICCADILLY PLATFORMS 5 & 6",
+          "end": null,
+          "a": [
+            0.94,
+            0.53
+          ],
+          "b": [
+            0.608,
+            0.65
+          ],
+          "grid": "I4",
+          "residual": 0.5672221256372534,
+          "sources": [
+            {
+              "file": "3d district stations Redacted.pdf",
+              "page": 3
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 3,
+          "caption": "DISTRICT PLATFORMS 1 & 2",
+          "lineId": "district",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 70,
+          "a": [
+            0.719,
+            0.41
+          ],
+          "b": [
+            0.387,
+            0.53
+          ],
+          "grid": "G2",
+          "confidence": "high",
+          "eastM": -113.54353670423001,
+          "northM": 70.39380842008046,
+          "residual": 0.5672221256372534,
+          "placed": true
+        },
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 3,
+          "caption": "DISTRICT PLATFORMS 3 & 4",
+          "lineId": "district",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 70,
+          "a": [
+            0.829,
+            0.47
+          ],
+          "b": [
+            0.497,
+            0.59
+          ],
+          "grid": "H3",
+          "confidence": "high",
+          "eastM": -114.80513753244209,
+          "northM": 114.80513753244213,
+          "residual": 0.5672221256372534,
+          "placed": true
+        },
+        {
+          "file": "3d district stations Redacted.pdf",
+          "page": 3,
+          "caption": "PICCADILLY PLATFORMS 5 & 6",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": null,
+          "bearingDeg": 70,
+          "a": [
+            0.94,
+            0.53
+          ],
+          "b": [
+            0.608,
+            0.65
+          ],
+          "grid": "I4",
+          "confidence": "high",
+          "eastM": -116.27434258765676,
+          "northM": 159.42407087180638,
+          "residual": 0.5672221256372534,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -477,7 +1093,322 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            5
+          ],
+          "eastM": -24.918444496407925,
+          "northM": -78.94774188697822,
+          "bearingDeg": 128,
+          "confidence": "high",
+          "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
+          "end": null,
+          "a": [
+            0.232,
+            0.725
+          ],
+          "b": [
+            0.409,
+            0.5
+          ],
+          "grid": "D7",
+          "residual": 1.0099500721942243,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 6
+            }
+          ]
+        },
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            6
+          ],
+          "eastM": -11.672279332479967,
+          "northM": -114.06047260530329,
+          "bearingDeg": 118,
+          "confidence": "high",
+          "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
+          "end": null,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.35,
+            0.613
+          ],
+          "grid": "D8",
+          "residual": 1.0099500721942243,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 6
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "eastM": -9.562571271382708,
+          "northM": 80.62890932317329,
+          "bearingDeg": 128,
+          "confidence": "high",
+          "caption": "NORTHERN LINE PLATFORM 3 NORTHBOUND TO CHARING CROSS",
+          "end": null,
+          "a": [
+            0.468,
+            0.388
+          ],
+          "b": [
+            0.645,
+            0.163
+          ],
+          "grid": "H4",
+          "residual": 1.0099500721942243,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 6
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            4
+          ],
+          "eastM": 46.153295100270626,
+          "northM": 112.3793051691083,
+          "bearingDeg": 118,
+          "confidence": "high",
+          "caption": "NORTHERN LINE PLATFORM 4 SOUTHBOUND TO WATERLOO",
+          "end": null,
+          "a": [
+            0.586,
+            0.5
+          ],
+          "b": [
+            0.763,
+            0.163
+          ],
+          "grid": "J5",
+          "residual": 1.0099500721942243,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 6
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 4,
+          "caption": "PLATFORM 1 WESTBOUND TO WESTMINSTER",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 108,
+          "a": [
+            0.232,
+            0.95
+          ],
+          "b": [
+            0.527,
+            0.5
+          ],
+          "grid": "E8",
+          "confidence": "high",
+          "eastM": 62.8394164166047,
+          "northM": -14.240082446673988,
+          "residual": 0.9069224995650144,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 4,
+          "caption": "PLATFORM 2 EASTBOUND TO TEMPLE",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 99,
+          "a": [
+            0.291,
+            0.838
+          ],
+          "b": [
+            0.586,
+            0.163
+          ],
+          "grid": "H3",
+          "confidence": "high",
+          "eastM": 34.463090585914166,
+          "northM": 13.667854315007723,
+          "residual": 0.9069224995650144,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 5,
+          "caption": "PLATFORM 1 WESTBOUND TO WESTMINSTER",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 112,
+          "a": [
+            0.232,
+            0.815
+          ],
+          "b": [
+            0.586,
+            0.253
+          ],
+          "grid": "D8",
+          "confidence": "high",
+          "eastM": 0.48601975860665547,
+          "northM": -15.804757740744506,
+          "residual": 0.9745242194382927,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 5,
+          "caption": "PLATFORM 2 EASTBOUND TO TEMPLE",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 111,
+          "a": [
+            0.35,
+            0.669
+          ],
+          "b": [
+            0.674,
+            0.14
+          ],
+          "grid": "F6",
+          "confidence": "high",
+          "eastM": -0.48601975860667146,
+          "northM": 15.804757740744497,
+          "residual": 0.9745242194382927,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 6,
+          "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 128,
+          "a": [
+            0.232,
+            0.725
+          ],
+          "b": [
+            0.409,
+            0.5
+          ],
+          "grid": "D7",
+          "confidence": "high",
+          "eastM": -24.918444496407925,
+          "northM": -78.94774188697822,
+          "residual": 1.0099500721942243,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 6,
+          "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 118,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.35,
+            0.613
+          ],
+          "grid": "D8",
+          "confidence": "high",
+          "eastM": -11.672279332479967,
+          "northM": -114.06047260530329,
+          "residual": 1.0099500721942243,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 6,
+          "caption": "NORTHERN LINE PLATFORM 3 NORTHBOUND TO CHARING CROSS",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 128,
+          "a": [
+            0.468,
+            0.388
+          ],
+          "b": [
+            0.645,
+            0.163
+          ],
+          "grid": "H4",
+          "confidence": "high",
+          "eastM": -9.562571271382708,
+          "northM": 80.62890932317329,
+          "residual": 1.0099500721942243,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 6,
+          "caption": "NORTHERN LINE PLATFORM 4 SOUTHBOUND TO WATERLOO",
+          "lineId": "northern",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 118,
+          "a": [
+            0.586,
+            0.5
+          ],
+          "b": [
+            0.763,
+            0.163
+          ],
+          "grid": "J5",
+          "confidence": "high",
+          "eastM": 46.153295100270626,
+          "northM": 112.3793051691083,
+          "residual": 1.0099500721942243,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -504,6 +1435,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -527,6 +1459,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -550,6 +1483,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -568,6 +1502,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -586,6 +1521,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -613,7 +1549,328 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "jubilee",
+          "platformNumbers": [
+            5
+          ],
+          "eastM": 90.93656741728189,
+          "northM": -145.4729483817861,
+          "bearingDeg": 9,
+          "confidence": "high",
+          "caption": "JUBILEE PLATFORM 5 NORTHBOUND TO BOND STREET",
+          "end": null,
+          "a": [
+            0.409,
+            0.5
+          ],
+          "b": [
+            0.586,
+            0.95
+          ],
+          "grid": "G5",
+          "residual": 0.17646902850873575,
+          "sources": [
+            {
+              "file": "3d jubilee stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        },
+        {
+          "lineId": "jubilee",
+          "platformNumbers": [
+            6
+          ],
+          "eastM": 94.96240964017511,
+          "northM": -154.52667045132586,
+          "bearingDeg": 9,
+          "confidence": "high",
+          "caption": "JUBILEE PLATFORM 6 SOUTHBOUND TO WESTMINSTER",
+          "end": null,
+          "a": [
+            0.433,
+            0.523
+          ],
+          "b": [
+            0.61,
+            0.973
+          ],
+          "grid": "G5",
+          "residual": 0.17646902850873575,
+          "sources": [
+            {
+              "file": "3d jubilee stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        },
+        {
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": 102.28176529193787,
+          "northM": -19.198505887465597,
+          "bearingDeg": 164,
+          "confidence": "high",
+          "caption": "PICCADILLY PLATFORM 1 EASTBOUND TO PICCADILLY CIRCUS",
+          "end": null,
+          "a": [
+            0.191,
+            0.208
+          ],
+          "b": [
+            0.427,
+            0.433
+          ],
+          "grid": "C2",
+          "residual": 0.17646902850873575,
+          "sources": [
+            {
+              "file": "3d jubilee stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        },
+        {
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": 104.58850353583308,
+          "northM": -5.569705210934103,
+          "bearingDeg": 164,
+          "confidence": "high",
+          "caption": "PICCADILLY PLATFORM 2 WESTBOUND TO HYDE PARK CORNER",
+          "end": null,
+          "a": [
+            0.173,
+            0.163
+          ],
+          "b": [
+            0.409,
+            0.388
+          ],
+          "grid": "C2",
+          "residual": 0.17646902850873575,
+          "sources": [
+            {
+              "file": "3d jubilee stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        },
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            3
+          ],
+          "eastM": -33.65358698424408,
+          "northM": -95.65607848695696,
+          "bearingDeg": 68,
+          "confidence": "high",
+          "caption": "VICTORIA PLATFORM 3 NORTHBOUND TO OXFORD CIRCUS",
+          "end": null,
+          "a": [
+            0.055,
+            0.838
+          ],
+          "b": [
+            0.232,
+            0.613
+          ],
+          "grid": "A8",
+          "residual": 0.17646902850873575,
+          "sources": [
+            {
+              "file": "3d jubilee stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        },
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "eastM": -33.65713823957059,
+          "northM": -106.32768602862285,
+          "bearingDeg": 68,
+          "confidence": "high",
+          "caption": "VICTORIA PLATFORM 4 SOUTHBOUND TO VICTORIA",
+          "end": null,
+          "a": [
+            0.073,
+            0.871
+          ],
+          "b": [
+            0.25,
+            0.646
+          ],
+          "grid": "A8",
+          "residual": 0.17646902850873575,
+          "sources": [
+            {
+              "file": "3d jubilee stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 4,
+          "caption": "PICCADILLY PLATFORM 2 WESTBOUND TO HYDE PARK CORNER",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 164,
+          "a": [
+            0.173,
+            0.163
+          ],
+          "b": [
+            0.409,
+            0.388
+          ],
+          "grid": "C2",
+          "confidence": "high",
+          "eastM": 104.58850353583308,
+          "northM": -5.569705210934103,
+          "residual": 0.17646902850873575,
+          "placed": true
+        },
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 4,
+          "caption": "PICCADILLY PLATFORM 1 EASTBOUND TO PICCADILLY CIRCUS",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 164,
+          "a": [
+            0.191,
+            0.208
+          ],
+          "b": [
+            0.427,
+            0.433
+          ],
+          "grid": "C2",
+          "confidence": "high",
+          "eastM": 102.28176529193787,
+          "northM": -19.198505887465597,
+          "residual": 0.17646902850873575,
+          "placed": true
+        },
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 4,
+          "caption": "VICTORIA PLATFORM 3 NORTHBOUND TO OXFORD CIRCUS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 68,
+          "a": [
+            0.055,
+            0.838
+          ],
+          "b": [
+            0.232,
+            0.613
+          ],
+          "grid": "A8",
+          "confidence": "high",
+          "eastM": -33.65358698424408,
+          "northM": -95.65607848695696,
+          "residual": 0.17646902850873575,
+          "placed": true
+        },
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 4,
+          "caption": "VICTORIA PLATFORM 4 SOUTHBOUND TO VICTORIA",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 68,
+          "a": [
+            0.073,
+            0.871
+          ],
+          "b": [
+            0.25,
+            0.646
+          ],
+          "grid": "A8",
+          "confidence": "high",
+          "eastM": -33.65713823957059,
+          "northM": -106.32768602862285,
+          "residual": 0.17646902850873575,
+          "placed": true
+        },
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 4,
+          "caption": "JUBILEE PLATFORM 5 NORTHBOUND TO BOND STREET",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 9,
+          "a": [
+            0.409,
+            0.5
+          ],
+          "b": [
+            0.586,
+            0.95
+          ],
+          "grid": "G5",
+          "confidence": "high",
+          "eastM": 90.93656741728189,
+          "northM": -145.4729483817861,
+          "residual": 0.17646902850873575,
+          "placed": true
+        },
+        {
+          "file": "3d jubilee stations Redacted.pdf",
+          "page": 4,
+          "caption": "JUBILEE PLATFORM 6 SOUTHBOUND TO WESTMINSTER",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 9,
+          "a": [
+            0.433,
+            0.523
+          ],
+          "b": [
+            0.61,
+            0.973
+          ],
+          "grid": "G5",
+          "confidence": "high",
+          "eastM": 94.96240964017511,
+          "northM": -154.52667045132586,
+          "residual": 0.17646902850873575,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -642,6 +1899,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -660,6 +1918,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -688,6 +1947,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -711,6 +1971,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -729,6 +1990,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -747,6 +2009,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -765,6 +2028,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -783,6 +2047,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -806,6 +2071,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -824,6 +2090,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -842,6 +2109,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -860,6 +2128,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -878,6 +2147,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -896,6 +2166,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -914,6 +2185,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -932,6 +2204,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -950,6 +2223,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -973,6 +2247,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -991,6 +2266,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1019,6 +2295,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1037,6 +2314,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1055,6 +2333,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1073,6 +2352,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1101,6 +2381,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1119,6 +2400,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1146,7 +2428,328 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "eastM": -4.754141487393445,
+          "northM": -130.71690815548908,
+          "bearingDeg": 159,
+          "confidence": "high",
+          "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO PICCADILLY CIRCUS",
+          "end": null,
+          "a": [
+            0.645,
+            0.725
+          ],
+          "b": [
+            0.822,
+            0.331
+          ],
+          "grid": "K7",
+          "residual": 0.011842335045946286,
+          "sources": [
+            {
+              "file": "3d central line stations Redacted.pdf",
+              "page": 14
+            }
+          ]
+        },
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "eastM": -11.147787527779572,
+          "northM": -93.04481549363355,
+          "bearingDeg": 156,
+          "confidence": "high",
+          "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO REGENTS PARK",
+          "end": null,
+          "a": [
+            0.586,
+            0.838
+          ],
+          "b": [
+            0.763,
+            0.388
+          ],
+          "grid": "J8",
+          "residual": 0.011842335045946286,
+          "sources": [
+            {
+              "file": "3d central line stations Redacted.pdf",
+              "page": 14
+            }
+          ]
+        },
+        {
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": 21.331953372754086,
+          "northM": 231.26479402403046,
+          "bearingDeg": 173,
+          "confidence": "high",
+          "caption": "PLATFORM 1 CENTRAL WESTBOUND TO BOND STREET",
+          "end": null,
+          "a": [
+            0.114,
+            0.838
+          ],
+          "b": [
+            0.291,
+            0.613
+          ],
+          "grid": "B8",
+          "residual": 0.011842335045946286,
+          "sources": [
+            {
+              "file": "3d central line stations Redacted.pdf",
+              "page": 14
+            }
+          ]
+        },
+        {
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": 14.598088725012978,
+          "northM": 217.39014280767566,
+          "bearingDeg": 173,
+          "confidence": "high",
+          "caption": "PLATFORM 2 CENTRAL EASTBOUND TO TOTTENHAM COURT ROAD",
+          "end": null,
+          "a": [
+            0.132,
+            0.871
+          ],
+          "b": [
+            0.309,
+            0.646
+          ],
+          "grid": "B8",
+          "residual": 0.011842335045946286,
+          "sources": [
+            {
+              "file": "3d central line stations Redacted.pdf",
+              "page": 14
+            }
+          ]
+        },
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            5
+          ],
+          "eastM": -13.267885784051067,
+          "northM": -54.20082295783657,
+          "bearingDeg": 163,
+          "confidence": "high",
+          "caption": "PLATFORM 5 VICTORIA SOUTHBOUND TO GREEN PARK",
+          "end": null,
+          "a": [
+            0.527,
+            0.838
+          ],
+          "b": [
+            0.704,
+            0.5
+          ],
+          "grid": "I8",
+          "residual": 0.011842335045946286,
+          "sources": [
+            {
+              "file": "3d central line stations Redacted.pdf",
+              "page": 14
+            }
+          ]
+        },
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            6
+          ],
+          "eastM": -6.760227298542979,
+          "northM": -170.6923902247467,
+          "bearingDeg": 156,
+          "confidence": "high",
+          "caption": "PLATFORM 6 VICTORIA NORTHBOUND TO WARREN STREET",
+          "end": null,
+          "a": [
+            0.704,
+            0.725
+          ],
+          "b": [
+            0.881,
+            0.275
+          ],
+          "grid": "L7",
+          "residual": 0.011842335045946286,
+          "sources": [
+            {
+              "file": "3d central line stations Redacted.pdf",
+              "page": 14
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 14,
+          "caption": "PLATFORM 1 CENTRAL WESTBOUND TO BOND STREET",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 173,
+          "a": [
+            0.114,
+            0.838
+          ],
+          "b": [
+            0.291,
+            0.613
+          ],
+          "grid": "B8",
+          "confidence": "high",
+          "eastM": 21.331953372754086,
+          "northM": 231.26479402403046,
+          "residual": 0.011842335045946286,
+          "placed": true
+        },
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 14,
+          "caption": "PLATFORM 2 CENTRAL EASTBOUND TO TOTTENHAM COURT ROAD",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 173,
+          "a": [
+            0.132,
+            0.871
+          ],
+          "b": [
+            0.309,
+            0.646
+          ],
+          "grid": "B8",
+          "confidence": "high",
+          "eastM": 14.598088725012978,
+          "northM": 217.39014280767566,
+          "residual": 0.011842335045946286,
+          "placed": true
+        },
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 14,
+          "caption": "PLATFORM 5 VICTORIA SOUTHBOUND TO GREEN PARK",
+          "lineId": "victoria",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 163,
+          "a": [
+            0.527,
+            0.838
+          ],
+          "b": [
+            0.704,
+            0.5
+          ],
+          "grid": "I8",
+          "confidence": "high",
+          "eastM": -13.267885784051067,
+          "northM": -54.20082295783657,
+          "residual": 0.011842335045946286,
+          "placed": true
+        },
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 14,
+          "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO REGENTS PARK",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 156,
+          "a": [
+            0.586,
+            0.838
+          ],
+          "b": [
+            0.763,
+            0.388
+          ],
+          "grid": "J8",
+          "confidence": "high",
+          "eastM": -11.147787527779572,
+          "northM": -93.04481549363355,
+          "residual": 0.011842335045946286,
+          "placed": true
+        },
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 14,
+          "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO PICCADILLY CIRCUS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 159,
+          "a": [
+            0.645,
+            0.725
+          ],
+          "b": [
+            0.822,
+            0.331
+          ],
+          "grid": "K7",
+          "confidence": "high",
+          "eastM": -4.754141487393445,
+          "northM": -130.71690815548908,
+          "residual": 0.011842335045946286,
+          "placed": true
+        },
+        {
+          "file": "3d central line stations Redacted.pdf",
+          "page": 14,
+          "caption": "PLATFORM 6 VICTORIA NORTHBOUND TO WARREN STREET",
+          "lineId": "victoria",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 156,
+          "a": [
+            0.704,
+            0.725
+          ],
+          "b": [
+            0.881,
+            0.275
+          ],
+          "grid": "L7",
+          "confidence": "high",
+          "eastM": -6.760227298542979,
+          "northM": -170.6923902247467,
+          "residual": 0.011842335045946286,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1173,7 +2776,268 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": 80.4613734377629,
+          "northM": -107.9659429997048,
+          "bearingDeg": 148,
+          "confidence": "high",
+          "caption": "PLATFORM 1 BAKERLOO NORTHBOUND TO OXFORD CIRCUS",
+          "end": null,
+          "a": [
+            0.114,
+            0.5
+          ],
+          "b": [
+            0.291,
+            0.388
+          ],
+          "grid": "B5",
+          "residual": 0.21576207238093445,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 13
+            }
+          ]
+        },
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": -13.076470263017947,
+          "northM": 140.02628432478699,
+          "bearingDeg": 0,
+          "confidence": "high",
+          "caption": "PLATFORM 2 BAKERLOO SOUTHBOUND TO CHARING CROSS",
+          "end": null,
+          "a": [
+            0.586,
+            0.163
+          ],
+          "b": [
+            0.763,
+            0.163
+          ],
+          "grid": "J2",
+          "residual": 0.21576207238093445,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 13
+            }
+          ]
+        },
+        {
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            3
+          ],
+          "eastM": 153.17171407578107,
+          "northM": 18.599928932307535,
+          "bearingDeg": 118,
+          "confidence": "high",
+          "caption": "PLATFORM 3 PICCADILLY EASTBOUND TO LEICESTER SQUARE",
+          "end": null,
+          "a": [
+            0.173,
+            0.95
+          ],
+          "b": [
+            0.35,
+            0.613
+          ],
+          "grid": "C9",
+          "residual": 0.21576207238093445,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 13
+            }
+          ]
+        },
+        {
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            4
+          ],
+          "eastM": 107.53283487313396,
+          "northM": 55.39988478928414,
+          "bearingDeg": 123,
+          "confidence": "high",
+          "caption": "PLATFORM 4 PICCADILLY WESTBOUND TO GREEN PARK",
+          "end": null,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.527,
+            0.388
+          ],
+          "grid": "D8",
+          "residual": 0.21576207238093445,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 13
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 12,
+          "caption": "BAKERLOO LINE PLATFORMS",
+          "lineId": "bakerloo",
+          "platformNumbers": [],
+          "end": null,
+          "bearingDeg": 57,
+          "a": [
+            0.35,
+            0.635
+          ],
+          "b": [
+            0.409,
+            0.725
+          ],
+          "grid": "G7",
+          "confidence": "low",
+          "eastM": 199.0263421885187,
+          "northM": -15.952314153021007,
+          "residual": 0.5070177715336017,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 12,
+          "caption": "PICCADILLY LINE PLATFORMS",
+          "lineId": "piccadilly",
+          "platformNumbers": [],
+          "end": null,
+          "bearingDeg": 57,
+          "a": [
+            0.368,
+            0.68
+          ],
+          "b": [
+            0.427,
+            0.77
+          ],
+          "grid": "G7",
+          "confidence": "low",
+          "eastM": 244.5163719975331,
+          "northM": -24.206948429391744,
+          "residual": 0.5070177715336017,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 13,
+          "caption": "PLATFORM 1 BAKERLOO NORTHBOUND TO OXFORD CIRCUS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 148,
+          "a": [
+            0.114,
+            0.5
+          ],
+          "b": [
+            0.291,
+            0.388
+          ],
+          "grid": "B5",
+          "confidence": "high",
+          "eastM": 80.4613734377629,
+          "northM": -107.9659429997048,
+          "residual": 0.21576207238093445,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 13,
+          "caption": "PLATFORM 2 BAKERLOO SOUTHBOUND TO CHARING CROSS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.586,
+            0.163
+          ],
+          "b": [
+            0.763,
+            0.163
+          ],
+          "grid": "J2",
+          "confidence": "high",
+          "eastM": -13.076470263017947,
+          "northM": 140.02628432478699,
+          "residual": 0.21576207238093445,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 13,
+          "caption": "PLATFORM 3 PICCADILLY EASTBOUND TO LEICESTER SQUARE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 118,
+          "a": [
+            0.173,
+            0.95
+          ],
+          "b": [
+            0.35,
+            0.613
+          ],
+          "grid": "C9",
+          "confidence": "high",
+          "eastM": 153.17171407578107,
+          "northM": 18.599928932307535,
+          "residual": 0.21576207238093445,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 13,
+          "caption": "PLATFORM 4 PICCADILLY WESTBOUND TO GREEN PARK",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 123,
+          "a": [
+            0.232,
+            0.838
+          ],
+          "b": [
+            0.527,
+            0.388
+          ],
+          "grid": "D8",
+          "confidence": "high",
+          "eastM": 107.53283487313396,
+          "northM": 55.39988478928414,
+          "residual": 0.21576207238093445,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1195,7 +3059,116 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": -96.1146185127717,
+          "northM": -16.021586062403962,
+          "bearingDeg": 23,
+          "confidence": "high",
+          "caption": "PLATFORM 1 NORTHBOUND",
+          "end": "east",
+          "a": [
+            0.221,
+            0.29
+          ],
+          "b": [
+            0.497,
+            0.41
+          ],
+          "grid": "5H",
+          "residual": 0.6536336295317041,
+          "sources": [
+            {
+              "file": "3d victoria line stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        },
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": -111.13206209721564,
+          "northM": -1.0041424779600163,
+          "bearingDeg": 12,
+          "confidence": "high",
+          "caption": "PLATFORM 2 SOUTHBOUND",
+          "end": "west",
+          "a": [
+            0.221,
+            0.23
+          ],
+          "b": [
+            0.497,
+            0.29
+          ],
+          "grid": "7.5D",
+          "residual": 0.6536336295317041,
+          "sources": [
+            {
+              "file": "3d victoria line stations Redacted.pdf",
+              "page": 4
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 4,
+          "caption": "PLATFORM 2 SOUTHBOUND",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 12,
+          "a": [
+            0.221,
+            0.23
+          ],
+          "b": [
+            0.497,
+            0.29
+          ],
+          "grid": "7.5D",
+          "confidence": "high",
+          "eastM": -111.13206209721564,
+          "northM": -1.0041424779600163,
+          "residual": 0.6536336295317041,
+          "placed": true
+        },
+        {
+          "file": "3d victoria line stations Redacted.pdf",
+          "page": 4,
+          "caption": "PLATFORM 1 NORTHBOUND",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 23,
+          "a": [
+            0.221,
+            0.29
+          ],
+          "b": [
+            0.497,
+            0.41
+          ],
+          "grid": "5H",
+          "confidence": "high",
+          "eastM": -96.1146185127717,
+          "northM": -16.021586062403962,
+          "residual": 0.6536336295317041,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1214,6 +3187,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1232,6 +3206,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1250,6 +3225,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1268,6 +3244,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1291,6 +3268,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -1309,6 +3287,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1332,6 +3311,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1350,6 +3330,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1378,6 +3359,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1401,6 +3383,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1419,6 +3402,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1442,6 +3426,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1460,6 +3445,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1478,6 +3464,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1496,6 +3483,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1514,6 +3502,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1532,6 +3521,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1550,6 +3540,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1573,6 +3564,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1591,6 +3583,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1614,6 +3607,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1632,6 +3626,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1650,6 +3645,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1673,6 +3669,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1691,6 +3688,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1709,6 +3707,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1742,6 +3741,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1765,6 +3765,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1783,6 +3784,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1801,6 +3803,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1819,6 +3822,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1842,6 +3846,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1865,6 +3870,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1888,6 +3894,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1911,6 +3918,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1929,6 +3937,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1947,6 +3956,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1965,6 +3975,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1983,6 +3994,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -2021,6 +4033,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2043,6 +4056,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2066,6 +4080,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -2094,6 +4109,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -2112,6 +4128,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -2124,6 +4141,7 @@
       "northDeg": 135,
       "depths": [],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -2142,6 +4160,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2170,6 +4189,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -2188,6 +4208,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -2206,6 +4227,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2229,6 +4251,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -2247,6 +4270,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2275,6 +4299,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2293,6 +4318,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2330,7 +4356,298 @@
           "lineId": "waterloo-city"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "eastM": 222.34658574205943,
+          "northM": 11.201932534702578,
+          "bearingDeg": 59,
+          "confidence": "high",
+          "caption": "BAKERLOO LINE PLATFORM 3",
+          "end": null,
+          "a": [
+            0.291,
+            0.635
+          ],
+          "b": [
+            0.527,
+            0.86
+          ],
+          "grid": "E7",
+          "residual": 0.13297380116164162,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        },
+        {
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "eastM": 140.46555996237777,
+          "northM": 58.051632891231336,
+          "bearingDeg": 31,
+          "confidence": "high",
+          "caption": "BAKERLOO LINE PLATFORM 4",
+          "end": null,
+          "a": [
+            0.291,
+            0.477
+          ],
+          "b": [
+            0.527,
+            0.545
+          ],
+          "grid": "E5",
+          "residual": 0.13297380116164162,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": 174.790485894049,
+          "northM": 90.32008240893576,
+          "bearingDeg": 61,
+          "confidence": "high",
+          "caption": "NORTHERN LINE PLATFORM 1",
+          "end": null,
+          "a": [
+            0.409,
+            0.477
+          ],
+          "b": [
+            0.586,
+            0.658
+          ],
+          "grid": "H5",
+          "residual": 0.13297380116164162,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": 85.16938691217439,
+          "northM": 72.38764110059543,
+          "bearingDeg": 52,
+          "confidence": "high",
+          "caption": "NORTHERN LINE PLATFORM 2",
+          "end": null,
+          "a": [
+            0.291,
+            0.298
+          ],
+          "b": [
+            0.468,
+            0.433
+          ],
+          "grid": "E4",
+          "residual": 0.13297380116164162,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 16,
+          "caption": "JUBILEE LINE PLATFORM 5",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            5
+          ],
+          "end": "south",
+          "bearingDeg": 13,
+          "a": [
+            0.35,
+            0.725
+          ],
+          "b": [
+            0.822,
+            0.838
+          ],
+          "grid": "F7",
+          "confidence": "high",
+          "eastM": -42.76735691013093,
+          "northM": -174.30434932782902,
+          "residual": 0.6108558230755514,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 16,
+          "caption": "JUBILEE LINE PLATFORM 6",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            6
+          ],
+          "end": "south",
+          "bearingDeg": 13,
+          "a": [
+            0.368,
+            0.759
+          ],
+          "b": [
+            0.84,
+            0.871
+          ],
+          "grid": "F7",
+          "confidence": "high",
+          "eastM": -49.14096150280281,
+          "northM": -186.4108010476645,
+          "residual": 0.6108558230755514,
+          "placed": false
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 17,
+          "caption": "BAKERLOO LINE PLATFORM 4",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 31,
+          "a": [
+            0.291,
+            0.477
+          ],
+          "b": [
+            0.527,
+            0.545
+          ],
+          "grid": "E5",
+          "confidence": "high",
+          "eastM": 140.46555996237777,
+          "northM": 58.051632891231336,
+          "residual": 0.13297380116164162,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 17,
+          "caption": "BAKERLOO LINE PLATFORM 3",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 59,
+          "a": [
+            0.291,
+            0.635
+          ],
+          "b": [
+            0.527,
+            0.86
+          ],
+          "grid": "E7",
+          "confidence": "high",
+          "eastM": 222.34658574205943,
+          "northM": 11.201932534702578,
+          "residual": 0.13297380116164162,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 17,
+          "caption": "NORTHERN LINE PLATFORM 2",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 52,
+          "a": [
+            0.291,
+            0.298
+          ],
+          "b": [
+            0.468,
+            0.433
+          ],
+          "grid": "E4",
+          "confidence": "high",
+          "eastM": 85.16938691217439,
+          "northM": 72.38764110059543,
+          "residual": 0.13297380116164162,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 17,
+          "caption": "NORTHERN LINE PLATFORM 1",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 61,
+          "a": [
+            0.409,
+            0.477
+          ],
+          "b": [
+            0.586,
+            0.658
+          ],
+          "grid": "H5",
+          "confidence": "high",
+          "eastM": 174.790485894049,
+          "northM": 90.32008240893576,
+          "residual": 0.13297380116164162,
+          "placed": true
+        },
+        {
+          "file": "3d bakerloo stations Redacted.pdf",
+          "page": 18,
+          "caption": "WATERLOO AND CITY LINE PLATFORMS 25 & 26",
+          "lineId": "waterloo-city",
+          "platformNumbers": [
+            25,
+            26
+          ],
+          "end": null,
+          "bearingDeg": 36,
+          "a": [
+            0.291,
+            0.477
+          ],
+          "b": [
+            0.468,
+            0.545
+          ],
+          "grid": "F5",
+          "confidence": "high",
+          "eastM": 114.91153485346436,
+          "northM": -35.32721231572747,
+          "residual": 0.5473884951765579,
+          "placed": false
+        }
+      ],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -2357,6 +4674,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2375,6 +4693,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2398,6 +4717,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -2431,6 +4751,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2443,6 +4764,7 @@
       "northDeg": 45,
       "depths": [],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2471,6 +4793,7 @@
         }
       ],
       "platforms": [],
+      "marks": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",

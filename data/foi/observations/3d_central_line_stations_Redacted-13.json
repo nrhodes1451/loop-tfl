@@ -1,10 +1,27 @@
 {
   "northDeg": 225,
   "depths": [
-    {"label": "BAKERLOO LINE PLATFORMS", "metres": 23.1},
-    {"label": "VICTORIA LINE PLATFORMS", "metres": 23.1},
-    {"label": "CENTRAL LINE PLATFORMS", "metres": 24.6}
+    {
+      "label": "BAKERLOO LINE PLATFORMS",
+      "metres": 23.1
+    },
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 23.1
+    },
+    {
+      "label": "CENTRAL LINE PLATFORMS",
+      "metres": 24.6
+    }
   ],
   "confidence": "high",
-  "raw": "Oxford Circus upper-levels axonometric; N towards bottom-left; Bakerloo/Victoria 23.1m, Central 24.6m."
+  "raw": "Oxford Circus upper-levels axonometric; N towards bottom-left; Bakerloo/Victoria 23.1m, Central 24.6m. Upper-levels sheet: platform boxes not drawn; access labels only.",
+  "platforms": [],
+  "reference": {
+    "label": "Main Ticket Hall",
+    "at": [
+      0.468,
+      0.163
+    ]
+  }
 }

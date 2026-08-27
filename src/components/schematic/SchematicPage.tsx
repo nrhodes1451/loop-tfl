@@ -9,7 +9,7 @@ import type {
   SchematicStation,
   SchematicStationRef,
 } from "@/lib/schematic/types";
-import { lineColorForSchematic } from "@/lib/tokens";
+import { lineColorForSchematic, NATIONAL_RAIL_RED } from "@/lib/tokens";
 import { PMTILES_ATTRIBUTION, TILES_META_URL } from "@/lib/schematic/pmtiles";
 import type { LineNetwork } from "@/lib/schematic/lines";
 import type { SceneStation } from "./StationScene3D";
@@ -84,6 +84,12 @@ function depthLegend(
       level: 0,
       label: "Street",
       color: "#84b817",
+    });
+    rows.push({
+      key: "stairs",
+      level: 0,
+      label: "Stairs",
+      color: NATIONAL_RAIL_RED,
     });
   }
   const concourseLevels = [

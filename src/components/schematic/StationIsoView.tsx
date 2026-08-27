@@ -20,7 +20,7 @@ import type {
   SchematicNode,
   SchematicStation,
 } from "@/lib/schematic/types";
-import { hoverDepthLabel } from "@/lib/schematic/foi-layout";
+import { hoverDepthLabel, hoverFoiExtractLabel } from "@/lib/schematic/foi-layout";
 import { LINE_COLORS } from "@/lib/tokens";
 import { platformPlanSize } from "@/lib/schematic/scene";
 
@@ -681,6 +681,7 @@ export function StationIsoView({ station }: { station: SchematicStation }) {
             {[
               hovered.type,
               hoverDepthLabel(station.stationId, hovered, station.nodes),
+              hoverFoiExtractLabel(hovered.foi),
               hovered.liftId,
               hovered.lineId,
             ]

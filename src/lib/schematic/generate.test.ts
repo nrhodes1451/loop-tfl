@@ -218,6 +218,11 @@ describe("generateSchematic FOI placement", () => {
         eastM: 0,
         northM: 40,
         bearingDeg: 0,
+        confidence: "high",
+        caption: "NORTHERN LINE PLATFORMS 7 & 8",
+        a: [0.4, 0.2],
+        b: [0.4, 0.55],
+        grid: "G4",
       },
       {
         lineId: "circle",
@@ -225,6 +230,42 @@ describe("generateSchematic FOI placement", () => {
         eastM: -30,
         northM: 0,
         bearingDeg: 90,
+      },
+    ],
+    foiMarks: [
+      {
+        file: "3d northern line stations Redacted.pdf",
+        page: 1,
+        caption: "NORTHERN LINE PLATFORMS 7 & 8",
+        lineId: "northern",
+        platformNumbers: [7, 8],
+        end: "north",
+        bearingDeg: 0,
+        a: [0.4, 0.2],
+        b: [0.4, 0.55],
+        grid: "G4",
+        confidence: "high",
+        eastM: 0,
+        northM: 40,
+        residual: 0,
+        placed: true,
+      },
+      {
+        file: "3d bakerloo stations Redacted.pdf",
+        page: 12,
+        caption: "BAKERLOO LINE PLATFORMS",
+        lineId: "bakerloo",
+        platformNumbers: [],
+        end: null,
+        bearingDeg: 57,
+        a: [0.35, 0.635],
+        b: [0.409, 0.725],
+        grid: "G7",
+        confidence: "low",
+        eastM: 10,
+        northM: 12,
+        residual: 0.4,
+        placed: false,
       },
     ],
   });
@@ -236,6 +277,14 @@ describe("generateSchematic FOI placement", () => {
     expect(n7.y).toBeCloseTo(10);
     expect(n8.y).toBeCloseTo(10);
     expect(n7.bearingDeg).toBe(0);
+    expect(n7.foi?.confidence).toBe("high");
+    expect(n7.foi?.eastM).toBeDefined();
+    expect(n7.foi?.caption).toBe("NORTHERN LINE PLATFORMS 7 & 8");
+    expect(n7.foi?.a).toEqual([0.4, 0.2]);
+    expect(placed.foiMarks).toHaveLength(2);
+    expect(placed.foiMarks?.some((m) => m.confidence === "low" && !m.placed)).toBe(
+      true,
+    );
     expect(circle.x).toBeCloseTo(7.5);
     expect(circle.y).toBeCloseTo(0);
     expect(circle.bearingDeg).toBe(90);
