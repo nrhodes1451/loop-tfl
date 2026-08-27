@@ -1,0 +1,19 @@
+{
+  "northDeg": 330,
+  "depths": [
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 23.4
+    },
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 27.4
+    },
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 31.1
+    }
+  ],
+  "confidence": "high",
+  "raw": "Green Park: N about 30° west of up; Victoria 23.4m, Piccadilly 27.4m, Jubilee 31.1m."
+}

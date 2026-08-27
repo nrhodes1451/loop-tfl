@@ -1,0 +1,15 @@
+{
+  "northDeg": 135,
+  "depths": [
+    {
+      "label": "NORTHERN LINE (NORTH BOUND)",
+      "metres": 17.0
+    },
+    {
+      "label": "NORTHERN LINE (SOUTH BOUND)",
+      "metres": 18.8
+    }
+  ],
+  "confidence": "high",
+  "raw": "Kennington axonometric; north ~135\u00b0 (bottom-right); NB 17.0m, SB 18.8m."
+}

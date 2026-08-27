@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 17.6
+    }
+  ],
+  "confidence": "high",
+  "raw": "Brixton: N points top-left; Victoria platforms 17.6m."
+}

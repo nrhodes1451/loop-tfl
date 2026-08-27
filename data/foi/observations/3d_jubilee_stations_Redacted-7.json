@@ -1,0 +1,11 @@
+{
+  "northDeg": 45,
+  "depths": [
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 18.6
+    }
+  ],
+  "confidence": "high",
+  "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m."
+}

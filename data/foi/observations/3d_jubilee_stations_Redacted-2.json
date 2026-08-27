@@ -1,0 +1,15 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 15
+    },
+    {
+      "label": "EAST LONDON LINE PLATFORMS",
+      "metres": 8
+    }
+  ],
+  "confidence": "high",
+  "raw": "Canada Water: N points bottom-left; Jubilee 15.0m, East London Line 8.0m."
+}

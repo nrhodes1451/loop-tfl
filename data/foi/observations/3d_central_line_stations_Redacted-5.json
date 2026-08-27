@@ -1,0 +1,8 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 12.8}
+  ],
+  "confidence": "high",
+  "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m."
+}

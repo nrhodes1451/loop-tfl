@@ -1,0 +1,15 @@
+{
+  "northDeg": 230,
+  "depths": [
+    {
+      "label": "NORTHERN LINE (NORTHBOUND) PLATFORMS",
+      "metres": 14.6
+    },
+    {
+      "label": "NORTHERN LINE (SOUTHBOUND) PLATFORMS",
+      "metres": 18.3
+    }
+  ],
+  "confidence": "high",
+  "raw": "Camden Town axonometric: N about 230° on the portrait raster; NB 14.6m, SB 18.3m."
+}

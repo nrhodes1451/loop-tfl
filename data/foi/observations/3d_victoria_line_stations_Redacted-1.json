@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 16.8
+    }
+  ],
+  "confidence": "high",
+  "raw": "Blackhorse Road: N points top-left; Victoria platforms 16.8m."
+}

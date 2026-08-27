@@ -1,0 +1,11 @@
+{
+  "northDeg": 115,
+  "depths": [
+    {
+      "label": "Bakerloo Line Platforms",
+      "metres": 23.4
+    }
+  ],
+  "confidence": "high",
+  "raw": "Edgware Road table lists Bakerloo platforms at 23.4m; compass N is about 25\u00b0 clockwise of drawing-up, 115\u00b0 on this image."
+}

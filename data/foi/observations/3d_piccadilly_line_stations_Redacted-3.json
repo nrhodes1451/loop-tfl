@@ -1,0 +1,6 @@
+{
+  "northDeg": 30,
+  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 16.5 }],
+  "confidence": "high",
+  "raw": "Bounds Green: N about 30°; Piccadilly platforms 16.5m."
+}

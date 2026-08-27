@@ -1,0 +1,15 @@
+{
+  "northDeg": 75,
+  "depths": [
+    {
+      "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+      "metres": 8.5
+    },
+    {
+      "label": "RAILTRACK THAMESLINK PLATFORMS",
+      "metres": 8.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Barbican rose N at 75°; Circle & Met and Railtrack Thameslink both 8.5m."
+}

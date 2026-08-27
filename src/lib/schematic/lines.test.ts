@@ -169,6 +169,42 @@ describe("buildLineNetwork", () => {
   });
 });
 
+describe("buildLineNetwork FOI bearing", () => {
+  it("prefers FOI bearing over the geographic tangent (rotationY = -bearingDeg)", () => {
+    const schematic = generateSchematic({
+      ...sampleInput,
+      platforms: [
+        {
+          id: "HUBTEST-Plat01::victoria::North",
+          lineId: "victoria",
+          direction: "North",
+          label: "Platform 1 northbound",
+        },
+      ],
+      placement: [
+        {
+          lineId: "victoria",
+          platformNumbers: [1],
+          eastM: 0,
+          northM: 0,
+          bearingDeg: 90,
+        },
+      ],
+    });
+    const network = buildLineNetwork({
+      generatedAt: "test",
+      stations: [
+        { id: "HUBTEST", lat: 51.5, lon: -0.12 },
+        { id: "NEXT", lat: 51.51, lon: -0.12 },
+      ],
+      edges: [{ from: "HUBTEST", to: "NEXT", lineId: "victoria" }],
+      schematics: new Map([["HUBTEST", schematic]]),
+    });
+    // Neighbour is due north → geographic angle ≈ 0; FOI 90° east → −π/2.
+    expect(network.angles.HUBTEST?.victoria).toBeCloseTo(-Math.PI / 2, 8);
+  });
+});
+
 describe("buildLineNetwork from disk", () => {
   const raw = JSON.parse(
     readFileSync("data/network.json", "utf8"),

@@ -12,7 +12,8 @@
     "build-schematics": "tsx scripts/build-schematics.ts",
     "fetch-london-pmtiles": "tsx scripts/fetch-london-pmtiles.ts",
     "index-foi-pages": "tsx scripts/index-foi-pages.ts",
-    "extract-foi-layout": "tsx scripts/extract-foi-layout.ts",
+    "foi:render": "tsx scripts/render-foi-pages.ts",
+    "foi:build": "tsx scripts/build-foi-layout.ts",
     "test": "vitest run"
   },
   "dependencies": {
@@ -42,6 +43,7 @@
     "@types/mapbox__vector-tile": "^1.3.4",
     "@types/node": "^20.19.43",
     "@types/pbf": "^3.0.5",
+    "@types/pngjs": "^6.0.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

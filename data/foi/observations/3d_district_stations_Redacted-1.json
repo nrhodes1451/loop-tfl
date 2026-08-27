@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+      "metres": 8.2
+    }
+  ],
+  "confidence": "high",
+  "raw": "Aldgate East: N points top-left; table lists District & Metropolitan platforms at 8.2m."
+}

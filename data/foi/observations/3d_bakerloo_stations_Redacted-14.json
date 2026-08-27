@@ -1,0 +1,11 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "Bakerloo Line Platforms",
+      "metres": 21.6
+    }
+  ],
+  "confidence": "high",
+  "raw": "Regent's Park table lists Bakerloo platforms at 21.6m; compass N points to drawing-up (90\u00b0 on this image)."
+}

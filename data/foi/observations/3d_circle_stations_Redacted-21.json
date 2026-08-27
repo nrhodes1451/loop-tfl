@@ -1,0 +1,8 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {"label": "JUBILEE LINE PLATFORMS", "metres": 33.0}
+  ],
+  "confidence": "high",
+  "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only."
+}

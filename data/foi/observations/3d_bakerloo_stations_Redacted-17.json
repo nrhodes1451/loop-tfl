@@ -1,0 +1,19 @@
+{
+  "northDeg": 75,
+  "depths": [
+    {
+      "label": "Bakerloo Line Platforms (Northbound)",
+      "metres": 19.5
+    },
+    {
+      "label": "Bakerloo Line Platforms (Southbound)",
+      "metres": 16.4
+    },
+    {
+      "label": "Northern Line Platforms",
+      "metres": 21.3
+    }
+  ],
+  "confidence": "low",
+  "raw": "Waterloo axonometric 2 table lists Bakerloo NB 19.5m, SB 16.4m, Northern 21.3m; compass tilt about 15\u00b0 from drawing-up is a borderline guess (75\u00b0 on this image)."
+}

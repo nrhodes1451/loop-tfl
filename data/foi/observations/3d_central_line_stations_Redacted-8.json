@@ -1,0 +1,8 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 18.3}
+  ],
+  "confidence": "high",
+  "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m."
+}

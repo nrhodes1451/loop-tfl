@@ -1,0 +1,27 @@
+{
+  "northDeg": 135,
+  "depths": [
+    {
+      "label": "TICKET HALL",
+      "metres": 4.5
+    },
+    {
+      "label": "METROPOLITAN & CIRCLE LINE PLATFORMS",
+      "metres": 7.0
+    },
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 15.7
+    },
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 21.3
+    },
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 27.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "King's Cross rose N at 135°; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m."
+}

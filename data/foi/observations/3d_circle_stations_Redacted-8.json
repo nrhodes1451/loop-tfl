@@ -1,0 +1,15 @@
+{
+  "northDeg": 45,
+  "depths": [
+    {
+      "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+      "metres": 7.0
+    },
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 20.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Gloucester Road rose N at 45°; District & Circle 7.0m, Piccadilly 20.0m."
+}

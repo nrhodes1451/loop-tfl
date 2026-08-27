@@ -1,0 +1,11 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 23
+    }
+  ],
+  "confidence": "high",
+  "raw": "Canary Wharf: N points bottom-left; Jubilee platforms 23.0m."
+}

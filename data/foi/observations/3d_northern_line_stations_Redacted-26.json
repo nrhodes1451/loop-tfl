@@ -1,0 +1,15 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 22.2
+    },
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 25.6
+    }
+  ],
+  "confidence": "high",
+  "raw": "Warren Street axonometric; north ~315\u00b0 (top-left); Victoria 22.2m, Northern 25.6m."
+}

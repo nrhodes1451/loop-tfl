@@ -1,0 +1,6 @@
+{
+  "northDeg": 60,
+  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 12.8 }],
+  "confidence": "high",
+  "raw": "Southgate: N about 60°; Piccadilly platforms 12.8m."
+}

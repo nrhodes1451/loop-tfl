@@ -181,3 +181,69 @@ describe("generateSchematic", () => {
     }
   });
 });
+
+describe("generateSchematic FOI placement", () => {
+  const placed = generateSchematic({
+    id: "HUBKGX",
+    name: "King's Cross",
+    lat: 51.53,
+    lon: -0.123,
+    platforms: [
+      {
+        id: "HUBKGX-Plat07-NB-northern::northern::North",
+        lineId: "northern",
+        direction: "North",
+        label: "Platform 7 northbound",
+      },
+      {
+        id: "HUBKGX-Plat08-SB-northern::northern::South",
+        lineId: "northern",
+        direction: "South",
+        label: "Platform 8 southbound",
+      },
+      {
+        id: "HUBKGX-Plat01-WB-circle::circle::West",
+        lineId: "circle",
+        direction: "West",
+        label: "Platform 1 westbound",
+      },
+    ],
+    lifts: [],
+    platformLiftChains: [],
+    interchangeChains: [],
+    placement: [
+      {
+        lineId: "northern",
+        platformNumbers: [7, 8],
+        eastM: 0,
+        northM: 40,
+        bearingDeg: 0,
+      },
+      {
+        lineId: "circle",
+        platformNumbers: [1],
+        eastM: -30,
+        northM: 0,
+        bearingDeg: 90,
+      },
+    ],
+  });
+
+  it("puts FOI platforms at west/north schematic coords and stores bearing", () => {
+    const n7 = placed.nodes.find((n) => n.id.includes("Plat07"))!;
+    const n8 = placed.nodes.find((n) => n.id.includes("Plat08"))!;
+    const circle = placed.nodes.find((n) => n.lineId === "circle")!;
+    expect(n7.y).toBeCloseTo(10);
+    expect(n8.y).toBeCloseTo(10);
+    expect(n7.bearingDeg).toBe(0);
+    expect(circle.x).toBeCloseTo(7.5);
+    expect(circle.y).toBeCloseTo(0);
+    expect(circle.bearingDeg).toBe(90);
+  });
+
+  it("without placement stays byte-identical to the band layout", () => {
+    const a = generateSchematic(sample);
+    const b = generateSchematic({ ...sample, placement: [] });
+    expect(JSON.stringify(a)).toBe(JSON.stringify(b));
+  });
+});

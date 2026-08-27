@@ -1,0 +1,11 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+      "metres": 6.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Cannon Street rose N at 90°; District and Circle platforms 6.0m."
+}

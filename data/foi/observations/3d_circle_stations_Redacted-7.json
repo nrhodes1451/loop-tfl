@@ -1,0 +1,15 @@
+{
+  "northDeg": 270,
+  "depths": [
+    {
+      "label": "METROPOLITAN, CIRCLE & H&C PLATFORMS",
+      "metres": 4.3
+    },
+    {
+      "label": "FIRST CAPITAL CONNECT PLATFORMS",
+      "metres": 5.6
+    }
+  ],
+  "confidence": "high",
+  "raw": "Farringdon rose N at 270°; Met/Circle/H&C 4.3m, First Capital Connect 5.6m."
+}

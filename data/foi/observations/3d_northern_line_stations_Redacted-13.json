@@ -1,0 +1,11 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 28.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Goodge Street axonometric: N points right (90°) on the portrait raster; Northern Line platforms 28.5m."
+}

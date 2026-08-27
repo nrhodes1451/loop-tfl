@@ -1,0 +1,11 @@
+{
+  "northDeg": 105,
+  "depths": [
+    {
+      "label": "Bakerloo Line Platforms",
+      "metres": 10.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Kilburn Park table lists Bakerloo platforms at 10.0m; compass N is about 15\u00b0 clockwise of drawing-up (105\u00b0 on this image)."
+}

@@ -1,0 +1,10 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {"label": "BAKERLOO LINE PLATFORMS", "metres": 23.1},
+    {"label": "VICTORIA LINE PLATFORMS", "metres": 23.1},
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 24.6}
+  ],
+  "confidence": "high",
+  "raw": "Oxford Circus platforms axonometric; N towards bottom-left; same depth table as the upper-levels sheet."
+}

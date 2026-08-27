@@ -1,0 +1,11 @@
+{
+  "northDeg": 60,
+  "depths": [
+    {
+      "label": "CIRCLE / H & C / MET PLATFORMS",
+      "metres": 6.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Great Portland Street rose N at 60°; Circle/H&C/Met platforms 6.5m."
+}

@@ -1,0 +1,15 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 27.3
+    },
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 24.1
+    }
+  ],
+  "confidence": "high",
+  "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m."
+}

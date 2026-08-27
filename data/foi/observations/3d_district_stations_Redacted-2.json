@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
+      "metres": 7
+    }
+  ],
+  "confidence": "low",
+  "raw": "Bow Road: N top-left; depth table present but metres poorly printed (read as 7.0m)."
+}

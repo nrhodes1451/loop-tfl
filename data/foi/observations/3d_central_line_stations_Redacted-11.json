@@ -1,0 +1,8 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {"label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS", "metres": 7.0}
+  ],
+  "confidence": "high",
+  "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m."
+}

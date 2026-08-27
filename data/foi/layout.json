@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-23T09:30:36.334Z",
+  "generatedAt": "2026-08-24T10:37:37.567Z",
   "source": "tfl-foi-2015-axonometric",
-  "disclaimer": "Approximate platform depths and drawing north from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
+  "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
   "stations": [
     {
       "stationId": "940GZZLUACY",
@@ -13,6 +13,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -35,6 +36,7 @@
           "lineId": "metropolitan"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -52,6 +54,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -74,6 +77,7 @@
           "lineId": "metropolitan"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -91,6 +95,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -118,6 +123,7 @@
           "lineId": "national-rail"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -135,6 +141,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -152,6 +159,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -169,6 +177,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -186,6 +195,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -208,6 +218,7 @@
           "lineId": "metropolitan"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -230,6 +241,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -247,6 +259,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -264,6 +277,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -281,6 +295,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -298,6 +313,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -315,6 +331,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -332,6 +349,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -349,6 +367,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -366,6 +385,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -383,6 +403,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -400,6 +421,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -422,6 +444,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -454,6 +477,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -479,6 +503,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -501,6 +526,7 @@
           "lineId": "circle"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -523,6 +549,7 @@
           "lineId": "metropolitan"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -540,6 +567,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -557,6 +585,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -584,6 +613,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -611,6 +641,7 @@
           "lineId": "metropolitan"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -628,6 +659,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -655,6 +687,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -677,6 +710,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -694,6 +728,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -711,6 +746,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -728,6 +764,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -745,6 +782,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -767,6 +805,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -784,6 +823,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -801,6 +841,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -818,6 +859,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -835,6 +877,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -852,6 +895,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -869,6 +913,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -886,6 +931,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -903,6 +949,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -925,6 +972,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -942,6 +990,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -969,6 +1018,7 @@
           "lineId": "metropolitan"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -986,6 +1036,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1003,6 +1054,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1020,6 +1072,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1047,6 +1100,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1064,6 +1118,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1091,6 +1146,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1117,6 +1173,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1138,6 +1195,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1155,6 +1213,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1172,6 +1231,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1189,6 +1249,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1206,6 +1267,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1228,6 +1290,7 @@
           "lineId": "metropolitan"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -1245,6 +1308,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1267,6 +1331,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1284,6 +1349,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1311,6 +1377,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1333,6 +1400,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1350,6 +1418,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1372,6 +1441,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1389,6 +1459,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1406,6 +1477,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1423,6 +1495,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1440,6 +1513,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1457,6 +1531,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1474,6 +1549,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1496,6 +1572,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1513,6 +1590,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1535,6 +1613,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1552,6 +1631,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1569,6 +1649,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1591,6 +1672,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1608,6 +1690,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1625,6 +1708,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1657,6 +1741,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1679,6 +1764,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1696,6 +1782,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1713,6 +1800,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1730,6 +1818,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1752,6 +1841,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1774,6 +1864,7 @@
           "lineId": "district"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1796,6 +1887,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -1818,6 +1910,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1835,6 +1928,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1852,6 +1946,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1869,6 +1964,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -1886,6 +1982,7 @@
           "lineId": "piccadilly"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1923,6 +2020,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1944,6 +2042,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1966,6 +2065,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1993,6 +2093,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -2010,6 +2111,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -2021,6 +2123,7 @@
       "stationId": "HUBNGW",
       "northDeg": 135,
       "depths": [],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -2038,6 +2141,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2065,6 +2169,7 @@
           "lineId": "bakerloo"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -2082,6 +2187,7 @@
           "lineId": "central"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -2099,6 +2205,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2121,6 +2228,7 @@
           "lineId": "northern"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -2138,6 +2246,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2165,6 +2274,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2182,6 +2292,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2219,6 +2330,7 @@
           "lineId": "waterloo-city"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -2244,6 +2356,7 @@
           "lineId": "victoria"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -2261,6 +2374,7 @@
           "lineId": "jubilee"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2283,6 +2397,7 @@
           "lineId": "london-overground"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -2315,6 +2430,7 @@
           "lineId": "national-rail"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2326,6 +2442,7 @@
       "stationId": "HUBZMG",
       "northDeg": 45,
       "depths": [],
+      "platforms": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -2353,6 +2470,7 @@
           "lineId": "london-overground"
         }
       ],
+      "platforms": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",

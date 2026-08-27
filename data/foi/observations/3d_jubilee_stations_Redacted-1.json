@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 15
+    }
+  ],
+  "confidence": "high",
+  "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m."
+}

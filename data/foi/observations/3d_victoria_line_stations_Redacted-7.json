@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 17.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Vauxhall: N points top-left; Victoria platforms 17.5m."
+}

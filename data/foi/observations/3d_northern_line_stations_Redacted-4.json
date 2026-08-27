@@ -1,0 +1,11 @@
+{
+  "northDeg": 45,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 31.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Belsize Park axonometric: N about 45° on the portrait raster; Northern Line platforms 31.0m."
+}

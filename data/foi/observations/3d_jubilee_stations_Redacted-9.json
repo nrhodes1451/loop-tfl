@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "JUBILEE LINE PLATFORMS",
+      "metres": 13.7
+    }
+  ],
+  "confidence": "high",
+  "raw": "Swiss Cottage: N points top-left; Jubilee platforms 13.7m."
+}

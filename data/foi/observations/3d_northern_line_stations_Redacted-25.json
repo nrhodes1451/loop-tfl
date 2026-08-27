@@ -1,0 +1,15 @@
+{
+  "northDeg": 135,
+  "depths": [
+    {
+      "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+      "metres": 22.0
+    },
+    {
+      "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+      "metres": 25.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Tufnell Park axonometric; north ~135\u00b0 (bottom-right); NB 22.0m, SB 25.0m."
+}

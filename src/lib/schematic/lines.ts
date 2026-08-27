@@ -262,6 +262,21 @@ export function stationLineAngle(
   return Math.atan2(tx, tz);
 }
 
+/** FOI undirected bearing → rotationY that maps a +Z-long slab onto the line. */
+export function foiBearingAngle(
+  schematic: SchematicStation | undefined,
+  lineId: string,
+): number | null {
+  if (!schematic) return null;
+  const id = normalizeSchematicLineId(lineId);
+  for (const n of schematic.nodes) {
+    if (n.type !== "platform" || n.bearingDeg == null || !n.lineId) continue;
+    if (normalizeSchematicLineId(n.lineId) !== id) continue;
+    return -((n.bearingDeg * Math.PI) / 180);
+  }
+  return null;
+}
+
 export function buildLineNetwork(input: LineNetworkInput): LineNetwork {
   const origin = input.origin ?? HUBKGX_ORIGIN;
   const stations: Record<string, LineStation> = {};
@@ -334,11 +349,15 @@ export function buildLineNetwork(input: LineNetworkInput): LineNetwork {
     const ids = [...adj.keys()].sort((a, b) => a.localeCompare(b));
     for (const stationId of ids) {
       if (!stations[stationId]) continue;
-      const angle = stationLineAngle(
-        stationId,
-        adj.get(stationId) ?? [],
-        (id) => worldOf(id, lineId),
-      );
+      const schematic = input.schematics.get(stationId);
+      const foiAngle = foiBearingAngle(schematic, lineId);
+      const angle =
+        foiAngle ??
+        stationLineAngle(
+          stationId,
+          adj.get(stationId) ?? [],
+          (id) => worldOf(id, lineId),
+        );
       if (angle == null) continue;
       const row = angles[stationId] ?? (angles[stationId] = {});
       row[lineId] = angle;

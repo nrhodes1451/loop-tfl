@@ -1,0 +1,19 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "District and Circle Line Platforms",
+      "metres": 5.5
+    },
+    {
+      "label": "Northern Line Platforms",
+      "metres": 16.2
+    },
+    {
+      "label": "Bakerloo Line Platforms",
+      "metres": 21.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Embankment axonometric 3 table lists 5.5 / 16.2 / 21.0m; compass N points to drawing-up (90\u00b0 on this image)."
+}

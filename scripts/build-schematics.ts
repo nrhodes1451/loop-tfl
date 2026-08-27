@@ -7,6 +7,7 @@
 
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import type { FoiLayoutFile } from "../src/lib/schematic/foi-extract";
 import { generateSchematic } from "../src/lib/schematic/generate";
 import { buildLineNetwork } from "../src/lib/schematic/lines";
 import type { SchematicIndex, SchematicStation } from "../src/lib/schematic/types";
@@ -24,6 +25,36 @@ export async function buildSchematics(): Promise<{
   const networkPath = path.join(root, "data", "network.json");
 
   const network = JSON.parse(await readFile(networkPath, "utf8")) as NetworkData;
+
+  let placementByStation = new Map<
+    string,
+    {
+      lineId: string;
+      platformNumbers: number[];
+      eastM: number;
+      northM: number;
+      bearingDeg: number;
+    }[]
+  >();
+  try {
+    const layout = JSON.parse(
+      await readFile(path.join(root, "data", "foi", "layout.json"), "utf8"),
+    ) as FoiLayoutFile;
+    placementByStation = new Map(
+      layout.stations.map((s) => [
+        s.stationId,
+        (s.platforms ?? []).map((p) => ({
+          lineId: p.lineId,
+          platformNumbers: p.platformNumbers,
+          eastM: p.eastM,
+          northM: p.northM,
+          bearingDeg: p.bearingDeg,
+        })),
+      ]),
+    );
+  } catch {
+    /* layout.json is optional — generated stations then use line bands */
+  }
 
   const overrideIds = new Set<string>();
   const top = await readdir(schematicDir);
@@ -100,6 +131,7 @@ export async function buildSchematics(): Promise<{
       lifts,
       platformLiftChains,
       interchangeChains: hopsByStation.get(station.id) ?? [],
+      placement: placementByStation.get(station.id),
     });
     await writeFile(
       path.join(generatedDir, `${station.id}.json`),

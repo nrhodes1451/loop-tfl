@@ -1,0 +1,11 @@
+{
+  "northDeg": 45,
+  "depths": [
+    {
+      "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
+      "metres": 4.3
+    }
+  ],
+  "confidence": "high",
+  "raw": "High Street Kensington rose N at 45°; District and Circle platforms 4.3m."
+}

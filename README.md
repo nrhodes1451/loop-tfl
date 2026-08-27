@@ -47,12 +47,19 @@ npm run dev
 
 Optional: set `TFL_APP_KEY` (see `.env.example`) for higher rate limits.
 
-FOI axonometric page index (local scans in `data/pdf/`, gitignored):
+FOI axonometric sheets (local scans in `data/pdf/`, gitignored):
 
 ```bash
 sudo apt install poppler-utils   # pdftoppm; tesseract-ocr optional (script falls back to tesseract.js)
 npm run index-foi-pages   # writes data/foi/pages.json; edit data/foi/pages.overrides.json for misses
+npm run foi:render        # rasterize each sheet to data/pdf/.pages/
+npm run foi:build         # merge data/foi/observations/ → extract.json + layout.json
+npm run foi:build -- --todo   # sheets still needing a read
 ```
+
+Reading a sheet sits between those last two steps and is the one part no script does: depths, compass north, and platform endpoints are read off the drawing and recorded in `data/foi/observations/<sheet>.json`, one committed file per sheet. See `.cursor/skills/foi-sheet-reading/SKILL.md` for the schema and the procedure. Those observations are source data, not a cache — `data/pdf/` is gitignored, but `data/foi/observations/` is committed because nothing can regenerate it. Both scripts are offline and deterministic; there is no external service or API key anywhere in this pipeline.
+
+Plan offsets in `layout.json` are reconstructed from 2015 axonometric scans. They are approximate and are never used for routing or access decisions. `npm run build-schematics` bakes them into generated node `x`/`y`/`bearingDeg` when present; stations without a sheet keep the alphabetical line bands.
 
 ```bash
 npm test                  # topology, status derivation, pathfinder, schematic

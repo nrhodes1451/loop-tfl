@@ -1,0 +1,11 @@
+{
+  "northDeg": 135,
+  "depths": [
+    {
+      "label": "CIRCLE & HAMMERSMITH LINE PLATFORMS",
+      "metres": 5.1
+    }
+  ],
+  "confidence": "high",
+  "raw": "Edgware Road rose N at 135°; Circle & Hammersmith platforms 5.1m."
+}

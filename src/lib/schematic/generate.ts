@@ -8,6 +8,12 @@ import {
   SCHEMATIC_LINE_LEVEL,
   normalizeSchematicLineId,
 } from "./levels";
+import { undirectedBearingDeg } from "./foi-project";
+import {
+  DEEP_TUBE_DIAMETER_M,
+  PLATFORM_WIDTH_M,
+  SCHEMATIC_UNIT_M,
+} from "./lu-scale";
 import type {
   SchematicEdge,
   SchematicEdgeMode,
@@ -44,6 +50,14 @@ export type GenerateInterchange = {
   access: "lifts" | "level";
 };
 
+export type GeneratePlacementPlatform = {
+  lineId: string;
+  platformNumbers: number[];
+  eastM: number;
+  northM: number;
+  bearingDeg: number;
+};
+
 export type GenerateStationInput = {
   id: string;
   name: string;
@@ -53,6 +67,8 @@ export type GenerateStationInput = {
   lifts: GenerateLift[];
   platformLiftChains: GenerateStreetChain[];
   interchangeChains: GenerateInterchange[];
+  /** FOI plan offsets; omitted → alphabetical line bands. */
+  placement?: GeneratePlacementPlatform[];
 };
 
 const PLATFORM_DX = 2;
@@ -67,6 +83,18 @@ export function physicalPlatformId(servicePlatformId: string): string {
 
 export function platformNodeId(physicalId: string): string {
   return `plat-${physicalId}`;
+}
+
+/** Platform number from a TfL physical id (`Plat01`) or printed label. */
+export function platformNumberFromLabel(
+  label: string,
+  physicalId: string,
+): number | null {
+  const fromId = physicalId.match(/plat(?:form)?-?0*(\d+)/i);
+  if (fromId) return Number(fromId[1]);
+  const fromLabel = label.match(/platform\s*0*(\d+)/i);
+  if (fromLabel) return Number(fromLabel[1]);
+  return null;
 }
 
 function liftNodeId(tflId: string, index: number, used: Set<string>): string {
@@ -181,11 +209,86 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
 
   const nodes: SchematicNode[] = [];
   const platformPos = new Map<string, { x: number; y: number; level: number }>();
-  let xCursor = 0;
+  const placedIds = new Set<string>();
+
+  const placementByLine = new Map<string, GeneratePlacementPlatform[]>();
+  for (const p of input.placement ?? []) {
+    const id = normalizeSchematicLineId(p.lineId);
+    const list = placementByLine.get(id) ?? [];
+    list.push(p);
+    placementByLine.set(id, list);
+  }
+
+  const foiXs: number[] = [];
+
+  for (const lineId of lineIds) {
+    const entries =
+      placementByLine.get(normalizeSchematicLineId(lineId)) ??
+      placementByLine.get(lineId);
+    if (!entries?.length) continue;
+    const level = lineLevel(lineId, unknownAssigned, usedLevels);
+    const plats = byLine.get(lineId) ?? [];
+    const groups = new Map<GeneratePlacementPlatform, PhysPlat[]>();
+    for (const phys of plats) {
+      const num = platformNumberFromLabel(phys.label, phys.physicalId);
+      const hit =
+        num != null
+          ? (entries.find((e) => e.platformNumbers.includes(num)) ??
+            entries.find((e) => e.platformNumbers.length === 0))
+          : entries.length === 1
+            ? entries[0]
+            : entries.find((e) => e.platformNumbers.length === 0);
+      if (!hit) continue;
+      const list = groups.get(hit) ?? [];
+      list.push(phys);
+      groups.set(hit, list);
+    }
+    if (groups.size === 0 && entries.length === 1) {
+      groups.set(entries[0]!, plats);
+    }
+    for (const [entry, group] of groups) {
+      const sorted = [...group].sort((a, b) =>
+        a.physicalId.localeCompare(b.physicalId),
+      );
+      const n = sorted.length;
+      const bearing = undirectedBearingDeg(entry.bearingDeg);
+      const br = (bearing * Math.PI) / 180;
+      const perpE = Math.cos(br);
+      const perpN = Math.sin(br);
+      for (let i = 0; i < n; i++) {
+        const phys = sorted[i]!;
+        const offsetM =
+          (i - (n - 1) / 2) * (PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M);
+        const eastM = entry.eastM + perpE * offsetM;
+        const northM = entry.northM + perpN * offsetM;
+        const x = snap(-eastM / SCHEMATIC_UNIT_M);
+        const y = snap(northM / SCHEMATIC_UNIT_M);
+        platformPos.set(phys.nodeId, { x, y, level });
+        nodes.push({
+          id: phys.nodeId,
+          type: "platform",
+          label: phys.label,
+          level,
+          x,
+          y,
+          lineId: phys.lineId,
+          bearingDeg: bearing,
+        });
+        placedIds.add(phys.nodeId);
+        foiXs.push(x);
+      }
+    }
+  }
+
+  let xCursor =
+    foiXs.length > 0 ? snap(Math.max(...foiXs) + LINE_DX) : 0;
 
   for (const lineId of lineIds) {
     const level = lineLevel(lineId, unknownAssigned, usedLevels);
-    const plats = byLine.get(lineId) ?? [];
+    const plats = (byLine.get(lineId) ?? []).filter(
+      (p) => !placedIds.has(p.nodeId),
+    );
+    if (plats.length === 0) continue;
     const x0 = xCursor;
     const yLine = 0;
     for (let i = 0; i < plats.length; i++) {

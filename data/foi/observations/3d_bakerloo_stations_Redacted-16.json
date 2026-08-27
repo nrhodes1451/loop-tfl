@@ -1,0 +1,11 @@
+{
+  "northDeg": 270,
+  "depths": [
+    {
+      "label": "District and Circle Line Platforms",
+      "metres": 33.0
+    }
+  ],
+  "confidence": "low",
+  "raw": "Waterloo axonometric 1 table appears to list District and Circle at 33.0m (digit 1 vs 3 is uncertain); compass N points down on the drawing (270\u00b0 on this image)."
+}

@@ -1,0 +1,11 @@
+{
+  "northDeg": 0,
+  "depths": [
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 18.6
+    }
+  ],
+  "confidence": "high",
+  "raw": "Seven Sisters: N points up; Victoria platforms 18.6m."
+}

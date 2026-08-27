@@ -1,0 +1,9 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 22.2},
+    {"label": "JUBILEE LINE PLATFORMS", "metres": 32.0}
+  ],
+  "confidence": "high",
+  "raw": "Bond Street axonometric; N towards top-left; Central 22.2m and Jubilee 32.0m."
+}

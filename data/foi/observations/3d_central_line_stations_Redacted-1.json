@@ -1,0 +1,11 @@
+{
+  "northDeg": 45,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 20.7},
+    {"label": "DISTRICT LINE PLATFORMS", "metres": 8.2},
+    {"label": "DOCKLANDS PLATFORMS", "metres": 41.4},
+    {"label": "NORTHERN LINE PLATFORMS", "metres": 30.5}
+  ],
+  "confidence": "high",
+  "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row."
+}

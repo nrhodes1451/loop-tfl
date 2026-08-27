@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
+      "metres": 7
+    }
+  ],
+  "confidence": "high",
+  "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m."
+}

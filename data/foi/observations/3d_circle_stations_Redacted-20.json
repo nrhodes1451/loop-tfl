@@ -1,0 +1,9 @@
+{
+  "northDeg": 150,
+  "depths": [
+    {"label": "DISTRICT AND CIRCLE LINE PLATFORMS", "metres": 6.4},
+    {"label": "VICTORIA LINE PLATFORMS", "metres": 17.9}
+  ],
+  "confidence": "high",
+  "raw": "Victoria axonometric; N about 5 o'clock; District/Circle 6.4m, Victoria 17.9m."
+}

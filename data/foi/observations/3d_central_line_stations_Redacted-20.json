@@ -1,0 +1,8 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 18.8}
+  ],
+  "confidence": "high",
+  "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m."
+}

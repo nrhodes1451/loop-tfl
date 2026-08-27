@@ -1,0 +1,11 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "Bakerloo Line Platforms",
+      "metres": 25.3
+    }
+  ],
+  "confidence": "high",
+  "raw": "Marylebone table lists Bakerloo platforms at 25.3m; compass N points to drawing-up (90\u00b0 on this image)."
+}

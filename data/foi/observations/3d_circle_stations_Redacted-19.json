@@ -1,0 +1,8 @@
+{
+  "northDeg": 120,
+  "depths": [
+    {"label": "DISTRICT AND CIRCLE LINE PLATFORMS", "metres": 5.0}
+  ],
+  "confidence": "high",
+  "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m."
+}

@@ -1,0 +1,6 @@
+{
+  "northDeg": 90,
+  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 36.0 }],
+  "confidence": "high",
+  "raw": "Covent Garden: N to the right; Piccadilly platforms 36.0m."
+}

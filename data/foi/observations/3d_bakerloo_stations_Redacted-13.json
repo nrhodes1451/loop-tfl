@@ -1,0 +1,15 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "Bakerloo Line Platforms",
+      "metres": 28.0
+    },
+    {
+      "label": "Piccadilly Line Platforms",
+      "metres": 32.3
+    }
+  ],
+  "confidence": "high",
+  "raw": "Piccadilly Circus axonometric 2 repeats Bakerloo 28.0m and Piccadilly 32.3m; compass N points to drawing-up (90\u00b0 on this image)."
+}

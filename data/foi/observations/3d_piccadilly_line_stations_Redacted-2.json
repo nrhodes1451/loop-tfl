@@ -1,0 +1,6 @@
+{
+  "northDeg": 135,
+  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 20.7 }],
+  "confidence": "high",
+  "raw": "Caledonian Road: N bottom-right; Piccadilly platforms 20.7m."
+}

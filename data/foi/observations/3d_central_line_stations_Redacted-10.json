@@ -1,0 +1,8 @@
+{
+  "northDeg": 345,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 26.2}
+  ],
+  "confidence": "high",
+  "raw": "Marble Arch axonometric; N slightly left of up; Central platforms 26.2m."
+}

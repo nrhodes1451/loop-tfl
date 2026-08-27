@@ -1,0 +1,15 @@
+{
+  "northDeg": 110,
+  "depths": [
+    {
+      "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+      "metres": 17.0
+    },
+    {
+      "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+      "metres": 19.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Borough axonometric: N about 110° on the portrait raster; SB 17.0m, NB 19.5m."
+}

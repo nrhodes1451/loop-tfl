@@ -1,0 +1,6 @@
+{
+  "northDeg": 135,
+  "depths": [{ "label": "PICCADILLY LINE PLATFORMS", "metres": 4.3 }],
+  "confidence": "high",
+  "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m."
+}

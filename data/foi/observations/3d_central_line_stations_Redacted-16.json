@@ -1,0 +1,8 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 4.3}
+  ],
+  "confidence": "high",
+  "raw": "Redbridge axonometric; N towards bottom-left; Central platforms 4.3m."
+}

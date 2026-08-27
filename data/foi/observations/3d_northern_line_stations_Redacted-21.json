@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 12.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "South Wimbledon axonometric; north ~315\u00b0 (top-left); Northern Line platforms 12.5m."
+}

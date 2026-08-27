@@ -1,0 +1,8 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 24.4}
+  ],
+  "confidence": "high",
+  "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m."
+}

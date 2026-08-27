@@ -1,0 +1,19 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "NORTHERN LINE (CHARING CROSS BRANCH) PLATFORMS",
+      "metres": 20.4
+    },
+    {
+      "label": "NORTHERN LINE (CITY BRANCH) PLATFORMS",
+      "metres": 29.8
+    },
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 29.8
+    }
+  ],
+  "confidence": "high",
+  "raw": "Euston axonometric: N points right (90°) on the portrait raster; CX 20.4m, City 29.8m, Victoria 29.8m."
+}

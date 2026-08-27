@@ -1,0 +1,11 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 27.4
+    }
+  ],
+  "confidence": "high",
+  "raw": "Angel axonometric: N points right (90°) on the portrait raster; Northern Line platforms 27.4m."
+}

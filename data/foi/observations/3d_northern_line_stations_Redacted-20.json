@@ -1,0 +1,15 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "NORTHERN LINE NORTHBOUND PLATFORM",
+      "metres": 14.3
+    },
+    {
+      "label": "NORTHERN LINE SOUTHBOUND PLATFORM",
+      "metres": 17.7
+    }
+  ],
+  "confidence": "high",
+  "raw": "Oval axonometric; north ~315\u00b0 (top-left); NB 14.3m, SB 17.7m."
+}

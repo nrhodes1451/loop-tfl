@@ -1,0 +1,15 @@
+{
+  "northDeg": 180,
+  "depths": [
+    {
+      "label": "DISTRICT LINE PLATFORMS",
+      "metres": 4.8
+    },
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 19.8
+    }
+  ],
+  "confidence": "high",
+  "raw": "Earl's Court: rose has N down / S up; District 4.8m and Piccadilly 19.8m."
+}

@@ -1,0 +1,8 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 18.3}
+  ],
+  "confidence": "high",
+  "raw": "Holland Park axonometric; N towards top-left; Central platforms 18.3m."
+}

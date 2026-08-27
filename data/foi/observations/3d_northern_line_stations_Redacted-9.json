@@ -1,0 +1,11 @@
+{
+  "northDeg": 340,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 15.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Clapham North axonometric: N about 340° on the portrait raster; Northern Line platforms 15.5m."
+}

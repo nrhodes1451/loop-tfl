@@ -1,0 +1,11 @@
+{
+  "northDeg": 45,
+  "depths": [
+    {
+      "label": "DISTRICT LINE PLATFORMS",
+      "metres": 4
+    }
+  ],
+  "confidence": "high",
+  "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box."
+}

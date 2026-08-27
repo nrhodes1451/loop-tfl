@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 42.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Highgate axonometric; north ~315\u00b0 (top-left); Northern Line platforms 42.0m."
+}

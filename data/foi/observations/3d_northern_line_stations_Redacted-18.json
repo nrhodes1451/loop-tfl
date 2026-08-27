@@ -1,0 +1,15 @@
+{
+  "northDeg": 215,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 27.4
+    },
+    {
+      "label": "PICCADILLY LINE PLATFORMS",
+      "metres": 32.3
+    }
+  ],
+  "confidence": "high",
+  "raw": "Leicester Square axonometric; north ~215\u00b0; Northern 27.4m, Piccadilly 32.3m."
+}

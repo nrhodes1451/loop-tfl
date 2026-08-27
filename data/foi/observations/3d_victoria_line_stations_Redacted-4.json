@@ -1,0 +1,11 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "VICTORIA LINE PLATFORMS",
+      "metres": 22.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Pimlico: N points right; Victoria platforms 22.5m."
+}

@@ -1,0 +1,11 @@
+{
+  "northDeg": 90,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 17.3
+    }
+  ],
+  "confidence": "high",
+  "raw": "Chalk Farm axonometric: N points right (90°) on the portrait raster; Northern Line platforms 17.3m."
+}

@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 13.4
+    }
+  ],
+  "confidence": "high",
+  "raw": "Colliers Wood axonometric: N about 315° on the portrait raster; Northern Line platforms 13.4m."
+}

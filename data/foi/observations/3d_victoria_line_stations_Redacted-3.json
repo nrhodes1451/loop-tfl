@@ -1,0 +1,11 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {
+      "label": "VICTORIA & RAILTRACK LINE PLATFORMS",
+      "metres": 17.7
+    }
+  ],
+  "confidence": "high",
+  "raw": "Highbury & Islington: N points top-left; Victoria & Railtrack platforms 17.7m."
+}

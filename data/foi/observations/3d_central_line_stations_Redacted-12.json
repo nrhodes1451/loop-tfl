@@ -1,0 +1,10 @@
+{
+  "northDeg": 315,
+  "depths": [
+    {"label": "DISTRICT AND CIRCLE LINE PLATFORMS", "metres": 8.8},
+    {"label": "CENTRAL LINE WESTBOUND PLATFORM", "metres": 25.9},
+    {"label": "CENTRAL LINE EASTBOUND PLATFORM", "metres": 31.1}
+  ],
+  "confidence": "high",
+  "raw": "Notting Hill Gate axonometric; N towards top-left; District/Circle 8.8m, Central WB 25.9m, EB 31.1m."
+}

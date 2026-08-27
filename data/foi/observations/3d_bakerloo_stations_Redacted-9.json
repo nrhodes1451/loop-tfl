@@ -1,0 +1,11 @@
+{
+  "northDeg": 75,
+  "depths": [
+    {
+      "label": "Bakerloo Line Platforms",
+      "metres": 15.2
+    }
+  ],
+  "confidence": "high",
+  "raw": "Maida Vale table lists Bakerloo platforms at 15.2m; compass N is about 15\u00b0 counter-clockwise of drawing-up (75\u00b0 on this image)."
+}

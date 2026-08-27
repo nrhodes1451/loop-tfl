@@ -1,0 +1,11 @@
+{
+  "northDeg": 60,
+  "depths": [
+    {
+      "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
+      "metres": 7.0
+    }
+  ],
+  "confidence": "high",
+  "raw": "Aldgate rose N at 60°; Circle & Metropolitan platforms 7.0m."
+}

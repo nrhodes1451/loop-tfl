@@ -1,0 +1,8 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {"label": "CENTRAL LINE PLATFORMS", "metres": 15.9}
+  ],
+  "confidence": "high",
+  "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m."
+}

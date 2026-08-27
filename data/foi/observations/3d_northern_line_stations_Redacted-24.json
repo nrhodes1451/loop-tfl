@@ -1,0 +1,11 @@
+{
+  "northDeg": 225,
+  "depths": [
+    {
+      "label": "NORTHERN LINE PLATFORMS",
+      "metres": 12.5
+    }
+  ],
+  "confidence": "high",
+  "raw": "Tooting Broadway axonometric; north ~225\u00b0 (bottom-left); Northern Line platforms 12.5m."
+}
