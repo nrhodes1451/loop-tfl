@@ -356,6 +356,9 @@ export type OverlayHoverVolume = {
   label: string;
   type: string;
   level: number;
+  /** Present on dollhouse volumes; overlay halls/stairs omit these. */
+  liftId?: string;
+  lineId?: string;
 };
 
 export function overlayGeometries(
