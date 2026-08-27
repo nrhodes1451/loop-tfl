@@ -12,10 +12,12 @@ export const MAX_BUILDING_AABB_M2 = 2500;
 export const DEFAULT_HALL_HEIGHT_M = 7;
 export const MAX_HALL_HEIGHT_M = 16;
 export const STAIR_WIDTH_M = 2.5;
-/** Sit the kerb just above the OSM ground so it does not z-fight. */
-export const STAIR_Y_M = 0.04;
-/** Tall enough to read from the default south-looking camera. */
-export const STAIR_HEIGHT_M = 0.6;
+/** Schematic risers — not OSM `step_count`. */
+export const STAIR_RISERS = 8;
+/** Total drop below street (metres). */
+export const STAIR_DROP_M = 3.2;
+/** Pixel width for the stair cage, same order as dollhouse GlowLine. */
+export const STAIR_LINE_WIDTH = 2;
 export const STAIR_COLOR = NATIONAL_RAIL_RED;
 
 export const OVERPASS_ENDPOINTS = [
@@ -36,7 +38,14 @@ export type EntranceBuilding = {
 export type EntranceStairs = {
   osmWayId: number;
   path: LatLonPair[];
+  /** Raw OSM `incline`, when present. `path[0]` is always the street end. */
+  incline?: string;
 };
+
+/** `up` = uphill along the way (first node is bottom). */
+export type InclineDir = "up" | "down";
+
+type IndexedStairs = EntranceStairs & { nodeIds: number[] };
 
 export type StationEntrances = {
   buildings: EntranceBuilding[];
@@ -178,6 +187,44 @@ function isConveying(tags: Record<string, string> | undefined): boolean {
   return v != null && v !== "" && v !== "no";
 }
 
+export function parseIncline(raw: string | undefined): InclineDir | null {
+  if (!raw) return null;
+  const s = raw.trim().toLowerCase();
+  if (s === "" || s === "no" || s === "0" || s === "0%" || s === "0°") {
+    return null;
+  }
+  if (s === "up" || s === "yes") return "up";
+  if (s === "down") return "down";
+  const n = Number.parseFloat(s.replace(/[%°]/g, ""));
+  if (!Number.isFinite(n) || n === 0) return null;
+  return n > 0 ? "up" : "down";
+}
+
+/**
+ * OSM way order plus `incline` (or the entrance vertex) so `path[0]` is street.
+ */
+export function orientStairPath(
+  path: LatLonPair[],
+  opts: {
+    incline?: string;
+    nodeIds?: number[];
+    entranceNodeId?: number;
+  } = {},
+): LatLonPair[] {
+  if (path.length < 2) return path;
+  const dir = parseIncline(opts.incline);
+  if (dir === "up") return [...path].reverse();
+  if (dir === "down") return path;
+  const ids = opts.nodeIds;
+  const ent = opts.entranceNodeId;
+  if (ids == null || ids.length < 2 || ent == null) return path;
+  const idx = ids.indexOf(ent);
+  if (idx < 0) return path;
+  const last = ids.length - 1;
+  if (idx > last - idx) return [...path].reverse();
+  return path;
+}
+
 export function entranceRingToEnu(
   ring: LatLonPair[],
   origin: LatLon,
@@ -216,11 +263,11 @@ export function pickBuildingForEntrance(
 function indexOsm(osm: OverpassResponse): {
   nodes: OverpassNode[];
   buildingsByNode: Map<number, EntranceBuilding[]>;
-  stairsByNode: Map<number, EntranceStairs[]>;
+  stairsByNode: Map<number, IndexedStairs[]>;
 } {
   const nodes: OverpassNode[] = [];
   const buildingsByNode = new Map<number, EntranceBuilding[]>();
-  const stairsByNode = new Map<number, EntranceStairs[]>();
+  const stairsByNode = new Map<number, IndexedStairs[]>();
 
   const push = <T,>(map: Map<number, T[]>, nodeId: number, row: T) => {
     const list = map.get(nodeId) ?? [];
@@ -252,10 +299,24 @@ function indexOsm(osm: OverpassResponse): {
       continue;
     }
     if (tags.highway === "steps" && !isConveying(tags)) {
-      const path = dropClosingDuplicate(pairList(way.geometry));
+      let path = pairList(way.geometry);
+      let ids = [...nodeIds];
+      if (path.length >= 2) {
+        const first = path[0]!;
+        const last = path[path.length - 1]!;
+        if (first[0] === last[0] && first[1] === last[1]) {
+          path = path.slice(0, -1);
+          if (ids.length === path.length + 1) ids = ids.slice(0, -1);
+        }
+      }
       if (path.length < 2) continue;
-      const row: EntranceStairs = { osmWayId: way.id, path };
-      for (const nid of nodeIds) push(stairsByNode, nid, row);
+      const row: IndexedStairs = {
+        osmWayId: way.id,
+        path,
+        nodeIds: ids,
+        incline: tags.incline || undefined,
+      };
+      for (const nid of ids) push(stairsByNode, nid, row);
     }
   }
 
@@ -311,7 +372,16 @@ export function bakeEntrances(
       const building = pickBuildingForEntrance(node.id, buildingsByNode);
       if (building) buildings.set(building.osmWayId, building);
       for (const step of stairsByNode.get(node.id) ?? []) {
-        stairs.set(step.osmWayId, step);
+        const path = orientStairPath(step.path, {
+          incline: step.incline,
+          nodeIds: step.nodeIds,
+          entranceNodeId: node.id,
+        });
+        stairs.set(step.osmWayId, {
+          osmWayId: step.osmWayId,
+          path,
+          incline: step.incline,
+        });
       }
     }
     if (buildings.size === 0 && stairs.size === 0) continue;

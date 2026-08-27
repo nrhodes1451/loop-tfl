@@ -8,8 +8,11 @@ import {
   buildingsToGeometry,
   disposeSurfaceTile,
   featuresToTileGeom,
+  hallPrismEdges,
+  hallsToBottomGeometry,
   ribbonGeometry,
-  stairRibbonGeometry,
+  stairFlightBottomGeometry,
+  stairFlightEdges,
   wrapLambertFragment,
 } from "./building-geom";
 
@@ -131,26 +134,148 @@ describe("ribbonGeometry", () => {
     expect(geom!.getIndex()!.count).toBe(6);
     geom!.dispose();
   });
+
+  it("winds both triangles so the front face points +Y", () => {
+    const geom = ribbonGeometry(
+      [
+        [0, 0],
+        [10, 0],
+      ],
+      8,
+    );
+    expect(geom).not.toBeNull();
+    const pos = geom!.getAttribute("position")!;
+    const idx = geom!.getIndex()!;
+    expect(idx.count).toBe(6);
+    for (let t = 0; t < 2; t++) {
+      const i0 = idx.getX(t * 3);
+      const i1 = idx.getX(t * 3 + 1);
+      const i2 = idx.getX(t * 3 + 2);
+      const ax = pos.getX(i0);
+      const ay = pos.getY(i0);
+      const az = pos.getZ(i0);
+      const e1x = pos.getX(i1) - ax;
+      const e1y = pos.getY(i1) - ay;
+      const e1z = pos.getZ(i1) - az;
+      const e2x = pos.getX(i2) - ax;
+      const e2y = pos.getY(i2) - ay;
+      const e2z = pos.getZ(i2) - az;
+      const ny = e1z * e2x - e1x * e2z;
+      expect(ny).toBeGreaterThan(0);
+    }
+    geom!.dispose();
+  });
 });
 
-describe("stairRibbonGeometry", () => {
-  it("builds a kerb with a +Y top so a camera above can see it", () => {
-    const geom = stairRibbonGeometry(
+describe("stairFlightEdges", () => {
+  it("outlines 8 risers from street to -3.2 m along an east–west path", () => {
+    const pts = stairFlightEdges(
       [
         [0, 0],
         [10, 0],
       ],
       2.5,
-      0.6,
+      8,
+      3.2,
+    );
+    expect(pts.length).toBeGreaterThan(0);
+    expect(pts.length % 2).toBe(0);
+    let minY = Infinity;
+    let maxY = -Infinity;
+    let minX = Infinity;
+    let maxX = -Infinity;
+    for (const p of pts) {
+      minY = Math.min(minY, p[1]);
+      maxY = Math.max(maxY, p[1]);
+      minX = Math.min(minX, p[0]);
+      maxX = Math.max(maxX, p[0]);
+    }
+    expect(maxY).toBeCloseTo(0, 5);
+    expect(minY).toBeCloseTo(-3.2, 5);
+    expect(maxX).toBeGreaterThan(-1);
+    expect(minX).toBeLessThan(-9);
+    const ys = new Set(pts.map((p) => p[1].toFixed(1)));
+    expect(ys.has("0.0")).toBe(true);
+    expect(ys.has("-0.4")).toBe(true);
+    expect(ys.has("-3.2")).toBe(true);
+  });
+});
+
+describe("hallPrismEdges", () => {
+  it("outlines a prism from Y=0 to hall height", () => {
+    const pts = hallPrismEdges(
+      [
+        [0, 0],
+        [10, 0],
+        [10, 8],
+        [0, 8],
+        [0, 0],
+      ],
+      7,
+    );
+    expect(pts.length).toBe(24);
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const p of pts) {
+      minY = Math.min(minY, p[1]);
+      maxY = Math.max(maxY, p[1]);
+    }
+    expect(minY).toBeCloseTo(0, 5);
+    expect(maxY).toBeCloseTo(7, 5);
+    const ys = new Set(pts.map((p) => p[1].toFixed(1)));
+    expect(ys.has("0.0")).toBe(true);
+    expect(ys.has("7.0")).toBe(true);
+  });
+});
+
+describe("hallsToBottomGeometry", () => {
+  it("puts a glass floor at Y=0", () => {
+    const geom = hallsToBottomGeometry([
+      {
+        height: 7,
+        ring: [
+          [0, 0],
+          [10, 0],
+          [10, 8],
+          [0, 8],
+        ],
+      },
+    ]);
+    expect(geom).not.toBeNull();
+    const pos = geom!.getAttribute("position")!;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let i = 0; i < pos.count; i++) {
+      minY = Math.min(minY, pos.getY(i));
+      maxY = Math.max(maxY, pos.getY(i));
+    }
+    expect(minY).toBeCloseTo(0, 5);
+    expect(maxY).toBeCloseTo(0, 5);
+    geom!.dispose();
+  });
+});
+
+describe("stairFlightBottomGeometry", () => {
+  it("puts a floor slab at the stair drop", () => {
+    const geom = stairFlightBottomGeometry(
+      [
+        [0, 0],
+        [10, 0],
+      ],
+      2.5,
+      8,
+      3.2,
     );
     expect(geom).not.toBeNull();
     const pos = geom!.getAttribute("position")!;
+    let minY = Infinity;
     let maxY = -Infinity;
-    for (let i = 0; i < pos.count; i++) maxY = Math.max(maxY, pos.getY(i));
-    expect(maxY).toBeCloseTo(0.6, 5);
-    expect(uniqueNormals(geom!).some((n) => n.startsWith("0.000,1.000,"))).toBe(
-      true,
-    );
+    for (let i = 0; i < pos.count; i++) {
+      minY = Math.min(minY, pos.getY(i));
+      maxY = Math.max(maxY, pos.getY(i));
+    }
+    expect(minY).toBeCloseTo(-3.2, 5);
+    expect(maxY).toBeCloseTo(-3.2, 5);
     geom!.dispose();
   });
 });

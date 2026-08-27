@@ -1,43 +1,35 @@
 "use client";
 
+import { Line } from "@react-three/drei";
 import { useMemo } from "react";
 import {
-  buildingGeometry,
-  mergeGeomBatch,
-  stairsToGeometry,
-  SURFACE_ORDER,
-  wrapLambertCacheKey,
-  wrapLambertCompile,
+  hallsToBottomGeometry,
+  hallsToLineSegments,
+  stairsToBottomGeometry,
+  stairsToLineSegments,
 } from "@/lib/schematic/building-geom";
 import {
   STAIR_COLOR,
-  STAIR_HEIGHT_M,
-  STAIR_Y_M,
+  STAIR_DROP_M,
+  STAIR_LINE_WIDTH,
+  STAIR_RISERS,
   overlayGeometries,
   type EntranceOverlayFile,
 } from "@/lib/schematic/entrances";
-import { MIN_RING_EDGE_M, simplifyRing } from "@/lib/schematic/osm";
-import { schematicEdgeColor } from "@/lib/schematic/scene";
+import {
+  schematicEdgeColor,
+  VOLUME_BOTTOM_OPACITY,
+} from "@/lib/schematic/scene";
 import type { LatLon } from "@/lib/schematic/geo";
-import { DoubleSide, type BufferGeometry } from "three";
+import { DoubleSide } from "three";
 
-const HALL_OPACITY = 0.55;
-const HALL_ORDER = SURFACE_ORDER.buildings + 1;
-const STAIR_ORDER = SURFACE_ORDER.buildings + 2;
+// Same queue as VolumeMesh / GlowLine. City buildings write depth later
+// (order 3); painting first lets them composite over the cages the way
+// the rest of the dollhouse shows through the block.
+const VOLUME_ORDER = 1;
+const LINE_ORDER = 2;
 
 function noopRaycast() {}
-
-function hallsToGeometry(
-  halls: { ring: [number, number][]; height: number }[],
-): BufferGeometry | null {
-  const geoms: BufferGeometry[] = [];
-  for (const hall of halls) {
-    const ring = simplifyRing(hall.ring, MIN_RING_EDGE_M);
-    if (ring.length < 3) continue;
-    geoms.push(buildingGeometry(ring, hall.height, 0));
-  }
-  return mergeGeomBatch(geoms);
-}
 
 export function EntranceOverlay({
   origin,
@@ -48,11 +40,13 @@ export function EntranceOverlay({
   overlay: EntranceOverlayFile;
   stationIds: string[];
 }) {
-  const { hallGeom, stairGeom } = useMemo(() => {
+  const { hallPts, hallBottom, stairPts, stairBottom } = useMemo(() => {
     const { halls, stairs } = overlayGeometries(overlay, origin, stationIds);
     return {
-      hallGeom: hallsToGeometry(halls),
-      stairGeom: stairsToGeometry(stairs, STAIR_HEIGHT_M),
+      hallPts: hallsToLineSegments(halls),
+      hallBottom: hallsToBottomGeometry(halls),
+      stairPts: stairsToLineSegments(stairs, STAIR_RISERS, STAIR_DROP_M),
+      stairBottom: stairsToBottomGeometry(stairs, STAIR_RISERS, STAIR_DROP_M),
     };
   }, [overlay, origin, stationIds]);
 
@@ -60,32 +54,71 @@ export function EntranceOverlay({
 
   return (
     <group>
-      {hallGeom ? (
-        <mesh geometry={hallGeom} renderOrder={HALL_ORDER} raycast={noopRaycast}>
-          <meshLambertMaterial
+      {hallBottom ? (
+        <mesh
+          geometry={hallBottom}
+          renderOrder={VOLUME_ORDER}
+          raycast={noopRaycast}
+        >
+          <meshBasicMaterial
             color={hallColor}
             transparent
-            opacity={HALL_OPACITY}
-            depthWrite
-            onBeforeCompile={wrapLambertCompile}
-            customProgramCacheKey={wrapLambertCacheKey}
+            opacity={VOLUME_BOTTOM_OPACITY}
+            depthWrite={false}
+            side={DoubleSide}
+            toneMapped={false}
+            fog={false}
           />
         </mesh>
       ) : null}
-      {stairGeom ? (
+      {hallPts.length >= 2 ? (
+        <Line
+          points={hallPts}
+          segments
+          color={hallColor}
+          lineWidth={STAIR_LINE_WIDTH}
+          transparent
+          opacity={0.95}
+          toneMapped={false}
+          frustumCulled={false}
+          renderOrder={LINE_ORDER}
+          depthWrite={false}
+          fog={false}
+          raycast={noopRaycast}
+        />
+      ) : null}
+      {stairBottom ? (
         <mesh
-          geometry={stairGeom}
-          position={[0, STAIR_Y_M, 0]}
-          renderOrder={STAIR_ORDER}
+          geometry={stairBottom}
+          renderOrder={VOLUME_ORDER}
           raycast={noopRaycast}
         >
           <meshBasicMaterial
             color={STAIR_COLOR}
+            transparent
+            opacity={VOLUME_BOTTOM_OPACITY}
+            depthWrite={false}
             side={DoubleSide}
             toneMapped={false}
-            fog
+            fog={false}
           />
         </mesh>
+      ) : null}
+      {stairPts.length >= 2 ? (
+        <Line
+          points={stairPts}
+          segments
+          color={STAIR_COLOR}
+          lineWidth={STAIR_LINE_WIDTH}
+          transparent
+          opacity={0.95}
+          toneMapped={false}
+          frustumCulled={false}
+          renderOrder={LINE_ORDER}
+          depthWrite={false}
+          fog={false}
+          raycast={noopRaycast}
+        />
       ) : null}
     </group>
   );

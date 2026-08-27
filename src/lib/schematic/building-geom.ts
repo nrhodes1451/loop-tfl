@@ -4,7 +4,6 @@
  */
 
 import {
-  BoxGeometry,
   BufferAttribute,
   BufferGeometry,
   ExtrudeGeometry,
@@ -19,15 +18,15 @@ import { MIN_RING_EDGE_M, simplifyRing } from "./osm";
 export const BUILDING_COLOR = "#9ec5e8";
 export const BUILDING_COLOR_LOW = "#c5dff0";
 export const BUILDING_COLOR_HIGH = "#6a9ec0";
-export const GROUND_COLOR = "#cceeff";
+export const GROUND_COLOR = "#dcf2ff";
 /**
- * Park / water sit over the cyan ground at SURFACE_OPACITY, so the source
+ * Park / water sit over the ground at SURFACE_OPACITY, so the source
  * hexes are a bit greener / bluer than the designed look. Lighting shifts
  * them; tweak by eye.
  */
 export const LAND_COLOR = "#92d4a6";
 export const WATER_COLOR = "#3d8ed0";
-export const ROAD_COLOR = "#b0c4d2";
+export const ROAD_COLOR = "#778899";
 export const SURFACE_OPACITY = 0.7;
 
 export const SURFACE_ORDER = {
@@ -190,7 +189,8 @@ export function ribbonGeometry(
       normals[o + 2] = 0;
       v += 1;
     }
-    indices.push(base, base + 1, base + 2, base + 1, base + 3, base + 2);
+    /* Winding must face +Y. (0,1,2)/(1,3,2) points down and FrontSide-culls from above. */
+    indices.push(base, base + 2, base + 1, base + 1, base + 2, base + 3);
   }
   if (v === 0) return null;
   const geom = new BufferGeometry();
@@ -207,44 +207,231 @@ export function ribbonGeometry(
 }
 
 /**
- * Solid kerb along an ENU path (east, north). Unlike `ribbonGeometry` this
- * has outward-facing walls so a camera above the ground sees the top.
+ * Resample a polyline to `pointCount` vertices along arc length.
  */
-export function stairRibbonGeometry(
+export function resamplePolyline(
+  path: [number, number][],
+  pointCount: number,
+): [number, number][] {
+  if (path.length < 2 || pointCount < 2) return path;
+  const dist = [0];
+  let total = 0;
+  for (let i = 1; i < path.length; i++) {
+    const a = path[i - 1]!;
+    const b = path[i]!;
+    total += Math.hypot(b[0] - a[0], b[1] - a[1]);
+    dist.push(total);
+  }
+  if (total < 1e-6) return path;
+  const out: [number, number][] = [];
+  for (let i = 0; i < pointCount; i++) {
+    const t = (i / (pointCount - 1)) * total;
+    let s = 1;
+    while (s < dist.length && dist[s]! < t) s += 1;
+    const i1 = Math.max(1, s);
+    const i0 = i1 - 1;
+    const d0 = dist[i0]!;
+    const d1 = dist[i1]!;
+    const span = d1 - d0;
+    const u = span > 1e-9 ? (t - d0) / span : 0;
+    const a = path[i0]!;
+    const b = path[i1]!;
+    out.push([a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]);
+  }
+  return out;
+}
+
+export type StairLinePoint = [number, number, number];
+
+function sceneXZ(east: number, north: number): [number, number] {
+  return [-east, north];
+}
+
+function addSeg(
+  out: StairLinePoint[],
+  a: StairLinePoint,
+  b: StairLinePoint,
+) {
+  out.push(a, b);
+}
+
+function lrAt(
+  pts: [number, number][],
+  i: number,
+  half: number,
+): { left: [number, number]; right: [number, number] } {
+  const last = pts.length - 1;
+  let dx: number;
+  let dz: number;
+  if (i <= 0) {
+    dx = pts[1]![0] - pts[0]![0];
+    dz = pts[1]![1] - pts[0]![1];
+  } else if (i >= last) {
+    dx = pts[last]![0] - pts[last - 1]![0];
+    dz = pts[last]![1] - pts[last - 1]![1];
+  } else {
+    const ax = pts[i]![0] - pts[i - 1]![0];
+    const az = pts[i]![1] - pts[i - 1]![1];
+    const bx = pts[i + 1]![0] - pts[i]![0];
+    const bz = pts[i + 1]![1] - pts[i]![1];
+    const al = Math.hypot(ax, az) || 1;
+    const bl = Math.hypot(bx, bz) || 1;
+    dx = ax / al + bx / bl;
+    dz = az / al + bz / bl;
+  }
+  const len = Math.hypot(dx, dz) || 1;
+  const px = (-dz / len) * half;
+  const pz = (dx / len) * half;
+  const p = pts[i]!;
+  return {
+    left: [p[0] + px, p[1] + pz],
+    right: [p[0] - px, p[1] - pz],
+  };
+}
+
+/**
+ * Outer cage of a staircase (treads, risers, stringers, floor).
+ * `path[0]` is street (Y=0). Returns `[a, b, c, d, …]` for `<Line segments>`.
+ */
+export function stairFlightEdges(
   path: [number, number][],
   widthM: number,
-  heightM: number,
+  risers: number,
+  dropM: number,
+): StairLinePoint[] {
+  if (path.length < 2 || widthM <= 0 || risers < 1 || dropM <= 0) return [];
+  const samples = resamplePolyline(path, risers + 1);
+  const pts = samples.map(([e, n]) => sceneXZ(e, n));
+  if (pts.length < 2) return [];
+  const n = risers;
+  const rise = dropM / n;
+  const half = widthM / 2;
+  const yAt = (i: number) => -i * rise;
+  const corners = pts.map((_, i) => lrAt(pts, i, half));
+  const out: StairLinePoint[] = [];
+  const L = (i: number, y: number): StairLinePoint => [
+    corners[i]!.left[0],
+    y,
+    corners[i]!.left[1],
+  ];
+  const R = (i: number, y: number): StairLinePoint => [
+    corners[i]!.right[0],
+    y,
+    corners[i]!.right[1],
+  ];
+
+  for (let i = 0; i < n; i++) {
+    const y = yAt(i);
+    addSeg(out, L(i, y), L(i + 1, y));
+    addSeg(out, R(i, y), R(i + 1, y));
+  }
+  addSeg(out, L(0, 0), R(0, 0));
+  addSeg(out, L(0, -dropM), R(0, -dropM));
+  for (let i = 1; i < n; i++) {
+    addSeg(out, L(i, yAt(i - 1)), R(i, yAt(i - 1)));
+    addSeg(out, L(i, yAt(i)), R(i, yAt(i)));
+  }
+  addSeg(out, L(n, yAt(n - 1)), R(n, yAt(n - 1)));
+  addSeg(out, L(n, -dropM), R(n, -dropM));
+  for (let i = 1; i <= n; i++) {
+    addSeg(out, L(i, yAt(i - 1)), L(i, yAt(i)));
+    addSeg(out, R(i, yAt(i - 1)), R(i, yAt(i)));
+  }
+  addSeg(out, L(0, 0), L(0, -dropM));
+  addSeg(out, R(0, 0), R(0, -dropM));
+  for (let i = 0; i < n; i++) {
+    addSeg(out, L(i, -dropM), L(i + 1, -dropM));
+    addSeg(out, R(i, -dropM), R(i + 1, -dropM));
+  }
+  return out;
+}
+
+export function stairsToLineSegments(
+  lines: { path: [number, number][]; widthM: number }[],
+  risers: number,
+  dropM: number,
+): StairLinePoint[] {
+  const out: StairLinePoint[] = [];
+  for (const line of lines) {
+    out.push(...stairFlightEdges(line.path, line.widthM, risers, dropM));
+  }
+  return out;
+}
+
+export function stairFlightBottomGeometry(
+  path: [number, number][],
+  widthM: number,
+  risers: number,
+  dropM: number,
 ): BufferGeometry | null {
-  if (path.length < 2 || widthM <= 0 || heightM <= 0) return null;
+  if (path.length < 2 || widthM <= 0 || dropM < 0) return null;
+  const samples = resamplePolyline(path, Math.max(2, risers + 1));
+  const geom = ribbonGeometry(samples, widthM);
+  if (!geom) return null;
+  geom.translate(0, -dropM, 0);
+  return geom;
+}
+
+export function stairsToBottomGeometry(
+  lines: { path: [number, number][]; widthM: number }[],
+  risers: number,
+  dropM: number,
+): BufferGeometry | null {
   const geoms: BufferGeometry[] = [];
-  for (let i = 0; i < path.length - 1; i++) {
-    const a = path[i]!;
-    const b = path[i + 1]!;
-    const ax = -a[0];
-    const az = a[1];
-    const bx = -b[0];
-    const bz = b[1];
-    const dx = bx - ax;
-    const dz = bz - az;
-    const len = Math.hypot(dx, dz);
-    if (len < 0.15) continue;
-    const box = new BoxGeometry(widthM, heightM, len);
-    box.rotateY(Math.atan2(dx, dz));
-    box.translate((ax + bx) / 2, heightM / 2, (az + bz) / 2);
-    box.deleteAttribute("uv");
-    geoms.push(box);
+  for (const line of lines) {
+    const geom = stairFlightBottomGeometry(
+      line.path,
+      line.widthM,
+      risers,
+      dropM,
+    );
+    if (geom) geoms.push(geom);
   }
   return mergeGeomBatch(geoms);
 }
 
-export function stairsToGeometry(
-  lines: { path: [number, number][]; widthM: number }[],
-  heightM: number,
+/**
+ * Wire prism of an OSM hall: footprint at Y=0, roof at `height`, verticals.
+ * Ring is ENU [east, north], same frame as `polygonGeometry`.
+ */
+export function hallPrismEdges(
+  ring: [number, number][],
+  height: number,
+): StairLinePoint[] {
+  const open = simplifyRing(ring, MIN_RING_EDGE_M);
+  if (open.length < 3 || height <= 0) return [];
+  const xz = open.map(([e, n]) => sceneXZ(e, n));
+  const n = xz.length;
+  const out: StairLinePoint[] = [];
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n;
+    const a = xz[i]!;
+    const b = xz[j]!;
+    addSeg(out, [a[0], 0, a[1]], [b[0], 0, b[1]]);
+    addSeg(out, [a[0], height, a[1]], [b[0], height, b[1]]);
+    addSeg(out, [a[0], 0, a[1]], [a[0], height, a[1]]);
+  }
+  return out;
+}
+
+export function hallsToLineSegments(
+  halls: { ring: [number, number][]; height: number }[],
+): StairLinePoint[] {
+  const out: StairLinePoint[] = [];
+  for (const hall of halls) {
+    out.push(...hallPrismEdges(hall.ring, hall.height));
+  }
+  return out;
+}
+
+export function hallsToBottomGeometry(
+  halls: { ring: [number, number][]; height: number }[],
 ): BufferGeometry | null {
   const geoms: BufferGeometry[] = [];
-  for (const line of lines) {
-    const geom = stairRibbonGeometry(line.path, line.widthM, heightM);
-    if (geom) geoms.push(geom);
+  for (const hall of halls) {
+    const ring = simplifyRing(hall.ring, MIN_RING_EDGE_M);
+    if (ring.length < 3) continue;
+    geoms.push(polygonGeometry(ring));
   }
   return mergeGeomBatch(geoms);
 }

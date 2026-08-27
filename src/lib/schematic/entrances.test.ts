@@ -7,17 +7,21 @@ import { HUBKGX_ORIGIN } from "./geo";
 import {
   MAX_BUILDING_AABB_M2,
   STAIR_COLOR,
+  STAIR_DROP_M,
+  STAIR_RISERS,
   bakeEntrances,
   hallHeightM,
   hidesStreetCuboid,
+  orientStairPath,
   overlayGeometries,
   overpassQuery,
+  parseIncline,
   pickBuildingForEntrance,
   ringAabbAreaM2,
   type EntranceBuilding,
   type OverpassResponse,
 } from "./entrances";
-import { stairsToGeometry } from "./building-geom";
+import { stairsToLineSegments } from "./building-geom";
 import { buildSceneGeometry } from "./scene";
 import type { SchematicStation } from "./types";
 
@@ -231,10 +235,9 @@ describe("bakeEntrances", () => {
     expect(geoms.stairs).toHaveLength(1);
     expect(geoms.stairs[0]!.widthM).toBe(2.5);
     expect(geoms.stairs[0]!.path.length).toBeGreaterThanOrEqual(2);
-    const mesh = stairsToGeometry(geoms.stairs, 0.6);
-    expect(mesh).not.toBeNull();
-    expect(mesh!.getAttribute("position")!.count).toBeGreaterThan(0);
-    mesh!.dispose();
+    const segs = stairsToLineSegments(geoms.stairs, STAIR_RISERS, STAIR_DROP_M);
+    expect(segs.length).toBeGreaterThanOrEqual(4);
+    expect(segs.length % 2).toBe(0);
   });
 });
 
@@ -264,10 +267,97 @@ describe("overpass query", () => {
   });
 });
 
+describe("stair orientation", () => {
+  const a: [number, number] = [51.5152, -0.1419];
+  const b: [number, number] = [51.5151, -0.1418];
+
+  it("parses OSM incline relative to way direction", () => {
+    expect(parseIncline("up")).toBe("up");
+    expect(parseIncline("15%")).toBe("up");
+    expect(parseIncline("down")).toBe("down");
+    expect(parseIncline("-8%")).toBe("down");
+    expect(parseIncline(undefined)).toBeNull();
+    expect(parseIncline("0%")).toBeNull();
+  });
+
+  it("reverses when incline is up (first node is bottom)", () => {
+    expect(orientStairPath([a, b], { incline: "up" })).toEqual([b, a]);
+  });
+
+  it("keeps order when incline is down (first node is top)", () => {
+    expect(orientStairPath([a, b], { incline: "down" })).toEqual([a, b]);
+  });
+
+  it("reverses when the entrance is the last node and incline is absent", () => {
+    expect(
+      orientStairPath([a, b], {
+        nodeIds: [10, 20],
+        entranceNodeId: 20,
+      }),
+    ).toEqual([b, a]);
+  });
+
+  it("keeps order when the entrance is the first node and incline is absent", () => {
+    expect(
+      orientStairPath([a, b], {
+        nodeIds: [10, 20],
+        entranceNodeId: 10,
+      }),
+    ).toEqual([a, b]);
+  });
+
+  it("bakes incline=up so path[0] is the downhill end of the OSM way", () => {
+    const osm: OverpassResponse = {
+      elements: [
+        {
+          type: "node",
+          id: 1,
+          lat: 51.5,
+          lon: -0.1,
+          tags: { railway: "subway_entrance" },
+        },
+        {
+          type: "way",
+          id: 9,
+          nodes: [1, 2],
+          geometry: [
+            { lat: 51.5, lon: -0.1 },
+            { lat: 51.5001, lon: -0.1 },
+          ],
+          tags: { highway: "steps", incline: "up" },
+        },
+      ],
+    };
+    const file = bakeEntrances(osm, [{ id: "S", lat: 51.5, lon: -0.1 }]);
+    const path = file.stations.S!.stairs[0]!.path;
+    expect(path[0]![0]).toBeCloseTo(51.5001, 5);
+    expect(file.stations.S!.stairs[0]!.incline).toBe("up");
+  });
+});
+
 describe("overlay tokens", () => {
   it("uses National Rail red for stairs", () => {
     expect(STAIR_COLOR).toBe(NATIONAL_RAIL_RED);
     expect(STAIR_COLOR.toUpperCase()).toBe("#FF4200");
+  });
+
+  it("draws stairs as a dollhouse-style wireframe cage", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/components/schematic/EntranceOverlay.tsx"),
+      "utf8",
+    );
+    expect(src).toContain("stairsToLineSegments");
+    expect(src).toContain("hallsToLineSegments");
+    expect(src).toContain("VOLUME_BOTTOM_OPACITY");
+    expect(src).toContain('schematicEdgeColor("street")');
+    expect(src).toContain("depthWrite={false}");
+    expect(src).toContain("const VOLUME_ORDER = 1");
+    expect(src).toContain("const LINE_ORDER = 2");
+    expect(src).not.toContain("SURFACE_ORDER");
+    expect(src).not.toContain("STAIR_Y_M");
+    expect(src).not.toContain("polygonOffset");
+    expect(src).not.toContain("buildingGeometry");
+    expect(src).not.toContain("wrapLambert");
   });
 
   it("clamps hall height to a short pavilion", () => {
