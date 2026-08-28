@@ -26,7 +26,7 @@ export type SheetBasis = {
   originU: number;
   originV: number;
   residual: number;
-  mode: "fit" | "isometric";
+  mode: "fit" | "plan";
 };
 
 export type PlanMetres = { eastM: number; northM: number };
@@ -53,17 +53,6 @@ function hypot2(x: number, y: number): number {
   return Math.hypot(x, y);
 }
 
-function invert2(
-  a: number,
-  b: number,
-  c: number,
-  d: number,
-): [number, number, number, number] | null {
-  const det = a * d - b * c;
-  if (!Number.isFinite(det) || Math.abs(det) < 1e-12) return null;
-  return [d / det, -b / det, -c / det, a / det];
-}
-
 function applyA(
   A: [number, number, number, number],
   du: number,
@@ -80,32 +69,18 @@ function scaleA(
 }
 
 /**
- * Image-to-plan matrix for a canonical 30° isometric, rotated so that
- * drawing north (clockwise degrees from image up) matches `northDeg`.
+ * Image-to-plan matrix: the page is a map, the rose is north.
+ * `northDeg` is clockwise from image up (v down). A square on the A4
+ * page is a square in metres (`SHEET_ASPECT` stretches normalised u).
  */
-export function isometricImageToPlan(
+export function planImageToPlan(
   northDeg: number,
 ): [number, number, number, number] {
-  const c = Math.cos(Math.PI / 6);
-  const s = Math.sin(Math.PI / 6);
-  // Plan → image (north-up isometric, v down):
-  // du =  (east - north) * cos30
-  // dv = -(east + north) * sin30
-  const M00 = c;
-  const M01 = -c;
-  const M10 = -s;
-  const M11 = -s;
   const th = (northDeg * Math.PI) / 180;
-  // Clockwise in y-down = [cos -sin; sin cos]
-  const rc = Math.cos(th);
-  const rs = Math.sin(th);
-  const RM00 = rc * M00 - rs * M10;
-  const RM01 = rc * M01 - rs * M11;
-  const RM10 = rs * M00 + rc * M10;
-  const RM11 = rs * M01 + rc * M11;
-  const inv = invert2(RM00, RM01, RM10, RM11) ?? [1, 0, 0, -1];
-  // Consume normalised (u,v): du_iso = du_norm * SHEET_ASPECT.
-  return [inv[0] * SHEET_ASPECT, inv[1], inv[2] * SHEET_ASPECT, inv[3]];
+  const c = Math.cos(th);
+  const s = Math.sin(th);
+  // northDeg=0: east = du * SHEET_ASPECT, north = -dv.
+  return [c * SHEET_ASPECT, s, s * SHEET_ASPECT, -c];
 }
 
 function hasTwoDirections(dirs: [number, number][]): boolean {
@@ -183,7 +158,7 @@ function residualOf(
 
 /**
  * Fit a 2×2 image→plan basis. Needs two non-parallel image directions;
- * otherwise falls back to a northDeg-rotated isometric basis.
+ * otherwise falls back to a north-up plan (rose = north, page = map).
  */
 export function fitSheetBasis(
   marks: readonly SheetMark[],
@@ -196,19 +171,19 @@ export function fitSheetBasis(
   });
   const originUV = origin ?? meanCentre(usable);
   const L = PLATFORM_LENGTH_M;
-  const Aiso = isometricImageToPlan(northDeg ?? 0);
+  const Aplan = planImageToPlan(northDeg ?? 0);
 
   const rows = usable.map((m) => {
     const d: [number, number] = [m.b[0] - m.a[0], m.b[1] - m.a[1]];
     let u = planDir(m.bearingDeg);
-    const mapped = applyA(Aiso, d[0], d[1]);
+    const mapped = applyA(Aplan, d[0], d[1]);
     if (mapped[0] * u[0] + mapped[1] * u[1] < 0) u = [-u[0], -u[1]];
     return { d, target: [L * u[0], L * u[1]] as [number, number] };
   });
 
   const parallel = !hasTwoDirections(rows.map((r) => r.d));
-  let A: [number, number, number, number] = Aiso;
-  let mode: SheetBasis["mode"] = "isometric";
+  let A: [number, number, number, number] = Aplan;
+  let mode: SheetBasis["mode"] = "plan";
   if (rows.length >= 2 && !parallel) {
     const fit = leastSquares(rows);
     if (fit) {

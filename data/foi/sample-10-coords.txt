@@ -1,0 +1,381 @@
+FOI placement sample — 11 stations
+a/b = normalised page coords (origin top-left, reading pose). eastM/northM = plan metres from sheet fit.
+Comment under any mark or at STATION COMMENT.
+
+==============================================================================
+1. Pimlico  (940GZZLUPCO)
+    northDeg=0  depths: victoria 22.5m
+    sheets: 3d victoria line stations Redacted.pdf p4
+
+    [1] victoria 2  high  placed  3d victoria line stations Redacted.pdf p4
+        PLATFORM 2 SOUTHBOUND
+        a=0.170,0.625  b=0.500,0.695  grid=D6  end=—  bearing=80°
+        eastM=-118.9  northM=-43.9  residual=0.3
+        COMMENT:
+
+    [2] victoria 1  high  placed  3d victoria line stations Redacted.pdf p4
+        PLATFORM 1 NORTHBOUND
+        a=0.170,0.705  b=0.500,0.775  grid=D7  end=—  bearing=80°
+        eastM=-118.9  northM=-63.4  residual=0.3
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+2. Angel  (940GZZLUAGL)
+    northDeg=315  depths: northern 27.4m
+    sheets: 3d northern line stations Redacted.pdf p1
+
+    [1] northern 1  high  placed  3d northern line stations Redacted.pdf p1
+        SOUTHBOUND PLATFORM TO OLD STREET
+        a=0.580,0.580  b=0.820,0.380  grid=J6  end=—  bearing=100°
+        eastM=152.8  northM=-185.8  residual=0.1
+        COMMENT:
+
+    [2] northern 2  high  placed  3d northern line stations Redacted.pdf p1
+        PLATFORM 2 NORTHBOUND TO KINGS CROSS
+        a=0.640,0.680  b=0.880,0.480  grid=K7  end=—  bearing=100°
+        eastM=149.7  northM=-224.0  residual=0.1
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+3. Aldgate  (940GZZLUALD)
+    northDeg=315  depths: circle 7m, metropolitan 7m
+    sheets: 3d circle stations Redacted.pdf p1
+
+    [1] circle 1  high  placed  3d circle stations Redacted.pdf p1
+        PLATFORM 1 SOUTHBOUND CIRCLE LINE
+        a=0.220,0.720  b=0.550,0.380  grid=D7  end=south  bearing=125°
+        eastM=3.1  northM=-22.8  residual=0.5  flags=placement-residual
+        COMMENT:
+
+    [2] circle 2  high  placed  3d circle stations Redacted.pdf p1
+        PLATFORM 2 NORTHBOUND CIRCLE & METROPOLITAN
+        a=0.250,0.700  b=0.580,0.360  grid=E7  end=—  bearing=125°
+        eastM=11.9  northM=-26.0  residual=0.5  flags=placement-residual
+        COMMENT:
+
+    [3] metropolitan 3  high  placed  3d circle stations Redacted.pdf p1
+        PLATFORM 3 NORTHBOUND METROPOLITAN & CIRCLE
+        a=0.280,0.680  b=0.610,0.340  grid=F6  end=—  bearing=125°
+        eastM=20.7  northM=-29.1  residual=0.5  flags=placement-residual
+        COMMENT:
+
+    [4] metropolitan 4  high  placed  3d circle stations Redacted.pdf p1
+        PLATFORM 4 NORTHBOUND METROPOLITAN LINE
+        a=0.310,0.660  b=0.640,0.320  grid=F6  end=north  bearing=125°
+        eastM=29.5  northM=-32.3  residual=0.5  flags=placement-residual
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+4. Covent Garden  (940GZZLUCGN)
+    northDeg=0  depths: piccadilly 36m
+    sheets: 3d piccadilly line stations Redacted.pdf p4
+
+    [1] piccadilly 1  high  placed  3d piccadilly line stations Redacted.pdf p4
+        PLATFORM 1
+        a=0.220,0.780  b=0.480,0.520  grid=D8  end=—  bearing=42°
+        eastM=-25.3  northM=-63.8  residual=0.2
+        COMMENT:
+
+    [2] piccadilly 2  high  placed  3d piccadilly line stations Redacted.pdf p4
+        PLATFORM 2
+        a=0.250,0.740  b=0.510,0.480  grid=D8  end=—  bearing=42°
+        eastM=-14.4  northM=-53.6  residual=0.2
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+5. Earl's Court  (940GZZLUECT)
+    northDeg=0  depths: district 4.8m, piccadilly 19.8m
+    sheets: 3d district stations Redacted.pdf p3
+
+    [1] district 1,2  high  placed  3d district stations Redacted.pdf p3
+        DISTRICT PLATFORMS 1 & 2
+        a=0.280,0.500  b=0.620,0.300  grid=E5  end=east  bearing=70°
+        eastM=-62.5  northM=-44.2  residual=0.0
+        COMMENT:
+
+    [2] district 3,4  high  placed  3d district stations Redacted.pdf p3
+        DISTRICT PLATFORMS 3 & 4
+        a=0.350,0.570  b=0.690,0.370  grid=F6  end=—  bearing=70°
+        eastM=-40.6  northM=-59.6  residual=0.0
+        COMMENT:
+
+    [3] piccadilly 5,6  high  placed  3d district stations Redacted.pdf p3
+        PICCADILLY PLATFORMS 5 & 6
+        a=0.420,0.640  b=0.760,0.440  grid=G7  end=—  bearing=70°
+        eastM=-18.7  northM=-75.1  residual=0.0
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+6. Green Park  (940GZZLUGPK)
+    northDeg=315  depths: victoria 23.4m, piccadilly 27.4m, jubilee 31.1m
+    sheets: 3d jubilee stations Redacted.pdf p4
+
+    [1] piccadilly 2  high  placed  3d jubilee stations Redacted.pdf p4
+        PICCADILLY PLATFORM 2 WESTBOUND TO HYDE PARK CORNER
+        a=0.220,0.220  b=0.480,0.420  grid=C2  end=—  bearing=60°
+        eastM=-13.8  northM=-72.4  residual=0.7  flags=placement-residual
+        COMMENT:
+
+    [2] piccadilly 1  high  placed  3d jubilee stations Redacted.pdf p4
+        PICCADILLY PLATFORM 1 EASTBOUND TO PICCADILLY CIRCUS
+        a=0.240,0.260  b=0.500,0.460  grid=C3  end=—  bearing=60°
+        eastM=-14.3  northM=-77.1  residual=0.7  flags=placement-residual
+        COMMENT:
+
+    [3] victoria 3  high  placed  3d jubilee stations Redacted.pdf p4
+        VICTORIA PLATFORM 3 NORTHBOUND TO OXFORD CIRCUS
+        a=0.080,0.780  b=0.280,0.550  grid=B8  end=—  bearing=4°
+        eastM=23.9  northM=79.7  residual=0.7  flags=placement-residual
+        COMMENT:
+
+    [4] victoria 4  high  placed  3d jubilee stations Redacted.pdf p4
+        VICTORIA PLATFORM 4 SOUTHBOUND TO VICTORIA
+        a=0.100,0.820  b=0.300,0.590  grid=B8  end=—  bearing=4°
+        eastM=23.5  northM=75.0  residual=0.7  flags=placement-residual
+        COMMENT:
+
+    [5] jubilee 5  high  placed  3d jubilee stations Redacted.pdf p4
+        JUBILEE PLATFORM 5 NORTHBOUND TO BOND STREET
+        a=0.420,0.550  b=0.620,0.780  grid=G6  end=—  bearing=135°
+        eastM=-17.5  northM=-111.2  residual=0.7  flags=placement-residual
+        COMMENT:
+
+    [6] jubilee 6  high  placed  3d jubilee stations Redacted.pdf p4
+        JUBILEE PLATFORM 6 SOUTHBOUND TO WESTMINSTER
+        a=0.450,0.580  b=0.650,0.810  grid=G6  end=—  bearing=135°
+        eastM=-19.6  northM=-123.1  residual=0.7  flags=placement-residual
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+7. Embankment  (940GZZLUEMB)
+    northDeg=315  depths: circle 5.5m, district 5.5m, northern 16.2m, bakerloo 21m
+    sheets: 3d bakerloo stations Redacted.pdf p4, 3d bakerloo stations Redacted.pdf p5, 3d bakerloo stations Redacted.pdf p6
+
+    [1] district 1  high  unused  3d bakerloo stations Redacted.pdf p4
+        PLATFORM 1 WESTBOUND TO WESTMINSTER
+        a=0.280,0.820  b=0.620,0.380  grid=E8  end=west  bearing=53°
+        eastM=-22.5  northM=-22.5  residual=0.7
+        COMMENT:
+
+    [2] circle 2  high  unused  3d bakerloo stations Redacted.pdf p4
+        PLATFORM 2 EASTBOUND TO TEMPLE
+        a=0.320,0.760  b=0.660,0.320  grid=F7  end=east  bearing=53°
+        eastM=-7.9  northM=-22.0  residual=0.7
+        COMMENT:
+
+    [3] district 1  high  unused  3d bakerloo stations Redacted.pdf p5
+        PLATFORM 1 WESTBOUND TO WESTMINSTER
+        a=0.280,0.780  b=0.620,0.280  grid=D8  end=—  bearing=53°
+        eastM=-6.8  northM=-0.2  residual=0.6
+        COMMENT:
+
+    [4] circle 2  high  unused  3d bakerloo stations Redacted.pdf p5
+        PLATFORM 2 EASTBOUND TO TEMPLE
+        a=0.320,0.720  b=0.660,0.220  grid=F6  end=—  bearing=53°
+        eastM=6.8  northM=0.2  residual=0.6
+        COMMENT:
+
+    [5] northern 3  high  placed  3d bakerloo stations Redacted.pdf p6
+        NORTHERN LINE PLATFORM 3 NORTHBOUND TO CHARING CROSS
+        a=0.420,0.420  b=0.680,0.220  grid=H4  end=—  bearing=127°
+        eastM=69.3  northM=13.6  residual=0.4  flags=placement-residual
+        COMMENT:
+
+    [6] northern 4  high  placed  3d bakerloo stations Redacted.pdf p6
+        NORTHERN LINE PLATFORM 4 SOUTHBOUND TO WATERLOO
+        a=0.550,0.480  b=0.810,0.280  grid=J5  end=—  bearing=127°
+        eastM=95.6  northM=-38.2  residual=0.4  flags=placement-residual
+        COMMENT:
+
+    [7] bakerloo 5  high  placed  3d bakerloo stations Redacted.pdf p6
+        BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS
+        a=0.220,0.820  b=0.420,0.620  grid=D8  end=—  bearing=127°
+        eastM=-84.9  northM=-2.2  residual=0.4  flags=placement-residual
+        COMMENT:
+
+    [8] bakerloo 6  high  placed  3d bakerloo stations Redacted.pdf p6
+        BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO
+        a=0.180,0.740  b=0.380,0.540  grid=C7  end=—  bearing=127°
+        eastM=-79.9  northM=26.8  residual=0.4  flags=placement-residual
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+8. Piccadilly Circus  (940GZZLUPCC)
+    northDeg=315  depths: bakerloo 28m, piccadilly 32.3m
+    sheets: 3d bakerloo stations Redacted.pdf p12, 3d bakerloo stations Redacted.pdf p13
+
+    [1] bakerloo 1  high  placed  3d bakerloo stations Redacted.pdf p13
+        PLATFORM 1 BAKERLOO NORTHBOUND TO OXFORD CIRCUS
+        a=0.080,0.480  b=0.280,0.380  grid=B5  end=—  bearing=130°
+        eastM=-131.1  northM=12.8  residual=0.0
+        COMMENT:
+
+    [2] bakerloo 2  high  placed  3d bakerloo stations Redacted.pdf p13
+        PLATFORM 2 BAKERLOO SOUTHBOUND TO CHARING CROSS
+        a=0.620,0.280  b=0.820,0.180  grid=K3  end=—  bearing=130°
+        eastM=107.5  northM=-255.4  residual=0.0
+        COMMENT:
+
+    [3] piccadilly 3  high  placed  3d bakerloo stations Redacted.pdf p13
+        PLATFORM 3 PICCADILLY EASTBOUND TO LEICESTER SQUARE
+        a=0.140,0.880  b=0.380,0.620  grid=C9  end=—  bearing=65°
+        eastM=-92.0  northM=-369.8  residual=0.0
+        COMMENT:
+
+    [4] piccadilly 4  high  placed  3d bakerloo stations Redacted.pdf p13
+        PLATFORM 4 PICCADILLY WESTBOUND TO GREEN PARK
+        a=0.220,0.880  b=0.460,0.620  grid=D9  end=—  bearing=65°
+        eastM=-56.3  northM=-438.6  residual=0.0
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+9. Oxford Circus  (940GZZLUOXC)
+    northDeg=315  depths: bakerloo 23.1m, victoria 23.1m, central 24.6m
+    sheets: 3d central line stations Redacted.pdf p13, 3d central line stations Redacted.pdf p14
+
+    [1] central 1  high  placed  3d central line stations Redacted.pdf p14
+        PLATFORM 1 CENTRAL WESTBOUND TO BOND STREET
+        a=0.120,0.840  b=0.320,0.620  grid=B8  end=—  bearing=80°
+        eastM=-234.1  northM=17.5  residual=0.3
+        COMMENT:
+
+    [2] central 2  high  placed  3d central line stations Redacted.pdf p14
+        PLATFORM 2 CENTRAL EASTBOUND TO TOTTENHAM COURT ROAD
+        a=0.140,0.880  b=0.340,0.660  grid=B9  end=—  bearing=80°
+        eastM=-203.8  northM=0.6  residual=0.3
+        COMMENT:
+
+    [3] victoria 5  high  placed  3d central line stations Redacted.pdf p14
+        PLATFORM 5 VICTORIA SOUTHBOUND TO GREEN PARK
+        a=0.530,0.800  b=0.700,0.480  grid=I8  end=—  bearing=8°
+        eastM=77.3  northM=-10.5  residual=0.3
+        COMMENT:
+
+    [4] victoria 6  high  placed  3d central line stations Redacted.pdf p14
+        PLATFORM 6 VICTORIA NORTHBOUND TO WARREN STREET
+        a=0.700,0.700  b=0.870,0.380  grid=L7  end=—  bearing=8°
+        eastM=191.2  northM=-1.4  residual=0.3
+        COMMENT:
+
+    [5] bakerloo 4  high  placed  3d central line stations Redacted.pdf p14
+        PLATFORM 4 BAKERLOO SOUTHBOUND TO PICCADILLY CIRCUS
+        a=0.580,0.840  b=0.630,0.480  grid=J8  end=—  bearing=148°
+        eastM=75.2  northM=-16.0  residual=0.3
+        COMMENT:
+
+    [6] bakerloo 3  high  placed  3d central line stations Redacted.pdf p14
+        PLATFORM 3 BAKERLOO NORTHBOUND TO REGENTS PARK
+        a=0.640,0.740  b=0.690,0.380  grid=K7  end=—  bearing=148°
+        eastM=94.2  northM=9.7  residual=0.3
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+10. Waterloo  (HUBWAT)
+    northDeg=322.5  depths: circle 33m, district 33m, bakerloo 19.5m, northern 21.3m, waterloo-city 12.2m
+    sheets: 3d bakerloo stations Redacted.pdf p16, 3d bakerloo stations Redacted.pdf p17, 3d bakerloo stations Redacted.pdf p18
+
+    [1] jubilee 5  high  unused  3d bakerloo stations Redacted.pdf p16
+        JUBILEE LINE PLATFORM 5
+        a=0.320,0.720  b=0.780,0.520  grid=F7  end=south  bearing=77°
+        eastM=78.9  northM=-40.6  residual=0.1
+        COMMENT:
+
+    [2] jubilee 6  high  unused  3d bakerloo stations Redacted.pdf p16
+        JUBILEE LINE PLATFORM 6
+        a=0.350,0.760  b=0.810,0.560  grid=F8  end=south  bearing=77°
+        eastM=86.0  northM=-47.3  residual=0.1
+        COMMENT:
+
+    [3] bakerloo 4  high  placed  3d bakerloo stations Redacted.pdf p17
+        BAKERLOO LINE PLATFORM 4
+        a=0.300,0.500  b=0.520,0.720  grid=E5  end=—  bearing=145°
+        eastM=28.6  northM=-165.2  residual=0.2
+        COMMENT:
+
+    [4] bakerloo 3  high  placed  3d bakerloo stations Redacted.pdf p17
+        BAKERLOO LINE PLATFORM 3
+        a=0.300,0.620  b=0.520,0.840  grid=E7  end=—  bearing=145°
+        eastM=8.8  northM=-199.5  residual=0.2
+        COMMENT:
+
+    [5] northern 2  high  placed  3d bakerloo stations Redacted.pdf p17
+        NORTHERN LINE PLATFORM 2
+        a=0.280,0.280  b=0.480,0.420  grid=E3  end=—  bearing=145°
+        eastM=59.4  northM=-83.9  residual=0.2
+        COMMENT:
+
+    [6] northern 1  high  placed  3d bakerloo stations Redacted.pdf p17
+        NORTHERN LINE PLATFORM 1
+        a=0.400,0.450  b=0.600,0.590  grid=H5  end=—  bearing=145°
+        eastM=79.9  northM=-160.5  residual=0.2
+        COMMENT:
+
+    [7] waterloo-city 25,26  high  unused  3d bakerloo stations Redacted.pdf p18
+        WATERLOO AND CITY LINE PLATFORMS 25 & 26
+        a=0.320,0.480  b=0.500,0.580  grid=F5  end=—  bearing=58°
+        eastM=-19.7  northM=-129.0  residual=1.3
+        COMMENT:
+
+    STATION COMMENT:
+
+==============================================================================
+11. Euston  (HUBEUS)
+    northDeg=0  depths: northern 20.4m, victoria 29.8m
+    sheets: 3d northern line stations Redacted.pdf p12
+
+    [1] northern 1  high  placed  3d northern line stations Redacted.pdf p12
+        PLATFORM 1 NORTHBOUND TO MORNINGTON CRESCENT
+        a=0.100,0.580  b=0.320,0.380  grid=D5  end=—  bearing=45°
+        eastM=-127.5  northM=99.5  residual=0.2
+        COMMENT:
+
+    [2] northern 2  high  placed  3d northern line stations Redacted.pdf p12
+        PLATFORM 2 SOUTHBOUND TO WARREN STREET
+        a=0.130,0.630  b=0.350,0.430  grid=D6  end=—  bearing=45°
+        eastM=-114.3  northM=83.9  residual=0.2
+        COMMENT:
+
+    [3] northern 6  high  placed  3d northern line stations Redacted.pdf p12
+        NORTHERN CITY SOUTHBOUND PLATFORM 6 TO KINGS CROSS
+        a=0.480,0.400  b=0.700,0.200  grid=I4  end=—  bearing=45°
+        eastM=39.6  northM=155.5  residual=0.2
+        COMMENT:
+
+    [4] victoria 5  high  placed  3d northern line stations Redacted.pdf p12
+        VICTORIA SOUTHBOUND PLATFORM 5 TO WARREN STREET
+        a=0.510,0.440  b=0.730,0.240  grid=I5  end=—  bearing=45°
+        eastM=52.8  northM=143.0  residual=0.2
+        COMMENT:
+
+    [5] victoria 4  high  placed  3d northern line stations Redacted.pdf p12
+        VICTORIA NORTHBOUND PLATFORM 4 TO KINGS CROSS
+        a=0.620,0.520  b=0.840,0.320  grid=K6  end=—  bearing=45°
+        eastM=101.1  northM=118.2  residual=0.2
+        COMMENT:
+
+    [6] northern 3  high  placed  3d northern line stations Redacted.pdf p12
+        NORTHERN CITY NORTHBOUND PLATFORM 3 TO CAMDEN TOWN
+        a=0.650,0.560  b=0.870,0.360  grid=K5  end=—  bearing=45°
+        eastM=114.3  northM=105.7  residual=0.2
+        COMMENT:
+
+    STATION COMMENT:
+

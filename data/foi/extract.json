@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T14:37:15.721Z",
+  "generatedAt": "2026-08-28T18:55:14.908Z",
   "source": "tfl-foi-2015-axonometric",
   "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
   "pages": [
@@ -2626,9 +2626,131 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO MORNINGTON CRESCENT",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.1,
+            0.58
+          ],
+          "b": [
+            0.32,
+            0.38
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO WARREN STREET",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.13,
+            0.63
+          ],
+          "b": [
+            0.35,
+            0.43
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN CITY SOUTHBOUND PLATFORM 6 TO KINGS CROSS",
+          "lineId": "northern",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.48,
+            0.4
+          ],
+          "b": [
+            0.7,
+            0.2
+          ],
+          "grid": "I4",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA SOUTHBOUND PLATFORM 5 TO WARREN STREET",
+          "lineId": "victoria",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.51,
+            0.44
+          ],
+          "b": [
+            0.73,
+            0.24
+          ],
+          "grid": "I5",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA NORTHBOUND PLATFORM 4 TO KINGS CROSS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.62,
+            0.52
+          ],
+          "b": [
+            0.84,
+            0.32
+          ],
+          "grid": "K6",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN CITY NORTHBOUND PLATFORM 3 TO CAMDEN TOWN",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.65,
+            0.56
+          ],
+          "b": [
+            0.87,
+            0.36
+          ],
+          "grid": "K5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Euston axonometric: N points right (90°) on the portrait raster; CX 20.4m, City 29.8m, Victoria 29.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Euston reading pose: rose N up (0). CX 1–2 and City/Victoria 3–6 share bearingDeg 45 (NE–SW). Depths 20.4 / 29.8 / 29.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.5,
+          0.8
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",

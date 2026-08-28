@@ -4,8 +4,8 @@ import {
   PLACEMENT_RESIDUAL_LIMIT,
   fitSheetBasis,
   imageToPlan,
-  isometricImageToPlan,
   planDir,
+  planImageToPlan,
   undirectedBearingDeg,
 } from "./foi-project";
 
@@ -51,24 +51,32 @@ describe("planDir", () => {
   });
 });
 
+describe("planImageToPlan", () => {
+  it("maps right to east and down to south when the rose points up", () => {
+    const A = planImageToPlan(0);
+    expect(A[0] * 0.1 + A[1] * 0).toBeGreaterThan(0);
+    expect(A[2] * 0 + A[3] * 0.1).toBeLessThan(0);
+  });
+});
+
 describe("fitSheetBasis", () => {
   const origin: [number, number] = [0.5, 0.5];
   const northDeg = 25;
-  const Aiso = isometricImageToPlan(northDeg);
+  const Aplan = planImageToPlan(northDeg);
   const half = PLATFORM_LENGTH_M / 2;
 
   const nsEnds = {
-    a: planToImage(0, -half, Aiso, origin),
-    b: planToImage(0, half, Aiso, origin),
+    a: planToImage(0, -half, Aplan, origin),
+    b: planToImage(0, half, Aplan, origin),
     bearingDeg: 0,
   };
   const ewEnds = {
-    a: planToImage(40 - half, 15, Aiso, origin),
-    b: planToImage(40 + half, 15, Aiso, origin),
+    a: planToImage(40 - half, 15, Aplan, origin),
+    b: planToImage(40 + half, 15, Aplan, origin),
     bearingDeg: 90,
   };
 
-  it("round-trips known isometric offsets and bearings", () => {
+  it("round-trips known plan offsets and bearings", () => {
     const basis = fitSheetBasis([nsEnds, ewEnds], northDeg, origin);
     expect(basis.mode).toBe("fit");
     expect(basis.residual).toBeLessThan(0.05);
@@ -89,14 +97,14 @@ describe("fitSheetBasis", () => {
     expect(ew.northM).toBeCloseTo(15, 5);
   });
 
-  it("falls back to isometric when every platform is parallel", () => {
+  it("falls back to plan when every platform is parallel", () => {
     const other = {
-      a: planToImage(20, -half, Aiso, origin),
-      b: planToImage(20, half, Aiso, origin),
+      a: planToImage(20, -half, Aplan, origin),
+      b: planToImage(20, half, Aplan, origin),
       bearingDeg: 0,
     };
     const basis = fitSheetBasis([nsEnds, other], northDeg, origin);
-    expect(basis.mode).toBe("isometric");
+    expect(basis.mode).toBe("plan");
     const ns = imageToPlan(
       (nsEnds.a[0] + nsEnds.b[0]) / 2,
       (nsEnds.a[1] + nsEnds.b[1]) / 2,
@@ -106,14 +114,14 @@ describe("fitSheetBasis", () => {
     expect(ns.northM).toBeCloseTo(0, 4);
   });
 
-  it("round-trips a known offset through the isometric fallback once aspect is applied", () => {
+  it("round-trips a known east offset through the plan fallback", () => {
     const other = {
-      a: planToImage(40, -half, Aiso, origin),
-      b: planToImage(40, half, Aiso, origin),
+      a: planToImage(40, -half, Aplan, origin),
+      b: planToImage(40, half, Aplan, origin),
       bearingDeg: 0,
     };
     const basis = fitSheetBasis([nsEnds, other], northDeg, origin);
-    expect(basis.mode).toBe("isometric");
+    expect(basis.mode).toBe("plan");
     const hit = imageToPlan(
       (other.a[0] + other.b[0]) / 2,
       (other.a[1] + other.b[1]) / 2,
@@ -123,14 +131,42 @@ describe("fitSheetBasis", () => {
     expect(hit.northM).toBeCloseTo(0, 4);
   });
 
+  it("maps a Pimlico-shaped vertical gap to south, not west", () => {
+    const northUp: [number, number, number, number] = planImageToPlan(0);
+    const upper = {
+      a: planToImage(-half, 0, northUp, origin),
+      b: planToImage(half, 0, northUp, origin),
+      bearingDeg: 90,
+    };
+    const lower = {
+      a: planToImage(-half, -20, northUp, origin),
+      b: planToImage(half, -20, northUp, origin),
+      bearingDeg: 90,
+    };
+    const basis = fitSheetBasis([upper, lower], 0, origin);
+    expect(basis.mode).toBe("plan");
+    const u = imageToPlan(
+      (upper.a[0] + upper.b[0]) / 2,
+      (upper.a[1] + upper.b[1]) / 2,
+      basis,
+    );
+    const lo = imageToPlan(
+      (lower.a[0] + lower.b[0]) / 2,
+      (lower.a[1] + lower.b[1]) / 2,
+      basis,
+    );
+    expect(u.eastM).toBeCloseTo(lo.eastM, 4);
+    expect(u.northM - lo.northM).toBeCloseTo(20, 4);
+  });
+
   it("reports a high residual when parallel platforms claim conflicting bearings", () => {
     const other = {
-      a: planToImage(20, -half, Aiso, origin),
-      b: planToImage(20, half, Aiso, origin),
+      a: planToImage(20, -half, Aplan, origin),
+      b: planToImage(20, half, Aplan, origin),
       bearingDeg: 90,
     };
     const basis = fitSheetBasis([nsEnds, other], northDeg, origin);
-    expect(basis.mode).toBe("isometric");
+    expect(basis.mode).toBe("plan");
     expect(basis.residual).toBeGreaterThan(PLACEMENT_RESIDUAL_LIMIT);
   });
 });

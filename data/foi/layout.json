@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T14:37:15.721Z",
+  "generatedAt": "2026-08-28T18:55:14.908Z",
   "source": "tfl-foi-2015-axonometric",
   "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
   "stations": [
@@ -62,8 +62,8 @@
           "platformNumbers": [
             1
           ],
-          "eastM": -112.69308914319201,
-          "northM": -316.40074191473525,
+          "eastM": 152.79662463179383,
+          "northM": -185.82239763248353,
           "bearingDeg": 100,
           "confidence": "high",
           "caption": "SOUTHBOUND PLATFORM TO OLD STREET",
@@ -77,15 +77,12 @@
             0.38
           ],
           "grid": "J6",
-          "residual": 0.9866109276176419,
+          "residual": 0.07836877956524359,
           "sources": [
             {
               "file": "3d northern line stations Redacted.pdf",
               "page": 1
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -93,8 +90,8 @@
           "platformNumbers": [
             2
           ],
-          "eastM": -158.83113389154323,
-          "northM": -358.3707785405361,
+          "eastM": 149.6702935200323,
+          "northM": -223.97828277158413,
           "bearingDeg": 100,
           "confidence": "high",
           "caption": "PLATFORM 2 NORTHBOUND TO KINGS CROSS",
@@ -108,15 +105,12 @@
             0.48
           ],
           "grid": "K7",
-          "residual": 0.9866109276176419,
+          "residual": 0.07836877956524359,
           "sources": [
             {
               "file": "3d northern line stations Redacted.pdf",
               "page": 1
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         }
       ],
@@ -141,9 +135,9 @@
           ],
           "grid": "J6",
           "confidence": "high",
-          "eastM": -112.69308914319201,
-          "northM": -316.40074191473525,
-          "residual": 0.9866109276176419,
+          "eastM": 152.79662463179383,
+          "northM": -185.82239763248353,
+          "residual": 0.07836877956524359,
           "placed": true
         },
         {
@@ -166,9 +160,9 @@
           ],
           "grid": "K7",
           "confidence": "high",
-          "eastM": -158.83113389154323,
-          "northM": -358.3707785405361,
-          "residual": 0.9866109276176419,
+          "eastM": 149.6702935200323,
+          "northM": -223.97828277158413,
+          "residual": 0.07836877956524359,
           "placed": true
         }
       ],
@@ -200,8 +194,8 @@
           "platformNumbers": [
             1
           ],
-          "eastM": -25.147455891011706,
-          "northM": -29.412668449294753,
+          "eastM": 3.087709597297289,
+          "northM": -22.80397165215498,
           "bearingDeg": 125,
           "confidence": "high",
           "caption": "PLATFORM 1 SOUTHBOUND CIRCLE LINE",
@@ -215,7 +209,7 @@
             0.38
           ],
           "grid": "D7",
-          "residual": 0.4365904029267028,
+          "residual": 0.4511652867917743,
           "sources": [
             {
               "file": "3d circle stations Redacted.pdf",
@@ -231,8 +225,8 @@
           "platformNumbers": [
             2
           ],
-          "eastM": -22.85364388669668,
-          "northM": -39.263163968196274,
+          "eastM": 11.879321827535168,
+          "northM": -25.962366152433525,
           "bearingDeg": 125,
           "confidence": "high",
           "caption": "PLATFORM 2 NORTHBOUND CIRCLE & METROPOLITAN",
@@ -246,7 +240,7 @@
             0.36
           ],
           "grid": "E7",
-          "residual": 0.4365904029267028,
+          "residual": 0.4511652867917743,
           "sources": [
             {
               "file": "3d circle stations Redacted.pdf",
@@ -262,8 +256,8 @@
           "platformNumbers": [
             3
           ],
-          "eastM": -20.55983188238166,
-          "northM": -49.11365948709783,
+          "eastM": 20.67093405777306,
+          "northM": -29.12076065271208,
           "bearingDeg": 125,
           "confidence": "high",
           "caption": "PLATFORM 3 NORTHBOUND METROPOLITAN & CIRCLE",
@@ -277,7 +271,7 @@
             0.34
           ],
           "grid": "F6",
-          "residual": 0.4365904029267028,
+          "residual": 0.4511652867917743,
           "sources": [
             {
               "file": "3d circle stations Redacted.pdf",
@@ -293,8 +287,8 @@
           "platformNumbers": [
             4
           ],
-          "eastM": -18.26601987806663,
-          "northM": -58.96415500599935,
+          "eastM": 29.46254628801094,
+          "northM": -32.279155152990626,
           "bearingDeg": 125,
           "confidence": "high",
           "caption": "PLATFORM 4 NORTHBOUND METROPOLITAN LINE",
@@ -308,7 +302,7 @@
             0.32
           ],
           "grid": "F6",
-          "residual": 0.4365904029267028,
+          "residual": 0.4511652867917743,
           "sources": [
             {
               "file": "3d circle stations Redacted.pdf",
@@ -341,9 +335,9 @@
           ],
           "grid": "D7",
           "confidence": "high",
-          "eastM": -25.147455891011706,
-          "northM": -29.412668449294753,
-          "residual": 0.4365904029267028,
+          "eastM": 3.087709597297289,
+          "northM": -22.80397165215498,
+          "residual": 0.4511652867917743,
           "placed": true
         },
         {
@@ -366,9 +360,9 @@
           ],
           "grid": "E7",
           "confidence": "high",
-          "eastM": -22.85364388669668,
-          "northM": -39.263163968196274,
-          "residual": 0.4365904029267028,
+          "eastM": 11.879321827535168,
+          "northM": -25.962366152433525,
+          "residual": 0.4511652867917743,
           "placed": true
         },
         {
@@ -391,9 +385,9 @@
           ],
           "grid": "F6",
           "confidence": "high",
-          "eastM": -20.55983188238166,
-          "northM": -49.11365948709783,
-          "residual": 0.4365904029267028,
+          "eastM": 20.67093405777306,
+          "northM": -29.12076065271208,
+          "residual": 0.4511652867917743,
           "placed": true
         },
         {
@@ -416,9 +410,9 @@
           ],
           "grid": "F6",
           "confidence": "high",
-          "eastM": -18.26601987806663,
-          "northM": -58.96415500599935,
-          "residual": 0.4365904029267028,
+          "eastM": 29.46254628801094,
+          "northM": -32.279155152990626,
+          "residual": 0.4511652867917743,
           "placed": true
         }
       ],
@@ -674,8 +668,8 @@
           "platformNumbers": [
             1
           ],
-          "eastM": -74.41169974822229,
-          "northM": -46.71865297719942,
+          "eastM": -25.280094206623446,
+          "northM": -63.841091463928834,
           "bearingDeg": 42,
           "confidence": "high",
           "caption": "PLATFORM 1",
@@ -689,15 +683,12 @@
             0.52
           ],
           "grid": "D8",
-          "residual": 0.7205124760559352,
+          "residual": 0.22182679822883772,
           "sources": [
             {
               "file": "3d piccadilly line stations Redacted.pdf",
               "page": 4
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -705,8 +696,8 @@
           "platformNumbers": [
             2
           ],
-          "eastM": -58.787047222112214,
-          "northM": -42.96244906724201,
+          "eastM": -14.445768118070532,
+          "northM": -53.62651682970021,
           "bearingDeg": 42,
           "confidence": "high",
           "caption": "PLATFORM 2",
@@ -720,15 +711,12 @@
             0.48
           ],
           "grid": "D8",
-          "residual": 0.7205124760559352,
+          "residual": 0.22182679822883772,
           "sources": [
             {
               "file": "3d piccadilly line stations Redacted.pdf",
               "page": 4
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         }
       ],
@@ -753,9 +741,9 @@
           ],
           "grid": "D8",
           "confidence": "high",
-          "eastM": -74.41169974822229,
-          "northM": -46.71865297719942,
-          "residual": 0.7205124760559352,
+          "eastM": -25.280094206623446,
+          "northM": -63.841091463928834,
+          "residual": 0.22182679822883772,
           "placed": true
         },
         {
@@ -778,9 +766,9 @@
           ],
           "grid": "D8",
           "confidence": "high",
-          "eastM": -58.787047222112214,
-          "northM": -42.96244906724201,
-          "residual": 0.7205124760559352,
+          "eastM": -14.445768118070532,
+          "northM": -53.62651682970021,
+          "residual": 0.22182679822883772,
           "placed": true
         }
       ],
@@ -927,8 +915,8 @@
             1,
             2
           ],
-          "eastM": -86.34350580180111,
-          "northM": -8.72193843548039,
+          "eastM": -62.459539958438555,
+          "northM": -44.165019631387366,
           "bearingDeg": 70,
           "confidence": "high",
           "caption": "DISTRICT PLATFORMS 1 & 2",
@@ -942,15 +930,12 @@
             0.3
           ],
           "grid": "E5",
-          "residual": 0.5046439992917963,
+          "residual": 0.04510214521564094,
           "sources": [
             {
               "file": "3d district stations Redacted.pdf",
               "page": 3
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -959,8 +944,8 @@
             3,
             4
           ],
-          "eastM": -89.39618425421924,
-          "northM": -38.942165466110765,
+          "eastM": -40.59870097298506,
+          "northM": -59.62277650237293,
           "bearingDeg": 70,
           "confidence": "high",
           "caption": "DISTRICT PLATFORMS 3 & 4",
@@ -974,15 +959,12 @@
             0.37
           ],
           "grid": "F6",
-          "residual": 0.5046439992917963,
+          "residual": 0.04510214521564094,
           "sources": [
             {
               "file": "3d district stations Redacted.pdf",
               "page": 3
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -991,8 +973,8 @@
             5,
             6
           ],
-          "eastM": -92.4488627066374,
-          "northM": -69.16239249674116,
+          "eastM": -18.73786198753158,
+          "northM": -75.08053337335852,
           "bearingDeg": 70,
           "confidence": "high",
           "caption": "PICCADILLY PLATFORMS 5 & 6",
@@ -1006,15 +988,12 @@
             0.44
           ],
           "grid": "G7",
-          "residual": 0.5046439992917963,
+          "residual": 0.04510214521564094,
           "sources": [
             {
               "file": "3d district stations Redacted.pdf",
               "page": 3
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         }
       ],
@@ -1040,9 +1019,9 @@
           ],
           "grid": "E5",
           "confidence": "high",
-          "eastM": -86.34350580180111,
-          "northM": -8.72193843548039,
-          "residual": 0.5046439992917963,
+          "eastM": -62.459539958438555,
+          "northM": -44.165019631387366,
+          "residual": 0.04510214521564094,
           "placed": true
         },
         {
@@ -1066,9 +1045,9 @@
           ],
           "grid": "F6",
           "confidence": "high",
-          "eastM": -89.39618425421924,
-          "northM": -38.942165466110765,
-          "residual": 0.5046439992917963,
+          "eastM": -40.59870097298506,
+          "northM": -59.62277650237293,
+          "residual": 0.04510214521564094,
           "placed": true
         },
         {
@@ -1092,9 +1071,9 @@
           ],
           "grid": "G7",
           "confidence": "high",
-          "eastM": -92.4488627066374,
-          "northM": -69.16239249674116,
-          "residual": 0.5046439992917963,
+          "eastM": -18.73786198753158,
+          "northM": -75.08053337335852,
+          "residual": 0.04510214521564094,
           "placed": true
         }
       ],
@@ -1136,8 +1115,8 @@
           "platformNumbers": [
             5
           ],
-          "eastM": -59.518808336394265,
-          "northM": 54.3148303939896,
+          "eastM": -84.92374519259458,
+          "northM": -2.2414721122965418,
           "bearingDeg": 127,
           "confidence": "high",
           "caption": "BAKERLOO LINE PLATFORM 5 NORTHBOUND TO CHARING CROSS",
@@ -1151,7 +1130,7 @@
             0.62
           ],
           "grid": "D8",
-          "residual": 0.5447314837247826,
+          "residual": 0.42320340324753986,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
@@ -1167,8 +1146,8 @@
           "platformNumbers": [
             6
           ],
-          "eastM": -22.47603694246698,
-          "northM": 84.68051202631268,
+          "eastM": -79.94241036163477,
+          "northM": 26.792887614749947,
           "bearingDeg": 127,
           "confidence": "high",
           "caption": "BAKERLOO LINE PLATFORM 6 SOUTHBOUND TO WATERLOO",
@@ -1182,7 +1161,7 @@
             0.54
           ],
           "grid": "C7",
-          "residual": 0.5447314837247826,
+          "residual": 0.42320340324753986,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
@@ -1198,8 +1177,8 @@
           "platformNumbers": [
             3
           ],
-          "eastM": 62.26414802893344,
-          "northM": -30.58410526952634,
+          "eastM": 69.26793777867044,
+          "northM": 13.645317706469918,
           "bearingDeg": 127,
           "confidence": "high",
           "caption": "NORTHERN LINE PLATFORM 3 NORTHBOUND TO CHARING CROSS",
@@ -1213,7 +1192,7 @@
             0.22
           ],
           "grid": "H4",
-          "residual": 0.5447314837247826,
+          "residual": 0.42320340324753986,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
@@ -1229,8 +1208,8 @@
           "platformNumbers": [
             4
           ],
-          "eastM": 19.7306972499278,
-          "northM": -108.41123715077597,
+          "eastM": 95.59821777555894,
+          "northM": -38.196733208923334,
           "bearingDeg": 127,
           "confidence": "high",
           "caption": "NORTHERN LINE PLATFORM 4 SOUTHBOUND TO WATERLOO",
@@ -1244,7 +1223,7 @@
             0.28
           ],
           "grid": "J5",
-          "residual": 0.5447314837247826,
+          "residual": 0.42320340324753986,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
@@ -1277,9 +1256,9 @@
           ],
           "grid": "E8",
           "confidence": "high",
-          "eastM": -43.29952200059571,
-          "northM": -11.60207195271325,
-          "residual": 1.3689995844501623,
+          "eastM": -22.457436420236107,
+          "northM": -22.457436420236096,
+          "residual": 0.6764800049903109,
           "placed": false
         },
         {
@@ -1302,9 +1281,9 @@
           ],
           "grid": "F7",
           "confidence": "high",
-          "eastM": -32.51257240946505,
-          "northM": -21.34260938558134,
-          "residual": 1.3689995844501623,
+          "eastM": -7.9138458786533965,
+          "northM": -22.029402681661423,
+          "residual": 0.6764800049903109,
           "placed": false
         },
         {
@@ -1327,9 +1306,9 @@
           ],
           "grid": "D8",
           "confidence": "high",
-          "eastM": -5.075556534330253,
-          "northM": 4.583190826805351,
-          "residual": 1.2864042762137062,
+          "eastM": -6.832370826815124,
+          "northM": -0.2010841284322984,
+          "residual": 0.6160554416324513,
           "placed": false
         },
         {
@@ -1352,9 +1331,9 @@
           ],
           "grid": "F6",
           "confidence": "high",
-          "eastM": 5.075556534330248,
-          "northM": -4.583190826805369,
-          "residual": 1.2864042762137062,
+          "eastM": 6.832370826815133,
+          "northM": 0.20108412843228907,
+          "residual": 0.6160554416324513,
           "placed": false
         },
         {
@@ -1377,9 +1356,9 @@
           ],
           "grid": "H4",
           "confidence": "high",
-          "eastM": 62.26414802893344,
-          "northM": -30.58410526952634,
-          "residual": 0.5447314837247826,
+          "eastM": 69.26793777867044,
+          "northM": 13.645317706469918,
+          "residual": 0.42320340324753986,
           "placed": true
         },
         {
@@ -1402,9 +1381,9 @@
           ],
           "grid": "J5",
           "confidence": "high",
-          "eastM": 19.7306972499278,
-          "northM": -108.41123715077597,
-          "residual": 0.5447314837247826,
+          "eastM": 95.59821777555894,
+          "northM": -38.196733208923334,
+          "residual": 0.42320340324753986,
           "placed": true
         },
         {
@@ -1427,9 +1406,9 @@
           ],
           "grid": "D8",
           "confidence": "high",
-          "eastM": -59.518808336394265,
-          "northM": 54.3148303939896,
-          "residual": 0.5447314837247826,
+          "eastM": -84.92374519259458,
+          "northM": -2.2414721122965418,
+          "residual": 0.42320340324753986,
           "placed": true
         },
         {
@@ -1452,9 +1431,9 @@
           ],
           "grid": "C7",
           "confidence": "high",
-          "eastM": -22.47603694246698,
-          "northM": 84.68051202631268,
-          "residual": 0.5447314837247826,
+          "eastM": -79.94241036163477,
+          "northM": 26.792887614749947,
+          "residual": 0.42320340324753986,
           "placed": true
         }
       ],
@@ -2501,8 +2480,8 @@
           "platformNumbers": [
             3
           ],
-          "eastM": 50.25867978477026,
-          "northM": 17.252688410635336,
+          "eastM": 94.20153658959602,
+          "northM": 9.70862181960656,
           "bearingDeg": 148,
           "confidence": "high",
           "caption": "PLATFORM 3 BAKERLOO NORTHBOUND TO REGENTS PARK",
@@ -2516,15 +2495,12 @@
             0.38
           ],
           "grid": "K7",
-          "residual": 0.6246824170057196,
+          "residual": 0.2711027492128648,
           "sources": [
             {
               "file": "3d central line stations Redacted.pdf",
               "page": 14
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -2532,8 +2508,8 @@
           "platformNumbers": [
             4
           ],
-          "eastM": 25.46576354500874,
-          "northM": 40.030500108443285,
+          "eastM": 75.20934056203201,
+          "northM": -15.971553583290762,
           "bearingDeg": 148,
           "confidence": "high",
           "caption": "PLATFORM 4 BAKERLOO SOUTHBOUND TO PICCADILLY CIRCUS",
@@ -2547,15 +2523,12 @@
             0.48
           ],
           "grid": "J8",
-          "residual": 0.6246824170057196,
+          "residual": 0.2711027492128648,
           "sources": [
             {
               "file": "3d central line stations Redacted.pdf",
               "page": 14
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -2563,8 +2536,8 @@
           "platformNumbers": [
             1
           ],
-          "eastM": -99.18577696045654,
-          "northM": -88.97856822504528,
+          "eastM": -234.14754146908086,
+          "northM": 17.51590045650227,
           "bearingDeg": 80,
           "confidence": "high",
           "caption": "PLATFORM 1 CENTRAL WESTBOUND TO BOND STREET",
@@ -2578,15 +2551,12 @@
             0.62
           ],
           "grid": "B8",
-          "residual": 0.6246824170057196,
+          "residual": 0.2711027492128648,
           "sources": [
             {
               "file": "3d central line stations Redacted.pdf",
               "page": 14
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -2594,8 +2564,8 @@
           "platformNumbers": [
             2
           ],
-          "eastM": -95.33896105969694,
-          "northM": -61.27282078508825,
+          "eastM": -203.76557681386737,
+          "northM": 0.6420886622233866,
           "bearingDeg": 80,
           "confidence": "high",
           "caption": "PLATFORM 2 CENTRAL EASTBOUND TO TOTTENHAM COURT ROAD",
@@ -2609,15 +2579,12 @@
             0.66
           ],
           "grid": "B9",
-          "residual": 0.6246824170057196,
+          "residual": 0.2711027492128648,
           "sources": [
             {
               "file": "3d central line stations Redacted.pdf",
               "page": 14
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -2625,8 +2592,8 @@
           "platformNumbers": [
             5
           ],
-          "eastM": 29.7987112294763,
-          "northM": 34.62972764338929,
+          "eastM": 77.28146871907943,
+          "northM": -10.535439337569507,
           "bearingDeg": 8,
           "confidence": "high",
           "caption": "PLATFORM 5 VICTORIA SOUTHBOUND TO GREEN PARK",
@@ -2640,15 +2607,12 @@
             0.48
           ],
           "grid": "I8",
-          "residual": 0.6246824170057196,
+          "residual": 0.2711027492128648,
           "sources": [
             {
               "file": "3d central line stations Redacted.pdf",
               "page": 14
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -2656,8 +2620,8 @@
           "platformNumbers": [
             6
           ],
-          "eastM": 89.00158346089826,
-          "northM": 58.33847284766567,
+          "eastM": 191.22077241224096,
+          "northM": -1.3596180174719308,
           "bearingDeg": 8,
           "confidence": "high",
           "caption": "PLATFORM 6 VICTORIA NORTHBOUND TO WARREN STREET",
@@ -2671,15 +2635,12 @@
             0.38
           ],
           "grid": "L7",
-          "residual": 0.6246824170057196,
+          "residual": 0.2711027492128648,
           "sources": [
             {
               "file": "3d central line stations Redacted.pdf",
               "page": 14
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         }
       ],
@@ -2704,9 +2665,9 @@
           ],
           "grid": "B8",
           "confidence": "high",
-          "eastM": -99.18577696045654,
-          "northM": -88.97856822504528,
-          "residual": 0.6246824170057196,
+          "eastM": -234.14754146908086,
+          "northM": 17.51590045650227,
+          "residual": 0.2711027492128648,
           "placed": true
         },
         {
@@ -2729,9 +2690,9 @@
           ],
           "grid": "B9",
           "confidence": "high",
-          "eastM": -95.33896105969694,
-          "northM": -61.27282078508825,
-          "residual": 0.6246824170057196,
+          "eastM": -203.76557681386737,
+          "northM": 0.6420886622233866,
+          "residual": 0.2711027492128648,
           "placed": true
         },
         {
@@ -2754,9 +2715,9 @@
           ],
           "grid": "I8",
           "confidence": "high",
-          "eastM": 29.7987112294763,
-          "northM": 34.62972764338929,
-          "residual": 0.6246824170057196,
+          "eastM": 77.28146871907943,
+          "northM": -10.535439337569507,
+          "residual": 0.2711027492128648,
           "placed": true
         },
         {
@@ -2779,9 +2740,9 @@
           ],
           "grid": "L7",
           "confidence": "high",
-          "eastM": 89.00158346089826,
-          "northM": 58.33847284766567,
-          "residual": 0.6246824170057196,
+          "eastM": 191.22077241224096,
+          "northM": -1.3596180174719308,
+          "residual": 0.2711027492128648,
           "placed": true
         },
         {
@@ -2804,9 +2765,9 @@
           ],
           "grid": "J8",
           "confidence": "high",
-          "eastM": 25.46576354500874,
-          "northM": 40.030500108443285,
-          "residual": 0.6246824170057196,
+          "eastM": 75.20934056203201,
+          "northM": -15.971553583290762,
+          "residual": 0.2711027492128648,
           "placed": true
         },
         {
@@ -2829,9 +2790,9 @@
           ],
           "grid": "K7",
           "confidence": "high",
-          "eastM": 50.25867978477026,
-          "northM": 17.252688410635336,
-          "residual": 0.6246824170057196,
+          "eastM": 94.20153658959602,
+          "northM": 9.70862181960656,
+          "residual": 0.2711027492128648,
           "placed": true
         }
       ],
@@ -3104,8 +3065,8 @@
           "platformNumbers": [
             1
           ],
-          "eastM": -158.2273797651394,
-          "northM": 6.336982492482221,
+          "eastM": -118.89728633791397,
+          "northM": -63.35863936502146,
           "bearingDeg": 80,
           "confidence": "high",
           "caption": "PLATFORM 1 NORTHBOUND",
@@ -3119,15 +3080,12 @@
             0.775
           ],
           "grid": "D7",
-          "residual": 1.1408969126747808,
+          "residual": 0.32200592658801613,
           "sources": [
             {
               "file": "3d victoria line stations Redacted.pdf",
               "page": 4
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -3135,8 +3093,8 @@
           "platformNumbers": [
             2
           ],
-          "eastM": -134.85962633857676,
-          "northM": 29.704735919044886,
+          "eastM": -118.89728633791397,
+          "northM": -43.863673406553296,
           "bearingDeg": 80,
           "confidence": "high",
           "caption": "PLATFORM 2 SOUTHBOUND",
@@ -3150,15 +3108,12 @@
             0.695
           ],
           "grid": "D6",
-          "residual": 1.1408969126747808,
+          "residual": 0.32200592658801613,
           "sources": [
             {
               "file": "3d victoria line stations Redacted.pdf",
               "page": 4
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         }
       ],
@@ -3183,9 +3138,9 @@
           ],
           "grid": "D6",
           "confidence": "high",
-          "eastM": -134.85962633857676,
-          "northM": 29.704735919044886,
-          "residual": 1.1408969126747808,
+          "eastM": -118.89728633791397,
+          "northM": -43.863673406553296,
+          "residual": 0.32200592658801613,
           "placed": true
         },
         {
@@ -3208,9 +3163,9 @@
           ],
           "grid": "D7",
           "confidence": "high",
-          "eastM": -158.2273797651394,
-          "northM": 6.336982492482221,
-          "residual": 1.1408969126747808,
+          "eastM": -118.89728633791397,
+          "northM": -63.35863936502146,
+          "residual": 0.32200592658801613,
           "placed": true
         }
       ],
@@ -3962,8 +3917,328 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
-      "marks": [],
+      "platforms": [
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "eastM": -127.51737186007637,
+          "northM": 99.49493678257997,
+          "bearingDeg": 45,
+          "confidence": "high",
+          "caption": "PLATFORM 1 NORTHBOUND TO MORNINGTON CRESCENT",
+          "end": null,
+          "a": [
+            0.1,
+            0.58
+          ],
+          "b": [
+            0.32,
+            0.38
+          ],
+          "grid": "D5",
+          "residual": 0.2136808730665257,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "eastM": -114.32591959868917,
+          "northM": 83.94885291030184,
+          "bearingDeg": 45,
+          "confidence": "high",
+          "caption": "PLATFORM 2 SOUTHBOUND TO WARREN STREET",
+          "end": null,
+          "a": [
+            0.13,
+            0.63
+          ],
+          "b": [
+            0.35,
+            0.43
+          ],
+          "grid": "D6",
+          "residual": 0.2136808730665257,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "eastM": 114.32591959868917,
+          "northM": 105.7133703314912,
+          "bearingDeg": 45,
+          "confidence": "high",
+          "caption": "NORTHERN CITY NORTHBOUND PLATFORM 3 TO CAMDEN TOWN",
+          "end": null,
+          "a": [
+            0.65,
+            0.56
+          ],
+          "b": [
+            0.87,
+            0.36
+          ],
+          "grid": "K5",
+          "residual": 0.2136808730665257,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "lineId": "northern",
+          "platformNumbers": [
+            6
+          ],
+          "eastM": 39.57435678416162,
+          "northM": 155.46083872278118,
+          "bearingDeg": 45,
+          "confidence": "high",
+          "caption": "NORTHERN CITY SOUTHBOUND PLATFORM 6 TO KINGS CROSS",
+          "end": null,
+          "a": [
+            0.48,
+            0.4
+          ],
+          "b": [
+            0.7,
+            0.2
+          ],
+          "grid": "I4",
+          "residual": 0.2136808730665257,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "eastM": 101.13446733730194,
+          "northM": 118.15023742931369,
+          "bearingDeg": 45,
+          "confidence": "high",
+          "caption": "VICTORIA NORTHBOUND PLATFORM 4 TO KINGS CROSS",
+          "end": null,
+          "a": [
+            0.62,
+            0.52
+          ],
+          "b": [
+            0.84,
+            0.32
+          ],
+          "grid": "K6",
+          "residual": 0.2136808730665257,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "lineId": "victoria",
+          "platformNumbers": [
+            5
+          ],
+          "eastM": 52.76580904554884,
+          "northM": 143.0239716249587,
+          "bearingDeg": 45,
+          "confidence": "high",
+          "caption": "VICTORIA SOUTHBOUND PLATFORM 5 TO WARREN STREET",
+          "end": null,
+          "a": [
+            0.51,
+            0.44
+          ],
+          "b": [
+            0.73,
+            0.24
+          ],
+          "grid": "I5",
+          "residual": 0.2136808730665257,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 12,
+          "caption": "PLATFORM 1 NORTHBOUND TO MORNINGTON CRESCENT",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.1,
+            0.58
+          ],
+          "b": [
+            0.32,
+            0.38
+          ],
+          "grid": "D5",
+          "confidence": "high",
+          "eastM": -127.51737186007637,
+          "northM": 99.49493678257997,
+          "residual": 0.2136808730665257,
+          "placed": true
+        },
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 12,
+          "caption": "PLATFORM 2 SOUTHBOUND TO WARREN STREET",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.13,
+            0.63
+          ],
+          "b": [
+            0.35,
+            0.43
+          ],
+          "grid": "D6",
+          "confidence": "high",
+          "eastM": -114.32591959868917,
+          "northM": 83.94885291030184,
+          "residual": 0.2136808730665257,
+          "placed": true
+        },
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 12,
+          "caption": "NORTHERN CITY SOUTHBOUND PLATFORM 6 TO KINGS CROSS",
+          "lineId": "northern",
+          "platformNumbers": [
+            6
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.48,
+            0.4
+          ],
+          "b": [
+            0.7,
+            0.2
+          ],
+          "grid": "I4",
+          "confidence": "high",
+          "eastM": 39.57435678416162,
+          "northM": 155.46083872278118,
+          "residual": 0.2136808730665257,
+          "placed": true
+        },
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 12,
+          "caption": "VICTORIA SOUTHBOUND PLATFORM 5 TO WARREN STREET",
+          "lineId": "victoria",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.51,
+            0.44
+          ],
+          "b": [
+            0.73,
+            0.24
+          ],
+          "grid": "I5",
+          "confidence": "high",
+          "eastM": 52.76580904554884,
+          "northM": 143.0239716249587,
+          "residual": 0.2136808730665257,
+          "placed": true
+        },
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 12,
+          "caption": "VICTORIA NORTHBOUND PLATFORM 4 TO KINGS CROSS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.62,
+            0.52
+          ],
+          "b": [
+            0.84,
+            0.32
+          ],
+          "grid": "K6",
+          "confidence": "high",
+          "eastM": 101.13446733730194,
+          "northM": 118.15023742931369,
+          "residual": 0.2136808730665257,
+          "placed": true
+        },
+        {
+          "file": "3d northern line stations Redacted.pdf",
+          "page": 12,
+          "caption": "NORTHERN CITY NORTHBOUND PLATFORM 3 TO CAMDEN TOWN",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 45,
+          "a": [
+            0.65,
+            0.56
+          ],
+          "b": [
+            0.87,
+            0.36
+          ],
+          "grid": "K5",
+          "confidence": "high",
+          "eastM": 114.32591959868917,
+          "northM": 105.7133703314912,
+          "residual": 0.2136808730665257,
+          "placed": true
+        }
+      ],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -4407,8 +4682,8 @@
           "platformNumbers": [
             3
           ],
-          "eastM": -149.75529775460777,
-          "northM": -157.59389940248167,
+          "eastM": 8.813297958583263,
+          "northM": -199.51305288556804,
           "bearingDeg": 145,
           "confidence": "high",
           "caption": "BAKERLOO LINE PLATFORM 3",
@@ -4422,15 +4697,12 @@
             0.84
           ],
           "grid": "E7",
-          "residual": 1.0436567115965898,
+          "residual": 0.163034938196043,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
               "page": 17
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -4438,8 +4710,8 @@
           "platformNumbers": [
             4
           ],
-          "eastM": -114.51875710646478,
-          "northM": -139.97562907841018,
+          "eastM": 28.622324218136043,
+          "northM": -165.2028129555566,
           "bearingDeg": 145,
           "confidence": "high",
           "caption": "BAKERLOO LINE PLATFORM 4",
@@ -4453,15 +4725,12 @@
             0.72
           ],
           "grid": "E5",
-          "residual": 1.0436567115965898,
+          "residual": 0.163034938196043,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
               "page": 17
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -4469,8 +4738,8 @@
           "platformNumbers": [
             1
           ],
-          "eastM": -88.09135162035757,
-          "northM": -159.12915480173052,
+          "eastM": 79.87104765432855,
+          "northM": -160.48103729705562,
           "bearingDeg": 145,
           "confidence": "high",
           "caption": "NORTHERN LINE PLATFORM 1",
@@ -4484,15 +4753,12 @@
             0.59
           ],
           "grid": "H5",
-          "residual": 1.0436567115965898,
+          "residual": 0.163034938196043,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
               "page": 17
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         },
         {
@@ -4500,8 +4766,8 @@
           "platformNumbers": [
             2
           ],
-          "eastM": -38.17291903548828,
-          "northM": -91.01363388746398,
+          "eastM": 59.411229866657735,
+          "northM": -83.8603250108626,
           "bearingDeg": 145,
           "confidence": "high",
           "caption": "NORTHERN LINE PLATFORM 2",
@@ -4515,15 +4781,12 @@
             0.42
           ],
           "grid": "E3",
-          "residual": 1.0436567115965898,
+          "residual": 0.163034938196043,
           "sources": [
             {
               "file": "3d bakerloo stations Redacted.pdf",
               "page": 17
             }
-          ],
-          "flags": [
-            "placement-residual"
           ]
         }
       ],
@@ -4548,9 +4811,9 @@
           ],
           "grid": "F7",
           "confidence": "high",
-          "eastM": 5.627342384601512,
-          "northM": -97.35507410135548,
-          "residual": 0.5170495573243356,
+          "eastM": 78.85749283722575,
+          "northM": -40.55271296418336,
+          "residual": 0.07135494272777489,
           "placed": false
         },
         {
@@ -4573,9 +4836,9 @@
           ],
           "grid": "F8",
           "confidence": "high",
-          "eastM": 2.664383672718543,
-          "northM": -109.6800706755982,
-          "residual": 0.5170495573243356,
+          "eastM": 86.02635582242809,
+          "northM": -47.311498458213926,
+          "residual": 0.07135494272777489,
           "placed": false
         },
         {
@@ -4598,9 +4861,9 @@
           ],
           "grid": "E5",
           "confidence": "high",
-          "eastM": -114.51875710646478,
-          "northM": -139.97562907841018,
-          "residual": 1.0436567115965898,
+          "eastM": 28.622324218136043,
+          "northM": -165.2028129555566,
+          "residual": 0.163034938196043,
           "placed": true
         },
         {
@@ -4623,9 +4886,9 @@
           ],
           "grid": "E7",
           "confidence": "high",
-          "eastM": -149.75529775460777,
-          "northM": -157.59389940248167,
-          "residual": 1.0436567115965898,
+          "eastM": 8.813297958583263,
+          "northM": -199.51305288556804,
+          "residual": 0.163034938196043,
           "placed": true
         },
         {
@@ -4648,9 +4911,9 @@
           ],
           "grid": "E3",
           "confidence": "high",
-          "eastM": -38.17291903548828,
-          "northM": -91.01363388746398,
-          "residual": 1.0436567115965898,
+          "eastM": 59.411229866657735,
+          "northM": -83.8603250108626,
+          "residual": 0.163034938196043,
           "placed": true
         },
         {
@@ -4673,9 +4936,9 @@
           ],
           "grid": "H5",
           "confidence": "high",
-          "eastM": -88.09135162035757,
-          "northM": -159.12915480173052,
-          "residual": 1.0436567115965898,
+          "eastM": 79.87104765432855,
+          "northM": -160.48103729705562,
+          "residual": 0.163034938196043,
           "placed": true
         },
         {
@@ -4699,9 +4962,9 @@
           ],
           "grid": "F5",
           "confidence": "high",
-          "eastM": -104.98684385176597,
-          "northM": -87.99840379433384,
-          "residual": 0.4690426984298705,
+          "eastM": -19.667857547885795,
+          "northM": -128.99326518585173,
+          "residual": 1.306226725611243,
           "placed": false
         }
       ],
