@@ -20,14 +20,37 @@ import {
   alignTrackPair,
   applyFanout,
   buildTubeMeshes,
+  buildTubeMeshesChunked,
   clipChainStations,
+  disposeGeometries,
   disposeTubeMeshes,
   trackControlPoints,
   tubeAnchorKey,
   worldAnchors,
+  type TubeMesh,
 } from "./tubes";
 
 const kgx = kgxStation;
+
+function tubeFingerprint(mesh: TubeMesh) {
+  const pos = mesh.geometry.getAttribute("position");
+  return {
+    lineId: mesh.lineId,
+    track: mesh.track,
+    count: pos?.count ?? 0,
+    first: pos ? [pos.getX(0), pos.getY(0), pos.getZ(0)] : null,
+    last: pos
+      ? [
+          pos.getX(pos.count - 1),
+          pos.getY(pos.count - 1),
+          pos.getZ(pos.count - 1),
+        ]
+      : null,
+    centre: mesh.centreline.length,
+    centreFirst: mesh.centreline[0] ?? null,
+    centreLast: mesh.centreline[mesh.centreline.length - 1] ?? null,
+  };
+}
 
 function toyNetwork(overrides?: Partial<LineNetwork>): LineNetwork {
   return {
@@ -295,6 +318,90 @@ describe("buildTubeMeshes", () => {
     expect(tangentAt(station.x, station.z + beyond)).toBeLessThan(
       (TUBE_SEGMENT_M / TUBE_MIN_RADIUS_M) * 1.5,
     );
+  });
+
+  it("chunked build matches the sync meshes", async () => {
+    const network = toyNetwork({
+      chains: [
+        {
+          id: "victoria::0",
+          lineId: "victoria",
+          level: -4,
+          stationIds: ["A", "B", "C"],
+        },
+        {
+          id: "northern::0",
+          lineId: "northern",
+          level: -6,
+          stationIds: ["A", "D"],
+        },
+      ],
+    });
+    const sync = buildTubeMeshes(network, HUBKGX_ORIGIN, "low");
+    const { meshes, leftovers } = await buildTubeMeshesChunked(
+      network,
+      HUBKGX_ORIGIN,
+      "low",
+      { shouldYield: () => false },
+    );
+    expect(leftovers).toHaveLength(0);
+    expect(meshes.map(tubeFingerprint)).toEqual(sync.map(tubeFingerprint));
+    disposeTubeMeshes(sync);
+    disposeTubeMeshes(meshes);
+  });
+
+  it("chunked merge leftovers match a multi-chain line", async () => {
+    const network = toyNetwork({
+      chains: [
+        {
+          id: "circle::0",
+          lineId: "circle",
+          level: -2,
+          stationIds: ["A", "B"],
+        },
+        {
+          id: "circle::1",
+          lineId: "circle",
+          level: -2,
+          stationIds: ["C", "D"],
+        },
+      ],
+      angles: {
+        A: { circle: 0 },
+        B: { circle: 0 },
+        C: { circle: 0 },
+        D: { circle: 0 },
+      },
+    });
+    const sync = buildTubeMeshes(network, HUBKGX_ORIGIN, "low");
+    const { meshes, leftovers } = await buildTubeMeshesChunked(
+      network,
+      HUBKGX_ORIGIN,
+      "low",
+      { shouldYield: () => false },
+    );
+    expect(meshes.filter((m) => m.lineId === "circle")).toHaveLength(1);
+    expect(leftovers.length).toBeGreaterThan(0);
+    expect(meshes.map(tubeFingerprint)).toEqual(sync.map(tubeFingerprint));
+    disposeTubeMeshes(sync);
+    disposeTubeMeshes(meshes);
+    disposeGeometries(leftovers);
+  });
+
+  it("chunked build still matches after yielding", async () => {
+    const network = toyNetwork();
+    const sync = buildTubeMeshes(network, HUBKGX_ORIGIN, "low");
+    const { meshes, leftovers } = await buildTubeMeshesChunked(
+      network,
+      HUBKGX_ORIGIN,
+      "low",
+      { shouldYield: () => true },
+    );
+    expect(leftovers).toHaveLength(0);
+    expect(meshes.map(tubeFingerprint)).toEqual(sync.map(tubeFingerprint));
+    disposeTubeMeshes(sync);
+    disposeTubeMeshes(meshes);
+    disposeGeometries(leftovers);
   });
 });
 

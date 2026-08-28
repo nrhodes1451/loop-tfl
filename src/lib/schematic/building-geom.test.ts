@@ -7,7 +7,9 @@ import {
   buildingGeometry,
   buildingsToGeometry,
   disposeSurfaceTile,
+  featuresToFlatGeom,
   featuresToTileGeom,
+  roadsToGeometry,
   hallPickGeometry,
   hallPrismEdges,
   hallsToBottomGeometry,
@@ -16,6 +18,8 @@ import {
   stairFlightEdges,
   stairFlightPickGeometry,
   wrapLambertFragment,
+  type SurfaceTileGeom,
+  type TileGeomFeatures,
 } from "./building-geom";
 
 function uniqueNormals(geom: { getAttribute: (name: string) => { count: number; getX: (i: number) => number; getY: (i: number) => number; getZ: (i: number) => number } | undefined }) {
@@ -374,6 +378,74 @@ describe("stairFlightBottomGeometry", () => {
   });
 });
 
+function layerFingerprint(geom: SurfaceTileGeom[keyof SurfaceTileGeom]) {
+  if (!geom) return null;
+  const pos = geom.getAttribute("position");
+  const col = geom.getAttribute("color");
+  return {
+    count: pos?.count ?? 0,
+    first: pos ? [pos.getX(0), pos.getY(0), pos.getZ(0)] : null,
+    last: pos
+      ? [
+          pos.getX(pos.count - 1),
+          pos.getY(pos.count - 1),
+          pos.getZ(pos.count - 1),
+        ]
+      : null,
+    colors: col?.count ?? 0,
+  };
+}
+
+function tileFingerprint(geom: SurfaceTileGeom) {
+  return {
+    land: layerFingerprint(geom.land),
+    water: layerFingerprint(geom.water),
+    roads: layerFingerprint(geom.roads),
+    buildings: layerFingerprint(geom.buildings),
+  };
+}
+
+function sampleTileFeatures(): TileGeomFeatures {
+  return {
+    land: [
+      {
+        ring: [
+          [0, 0],
+          [30, 0],
+          [30, 20],
+          [0, 20],
+        ],
+      },
+    ],
+    water: [
+      {
+        ring: [
+          [0, 0],
+          [20, 0],
+          [20, 12],
+          [0, 12],
+        ],
+      },
+    ],
+    waterways: [
+      {
+        path: [
+          [0, 0],
+          [30, 0],
+        ],
+      },
+    ],
+    roads: [
+      { path: [[0, 0], [40, 0]], kind: "highway" },
+      { path: [[0, 0], [0, 40]], kind: "major_road" },
+    ],
+    buildings: [
+      { ring: [[0, 0], [8, 0], [8, 8], [0, 8]], height: 12 },
+      { ring: [[10, 0], [18, 0], [18, 6], [10, 6]], height: 40, minHeight: 4 },
+    ],
+  };
+}
+
 describe("featuresToTileGeom", () => {
   it("merges water polygons and canal ribbons into one water mesh", () => {
     const geom = featuresToTileGeom({
@@ -402,6 +474,23 @@ describe("featuresToTileGeom", () => {
     expect(geom.water).not.toBeNull();
     expect(geom.water!.getAttribute("position")!.count).toBeGreaterThan(6);
     disposeSurfaceTile(geom);
+  });
+
+  it("stepwise layers match the merged helper", () => {
+    const features = sampleTileFeatures();
+    const sync = featuresToTileGeom(features);
+    const flat = featuresToFlatGeom(features);
+    expect(flat.roads).toBeNull();
+    expect(flat.buildings).toBeNull();
+    const stepped: SurfaceTileGeom = {
+      land: flat.land,
+      water: flat.water,
+      roads: roadsToGeometry(features.roads),
+      buildings: buildingsToGeometry(features.buildings),
+    };
+    expect(tileFingerprint(stepped)).toEqual(tileFingerprint(sync));
+    disposeSurfaceTile(sync);
+    disposeSurfaceTile(stepped);
   });
 });
 

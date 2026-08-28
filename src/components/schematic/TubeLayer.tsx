@@ -1,19 +1,40 @@
 "use client";
 
 import { Line } from "@react-three/drei";
-import { useLayoutEffect, useMemo } from "react";
-import { DoubleSide } from "three";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { DoubleSide, type BufferGeometry } from "three";
 import type { LatLon } from "@/lib/schematic/geo";
 import type { LineNetwork } from "@/lib/schematic/lines";
 import {
   TUBE_FACE_OPACITY,
   TUBE_RENDER_ORDER,
-  buildTubeMeshes,
+  buildTubeMeshesChunked,
+  disposeGeometries,
   disposeTubeMeshes,
+  type TubeMesh,
 } from "@/lib/schematic/tubes";
 import type { SceneQuality } from "@/lib/schematic/scene";
 
 function noopRaycast() {}
+
+function tubeCacheKey(
+  network: LineNetwork,
+  origin: LatLon,
+  quality: SceneQuality,
+): string {
+  return `${network.generatedAt}\0${origin.lat}\0${origin.lon}\0${quality}`;
+}
+
+const tubeMeshCache = new Map<string, TubeMesh[]>();
+
+function evictTubeCacheExcept(keep: string) {
+  for (const [k, meshes] of tubeMeshCache) {
+    if (k !== keep) {
+      disposeTubeMeshes(meshes);
+      tubeMeshCache.delete(k);
+    }
+  }
+}
 
 export function TubeLayer({
   network,
@@ -24,20 +45,58 @@ export function TubeLayer({
   origin: LatLon;
   quality: SceneQuality;
 }) {
-  const meshes = useMemo(
-    () => buildTubeMeshes(network, origin, quality),
-    [network, origin, quality],
+  const key = tubeCacheKey(network, origin, quality);
+  const [meshes, setMeshes] = useState<TubeMesh[]>(
+    () => tubeMeshCache.get(key) ?? [],
   );
+  const leftoversRef = useRef<BufferGeometry[]>([]);
 
-  useLayoutEffect(() => () => disposeTubeMeshes(meshes), [meshes]);
+  useLayoutEffect(() => {
+    const extra = leftoversRef.current;
+    leftoversRef.current = [];
+    if (extra.length > 0) disposeGeometries(extra);
+  }, [meshes]);
+
+  useEffect(() => {
+    const hit = tubeMeshCache.get(key);
+    if (hit) {
+      setMeshes(hit);
+      return;
+    }
+    setMeshes([]);
+    const ac = new AbortController();
+    void (async () => {
+      const built = await buildTubeMeshesChunked(network, origin, quality, {
+        signal: ac.signal,
+        onChunk: (partial) => {
+          if (!ac.signal.aborted) setMeshes(partial);
+        },
+      });
+      if (ac.signal.aborted) {
+        if (built.meshes.length > 0) {
+          tubeMeshCache.set(key, built.meshes);
+          evictTubeCacheExcept(key);
+          disposeGeometries(built.leftovers);
+        }
+        return;
+      }
+      tubeMeshCache.set(key, built.meshes);
+      evictTubeCacheExcept(key);
+      leftoversRef.current = built.leftovers;
+      setMeshes(built.meshes);
+    })();
+    return () => {
+      ac.abort();
+    };
+  }, [key, network, origin, quality]);
 
   if (meshes.length === 0) return null;
 
   return (
     <group>
-      {meshes.map((mesh) => (
+      {meshes.map((mesh, i) => (
         <mesh
-          key={`${mesh.lineId}::${mesh.track}`}
+          key={`${mesh.lineId}::${mesh.track}::${i}`}
           geometry={mesh.geometry}
           renderOrder={TUBE_RENDER_ORDER}
           raycast={noopRaycast}
@@ -49,14 +108,13 @@ export function TubeLayer({
             depthWrite={false}
             side={DoubleSide}
             toneMapped
-            fog={false}
           />
         </mesh>
       ))}
-      {meshes.map((mesh) =>
+      {meshes.map((mesh, i) =>
         mesh.centreline.length >= 2 ? (
           <Line
-            key={`${mesh.lineId}::${mesh.track}-line`}
+            key={`${mesh.lineId}::${mesh.track}-line::${i}`}
             points={mesh.centreline}
             segments
             color={mesh.edgeColor}
@@ -67,7 +125,6 @@ export function TubeLayer({
             frustumCulled={false}
             renderOrder={TUBE_RENDER_ORDER + 1}
             depthWrite={false}
-            fog={false}
             raycast={noopRaycast}
           />
         ) : null,

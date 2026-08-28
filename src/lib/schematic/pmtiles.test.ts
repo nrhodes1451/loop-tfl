@@ -4,6 +4,10 @@ import { CITY_MAX_DISTANCE_M, HUBKGX_ORIGIN } from "./geo";
 import { ringAabb } from "./osm";
 import {
   PMTILES_TILE_BUFFER_UNITS,
+  FOG_OVERLAY_FRAGMENT,
+  FOG_OVERLAY_ORDER,
+  FOG_OVERLAY_VERTEX,
+  fogOverlayFactor,
   fogRange,
   landZoomForDistance,
   latToTileY,
@@ -20,6 +24,7 @@ import {
   surfaceFromMvt,
   tilesAround,
   tileUrl,
+  fetchTileBytes,
   fetchTileSurface,
   zoomForDistance,
   type TileCoord,
@@ -158,19 +163,39 @@ describe("ringForDistance", () => {
 });
 
 describe("fogRange", () => {
-  it("tracks camera distance and caps far at the tile window", () => {
+  it("widens the clear disk with the tile window", () => {
     const close = fogRange(150, 15);
-    expect(close.near).toBe(150 * 0.9);
-    expect(close.far).toBe(150 * 2.2);
-    expect(fogRange(201, 15).far).toBeGreaterThan(close.far);
-    expect(fogRange(500, 15).near).toBe(500 * 0.9);
+    const closeWindow =
+      (2 * ringForDistance(150, 15) + 1) * tileWidthM(15, 51.53);
+    expect(close.far).toBe(closeWindow * 0.5);
+    expect(close.near).toBe(close.far * 0.55);
 
     const city = fogRange(4_000, 14);
-    const windowM =
+    const cityWindow =
       (2 * ringForDistance(4_000, 14) + 1) * tileWidthM(14, 51.53);
+    expect(city.far).toBe(cityWindow * 0.5);
+    expect(city.far).toBeGreaterThan(close.far);
     expect(city.near).toBeGreaterThan(close.near);
-    expect(city.far).toBeLessThanOrEqual(windowM);
-    expect(city.far).toBeGreaterThan(city.near);
+    expect(fogOverlayFactor(0, city.near, city.far)).toBe(0);
+    expect(fogOverlayFactor(city.far, city.near, city.far)).toBe(1);
+  });
+});
+
+describe("fog overlay", () => {
+  it("uses the same smoothstep as GLSL Fog", () => {
+    expect(fogOverlayFactor(0, 100, 200)).toBe(0);
+    expect(fogOverlayFactor(100, 100, 200)).toBe(0);
+    expect(fogOverlayFactor(200, 100, 200)).toBe(1);
+    expect(fogOverlayFactor(300, 100, 200)).toBe(1);
+    const mid = fogOverlayFactor(150, 100, 200);
+    expect(mid).toBe(0.5);
+  });
+
+  it("paints after surface and dollhouse lines", () => {
+    expect(FOG_OVERLAY_ORDER).toBeGreaterThan(3);
+    expect(FOG_OVERLAY_VERTEX).toContain("gl_Position = vec4(position.xy, 0.0, 1.0)");
+    expect(FOG_OVERLAY_FRAGMENT).toContain("smoothstep(fogNear, fogFar, groundDist)");
+    expect(FOG_OVERLAY_FRAGMENT).toContain("hit.xz - fogTarget");
   });
 });
 
@@ -601,5 +626,29 @@ describe("fetchTileSurface", () => {
     stubFetch(new Response(bytes, { status: 200 }));
     const surface = await fetchTileSurface(tile, HUBKGX_ORIGIN, "v9");
     expect(surface.roads).toHaveLength(1);
+  });
+});
+
+describe("fetchTileBytes", () => {
+  const tile: TileCoord = { z: 15, x: 16368, y: 10891 };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("returns null for 204 without decoding", async () => {
+    const fetchMock = vi.fn(async () => new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+    await expect(fetchTileBytes(tile, "v9")).resolves.toBeNull();
+    expect(fetchMock).toHaveBeenCalledWith(tileUrl(tile, "v9"));
+  });
+
+  it("returns the response body on 200", async () => {
+    const bytes = new Uint8Array([1, 2, 3]);
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(bytes, { status: 200 })),
+    );
+    await expect(fetchTileBytes(tile, "v9")).resolves.toEqual(bytes);
   });
 });

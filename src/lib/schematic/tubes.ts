@@ -469,83 +469,221 @@ function curveThrough(
   return new CatmullRomCurve3(vecs, closed, "centripetal");
 }
 
+function meshKey(lineId: string, track: number): string {
+  return `${lineId}\0${track}`;
+}
+
+function parseMeshKey(key: string): { lineId: string; track: number } {
+  const sep = key.lastIndexOf("\0");
+  return {
+    lineId: key.slice(0, sep),
+    track: Number.parseInt(key.slice(sep + 1), 10) || 0,
+  };
+}
+
+type TubeBuildAcc = {
+  network: LineNetwork;
+  radial: number;
+  base: Map<TubeAnchorKey, WorldAnchor>;
+  geoms: Map<string, BufferGeometry[]>;
+  lines: Map<string, Vec3[]>;
+};
+
+function createTubeBuildAcc(
+  network: LineNetwork,
+  origin: LatLon,
+  quality: SceneQuality,
+): TubeBuildAcc {
+  return {
+    network,
+    radial: quality === "high" ? 12 : 8,
+    base: applyFanout(network, worldAnchors(network, origin)),
+    geoms: new Map(),
+    lines: new Map(),
+  };
+}
+
+function processChain(acc: TubeBuildAcc, chain: LineNetwork["chains"][number]) {
+  const run = chain.stationIds;
+  if (run.length < 2) return;
+  const nTracks = trackCountForLine(chain.lineId);
+  const closed = !!chain.closed;
+  for (let track = 0; track < nTracks; track++) {
+    const pts = trackControlPoints(
+      acc.network,
+      chain.lineId,
+      run,
+      track,
+      acc.base,
+      closed,
+    );
+    const curve = curveThrough(pts, closed);
+    if (!curve) continue;
+    const length = curve.getLength();
+    const tubular = Math.max(1, Math.round(length / TUBE_SEGMENT_M));
+    const geom = new TubeGeometry(
+      curve,
+      tubular,
+      tubeRadiusM(chain.lineId),
+      acc.radial,
+      closed,
+    );
+    const k = meshKey(chain.lineId, track);
+    const list = acc.geoms.get(k) ?? [];
+    list.push(geom);
+    acc.geoms.set(k, list);
+
+    const spaced = curve.getSpacedPoints(Math.max(2, tubular));
+    const centre = acc.lines.get(k) ?? [];
+    for (let i = 0; i + 1 < spaced.length; i++) {
+      const a = spaced[i]!;
+      const b = spaced[i + 1]!;
+      centre.push([a.x, a.y, a.z], [b.x, b.y, b.z]);
+    }
+    acc.lines.set(k, centre);
+  }
+}
+
+function tubeMeshForKey(
+  acc: TubeBuildAcc,
+  key: string,
+  geometry: BufferGeometry,
+  centreline: Vec3[],
+): TubeMesh {
+  const { lineId, track } = parseMeshKey(key);
+  return {
+    lineId,
+    track,
+    geometry,
+    faceColor: schematicFaceColor("platform", lineId),
+    edgeColor: schematicEdgeColor("platform", lineId),
+    centreline,
+  };
+}
+
+/** Unmerged per-chain parts — safe to show while the rest of the network builds. */
+function previewTubeMeshes(acc: {
+  geoms: Map<string, BufferGeometry[]>;
+  lines: Map<string, Vec3[]>;
+  network: LineNetwork;
+}): TubeMesh[] {
+  const meshes: TubeMesh[] = [];
+  const keys = [...acc.geoms.keys()].sort((a, b) => a.localeCompare(b));
+  for (const k of keys) {
+    const parts = acc.geoms.get(k)!;
+    const centre = acc.lines.get(k) ?? [];
+    const { lineId, track } = parseMeshKey(k);
+    for (let i = 0; i < parts.length; i++) {
+      meshes.push({
+        lineId,
+        track,
+        geometry: parts[i]!,
+        faceColor: schematicFaceColor("platform", lineId),
+        edgeColor: schematicEdgeColor("platform", lineId),
+        centreline: i === 0 ? centre : [],
+      });
+    }
+  }
+  return meshes;
+}
+
+function disposeAccParts(acc: TubeBuildAcc) {
+  for (const parts of acc.geoms.values()) {
+    for (const g of parts) g.dispose();
+  }
+  acc.geoms.clear();
+  acc.lines.clear();
+}
+
+export type TubeMeshesBuild = {
+  meshes: TubeMesh[];
+  /** Parts replaced by a merge; dispose after React swaps to `meshes`. */
+  leftovers: BufferGeometry[];
+};
+
+function finalizeTubeMeshes(acc: TubeBuildAcc): TubeMeshesBuild {
+  const meshes: TubeMesh[] = [];
+  const leftovers: BufferGeometry[] = [];
+  const keys = [...acc.geoms.keys()].sort((a, b) => a.localeCompare(b));
+  for (const k of keys) {
+    const parts = acc.geoms.get(k)!;
+    const merged =
+      parts.length === 1 ? parts[0]! : mergeGeometries(parts, false);
+    if (!merged) continue;
+    if (parts.length > 1) leftovers.push(...parts);
+    meshes.push(tubeMeshForKey(acc, k, merged, acc.lines.get(k) ?? []));
+  }
+  return { meshes, leftovers };
+}
+
 export function buildTubeMeshes(
   network: LineNetwork,
   origin: LatLon,
   quality: SceneQuality = "high",
 ): TubeMesh[] {
-  const radial = quality === "high" ? 12 : 8;
-  const base = applyFanout(network, worldAnchors(network, origin));
-  const geoms = new Map<string, BufferGeometry[]>();
-  const lines = new Map<string, Vec3[]>();
+  const acc = createTubeBuildAcc(network, origin, quality);
+  for (const chain of network.chains) processChain(acc, chain);
+  const { meshes, leftovers } = finalizeTubeMeshes(acc);
+  for (const g of leftovers) g.dispose();
+  return meshes;
+}
 
-  const meshKey = (lineId: string, track: number) => `${lineId}\0${track}`;
+export type TubeBuildChunkOptions = {
+  signal?: AbortSignal;
+  /** Return true to wait a frame before the next chain. Tests pass `() => false`. */
+  shouldYield?: () => boolean | Promise<boolean>;
+  onChunk?: (meshes: TubeMesh[]) => void;
+  /** Work slice before yielding when `shouldYield` is omitted. */
+  budgetMs?: number;
+};
+
+function nextFrame(): Promise<void> {
+  return new Promise((resolve) => {
+    if (typeof requestAnimationFrame === "function") {
+      requestAnimationFrame(() => resolve());
+      return;
+    }
+    setTimeout(resolve, 0);
+  });
+}
+
+export async function buildTubeMeshesChunked(
+  network: LineNetwork,
+  origin: LatLon,
+  quality: SceneQuality = "high",
+  options: TubeBuildChunkOptions = {},
+): Promise<TubeMeshesBuild> {
+  const acc = createTubeBuildAcc(network, origin, quality);
+  const budgetMs = options.budgetMs ?? 8;
+  let sliceStart = performance.now();
+  const abort = () => {
+    disposeAccParts(acc);
+    return { meshes: [] as TubeMesh[], leftovers: [] as BufferGeometry[] };
+  };
 
   for (const chain of network.chains) {
-    const run = chain.stationIds;
-    if (run.length < 2) continue;
-    const nTracks = trackCountForLine(chain.lineId);
-    const closed = !!chain.closed;
-    for (let track = 0; track < nTracks; track++) {
-      const pts = trackControlPoints(
-        network,
-        chain.lineId,
-        run,
-        track,
-        base,
-        closed,
-      );
-      const curve = curveThrough(pts, closed);
-      if (!curve) continue;
-      const length = curve.getLength();
-      const tubular = Math.max(1, Math.round(length / TUBE_SEGMENT_M));
-      const geom = new TubeGeometry(
-        curve,
-        tubular,
-        tubeRadiusM(chain.lineId),
-        radial,
-        closed,
-      );
-      const k = meshKey(chain.lineId, track);
-      const list = geoms.get(k) ?? [];
-      list.push(geom);
-      geoms.set(k, list);
-
-      const spaced = curve.getSpacedPoints(Math.max(2, tubular));
-      const centre = lines.get(k) ?? [];
-      for (let i = 0; i + 1 < spaced.length; i++) {
-        const a = spaced[i]!;
-        const b = spaced[i + 1]!;
-        centre.push([a.x, a.y, a.z], [b.x, b.y, b.z]);
-      }
-      lines.set(k, centre);
+    if (options.signal?.aborted) return abort();
+    processChain(acc, chain);
+    if (options.signal?.aborted) return abort();
+    const overBudget = performance.now() - sliceStart >= budgetMs;
+    const yieldNow = options.shouldYield
+      ? await options.shouldYield()
+      : overBudget;
+    if (yieldNow) {
+      options.onChunk?.(previewTubeMeshes(acc));
+      await nextFrame();
+      if (options.signal?.aborted) return abort();
+      sliceStart = performance.now();
     }
   }
-
-  const meshes: TubeMesh[] = [];
-  const keys = [...geoms.keys()].sort((a, b) => a.localeCompare(b));
-  for (const k of keys) {
-    const parts = geoms.get(k)!;
-    const merged = parts.length === 1 ? parts[0]! : mergeGeometries(parts, false);
-    if (parts.length > 1) {
-      for (const g of parts) g.dispose();
-    }
-    if (!merged) continue;
-    const sep = k.lastIndexOf("\0");
-    const lineId = k.slice(0, sep);
-    const track = Number.parseInt(k.slice(sep + 1), 10) || 0;
-    meshes.push({
-      lineId,
-      track,
-      geometry: merged,
-      faceColor: schematicFaceColor("platform", lineId),
-      edgeColor: schematicEdgeColor("platform", lineId),
-      centreline: lines.get(k) ?? [],
-    });
-  }
-  return meshes;
+  if (options.signal?.aborted) return abort();
+  return finalizeTubeMeshes(acc);
 }
 
 export function disposeTubeMeshes(meshes: TubeMesh[]) {
   for (const m of meshes) m.geometry.dispose();
+}
+
+export function disposeGeometries(geoms: BufferGeometry[]) {
+  for (const g of geoms) g.dispose();
 }

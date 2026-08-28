@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { Line, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import {
+  memo,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -34,7 +36,6 @@ import {
   splitHoverId,
   streetVolumeIds,
   type CameraFrame,
-  type HoverHighlight,
   type SceneGeometry,
   type ScenePolyline,
   type SceneQuality,
@@ -174,12 +175,11 @@ function GlassFace({
       depthWrite={false}
       side={DoubleSide}
       toneMapped
-      fog={false}
     />
   );
 }
 
-function VolumeMesh({
+const VolumeMesh = memo(function VolumeMesh({
   volume,
   highlighted,
   dimmed,
@@ -275,15 +275,14 @@ function VolumeMesh({
             transparent
             opacity={0}
             depthWrite={false}
-            fog={false}
           />
         </mesh>
       ) : null}
     </group>
   );
-}
+});
 
-function GlowLine({
+const GlowLine = memo(function GlowLine({
   line,
   highlighted,
   dimmed,
@@ -312,11 +311,10 @@ function GlowLine({
       frustumCulled={false}
       renderOrder={2}
       depthWrite={false}
-      fog={false}
       raycast={noopRaycast}
     />
   );
-}
+});
 
 function FrameCamera({
   frame,
@@ -629,11 +627,10 @@ function SceneControls({
   );
 }
 
-function StationMeshes({
+const StationMeshes = memo(function StationMeshes({
   stationId,
   geom,
-  highlight,
-  active,
+  hoveredVolumeId,
   draggingRef,
   stickyHover,
   hideStreet,
@@ -642,17 +639,27 @@ function StationMeshes({
 }: {
   stationId: string;
   geom: SceneGeometry;
-  highlight: HoverHighlight;
-  active: boolean;
+  hoveredVolumeId: string | null;
   draggingRef: RefObject<boolean>;
   stickyHover: boolean;
   hideStreet: boolean;
   onHover: (id: string | null) => void;
   onPick?: (stationId: string) => void;
 }) {
-  const hoverVolume = (volumeId: string | null) => {
-    onHover(volumeId ? makeHoverId(stationId, volumeId) : null);
-  };
+  const hoverVolume = useCallback(
+    (volumeId: string | null) => {
+      onHover(volumeId ? makeHoverId(stationId, volumeId) : null);
+    },
+    [onHover, stationId],
+  );
+  const pickStation = useCallback(() => {
+    onPick?.(stationId);
+  }, [onPick, stationId]);
+  const highlight = useMemo(
+    () => hoverHighlight(hoveredVolumeId, geom),
+    [hoveredVolumeId, geom],
+  );
+  const active = hoveredVolumeId != null;
   const hiddenStreet = hideStreet ? streetVolumeIds(geom) : new Set<string>();
   return (
     <group>
@@ -667,7 +674,7 @@ function StationMeshes({
             draggingRef={draggingRef}
             stickyHover={stickyHover}
             onHover={hoverVolume}
-            onPick={onPick ? () => onPick(stationId) : undefined}
+            onPick={onPick ? pickStation : undefined}
           />
         );
       })}
@@ -684,7 +691,7 @@ function StationMeshes({
       })}
     </group>
   );
-}
+});
 
 function tooltipPos(
   cursor: { x: number; y: number },
@@ -1083,10 +1090,37 @@ export function StationScene3D({
       ? tooltipPos(pointer, { width: pointer.w, height: pointer.h })
       : null;
 
-  const onPickStation = (id: string) => {
-    if (id === selectedId) return;
-    router.push(`/schematic/${encodeURIComponent(id)}`);
-  };
+  const onPickStation = useCallback(
+    (id: string) => {
+      if (id === selectedId) return;
+      router.push(`/schematic/${encodeURIComponent(id)}`);
+    },
+    [router, selectedId],
+  );
+  const onPointerMissed = useCallback(() => setHoveredId(null), []);
+  const onDragStart = useCallback(() => {
+    draggingRef.current = true;
+    setIsDragging(true);
+    setHoveredId(null);
+  }, []);
+  const onDragEnd = useCallback(() => {
+    draggingRef.current = false;
+    setIsDragging(false);
+  }, []);
+  const canvasDpr = useMemo(
+    () => (quality === "low" ? ([1, 1.25] as [number, number]) : ([1, 1.5] as [number, number])),
+    [quality],
+  );
+  const canvasGl = useMemo(
+    () => ({
+      // MSAA is framebuffer-wide: schematic 1px lines need it; the map
+      // rides along at no extra cost. Bloom/composer MSAA is off.
+      antialias: true as const,
+      toneMapping: NoToneMapping,
+      outputColorSpace: SRGBColorSpace,
+    }),
+    [],
+  );
 
   return (
     <div
@@ -1105,16 +1139,10 @@ export function StationScene3D({
       }}
     >
       <Canvas
-        dpr={quality === "low" ? [1, 1.25] : [1, 1.5]}
-        gl={{
-          // MSAA is framebuffer-wide: schematic 1px lines need it; the map
-          // rides along at no extra cost. Bloom/composer MSAA is off.
-          antialias: true,
-          toneMapping: NoToneMapping,
-          outputColorSpace: SRGBColorSpace,
-        }}
+        dpr={canvasDpr}
+        gl={canvasGl}
         camera={canvasCamera}
-        onPointerMissed={() => setHoveredId(null)}
+        onPointerMissed={onPointerMissed}
       >
         <color attach="background" args={[SCENE_BACKGROUND]} />
         <FrameCamera frame={frame} reframeKey={reframeKey} />
@@ -1147,10 +1175,6 @@ export function StationScene3D({
                   if (!row.placement) return null;
                   const parsed = hoveredId ? splitHoverId(hoveredId) : null;
                   const thisHover = parsed?.stationId === row.station.id;
-                  const highlight = hoverHighlight(
-                    thisHover && parsed ? parsed.volumeId : null,
-                    row.geom,
-                  );
                   return (
                     <group
                       key={row.station.id}
@@ -1160,8 +1184,9 @@ export function StationScene3D({
                       <StationMeshes
                         stationId={row.station.id}
                         geom={row.geom}
-                        highlight={highlight}
-                        active={thisHover}
+                        hoveredVolumeId={
+                          thisHover && parsed ? parsed.volumeId : null
+                        }
                         draggingRef={draggingRef}
                         stickyHover={stickyHover}
                         hideStreet={hidesStreetCuboid(
@@ -1185,11 +1210,9 @@ export function StationScene3D({
           <StationMeshes
             stationId={selectedRow.station.id}
             geom={selectedRow.geom}
-            highlight={hoverHighlight(
-              hoveredId ? splitHoverId(hoveredId).volumeId : null,
-              selectedRow.geom,
-            )}
-            active={hoveredId !== null}
+            hoveredVolumeId={
+              hoveredId ? splitHoverId(hoveredId).volumeId : null
+            }
             draggingRef={draggingRef}
             stickyHover={stickyHover}
             hideStreet={false}
@@ -1204,15 +1227,8 @@ export function StationScene3D({
           panMode={panMode}
           panAltitude={panAltitude}
           panBounds={panBounds}
-          onDragStart={() => {
-            draggingRef.current = true;
-            setIsDragging(true);
-            setHoveredId(null);
-          }}
-          onDragEnd={() => {
-            draggingRef.current = false;
-            setIsDragging(false);
-          }}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
         />
       </Canvas>
       {hovered && tip ? (

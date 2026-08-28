@@ -691,13 +691,19 @@ export type SurfaceTileGeom = {
   buildings: BufferGeometry | null;
 };
 
-export function featuresToTileGeom(features: {
+export type TileGeomFeatures = {
   land: { ring: [number, number][] }[];
   water: { ring: [number, number][] }[];
   waterways: { path: [number, number][] }[];
   roads: { path: [number, number][]; kind: string }[];
   buildings: { ring: [number, number][]; height: number; minHeight?: number }[];
-}): SurfaceTileGeom {
+};
+
+export function emptyTileGeom(): SurfaceTileGeom {
+  return { land: null, water: null, roads: null, buildings: null };
+}
+
+export function tileWaterGeometry(features: TileGeomFeatures): BufferGeometry | null {
   const waterPolys = polygonsToGeometry(features.water);
   const waterLines = ribbonsToGeometry(
     features.waterways.map((w) => ({
@@ -708,9 +714,23 @@ export function featuresToTileGeom(features: {
   const waterParts = [waterPolys, waterLines].filter(
     (g): g is BufferGeometry => g != null,
   );
+  return mergeGeomBatch(waterParts);
+}
+
+/** Land + water only — first paint of a tile while roads/buildings catch up. */
+export function featuresToFlatGeom(features: TileGeomFeatures): SurfaceTileGeom {
   return {
     land: polygonsToGeometry(features.land),
-    water: mergeGeomBatch(waterParts),
+    water: tileWaterGeometry(features),
+    roads: null,
+    buildings: null,
+  };
+}
+
+export function featuresToTileGeom(features: TileGeomFeatures): SurfaceTileGeom {
+  return {
+    land: polygonsToGeometry(features.land),
+    water: tileWaterGeometry(features),
     roads: roadsToGeometry(features.roads),
     buildings: buildingsToGeometry(features.buildings),
   };

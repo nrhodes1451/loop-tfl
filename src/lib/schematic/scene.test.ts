@@ -14,6 +14,7 @@ import {
   boxCorners,
   buildSceneGeometry,
   cameraFrame,
+  EMPTY_HOVER_HIGHLIGHT,
   hoverHighlight,
   levelT,
   makeHoverId,
@@ -424,6 +425,7 @@ describe("hoverHighlight", () => {
     const h = hoverHighlight(null, geom);
     expect(h.volumeIds.size).toBe(0);
     expect(h.polylineIds.size).toBe(0);
+    expect(h).toBe(EMPTY_HOVER_HIGHLIGHT);
   });
 
   it("highlights a platform volume and its outline only", () => {
@@ -488,6 +490,7 @@ describe("makeHoverId", () => {
     const h = hoverHighlight(hovered.volumeId, geom);
     expect(h.volumeIds.has("concourse")).toBe(true);
     const other = hoverHighlight(null, geom);
+    expect(other).toBe(EMPTY_HOVER_HIGHLIGHT);
     expect(other.volumeIds.size).toBe(0);
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { Line } from "@react-three/drei";
-import { useMemo, type RefObject } from "react";
+import { memo, useMemo, type RefObject } from "react";
 import { type ThreeEvent } from "@react-three/fiber";
 import {
   hallPickGeometry,
@@ -54,35 +54,39 @@ function lineOpacity(highlighted: boolean, dimmed: boolean): number {
   return 0.95;
 }
 
-function OverlayPickMesh({
+const OverlayPickMesh = memo(function OverlayPickMesh({
   geometry,
+  hoverId,
+  stationId,
   draggingRef,
   stickyHover,
   onHover,
   onPick,
 }: {
   geometry: BufferGeometry | null;
+  hoverId: string;
+  stationId: string;
   draggingRef: RefObject<boolean>;
   stickyHover: boolean;
-  onHover: (hit: boolean) => void;
-  onPick?: () => void;
+  onHover: (id: string | null) => void;
+  onPick?: (stationId: string) => void;
 }) {
   if (!geometry) return null;
   const onOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     if (draggingRef.current) return;
-    onHover(true);
+    onHover(hoverId);
   };
   const onOut = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     if (stickyHover) return;
-    onHover(false);
+    onHover(null);
   };
   const onTap = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     if (draggingRef.current) return;
-    onHover(true);
-    onPick?.();
+    onHover(hoverId);
+    onPick?.(stationId);
   };
   return (
     <mesh
@@ -97,13 +101,12 @@ function OverlayPickMesh({
         opacity={0}
         depthWrite={false}
         side={DoubleSide}
-        fog={false}
       />
     </mesh>
   );
-}
+});
 
-function OverlayHall({
+const OverlayHall = memo(function OverlayHall({
   hall,
   highlighted,
   dimmed,
@@ -118,7 +121,7 @@ function OverlayHall({
   draggingRef: RefObject<boolean>;
   stickyHover: boolean;
   onHover: (id: string | null) => void;
-  onPick?: () => void;
+  onPick?: (stationId: string) => void;
 }) {
   const { pts, bottom, pick } = useMemo(
     () => ({
@@ -145,7 +148,6 @@ function OverlayHall({
             depthWrite={false}
             side={DoubleSide}
             toneMapped={false}
-            fog={false}
           />
         </mesh>
       ) : null}
@@ -161,22 +163,23 @@ function OverlayHall({
           frustumCulled={false}
           renderOrder={LINE_ORDER}
           depthWrite={false}
-          fog={false}
           raycast={noopRaycast}
         />
       ) : null}
       <OverlayPickMesh
         geometry={pick}
+        hoverId={hoverId}
+        stationId={hall.stationId}
         draggingRef={draggingRef}
         stickyHover={stickyHover}
-        onHover={(hit) => onHover(hit ? hoverId : null)}
+        onHover={onHover}
         onPick={onPick}
       />
     </group>
   );
-}
+});
 
-function OverlayStairs({
+const OverlayStairs = memo(function OverlayStairs({
   stair,
   highlighted,
   dimmed,
@@ -191,7 +194,7 @@ function OverlayStairs({
   draggingRef: RefObject<boolean>;
   stickyHover: boolean;
   onHover: (id: string | null) => void;
-  onPick?: () => void;
+  onPick?: (stationId: string) => void;
 }) {
   const { pts, bottom, pick } = useMemo(
     () => ({
@@ -217,7 +220,6 @@ function OverlayStairs({
             depthWrite={false}
             side={DoubleSide}
             toneMapped={false}
-            fog={false}
           />
         </mesh>
       ) : null}
@@ -233,20 +235,21 @@ function OverlayStairs({
           frustumCulled={false}
           renderOrder={LINE_ORDER}
           depthWrite={false}
-          fog={false}
           raycast={noopRaycast}
         />
       ) : null}
       <OverlayPickMesh
         geometry={pick}
+        hoverId={hoverId}
+        stationId={stair.stationId}
         draggingRef={draggingRef}
         stickyHover={stickyHover}
-        onHover={(hit) => onHover(hit ? hoverId : null)}
+        onHover={onHover}
         onPick={onPick}
       />
     </group>
   );
-}
+});
 
 export function EntranceOverlay({
   origin,
@@ -286,7 +289,7 @@ export function EntranceOverlay({
             draggingRef={draggingRef}
             stickyHover={stickyHover}
             onHover={onHover}
-            onPick={onPick ? () => onPick(hall.stationId) : undefined}
+            onPick={onPick}
           />
         );
       })}
@@ -301,7 +304,7 @@ export function EntranceOverlay({
             draggingRef={draggingRef}
             stickyHover={stickyHover}
             onHover={onHover}
-            onPick={onPick ? () => onPick(stair.stationId) : undefined}
+            onPick={onPick}
           />
         );
       })}

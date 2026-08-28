@@ -210,9 +210,8 @@ export function ringForDistance(
 }
 
 /**
- * Linear fog that tracks camera distance so the ramp stays tight while
- * zooming. Far is still capped at the tile-window edge so unloaded tiles
- * never pop out of the mist.
+ * Ground-plane mist around the look-at, sized to the loaded tile window.
+ * Zooming out widens the clear disk; only the unloaded rim is hidden.
  */
 export function fogRange(
   distM: number,
@@ -221,11 +220,57 @@ export function fogRange(
 ): { near: number; far: number } {
   const ring = ringForDistance(distM, z, lat);
   const windowM = (2 * ring + 1) * tileWidthM(z, lat);
-  const d = Number.isFinite(distM) ? distM : windowM;
-  const near = Math.max(80, d * 0.9);
-  const far = Math.max(near + 50, Math.min(d * 2.2, windowM));
-  return { near, far };
+  const far = windowM * 0.5;
+  const near = Math.max(80, far * 0.55);
+  return { near, far: Math.max(near + 50, far) };
 }
+
+/** Same smoothstep as the overlay shader. */
+export function fogOverlayFactor(
+  distM: number,
+  near: number,
+  far: number,
+): number {
+  if (!(far > near)) return distM >= far ? 1 : 0;
+  const t = Math.min(1, Math.max(0, (distM - near) / (far - near)));
+  return t * t * (3 - 2 * t);
+}
+
+/** After surface (≤3) and dollhouse lines (2) so mist covers tubes too. */
+export const FOG_OVERLAY_ORDER = 10_000;
+
+export const FOG_OVERLAY_VERTEX = /* glsl */ `
+varying vec2 vNdc;
+void main() {
+  vNdc = position.xy;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
+`;
+
+export const FOG_OVERLAY_FRAGMENT = /* glsl */ `
+uniform vec3 fogColor;
+uniform float fogNear;
+uniform float fogFar;
+uniform vec2 fogTarget;
+uniform mat4 inverseViewProjection;
+varying vec2 vNdc;
+void main() {
+  vec4 worldFar = inverseViewProjection * vec4(vNdc, 1.0, 1.0);
+  vec3 worldPos = worldFar.xyz / worldFar.w;
+  vec3 worldDir = normalize(worldPos - cameraPosition);
+  float fogFactor = 0.0;
+  if (abs(worldDir.y) > 1.0e-5) {
+    float t = -cameraPosition.y / worldDir.y;
+    if (t > 0.0) {
+      vec3 hit = cameraPosition + worldDir * t;
+      float groundDist = length(hit.xz - fogTarget);
+      fogFactor = smoothstep(fogNear, fogFar, groundDist);
+    }
+  }
+  gl_FragColor = vec4(fogColor, fogFactor);
+  #include <colorspace_fragment>
+}
+`;
 
 export function tilesAround(
   lon: number,
@@ -602,15 +647,24 @@ export function surfaceFromMvt(
 }
 
 /** 204 (no such tile) and 404 (no extract) both mean nothing to draw. */
+export async function fetchTileBytes(
+  tile: TileCoord,
+  version: string,
+): Promise<Uint8Array | null> {
+  const res = await fetch(tileUrl(tile, version));
+  if (res.status === 204 || res.status === 404) return null;
+  if (!res.ok) throw new Error(`Tile ${tileKey(tile)} failed: ${res.status}`);
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  if (bytes.byteLength === 0) return null;
+  return bytes;
+}
+
 export async function fetchTileSurface(
   tile: TileCoord,
   origin: LatLon,
   version: string,
 ): Promise<TileSurface> {
-  const res = await fetch(tileUrl(tile, version));
-  if (res.status === 204 || res.status === 404) return emptySurface();
-  if (!res.ok) throw new Error(`Tile ${tileKey(tile)} failed: ${res.status}`);
-  const bytes = new Uint8Array(await res.arrayBuffer());
-  if (bytes.byteLength === 0) return emptySurface();
+  const bytes = await fetchTileBytes(tile, version);
+  if (!bytes) return emptySurface();
   return surfaceFromMvt(bytes, tile, origin);
 }

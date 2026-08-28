@@ -2,7 +2,7 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Fog, type BufferGeometry } from "three";
+import { Color, Matrix4, Vector2, type BufferGeometry } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
   GROUND_COLOR,
@@ -17,7 +17,6 @@ import {
   SURFACE_SUN_POSITION,
   WATER_COLOR,
   disposeSurfaceTile,
-  featuresToTileGeom,
   groundGeometry,
   wrapLambertCacheKey,
   wrapLambertCompile,
@@ -30,7 +29,10 @@ import {
   type LatLon,
 } from "@/lib/schematic/geo";
 import {
-  fetchTileSurface,
+  FOG_OVERLAY_FRAGMENT,
+  FOG_OVERLAY_ORDER,
+  FOG_OVERLAY_VERTEX,
+  fetchTileBytes,
   fogRange,
   landZoomForDistance,
   ringForDistance,
@@ -38,6 +40,7 @@ import {
   tilesAround,
   type TileCoord,
 } from "@/lib/schematic/pmtiles";
+import { enqueueTileExtrude, promoteTileExtrude } from "@/lib/schematic/tile-extrude";
 
 /** Ground plane in ENU metres — Greater London fits with margin. */
 const GROUND_SIZE_M = 50_000;
@@ -89,6 +92,7 @@ class TileGeomCache {
   private readonly inflight = new Map<string, Promise<SurfaceTileGeom | null>>();
   private keep = new Set<string>();
   private alive = true;
+  onChange: (() => void) | null = null;
 
   setKeep(keys: Iterable<string>) {
     this.keep = new Set(keys);
@@ -136,33 +140,53 @@ class TileGeomCache {
     }
   }
 
+  private notify() {
+    this.onChange?.();
+  }
+
   load(
     tile: TileCoord,
     origin: LatLon,
     version: string,
+    opts: { preload?: boolean } = {},
   ): Promise<SurfaceTileGeom | null> {
     const key = tileKey(tile);
-    if (this.stored.has(key)) return Promise.resolve(this.stored.get(key)!);
     const pending = this.inflight.get(key);
-    if (pending) return pending;
-    const next = fetchTileSurface(tile, origin, version)
-      .then((features) => {
-        this.inflight.delete(key);
-        const geom = featuresToTileGeom(features);
-        if (!this.alive) {
-          disposeSurfaceTile(geom);
+    if (pending) {
+      if (!opts.preload) promoteTileExtrude(key);
+      return pending;
+    }
+    if (this.stored.has(key)) return Promise.resolve(this.stored.get(key)!);
+    const next = fetchTileBytes(tile, version)
+      .then((bytes) => {
+        if (!this.alive) return null;
+        if (bytes == null) {
+          this.remember(key, null);
+          this.notify();
           return null;
         }
-        if (this.stored.has(key)) {
-          disposeSurfaceTile(geom);
-          return this.stored.get(key)!;
-        }
-        this.remember(key, geom);
-        return geom;
+        return new Promise<SurfaceTileGeom | null>((resolve) => {
+          enqueueTileExtrude({
+            key,
+            tile,
+            origin,
+            bytes,
+            priority: opts.preload ? "preload" : "wanted",
+            accept: () =>
+              this.alive && (this.keep.size === 0 || this.keep.has(key)),
+            onUpdate: (geom) => {
+              if (!this.alive) return;
+              if (this.stored.get(key) !== geom) this.remember(key, geom);
+              else this.touch(key);
+              this.notify();
+            },
+            resolve,
+          });
+        });
       })
-      .catch(() => {
+      .catch(() => null)
+      .finally(() => {
         this.inflight.delete(key);
-        return null;
       });
     this.inflight.set(key, next);
     return next;
@@ -170,6 +194,7 @@ class TileGeomCache {
 
   dispose() {
     this.alive = false;
+    this.onChange = null;
     for (const geom of this.stored.values()) disposeSurfaceTile(geom);
     this.stored.clear();
     this.orderByZoom.clear();
@@ -205,6 +230,37 @@ function LayerMesh({
   );
 }
 
+type FogOverlayUniforms = {
+  fogColor: { value: Color };
+  fogNear: { value: number };
+  fogFar: { value: number };
+  fogTarget: { value: Vector2 };
+  inverseViewProjection: { value: Matrix4 };
+};
+
+/** Screen-space mist drawn last so tubes and stations sit under it. */
+function FogOverlay({ uniforms }: { uniforms: FogOverlayUniforms }) {
+  return (
+    <mesh
+      renderOrder={FOG_OVERLAY_ORDER}
+      frustumCulled={false}
+      raycast={noopRaycast}
+    >
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial
+        uniforms={uniforms}
+        vertexShader={FOG_OVERLAY_VERTEX}
+        fragmentShader={FOG_OVERLAY_FRAGMENT}
+        transparent
+        depthTest={false}
+        depthWrite={false}
+        toneMapped={false}
+        fog={false}
+      />
+    </mesh>
+  );
+}
+
 export function PmtilesSurface({
   origin,
   tilesVersion,
@@ -214,7 +270,6 @@ export function PmtilesSurface({
 }) {
   const controls = useThree((s) => s.controls) as OrbitControlsImpl | null;
   const camera = useThree((s) => s.camera);
-  const scene = useThree((s) => s.scene);
   const [wanted, setWanted] = useState<TileCoord[]>([]);
   const [shown, setShown] = useState<TileCoord[]>([]);
   const [geoms, setGeoms] = useState<Map<string, SurfaceTileGeom>>(
@@ -223,22 +278,49 @@ export function PmtilesSurface({
   const cacheRef = useRef<TileGeomCache | null>(null);
   if (cacheRef.current == null) cacheRef.current = new TileGeomCache();
   const cache = cacheRef.current;
+  const wantedRef = useRef(wanted);
+  wantedRef.current = wanted;
   const lastSample = useRef(0);
   const lastKey = useRef("");
   const originRef = useRef(origin);
   const shownRef = useRef<TileCoord[]>([]);
   const preloadRef = useRef<TileCoord[]>([]);
+  const fogUniforms = useMemo<FogOverlayUniforms>(
+    () => ({
+      fogColor: { value: new Color(SCENE_BACKGROUND) },
+      fogNear: { value: 80 },
+      fogFar: { value: 4_000 },
+      fogTarget: { value: new Vector2() },
+      inverseViewProjection: { value: new Matrix4() },
+    }),
+    [],
+  );
+
   useLayoutEffect(() => {
     originRef.current = origin;
   }, [origin]);
 
+  const paint = () => {
+    const next = wantedRef.current;
+    if (next.length === 0) return;
+    const prevZ = shownRef.current[0]?.z;
+    const z = next[0]?.z;
+    const zoomChanged = prevZ != null && z != null && prevZ !== z;
+    if (tilesReady(next, cache) || !zoomChanged) {
+      shownRef.current = next;
+      setShown(next);
+      setGeoms(visibleFromCache(next, cache));
+    }
+  };
+  const paintRef = useRef(paint);
+  paintRef.current = paint;
+
   useLayoutEffect(() => {
-    const fog = new Fog(SCENE_BACKGROUND, 80, 2_000);
-    scene.fog = fog;
+    cache.onChange = () => paintRef.current();
     return () => {
-      if (scene.fog === fog) scene.fog = null;
+      cache.onChange = null;
     };
-  }, [scene]);
+  }, [cache]);
 
   useFrame(() => {
     const target = controls?.target;
@@ -247,10 +329,13 @@ export function PmtilesSurface({
     const z = landZoomForDistance(dist);
     const ll = worldToLatLon(target.x, target.z, originRef.current);
     const range = fogRange(dist, z, ll.lat);
-    if (scene.fog instanceof Fog) {
-      scene.fog.near = range.near;
-      scene.fog.far = range.far;
-    }
+    fogUniforms.fogNear.value = range.near;
+    fogUniforms.fogFar.value = range.far;
+    fogUniforms.fogTarget.value.set(target.x, target.z);
+    fogUniforms.inverseViewProjection.value.multiplyMatrices(
+      camera.matrixWorld,
+      camera.projectionMatrixInverse,
+    );
     const now = performance.now();
     const waiting = lastKey.current === "";
     if (!waiting && now - lastSample.current < SAMPLE_EVERY_MS) return;
@@ -289,31 +374,13 @@ export function PmtilesSurface({
 
   useEffect(() => {
     if (wanted.length === 0) return;
-    let cancelled = false;
     const origin = originRef.current;
-
-    void (async () => {
-      const missing = wanted.filter((t) => !cache.has(tileKey(t)));
-      if (missing.length > 0) {
-        await Promise.all(
-          missing.map((tile) => cache.load(tile, origin, tilesVersion)),
-        );
-        if (cancelled) return;
-        shownRef.current = wanted;
-        setShown(wanted);
-        setGeoms(visibleFromCache(wanted, cache));
-      }
-
-      const preload = preloadRef.current.filter((t) => !cache.has(tileKey(t)));
-      if (preload.length === 0) return;
-      await Promise.all(
-        preload.map((tile) => cache.load(tile, origin, tilesVersion)),
-      );
-    })();
-
-    return () => {
-      cancelled = true;
-    };
+    for (const tile of wanted) {
+      void cache.load(tile, origin, tilesVersion, { preload: false });
+    }
+    for (const tile of preloadRef.current) {
+      void cache.load(tile, origin, tilesVersion, { preload: true });
+    }
   }, [cache, wanted, tilesVersion]);
 
   useLayoutEffect(() => {
@@ -395,6 +462,7 @@ export function PmtilesSurface({
           ) : null}
         </group>
       ))}
+      <FogOverlay uniforms={fogUniforms} />
     </group>
   );
 }

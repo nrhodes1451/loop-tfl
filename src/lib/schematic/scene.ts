@@ -496,6 +496,14 @@ export type HoverHighlight = {
   polylineIds: Set<string>;
 };
 
+const EMPTY_HOVER_IDS: Set<string> = new Set();
+export const EMPTY_HOVER_HIGHLIGHT: HoverHighlight = {
+  volumeIds: EMPTY_HOVER_IDS,
+  polylineIds: EMPTY_HOVER_IDS,
+};
+Object.freeze(EMPTY_HOVER_IDS);
+Object.freeze(EMPTY_HOVER_HIGHLIGHT);
+
 /** Prefix volume ids so generated stations (`street`, `lift-1`) do not collide. */
 export function makeHoverId(stationId: string, volumeId: string): string {
   return `${stationId}::${volumeId}`;
@@ -515,11 +523,12 @@ export function hoverHighlight(
   hoveredVolumeId: string | null,
   geom: SceneGeometry,
 ): HoverHighlight {
+  if (!hoveredVolumeId) return EMPTY_HOVER_HIGHLIGHT;
+  const vol = geom.volumes.find((v) => v.id === hoveredVolumeId);
+  if (!vol) return EMPTY_HOVER_HIGHLIGHT;
+
   const volumeIds = new Set<string>();
   const polylineIds = new Set<string>();
-  if (!hoveredVolumeId) return { volumeIds, polylineIds };
-  const vol = geom.volumes.find((v) => v.id === hoveredVolumeId);
-  if (!vol) return { volumeIds, polylineIds };
 
   if (vol.liftId) {
     for (const v of geom.volumes) {
