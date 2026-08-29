@@ -1,11 +1,33 @@
 {
   "northDeg": 225,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 18.3 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 18.3
+      "caption": "PLATFORM 1 WESTBOUND TO SHEPHERDS BUSH",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.22, 0.62],
+      "b": [0.58, 0.72],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO NOTTING HILL GATE",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.22, 0.70],
+      "b": [0.58, 0.80],
+      "grid": "D7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.45, 0.22] },
   "confidence": "high",
-  "raw": "Holland Park axonometric; N towards top-left; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Holland Park reading pose: rose N top-left (225). Parallel Central platforms share bearingDeg 90. Depth 18.3m."
 }

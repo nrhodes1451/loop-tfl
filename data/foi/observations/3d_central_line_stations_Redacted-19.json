@@ -1,15 +1,34 @@
 {
   "northDeg": 320,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 26.2 },
+    { "label": "NORTHERN LINE PLATFORMS", "metres": 29.8 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 26.2
+      "caption": "CENTRAL LINE PLATFORMS 1 & 2",
+      "lineId": "central",
+      "platformNumbers": [1, 2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.16, 0.50],
+      "b": [0.34, 0.39],
+      "grid": "C5",
+      "confidence": "high"
     },
     {
-      "label": "NORTHERN LINE PLATFORMS",
-      "metres": 29.8
+      "caption": "NORTHERN LINE PLATFORMS 3 & 4",
+      "lineId": "northern",
+      "platformNumbers": [3, 4],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.78, 0.39],
+      "b": [0.91, 0.50],
+      "grid": "M4",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.66, 0.17] },
   "confidence": "high",
-  "raw": "Tottenham Court Road axonometric; N towards top-right; Central 26.2m, Northern 29.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Tottenham Court Road reading pose: rose N top-right (320). Central bearingDeg 90; Northern 0. Depths 26.2 / 29.8m."
 }

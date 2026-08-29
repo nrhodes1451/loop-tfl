@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Highgate axonometric; north ~315\u00b0 (top-left); Northern Line platforms 42.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Highgate reading pose: rose N ~225\u00b0. Parallel Northern platforms share bearingDeg 0. Depth 42.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO EAST FINCHLEY",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [
+        0.09,
+        0.72
+      ],
+      "b": [
+        0.53,
+        0.83
+      ],
+      "grid": "B7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO ARCHWAY",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": "south",
+      "bearingDeg": 0,
+      "a": [
+        0.03,
+        0.61
+      ],
+      "b": [
+        0.41,
+        0.72
+      ],
+      "grid": "A6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.59,
+      0.39
+    ]
+  }
 }

@@ -7,5 +7,33 @@
     }
   ],
   "confidence": "high",
-  "raw": "Heathrow Terminal 4: N top-right; table row Piccadilly Line 8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Heathrow Terminal 4 reading pose: rose N ~315\u00b0. Single Piccadilly platform bearingDeg 90. Depth 8m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO HEATHROW TERMINALS 1 2 3",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.28,
+        0.83
+      ],
+      "b": [
+        0.72,
+        0.28
+      ],
+      "grid": "E8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.16,
+      0.72
+    ]
+  }
 }

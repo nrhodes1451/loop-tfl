@@ -11,5 +11,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Borough axonometric: N about 110\u00b0 on the portrait raster; SB 17.0m, NB 19.5m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Borough reading pose: rose N ~20\u00b0. Parallel Northern platforms share bearingDeg 0. Depths 17.0 / 19.5m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO LONDON BRIDGE",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.83
+      ],
+      "b": [
+        0.41,
+        0.5
+      ],
+      "grid": "C8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO ELEPHANT AND CASTLE",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.47,
+        0.5
+      ],
+      "b": [
+        0.72,
+        0.17
+      ],
+      "grid": "H5",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.41,
+      0.17
+    ]
+  }
 }

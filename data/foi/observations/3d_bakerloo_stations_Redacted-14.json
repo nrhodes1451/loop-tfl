@@ -6,6 +6,34 @@
       "metres": 21.6
     }
   ],
+  "platforms": [
+    {
+      "caption": "PLATFORM 2 NORTHBOUND TO BAKER STREET",
+      "lineId": "bakerloo",
+      "platformNumbers": [2],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [0.50, 0.28],
+      "b": [0.56, 0.82],
+      "grid": "I3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 SOUTHBOUND TO OXFORD CIRCUS",
+      "lineId": "bakerloo",
+      "platformNumbers": [1],
+      "end": "south",
+      "bearingDeg": 0,
+      "a": [0.56, 0.30],
+      "b": [0.62, 0.84],
+      "grid": "J4",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [0.34, 0.39]
+  },
   "confidence": "high",
-  "raw": "Regent's Park table lists Bakerloo platforms at 21.6m; compass N points to drawing-up (90\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
+  "raw": "Regent's Park reading pose: rose N up (0). Parallel Bakerloo platforms share bearingDeg 0. Depth 21.6m."
 }

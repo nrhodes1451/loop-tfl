@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Heathrow 1,2,3: N top-right; Piccadilly platforms 14m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Heathrow Terminals 1 2 3 reading pose: rose N ~315\u00b0. Parallel Piccadilly platforms share bearingDeg 90. Depth 14m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO HATTON CROSS",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.47,
+        0.83
+      ],
+      "b": [
+        0.84,
+        0.72
+      ],
+      "grid": "H8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO HATTON CROSS",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.03,
+        0.94
+      ],
+      "b": [
+        0.34,
+        0.83
+      ],
+      "grid": "A9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall (West End)",
+    "at": [
+      0.22,
+      0.5
+    ]
+  }
 }

@@ -6,6 +6,7 @@ import {
   geographyIssues,
   lineIdFromCaption,
   lineIdsFromCaption,
+  matchPlatformDepth,
   foiSheetStem,
   mergeNorthDeg,
   mergeStationLayouts,
@@ -145,6 +146,33 @@ describe("mergeStationLayouts", () => {
     expect(northConflicts).toEqual(["940GZZLUEMB"]);
     expect(stations[0]!.northDeg).toBeNull();
   });
+
+  it("keeps both Northern depth rows when the labels differ", () => {
+    const euston: FoiPageExtract = {
+      ...northern,
+      stationId: "HUBEUS",
+      depths: [
+        {
+          label: "NORTHERN LINE (CHARING CROSS BRANCH) PLATFORMS",
+          metres: 20.4,
+          lineId: "northern",
+        },
+        {
+          label: "NORTHERN LINE (CITY BRANCH) PLATFORMS",
+          metres: 29.8,
+          lineId: "northern",
+        },
+        {
+          label: "VICTORIA LINE PLATFORMS",
+          metres: 29.8,
+          lineId: "victoria",
+        },
+      ],
+    };
+    const { stations } = mergeStationLayouts([euston]);
+    const northernRows = stations[0]!.depths.filter((d) => d.lineId === "northern");
+    expect(northernRows.map((d) => d.metres).sort()).toEqual([20.4, 29.8]);
+  });
 });
 
 describe("mergeNorthDeg", () => {
@@ -283,7 +311,143 @@ describe("parseObservedPlacement", () => {
   });
 });
 
+describe("matchPlatformDepth", () => {
+  const cx = {
+    label: "NORTHERN LINE (CHARING CROSS BRANCH) PLATFORMS",
+    metres: 20.4,
+    lineId: "northern" as const,
+  };
+  const city = {
+    label: "NORTHERN LINE (CITY BRANCH) PLATFORMS",
+    metres: 29.8,
+    lineId: "northern" as const,
+  };
+  const victoria = {
+    label: "VICTORIA LINE PLATFORMS",
+    metres: 29.8,
+    lineId: "victoria" as const,
+  };
+
+  it("leaves CX marks unset and matches City captions at Euston", () => {
+    const depths = [cx, city, victoria];
+    expect(
+      matchPlatformDepth(
+        {
+          lineId: "northern",
+          caption: "PLATFORM 1 NORTHBOUND TO MORNINGTON CRESCENT",
+          platformNumbers: [1],
+        },
+        depths,
+      ),
+    ).toEqual({ ambiguous: false });
+    expect(
+      matchPlatformDepth(
+        {
+          lineId: "northern",
+          caption: "NORTHERN CITY SOUTHBOUND PLATFORM 6 TO KINGS CROSS",
+          platformNumbers: [6],
+        },
+        depths,
+      ),
+    ).toEqual({ metres: 29.8, ambiguous: false });
+  });
+
+  it("matches a platform number in the table caption", () => {
+    expect(
+      matchPlatformDepth(
+        { lineId: "central", caption: "PLATFORM 2", platformNumbers: [2] },
+        [
+          { label: "PLATFORM 1", metres: 29.9, lineId: "central" },
+          { label: "PLATFORM 2", metres: 22.2, lineId: "central" },
+        ],
+      ),
+    ).toEqual({ metres: 22.2, ambiguous: false });
+  });
+
+  it("flags two same-caption rows with different metres as ambiguous", () => {
+    expect(
+      matchPlatformDepth(
+        {
+          lineId: "piccadilly",
+          caption: "PICCADILLY PLATFORM 1",
+          platformNumbers: [1],
+        },
+        [
+          { label: "PICCADILLY LINE PLATFORMS", metres: 33.8, lineId: "piccadilly" },
+          { label: "PICCADILLY LINE PLATFORMS", metres: 39.6, lineId: "piccadilly" },
+        ],
+      ),
+    ).toEqual({ ambiguous: true });
+  });
+});
+
 describe("mergeStationLayouts placement", () => {
+  it("attaches City depthM and leaves CX unset", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      stationId: "HUBEUS",
+      depths: [
+        {
+          label: "NORTHERN LINE (CHARING CROSS BRANCH) PLATFORMS",
+          metres: 20.4,
+          lineId: "northern",
+        },
+        {
+          label: "NORTHERN LINE (CITY BRANCH) PLATFORMS",
+          metres: 29.8,
+          lineId: "northern",
+        },
+      ],
+      platforms: [
+        {
+          ...northernMark,
+          caption: "PLATFORM 1 NORTHBOUND TO MORNINGTON CRESCENT",
+          platformNumbers: [1],
+          a: [0.3, 0.2],
+          b: [0.3, 0.6],
+        },
+        {
+          ...northernMark,
+          caption: "NORTHERN CITY SOUTHBOUND PLATFORM 6 TO KINGS CROSS",
+          platformNumbers: [6],
+          a: [0.4, 0.2],
+          b: [0.4, 0.6],
+        },
+      ],
+    };
+    const { stations, placementIssues } = mergeStationLayouts([page]);
+    const p1 = stations[0]!.platforms.find((p) => p.platformNumbers.includes(1));
+    const p6 = stations[0]!.platforms.find((p) => p.platformNumbers.includes(6));
+    expect(p1?.depthM).toBeUndefined();
+    expect(p6?.depthM).toBe(29.8);
+    expect(placementIssues.map((i) => i.reason)).not.toContain("depth-ambiguous");
+  });
+
+  it("reports depth-ambiguous when same-caption rows cannot be matched", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      depths: [
+        { label: "PICCADILLY LINE PLATFORMS", metres: 33.8, lineId: "piccadilly" },
+        { label: "PICCADILLY LINE PLATFORMS", metres: 39.6, lineId: "piccadilly" },
+      ],
+      platforms: [
+        {
+          ...northernMark,
+          caption: "PICCADILLY PLATFORM 1",
+          lineId: "piccadilly",
+          platformNumbers: [1],
+        },
+      ],
+    };
+    const { stations, placementIssues } = mergeStationLayouts([page]);
+    expect(stations[0]!.platforms[0]!.depthM).toBeUndefined();
+    expect(placementIssues.map((i) => i.reason)).toContain("depth-ambiguous");
+    expect(
+      reviewExtract([page], [], placementIssues)
+        .flatMap((r) => r.reasons),
+    ).toContain("depth-ambiguous");
+  });
+
   it("folds a second sheet in when a platform is shared", () => {
     const bakerlooMark = {
       caption: "BAKERLOO LINE PLATFORMS",

@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Bounds Green: N about 30\u00b0; Piccadilly platforms 16.5m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Bounds Green reading pose: rose N ~300\u00b0. Parallel Piccadilly platforms share bearingDeg 0. Depth 16.5m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO WOOD GREEN",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.09,
+        0.83
+      ],
+      "b": [
+        0.41,
+        0.61
+      ],
+      "grid": "B8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO ARNOS GROVE",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.09,
+        0.94
+      ],
+      "b": [
+        0.47,
+        0.72
+      ],
+      "grid": "B9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.59,
+      0.39
+    ]
+  }
 }

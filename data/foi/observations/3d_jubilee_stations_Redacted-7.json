@@ -1,11 +1,31 @@
 {
   "northDeg": 315,
-  "depths": [
+  "depths": [{ "label": "JUBILEE LINE PLATFORMS", "metres": 18.6 }],
+  "platforms": [
     {
-      "label": "JUBILEE LINE PLATFORMS",
-      "metres": 18.6
+      "caption": "PLATFORM 1 NORTHBOUND TO SWISS COTTAGE",
+      "lineId": "jubilee",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.22, 0.61],
+      "b": [0.41, 0.78],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO BAKER STREET",
+      "lineId": "jubilee",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.28, 0.67],
+      "b": [0.47, 0.84],
+      "grid": "E7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.45, 0.22] },
   "confidence": "high",
-  "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m. northDeg migrated +270 for reading-pose raster."
+  "raw": "St John's Wood reading pose: rose N top-right (315). Parallel Jubilee platforms share bearingDeg 0. Depth 18.6m."
 }

@@ -1,23 +1,69 @@
 {
   "northDeg": 315,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 20.7 },
+    { "label": "DISTRICT LINE PLATFORMS", "metres": 8.2 },
+    { "label": "DOCKLANDS PLATFORMS", "metres": 41.4 },
+    { "label": "NORTHERN LINE PLATFORMS", "metres": 30.5 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 20.7
+      "caption": "CENTRAL LINE PLATFORMS 5 & 6",
+      "lineId": "central",
+      "platformNumbers": [5, 6],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.16, 0.39],
+      "b": [0.53, 0.33],
+      "grid": "C4",
+      "confidence": "high"
     },
     {
-      "label": "DISTRICT LINE PLATFORMS",
-      "metres": 8.2
+      "caption": "NORTHERN LINE PLATFORMS 3 & 4",
+      "lineId": "northern",
+      "platformNumbers": [3, 4],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.53, 0.61],
+      "b": [0.59, 0.78],
+      "grid": "I6",
+      "confidence": "high"
     },
     {
-      "label": "DOCKLANDS PLATFORMS",
-      "metres": 41.4
+      "caption": "DISTRICT LINE PLATFORMS 1 & 2",
+      "lineId": "district",
+      "platformNumbers": [1, 2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.78, 0.61],
+      "b": [0.84, 0.78],
+      "grid": "M6",
+      "confidence": "high"
     },
     {
-      "label": "NORTHERN LINE PLATFORMS",
-      "metres": 30.5
+      "caption": "WATERLOO AND CITY LINE PLATFORMS 7 & 8",
+      "lineId": "waterloo-city",
+      "platformNumbers": [7, 8],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.09, 0.61],
+      "b": [0.16, 0.78],
+      "grid": "B6",
+      "confidence": "low"
+    },
+    {
+      "caption": "DOCKLANDS PLATFORMS 9 & 10",
+      "lineId": "dlr",
+      "platformNumbers": [9, 10],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.47, 0.83],
+      "b": [0.53, 0.92],
+      "grid": "H8",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Central Line Ticket Hall", "at": [0.34, 0.28] },
   "confidence": "high",
-  "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row. northDeg migrated +270 for reading-pose raster."
+  "raw": "Bank/Monument reading pose: rose N top-right (315). Central/District E–W (90); Northern/DLR N–S (0). Depths 20.7 / 8.2 / 41.4 / 30.5m."
 }

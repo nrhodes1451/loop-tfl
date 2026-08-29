@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "VICTORIA LINE PLATFORMS", "metres": 16.8 }],
+  "platforms": [
     {
-      "label": "VICTORIA LINE PLATFORMS",
-      "metres": 16.8
+      "caption": "PLATFORM 1 NORTHBOUND TO BLACKHORSE ROAD",
+      "lineId": "victoria",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.22, 0.61],
+      "b": [0.66, 0.89],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO SEVEN SISTERS",
+      "lineId": "victoria",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.22, 0.70],
+      "b": [0.66, 0.94],
+      "grid": "D7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.50, 0.28] },
   "confidence": "high",
-  "raw": "Tottenham Hale: N points top-left; Victoria platforms 16.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Tottenham Hale reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 16.8m."
 }

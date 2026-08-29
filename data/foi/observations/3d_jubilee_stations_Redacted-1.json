@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "JUBILEE LINE PLATFORMS", "metres": 15 }],
+  "platforms": [
     {
-      "label": "JUBILEE LINE PLATFORMS",
-      "metres": 15
+      "caption": "PLATFORM 1 WESTBOUND TO LONDON BRIDGE",
+      "lineId": "jubilee",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.16, 0.78],
+      "b": [0.72, 0.50],
+      "grid": "C8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO CANADA WATER",
+      "lineId": "jubilee",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.12, 0.72],
+      "b": [0.78, 0.50],
+      "grid": "B7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.59, 0.17] },
   "confidence": "high",
-  "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Bermondsey reading pose: rose N top-left (225). Parallel Jubilee platforms share bearingDeg 90. Depth 15.0m."
 }

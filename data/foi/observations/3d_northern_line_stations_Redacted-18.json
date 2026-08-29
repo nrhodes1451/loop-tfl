@@ -11,5 +11,90 @@
     }
   ],
   "confidence": "high",
-  "raw": "Leicester Square axonometric; north ~215\u00b0; Northern 27.4m, Piccadilly 32.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Leicester Square reading pose: rose N ~125\u00b0. Northern bearingDeg 0; Piccadilly 90. Depths 27.4 / 32.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 4 NORTHBOUND TO TOTTENHAM COURT ROAD",
+      "lineId": "northern",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.47,
+        0.39
+      ],
+      "b": [
+        0.72,
+        0.17
+      ],
+      "grid": "H4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 SOUTHBOUND TO CHARING CROSS",
+      "lineId": "northern",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.39
+      ],
+      "b": [
+        0.66,
+        0.17
+      ],
+      "grid": "G4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO COVENT GARDEN",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.72
+      ],
+      "b": [
+        0.53,
+        0.83
+      ],
+      "grid": "C7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO PICCADILLY CIRCUS",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.09,
+        0.72
+      ],
+      "b": [
+        0.47,
+        0.83
+      ],
+      "grid": "B7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.09,
+      0.39
+    ]
+  }
 }

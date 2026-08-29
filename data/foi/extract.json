@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-28T18:55:14.908Z",
+  "generatedAt": "2026-08-29T17:28:13.638Z",
   "source": "tfl-foi-2015-axonometric",
   "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
   "pages": [
@@ -20,9 +20,57 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "NORTHERN LINE PLATFORMS 5 & 6",
+          "lineId": "northern",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.38,
+            0.26
+          ],
+          "b": [
+            0.62,
+            0.32
+          ],
+          "grid": "G3",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE LINE PLATFORMS 3 & 4",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.58
+          ],
+          "b": [
+            0.62,
+            0.72
+          ],
+          "grid": "F6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Charing Cross table lists Northern 19.5m and Jubilee 26.2m; compass N points right on the page (90°). northDeg migrated +270 for reading-pose raster."
+      "raw": "Charing Cross reading pose: rose N up (0). Northern 5–6 and Jubilee 3–4 run east–west (bearingDeg 90). Depths 19.5 / 26.2m.",
+      "reference": {
+        "label": "Northern Line Ticket Hall",
+        "at": [
+          0.55,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -36,9 +84,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 SOUTHBOUND TO MARYLEBONE",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.18,
+            0.62
+          ],
+          "b": [
+            0.38,
+            0.78
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 NORTHBOUND TO PADDINGTON",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.68
+          ],
+          "b": [
+            0.42,
+            0.84
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Edgware Road table lists Bakerloo platforms at 23.4m; compass N is about 25° clockwise of drawing-up, 115° on this image. northDeg migrated +270 for reading-pose raster."
+      "raw": "Edgware Road (Bakerloo) reading pose: rose N about 25°. Parallel Bakerloo platforms share bearingDeg 90. Depth 23.4m.",
+      "reference": {
+        "label": "Ticket Hall and Basement",
+        "at": [
+          0.38,
+          0.36
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -57,9 +151,93 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 4 NORTHBOUND TO LAMBETH NORTH",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.12,
+            0.28
+          ],
+          "b": [
+            0.3,
+            0.58
+          ],
+          "grid": "B3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND TO LAMBETH NORTH",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.34
+          ],
+          "b": [
+            0.34,
+            0.64
+          ],
+          "grid": "C4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO BOROUGH",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.4,
+            0.5
+          ],
+          "b": [
+            0.58,
+            0.88
+          ],
+          "grid": "G5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO KENNINGTON",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.44,
+            0.56
+          ],
+          "b": [
+            0.62,
+            0.94
+          ],
+          "grid": "H6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Elephant & Castle table lists Northern 18.9m and Bakerloo 23.5m; compass N points top-left on the drawing (45° on this image). northDeg migrated +270 for reading-pose raster."
+      "raw": "Elephant & Castle reading pose: rose N top-left (315). Bakerloo 3–4 and Northern 1–2 share bearingDeg 0. Depths 18.9 / 23.5m.",
+      "reference": {
+        "label": "Bakerloo Line Ticket Hall",
+        "at": [
+          0.34,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -329,9 +507,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO MAIDA VALE",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": "north",
+          "bearingDeg": 135,
+          "a": [
+            0.28,
+            0.36
+          ],
+          "b": [
+            0.72,
+            0.8
+          ],
+          "grid": "E4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO QUEENS PARK",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": "south",
+          "bearingDeg": 135,
+          "a": [
+            0.28,
+            0.42
+          ],
+          "b": [
+            0.72,
+            0.86
+          ],
+          "grid": "E5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Kilburn Park table lists Bakerloo platforms at 10.0m; compass N is about 15° clockwise of drawing-up (105° on this image). northDeg migrated +270 for reading-pose raster."
+      "raw": "Kilburn Park reading pose: rose N about 15°. Parallel Bakerloo platforms share bearingDeg 135 (NW–SE). Depth 10.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.78,
+          0.42
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -345,9 +569,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO WATERLOO",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.68
+          ],
+          "b": [
+            0.52,
+            0.84
+          ],
+          "grid": "E7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO ELEPHANT & CASTLE",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.32,
+            0.72
+          ],
+          "b": [
+            0.56,
+            0.88
+          ],
+          "grid": "F8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Lambeth North table lists Bakerloo platforms at 17.7m; compass N points top-left on the drawing (60° on this image). northDeg migrated +270 for reading-pose raster."
+      "raw": "Lambeth North reading pose: rose N top-left (330). Parallel Bakerloo platforms share bearingDeg 0. Depth 17.7m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.48,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -361,9 +631,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO KILBURN PARK",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.62
+          ],
+          "b": [
+            0.55,
+            0.8
+          ],
+          "grid": "E6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO WARWICK AVENUE",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.32,
+            0.68
+          ],
+          "b": [
+            0.59,
+            0.86
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Maida Vale table lists Bakerloo platforms at 15.2m; compass N is about 15° counter-clockwise of drawing-up (75° on this image). northDeg migrated +270 for reading-pose raster."
+      "raw": "Maida Vale reading pose: rose N about 345°. Parallel Bakerloo platforms share bearingDeg 0. Depth 15.2m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.38,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -377,9 +693,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO EDGWARE ROAD",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.52
+          ],
+          "b": [
+            0.68,
+            0.62
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO BAKER STREET",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.6
+          ],
+          "b": [
+            0.68,
+            0.7
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Marylebone table lists Bakerloo platforms at 25.3m; compass N points to drawing-up (90° on this image). northDeg migrated +270 for reading-pose raster."
+      "raw": "Marylebone reading pose: rose N up (0). Parallel Bakerloo platforms share bearingDeg 90. Depth 25.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.62,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -403,9 +765,93 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO EDGWARE ROAD",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.14,
+            0.62
+          ],
+          "b": [
+            0.3,
+            0.78
+          ],
+          "grid": "B6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO BAYSWATER",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.18,
+            0.6
+          ],
+          "b": [
+            0.34,
+            0.76
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND TO WARWICK AVENUE",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.64,
+            0.42
+          ],
+          "b": [
+            0.9,
+            0.48
+          ],
+          "grid": "K4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 SOUTHBOUND TO EDGWARE ROAD",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.64,
+            0.5
+          ],
+          "b": [
+            0.9,
+            0.56
+          ],
+          "grid": "K5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Paddington (City) table lists District and Circle 5.2m and Bakerloo 9.7m; compass N points down on this image (180°). northDeg migrated +270 for reading-pose raster."
+      "raw": "Paddington (City) reading pose: rose N right (90). District/Circle bearingDeg 90; Bakerloo 0. Depths 5.2 / 9.7m.",
+      "reference": {
+        "label": "Ticket Hall B (Lawn)",
+        "at": [
+          0.44,
+          0.35
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -552,9 +998,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 NORTHBOUND TO BAKER STREET",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.5,
+            0.28
+          ],
+          "b": [
+            0.56,
+            0.82
+          ],
+          "grid": "I3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 SOUTHBOUND TO OXFORD CIRCUS",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.56,
+            0.3
+          ],
+          "b": [
+            0.62,
+            0.84
+          ],
+          "grid": "J4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Regent's Park table lists Bakerloo platforms at 21.6m; compass N points to drawing-up (90° on this image). northDeg migrated +270 for reading-pose raster."
+      "raw": "Regent's Park reading pose: rose N up (0). Parallel Bakerloo platforms share bearingDeg 0. Depth 21.6m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.34,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -568,9 +1060,55 @@
           "lineId": "bakerloo"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO MAIDA VALE",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            1
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.8
+          ],
+          "b": [
+            0.72,
+            0.58
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO PADDINGTON",
+          "lineId": "bakerloo",
+          "platformNumbers": [
+            2
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.86
+          ],
+          "b": [
+            0.72,
+            0.64
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Warwick Avenue table lists Bakerloo platforms at 16.2m; compass N is about 60° clockwise of drawing-up (150° on this image). northDeg migrated +270 for reading-pose raster."
+      "raw": "Warwick Avenue reading pose: rose N about 60°. Parallel Bakerloo platforms share bearingDeg 0. Depth 16.2m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.72,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -823,9 +1361,117 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "CENTRAL LINE PLATFORMS 5 & 6",
+          "lineId": "central",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.39
+          ],
+          "b": [
+            0.53,
+            0.33
+          ],
+          "grid": "C4",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN LINE PLATFORMS 3 & 4",
+          "lineId": "northern",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.53,
+            0.61
+          ],
+          "b": [
+            0.59,
+            0.78
+          ],
+          "grid": "I6",
+          "confidence": "high"
+        },
+        {
+          "caption": "DISTRICT LINE PLATFORMS 1 & 2",
+          "lineId": "district",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.78,
+            0.61
+          ],
+          "b": [
+            0.84,
+            0.78
+          ],
+          "grid": "M6",
+          "confidence": "high"
+        },
+        {
+          "caption": "WATERLOO AND CITY LINE PLATFORMS 7 & 8",
+          "lineId": "waterloo-city",
+          "platformNumbers": [
+            7,
+            8
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.09,
+            0.61
+          ],
+          "b": [
+            0.16,
+            0.78
+          ],
+          "grid": "B6",
+          "confidence": "low"
+        },
+        {
+          "caption": "DOCKLANDS PLATFORMS 9 & 10",
+          "lineId": "dlr",
+          "platformNumbers": [
+            9,
+            10
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.47,
+            0.83
+          ],
+          "b": [
+            0.53,
+            0.92
+          ],
+          "grid": "H8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Bank/Monument axonometric; N towards top-right; four printed depth rows, no Waterloo & City row. northDeg migrated +270 for reading-pose raster."
+      "raw": "Bank/Monument reading pose: rose N top-right (315). Central/District E–W (90); Northern/DLR N–S (0). Depths 20.7 / 8.2 / 41.4 / 30.5m.",
+      "reference": {
+        "label": "Central Line Ticket Hall",
+        "at": [
+          0.34,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -839,9 +1485,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO LIVERPOOL STREET",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.08,
+            0.72
+          ],
+          "b": [
+            0.38,
+            0.52
+          ],
+          "grid": "A8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO MILE END",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.78
+          ],
+          "b": [
+            0.46,
+            0.58
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Bethnal Green reading pose: rose N bottom-left (135). Parallel Central platforms share bearingDeg 90. Depth 15.9m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.56,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -860,9 +1552,93 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO MARBLE ARCH",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.38,
+            0.28
+          ],
+          "b": [
+            0.62,
+            0.32
+          ],
+          "grid": "G3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO OXFORD CIRCUS",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.38,
+            0.36
+          ],
+          "b": [
+            0.62,
+            0.4
+          ],
+          "grid": "G4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND TO BAKER STREET",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.38,
+            0.68
+          ],
+          "b": [
+            0.5,
+            0.82
+          ],
+          "grid": "G7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 SOUTHBOUND TO GREEN PARK",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.68
+          ],
+          "b": [
+            0.4,
+            0.82
+          ],
+          "grid": "E7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Bond Street axonometric; N towards top-left; Central 22.2m and Jubilee 32.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Bond Street reading pose: rose N top-left (225). Central bearingDeg 90; Jubilee 0. Depths 22.2 / 32.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.66,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -881,9 +1657,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO ST PAULS",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.42
+          ],
+          "b": [
+            0.72,
+            0.72
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO HOLBORN",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.12,
+            0.72
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "B7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Chancery Lane axonometric; N about 11 o'clock; Platform 1 29.9m, Platform 2 22.2m. northDeg migrated +270 for reading-pose raster.",
+      "raw": "Chancery Lane reading pose: rose N about 240°. Both Central platforms bearingDeg 90. Depths P1 29.9m / P2 22.2m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.91,
+          0.61
+        ]
+      },
       "note": "Chancery Lane captions are platform numbers; both are Central line."
     },
     {
@@ -898,9 +1720,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO NEWBURY PARK",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.12,
+            0.5
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "B5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO REDBRIDGE",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.12,
+            0.58
+          ],
+          "b": [
+            0.41,
+            0.8
+          ],
+          "grid": "B6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Gants Hill reading pose: rose N top-left (225). Parallel Central platforms share bearingDeg 90. Depth 12.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.69,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -924,9 +1792,76 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "CENTRAL LINE PLATFORMS 1 & 2",
+          "lineId": "central",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.28
+          ],
+          "b": [
+            0.58,
+            0.34
+          ],
+          "grid": "F3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PICCADILLY LINE PLATFORM 3",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.61
+          ],
+          "b": [
+            0.5,
+            0.72
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PICCADILLY LINE PLATFORMS 4 & 5",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            4,
+            5
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.41,
+            0.94
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Holborn axonometric; N towards top-right; Central 27.4m plus three Piccadilly rows and hostelry. northDeg migrated +270 for reading-pose raster.",
+      "raw": "Holborn reading pose: rose N top-right (315). Central bearingDeg 90; Piccadilly 0. Omit hostelry. Depths 27.4 / 33.8 / 39.6m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.22,
+          0.39
+        ]
+      },
       "note": "Dropped disused hostelry tunnel; kept Central and the two distinct Piccadilly depths."
     },
     {
@@ -941,9 +1876,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO SHEPHERDS BUSH",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.62
+          ],
+          "b": [
+            0.58,
+            0.72
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO NOTTING HILL GATE",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.7
+          ],
+          "b": [
+            0.58,
+            0.8
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Holland Park axonometric; N towards top-left; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Holland Park reading pose: rose N top-left (225). Parallel Central platforms share bearingDeg 90. Depth 18.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.45,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -957,9 +1938,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO MARBLE ARCH",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.38,
+            0.48
+          ],
+          "b": [
+            0.68,
+            0.58
+          ],
+          "grid": "G5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO QUEENSWAY",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.38,
+            0.56
+          ],
+          "b": [
+            0.68,
+            0.66
+          ],
+          "grid": "G6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Lancaster Gate reading pose: rose N bottom-left (135). Parallel Central platforms share bearingDeg 90. Depth 18.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.34,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -983,9 +2010,57 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "METROPOLITAN & CIRCLE LINE PLATFORMS 1 & 2",
+          "lineId": "circle",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.28
+          ],
+          "b": [
+            0.5,
+            0.4
+          ],
+          "grid": "D3",
+          "confidence": "high"
+        },
+        {
+          "caption": "CENTRAL LINE PLATFORMS 4 & 5",
+          "lineId": "central",
+          "platformNumbers": [
+            4,
+            5
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.55,
+            0.62
+          ],
+          "b": [
+            0.82,
+            0.78
+          ],
+          "grid": "I6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Liverpool Street axonometric; N towards bottom-left; Circle & Metropolitan 7.6m, Central 15.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Liverpool Street reading pose: rose N bottom-left (135). Circle/Met and Central both bearingDeg 90. Depths 7.6 / 15.8m.",
+      "reference": {
+        "label": "Ticket Hall B",
+        "at": [
+          0.53,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -999,9 +2074,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO LANCASTER GATE",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.5
+          ],
+          "b": [
+            0.78,
+            0.5
+          ],
+          "grid": "H5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO BOND STREET",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.61
+          ],
+          "b": [
+            0.84,
+            0.72
+          ],
+          "grid": "H6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Marble Arch axonometric; N slightly left of up; Central platforms 26.2m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Marble Arch reading pose: rose N about 255°. Parallel Central platforms share bearingDeg 90. Depth 26.2m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.47,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1025,9 +2146,93 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 4 EASTBOUND TO STRATFORD",
+          "lineId": "central",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.42
+          ],
+          "b": [
+            0.62,
+            0.48
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 EASTBOUND TO BOW ROAD",
+          "lineId": "district",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.5
+          ],
+          "b": [
+            0.62,
+            0.56
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO STEPNEY GREEN",
+          "lineId": "district",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.58
+          ],
+          "b": [
+            0.62,
+            0.64
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO BETHNAL GREEN",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.66
+          ],
+          "b": [
+            0.62,
+            0.72
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Mile End reading pose: rose N top-right (225). Four parallel island platforms share bearingDeg 90. Table only lists subsurface 7.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.4,
+          0.7
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1056,9 +2261,75 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORMS 1 & 2 DISTRICT AND CIRCLE",
+          "lineId": "district",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.62,
+            0.68
+          ],
+          "b": [
+            0.78,
+            0.78
+          ],
+          "grid": "K7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 CENTRAL WESTBOUND TO HOLLAND PARK",
+          "lineId": "central",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.68
+          ],
+          "b": [
+            0.5,
+            0.78
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 CENTRAL EASTBOUND TO QUEENSWAY",
+          "lineId": "central",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.68
+          ],
+          "b": [
+            0.32,
+            0.78
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Notting Hill Gate axonometric; N towards top-left; District/Circle 8.8m, Central WB 25.9m, EB 31.1m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Notting Hill Gate reading pose: rose N top-left (225). All platforms bearingDeg 90. Depths 8.8 / WB 25.9 / EB 31.1m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1246,9 +2517,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO LANCASTER GATE",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.68
+          ],
+          "b": [
+            0.38,
+            0.78
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO NOTTING HILL GATE",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.78
+          ],
+          "b": [
+            0.38,
+            0.88
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Queensway reading pose: rose N top-left (225). Parallel Central platforms share bearingDeg 90. Depth 24.4m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.38,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1262,9 +2579,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO GANTS HILL",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.39
+          ],
+          "b": [
+            0.88,
+            0.78
+          ],
+          "grid": "C4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO WANSTEAD",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.47
+          ],
+          "b": [
+            0.88,
+            0.86
+          ],
+          "grid": "C5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Redbridge axonometric; N towards bottom-left; Central platforms 4.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Redbridge reading pose: rose N top-left (135). Parallel Central platforms share bearingDeg 90. Depth 4.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.25,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1278,9 +2641,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO HOLLAND PARK",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.41,
+            0.61
+          ],
+          "b": [
+            0.88,
+            0.39
+          ],
+          "grid": "G6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO WHITE CITY",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.59,
+            0.78
+          ],
+          "b": [
+            0.84,
+            0.5
+          ],
+          "grid": "J8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Shepherd's Bush axonometric; N about 11 o'clock; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Shepherd's Bush reading pose: rose N about 240°. Parallel Central platforms share bearingDeg 90. Depth 18.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.22,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1299,9 +2708,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO CHANCERY LANE",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.42
+          ],
+          "b": [
+            0.72,
+            0.62
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO BANK",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.58
+          ],
+          "b": [
+            0.72,
+            0.78
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "St Paul's axonometric; N points down; Platform 1 17.5m, Platform 2 22.2m. northDeg migrated +270 for reading-pose raster."
+      "raw": "St Paul's reading pose: rose N down (90). Both Central platforms bearingDeg 90. Depths P1 17.5m / P2 22.2m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.84,
+          0.61
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1320,9 +2775,57 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "CENTRAL LINE PLATFORMS 1 & 2",
+          "lineId": "central",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.5
+          ],
+          "b": [
+            0.34,
+            0.39
+          ],
+          "grid": "C5",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN LINE PLATFORMS 3 & 4",
+          "lineId": "northern",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.78,
+            0.39
+          ],
+          "b": [
+            0.91,
+            0.5
+          ],
+          "grid": "M4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Tottenham Court Road axonometric; N towards top-right; Central 26.2m, Northern 29.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Tottenham Court Road reading pose: rose N top-right (320). Central bearingDeg 90; Northern 0. Depths 26.2 / 29.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.66,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d central line stations Redacted.pdf",
@@ -1336,9 +2839,55 @@
           "lineId": "central"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO LEYTONSTONE",
+          "lineId": "central",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.62
+          ],
+          "b": [
+            0.62,
+            0.72
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO REDBRIDGE",
+          "lineId": "central",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.7
+          ],
+          "b": [
+            0.62,
+            0.8
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Wanstead reading pose: rose N bottom-left (135). Parallel Central platforms share bearingDeg 90. Depth 18.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.45,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1467,9 +3016,93 @@
           "lineId": "national-rail"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO MOORGATE",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.61
+          ],
+          "b": [
+            0.59,
+            0.61
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO FARRINGDON",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.59,
+            0.72
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 EASTBOUND THAMESLINK TO MOORGATE",
+          "lineId": "national-rail",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.83
+          ],
+          "b": [
+            0.66,
+            0.83
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 WESTBOUND THAMESLINK TO FARRINGDON",
+          "lineId": "national-rail",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.94
+          ],
+          "b": [
+            0.66,
+            0.94
+          ],
+          "grid": "D9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Barbican rose N at 75°; Circle & Met and Railtrack Thameslink both 8.5m. northDeg migrated +270 for reading-pose raster.",
+      "raw": "Barbican reading pose: rose N ~345°. Parallel Circle/Met and Thameslink platforms share bearingDeg 90. Depths 8.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.39
+        ]
+      },
       "note": "Barbican Railtrack Thameslink mapped to national-rail."
     },
     {
@@ -1489,9 +3122,55 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO NOTTING HILL GATE",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.53,
+            0.5
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO PADDINGTON",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.53,
+            0.39
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Bayswater rose N at 90°; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Bayswater reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 5.0m.",
+      "reference": {
+        "label": "Ticket Hall & Overbridge",
+        "at": [
+          0.59,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1510,9 +3189,55 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO MONUMENT",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.5
+          ],
+          "b": [
+            0.84,
+            0.72
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO MANSION HOUSE",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.61
+          ],
+          "b": [
+            0.78,
+            0.83
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Cannon Street rose N at 90°; District and Circle platforms 6.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Cannon Street reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 6.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.47,
+          0.72
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1531,9 +3256,93 @@
           "lineId": "circle"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO PADDINGTON",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.09,
+            0.39
+          ],
+          "b": [
+            0.72,
+            0.39
+          ],
+          "grid": "B4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO PADDINGTON",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.5
+          ],
+          "b": [
+            0.72,
+            0.61
+          ],
+          "grid": "C5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 EASTBOUND TO BAKER STREET",
+          "lineId": "circle",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.61
+          ],
+          "b": [
+            0.78,
+            0.72
+          ],
+          "grid": "E6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 EASTBOUND TO BAKER STREET",
+          "lineId": "circle",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.91,
+            0.94
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Edgware Road rose N at 135°; Circle & Hammersmith platforms 5.1m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Edgware Road Circle reading pose: rose N ~45°. Four parallel Circle/H&C platforms share bearingDeg 90. Depth 5.1m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.28,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1552,9 +3361,55 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO KINGS CROSS",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.61
+          ],
+          "b": [
+            0.84,
+            0.39
+          ],
+          "grid": "F6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO GREAT PORTLAND STREET",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.84,
+            0.5
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Euston Square rose N at 90°; Circle & Metropolitan platforms 7.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Euston Square reading pose: rose N up (0). Parallel Circle/Met platforms share bearingDeg 90. Depth 7.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.22,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1583,9 +3438,57 @@
           "lineId": "national-rail"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORMS 1 & 2 METROPOLITAN CIRCLE & H&C",
+          "lineId": "circle",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.59,
+            0.83
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORMS 3 & 4 FIRST CAPITAL CONNECT",
+          "lineId": "national-rail",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.59,
+            0.83
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Farringdon rose N at 270°; Met/Circle/H&C 4.3m, First Capital Connect 5.6m. northDeg migrated +270 for reading-pose raster.",
+      "raw": "Farringdon reading pose: rose N down (180). Parallel Met/Circle/H&C and Thameslink platforms share bearingDeg 0. Depths 4.3 / 5.6m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.47,
+          0.5
+        ]
+      },
       "note": "Farringdon First Capital Connect mapped to national-rail."
     },
     {
@@ -1610,9 +3513,112 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 3 EASTBOUND TO SOUTH KENSINGTON",
+          "lineId": "circle",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.61
+          ],
+          "b": [
+            0.41,
+            0.61
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO HIGH STREET KENSINGTON",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.61
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO EARLS COURT",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.72
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 5 EASTBOUND PICCADILLY TO SOUTH KENSINGTON",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            5
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.83
+          ],
+          "b": [
+            0.47,
+            0.83
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 WESTBOUND PICCADILLY TO EARLS COURT",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.83
+          ],
+          "b": [
+            0.47,
+            0.83
+          ],
+          "grid": "F8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Gloucester Road rose N at 45°; District & Circle 7.0m, Piccadilly 20.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Gloucester Road reading pose: rose N ~315°. Parallel District/Circle and Piccadilly platforms share bearingDeg 90. Depths 7.0 / 20.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.72,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1636,9 +3642,55 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO BAKER STREET",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.03,
+            0.94
+          ],
+          "b": [
+            0.34,
+            0.72
+          ],
+          "grid": "A9",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO EUSTON SQUARE",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.41,
+            0.61
+          ],
+          "b": [
+            0.72,
+            0.28
+          ],
+          "grid": "G6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Great Portland Street rose N at 60°; Circle/H&C/Met platforms 6.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Great Portland Street reading pose: rose N ~330°. Parallel Circle/H&C/Met platforms share bearingDeg 90. Depth 6.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.34,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1657,9 +3709,93 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO NOTTING HILL GATE",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.28
+          ],
+          "b": [
+            0.78,
+            0.83
+          ],
+          "grid": "C3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.39
+          ],
+          "b": [
+            0.72,
+            0.83
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 WESTBOUND TO EARLS COURT & GLOUCESTER ROAD",
+          "lineId": "circle",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.5
+          ],
+          "b": [
+            0.84,
+            0.94
+          ],
+          "grid": "E5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 WESTBOUND TO EARLS COURT",
+          "lineId": "circle",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.61
+          ],
+          "b": [
+            0.78,
+            0.94
+          ],
+          "grid": "E6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "High Street Kensington rose N at 45°; District and Circle platforms 4.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "High Street Kensington reading pose: rose N ~315°. Four parallel District/Circle platforms share bearingDeg 0. Depth 4.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1693,9 +3829,97 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "METROPOLITAN & CIRCLE LINE PLATFORMS 1 & 2",
+          "lineId": "circle",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.09,
+            0.72
+          ],
+          "b": [
+            0.28,
+            0.72
+          ],
+          "grid": "B7",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHERN LINE PLATFORMS 7 & 8",
+          "lineId": "northern",
+          "platformNumbers": [
+            7,
+            8
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.17
+          ],
+          "b": [
+            0.41,
+            0.39
+          ],
+          "grid": "F2",
+          "confidence": "high"
+        },
+        {
+          "caption": "PICCADILLY LINE PLATFORMS 5 & 6",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.59,
+            0.39
+          ],
+          "b": [
+            0.72,
+            0.61
+          ],
+          "grid": "J4",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA LINE PLATFORMS 3 & 4",
+          "lineId": "victoria",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.53,
+            0.72
+          ],
+          "b": [
+            0.78,
+            0.61
+          ],
+          "grid": "I7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "King's Cross rose N at 135°; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m. northDeg migrated +270 for reading-pose raster.",
+      "raw": "King's Cross axonometric 1 reading pose: rose N ~45°. Met/Circle and Northern bearingDeg 90; Piccadilly and Victoria 0. Depths 7.0 / 15.7 / 21.3 / 27.0m.",
+      "reference": {
+        "label": "Western Ticket Hall",
+        "at": [
+          0.09,
+          0.5
+        ]
+      },
       "note": "Dropped ticket-hall row (not a platform line)."
     },
     {
@@ -1704,9 +3928,37 @@
       "stationId": "HUBKGX",
       "northDeg": 45,
       "depths": [],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "NORTHERN LINE PLATFORMS 7 & 8 (WEST END)",
+          "lineId": "northern",
+          "platformNumbers": [
+            7,
+            8
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.83
+          ],
+          "b": [
+            0.28,
+            0.94
+          ],
+          "grid": "D8",
+          "confidence": "low"
+        }
+      ],
       "confidence": "high",
-      "raw": "King's Cross axonometric 2; N towards bottom-right; no printed depth table. northDeg migrated +270 for reading-pose raster.",
+      "raw": "King's Cross axonometric 2: rose N ~45°. Only Northern 7&8 west-end box is drawn. No depth table.",
+      "reference": {
+        "label": "Northern Ticket Hall",
+        "at": [
+          0.41,
+          0.17
+        ]
+      },
       "note": "King's Cross sheet 2 has no printed depth table.",
       "reviewed": true
     },
@@ -1722,9 +3974,74 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO BLACKFRIARS",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.61
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO CANNON STREET",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.5
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 EASTBOUND TO CANNON STREET",
+          "lineId": "circle",
+          "platformNumbers": [
+            3
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.39
+          ],
+          "b": [
+            0.41,
+            0.5
+          ],
+          "grid": "E4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Mansion House axonometric; N about 5 o'clock; District platforms 7.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Mansion House reading pose: rose N ~60°. Parallel District/Circle platforms share bearingDeg 90. Depth 7.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.72,
+          0.72
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1732,9 +4049,153 @@
       "stationId": "HUBZMG",
       "northDeg": 315,
       "depths": [],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 10 NORTHBOUND TO OLD STREET",
+          "lineId": "northern",
+          "platformNumbers": [
+            10
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.09,
+            0.28
+          ],
+          "b": [
+            0.28,
+            0.28
+          ],
+          "grid": "B3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 9 SOUTHBOUND TO BANK",
+          "lineId": "northern",
+          "platformNumbers": [
+            9
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.09,
+            0.28
+          ],
+          "b": [
+            0.28,
+            0.39
+          ],
+          "grid": "B3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 8 NORTHBOUND",
+          "lineId": "northern",
+          "platformNumbers": [
+            8
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.39
+          ],
+          "b": [
+            0.41,
+            0.39
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 7 SOUTHBOUND",
+          "lineId": "northern",
+          "platformNumbers": [
+            7
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.39
+          ],
+          "b": [
+            0.41,
+            0.5
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORMS 1 & 2 METROPOLITAN & CIRCLE",
+          "lineId": "circle",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.72
+          ],
+          "b": [
+            0.66,
+            0.61
+          ],
+          "grid": "H7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORMS 3 & 4 METROPOLITAN & CIRCLE",
+          "lineId": "circle",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.83
+          ],
+          "b": [
+            0.72,
+            0.61
+          ],
+          "grid": "H8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORMS 5 & 6 METROPOLITAN & CIRCLE",
+          "lineId": "circle",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.53,
+            0.94
+          ],
+          "b": [
+            0.78,
+            0.72
+          ],
+          "grid": "I9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Moorgate axonometric; N towards top-right; no printed depth table. northDeg migrated +270 for reading-pose raster.",
+      "raw": "Moorgate reading pose: rose N ~315°. Northern bearingDeg 0; Met/Circle 90. No printed depth table.",
+      "reference": {
+        "label": "Ticket Hall Metropolitan Circle & Railtrack",
+        "at": [
+          0.84,
+          0.39
+        ]
+      },
       "note": "Moorgate sheet has no printed depth table.",
       "reviewed": true
     },
@@ -1755,9 +4216,55 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO SOUTH KENSINGTON",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.61
+          ],
+          "b": [
+            0.72,
+            0.83
+          ],
+          "grid": "E6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO VICTORIA",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.5
+          ],
+          "b": [
+            0.97,
+            0.72
+          ],
+          "grid": "F5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Sloane Square axonometric; N towards the right; District and Circle platforms 7.75m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Sloane Square reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 7.75m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.09,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1786,9 +4293,75 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "DISTRICT AND CIRCLE PLATFORMS 1 & 2",
+          "lineId": "circle",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.5
+          ],
+          "b": [
+            0.59,
+            0.5
+          ],
+          "grid": "F5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PICCADILLY LINE WESTBOUND PLATFORM 3",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.39
+          ],
+          "b": [
+            0.22,
+            0.72
+          ],
+          "grid": "C4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PICCADILLY LINE EASTBOUND PLATFORM 4",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.53,
+            0.83
+          ],
+          "b": [
+            0.66,
+            0.72
+          ],
+          "grid": "I8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "South Kensington axonometric; N about 4 o'clock; District/Circle 8.2m, Piccadilly EB 18.9m, WB 24.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "South Kensington reading pose: rose N ~20°. District/Circle and Piccadilly share bearingDeg 90. Depths 8.2 / 18.9 / 24.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1807,9 +4380,55 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO WESTMINSTER",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.72
+          ],
+          "b": [
+            0.59,
+            0.39
+          ],
+          "grid": "E7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO VICTORIA",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.61
+          ],
+          "b": [
+            0.66,
+            0.28
+          ],
+          "grid": "F6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "St James's Park axonometric; N towards the right; District and Circle platforms 5.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "St James's Park reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 5.8m.",
+      "reference": {
+        "label": "Broadway Ticket Hall",
+        "at": [
+          0.53,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1828,9 +4447,55 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO BLACKFRIARS",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.72
+          ],
+          "b": [
+            0.72,
+            0.5
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO EMBANKMENT",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.83
+          ],
+          "b": [
+            0.66,
+            0.61
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Temple axonometric; N towards the right; District and Circle platforms 3.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Temple reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 3.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.72,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1849,9 +4514,74 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1",
+          "lineId": "circle",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.53,
+            0.72
+          ],
+          "b": [
+            0.78,
+            0.5
+          ],
+          "grid": "I7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2",
+          "lineId": "circle",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.53,
+            0.61
+          ],
+          "b": [
+            0.72,
+            0.39
+          ],
+          "grid": "I6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3",
+          "lineId": "circle",
+          "platformNumbers": [
+            3
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.61
+          ],
+          "b": [
+            0.53,
+            0.5
+          ],
+          "grid": "F6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Tower Hill reading pose: rose N ~30°. Parallel District/Circle platforms share bearingDeg 90. Depth 5.0m.",
+      "reference": {
+        "label": "Entrance Ticket Hall",
+        "at": [
+          0.47,
+          0.83
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1875,9 +4605,75 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "DISTRICT AND CIRCLE LINE PLATFORMS 1 & 2",
+          "lineId": "circle",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.28
+          ],
+          "b": [
+            0.59,
+            0.5
+          ],
+          "grid": "H3",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA LINE PLATFORM 3 NORTHBOUND TO GREEN PARK",
+          "lineId": "victoria",
+          "platformNumbers": [
+            3
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.78,
+            0.72
+          ],
+          "b": [
+            0.97,
+            0.83
+          ],
+          "grid": "M7",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA LINE PLATFORM 4 SOUTHBOUND TO PIMLICO",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.78,
+            0.83
+          ],
+          "b": [
+            0.97,
+            0.94
+          ],
+          "grid": "M8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Victoria axonometric; N about 5 o'clock; District/Circle 6.4m, Victoria 17.9m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Victoria reading pose: rose N ~60°. District/Circle bearingDeg 90; Victoria 0. Depths 6.4 / 17.9m.",
+      "reference": {
+        "label": "Ticket Hall Victoria Line",
+        "at": [
+          0.22,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d circle stations Redacted.pdf",
@@ -1891,9 +4687,75 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "DISTRICT & CIRCLE LINES PLATFORMS 1 & 2",
+          "lineId": "circle",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.53,
+            0.5
+          ],
+          "b": [
+            0.72,
+            0.5
+          ],
+          "grid": "I5",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE LINE PLATFORM 3 EASTBOUND TO WATERLOO",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            3
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.41,
+            0.72
+          ],
+          "b": [
+            0.84,
+            0.83
+          ],
+          "grid": "G7",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE LINE PLATFORM 4 WESTBOUND TO GREEN PARK",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            4
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.41,
+            0.83
+          ],
+          "b": [
+            0.84,
+            0.94
+          ],
+          "grid": "G8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only. northDeg migrated +270 for reading-pose raster."
+      "raw": "Westminster reading pose: rose N up (0). District/Circle and Jubilee share bearingDeg 90. Depth table lists Jubilee 33.0m.",
+      "reference": {
+        "label": "Intermediate Level (West End)",
+        "at": [
+          0.34,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d district stations Redacted.pdf",
@@ -1912,9 +4774,55 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND DISTRICT & H&C TO WHITECHAPEL",
+          "lineId": "district",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.53,
+            0.39
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND DISTRICT & H&C TO LIVERPOOL STREET",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.83
+          ],
+          "b": [
+            0.59,
+            0.5
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Aldgate East: N points top-left; table lists District & Metropolitan platforms at 8.2m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Aldgate East reading pose: rose N top-left (225). Parallel District platforms share bearingDeg 90. Depth 8.2m.",
+      "reference": {
+        "label": "Ticket Hall B",
+        "at": [
+          0.62,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d district stations Redacted.pdf",
@@ -1933,9 +4841,55 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO MILE END",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.62
+          ],
+          "b": [
+            0.62,
+            0.42
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO BROMLEY-BY-BOW",
+          "lineId": "district",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.7
+          ],
+          "b": [
+            0.62,
+            0.5
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Bow Road: N top-left; depth table present but metres poorly printed (read as 7.0m). northDeg migrated +270 for reading-pose raster.",
+      "raw": "Bow Road reading pose: rose N top-left (225). Parallel District platforms share bearingDeg 90. Depth 7.0m (table poorly printed).",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.72,
+          0.28
+        ]
+      },
       "note": "Bow Road table reads District & Metropolitan 7.0m."
     },
     {
@@ -2039,9 +4993,55 @@
           "lineId": "district"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO WEST BROMPTON",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": "north",
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.61
+          ],
+          "b": [
+            0.59,
+            0.5
+          ],
+          "grid": "E6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO PARSONS GREEN",
+          "lineId": "district",
+          "platformNumbers": [
+            2
+          ],
+          "end": "south",
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.72
+          ],
+          "b": [
+            0.59,
+            0.61
+          ],
+          "grid": "E7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box. northDeg migrated +270 for reading-pose raster."
+      "raw": "Fulham Broadway reading pose: rose N top-right (315). Parallel District platforms share bearingDeg 90. Depth 4.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.61
+        ]
+      }
     },
     {
       "file": "3d district stations Redacted.pdf",
@@ -2060,9 +5060,55 @@
           "lineId": "metropolitan"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO MILE END",
+          "lineId": "district",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.31,
+            0.83
+          ],
+          "b": [
+            0.69,
+            0.44
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO WHITECHAPEL",
+          "lineId": "district",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.31,
+            0.91
+          ],
+          "b": [
+            0.69,
+            0.52
+          ],
+          "grid": "E9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Stepney Green reading pose: rose N top-left (225). Parallel District platforms share bearingDeg 90. Depth 7.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.38,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d district stations Redacted.pdf",
@@ -2086,9 +5132,59 @@
           "lineId": "london-overground"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "DISTRICT & H&C PLATFORMS 1 TO 4",
+          "lineId": "district",
+          "platformNumbers": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.5,
+            0.5
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "LONDON OVERGROUND PLATFORMS 5 & 6",
+          "lineId": "london-overground",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.38,
+            0.28
+          ],
+          "b": [
+            0.72,
+            0.39
+          ],
+          "grid": "G3",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Whitechapel: N points top-right; District & Metropolitan 3.1m, East London Line 7.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Whitechapel reading pose: rose N top-right (315). District/H&C bearingDeg 90; Overground 0. Depths 3.1 / 7.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2102,9 +5198,55 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO LONDON BRIDGE",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.78
+          ],
+          "b": [
+            0.72,
+            0.5
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO CANADA WATER",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.12,
+            0.72
+          ],
+          "b": [
+            0.78,
+            0.5
+          ],
+          "grid": "B7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Bermondsey: N points top-left; Jubilee platforms 15.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Bermondsey reading pose: rose N top-left (225). Parallel Jubilee platforms share bearingDeg 90. Depth 15.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2123,9 +5265,57 @@
           "lineId": "london-overground"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "JUBILEE LINE PLATFORMS 1 & 2",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.06,
+            0.83
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "A8",
+          "confidence": "high"
+        },
+        {
+          "caption": "ELL PLATFORMS 3 & 4",
+          "lineId": "london-overground",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.56,
+            0.44
+          ],
+          "b": [
+            0.62,
+            0.61
+          ],
+          "grid": "J5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Canada Water: N points bottom-left; Jubilee 15.0m, East London Line 8.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Canada Water reading pose: rose N bottom-left (135). Jubilee bearingDeg 90; ELL 0. Depths 15.0 / 8.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2139,9 +5329,51 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "JUBILEE LINE WESTBOUND TO CANADA WATER",
+          "lineId": "jubilee",
+          "platformNumbers": [],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.72
+          ],
+          "b": [
+            0.72,
+            0.78
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE LINE EASTBOUND TO NORTH GREENWICH",
+          "lineId": "jubilee",
+          "platformNumbers": [],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.8
+          ],
+          "b": [
+            0.72,
+            0.86
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Canary Wharf: N points bottom-left; Jubilee platforms 23.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Canary Wharf reading pose: rose N bottom-left (135). Parallel Jubilee platforms share bearingDeg 90. Depth 23.0m.",
+      "reference": {
+        "label": "Ticket Hall Level",
+        "at": [
+          0.45,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2308,9 +5540,57 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "NORTHERN LINE PLATFORMS 1 & 2",
+          "lineId": "northern",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.17
+          ],
+          "b": [
+            0.34,
+            0.33
+          ],
+          "grid": "E2",
+          "confidence": "high"
+        },
+        {
+          "caption": "JUBILEE LINE PLATFORMS 3 & 4",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.72
+          ],
+          "b": [
+            0.5,
+            0.89
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m. northDeg migrated +270 for reading-pose raster."
+      "raw": "London Bridge reading pose: rose N top-left (225). Northern bearingDeg 0; Jubilee 90. Depths 27.3 / 24.1m.",
+      "reference": {
+        "label": "Main Ticket Hall",
+        "at": [
+          0.66,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2318,9 +5598,51 @@
       "stationId": "HUBNGW",
       "northDeg": 135,
       "depths": [],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "EASTBOUND TO CANNING TOWN",
+          "lineId": "jubilee",
+          "platformNumbers": [],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.75,
+            0.72
+          ],
+          "b": [
+            0.94,
+            0.83
+          ],
+          "grid": "M7",
+          "confidence": "low"
+        },
+        {
+          "caption": "WESTBOUND TO CANARY WHARF",
+          "lineId": "jubilee",
+          "platformNumbers": [],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.78,
+            0.83
+          ],
+          "b": [
+            0.91,
+            0.94
+          ],
+          "grid": "O9",
+          "confidence": "low"
+        }
+      ],
       "confidence": "high",
-      "raw": "North Greenwich: N points down-right; depth table missing or redacted. northDeg migrated +270 for reading-pose raster.",
+      "raw": "North Greenwich reading pose: rose N down-right (45). Parallel Jubilee platforms bearingDeg 90. Depth table missing.",
+      "reference": {
+        "label": "Ticket Hall (Level 4)",
+        "at": [
+          0.5,
+          0.22
+        ]
+      },
       "note": "North Greenwich has no metre table (levels only; some labels redacted). Compass N ~135° on the PNG.",
       "reviewed": true
     },
@@ -2336,9 +5658,55 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO SWISS COTTAGE",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.61
+          ],
+          "b": [
+            0.41,
+            0.78
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO BAKER STREET",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.67
+          ],
+          "b": [
+            0.47,
+            0.84
+          ],
+          "grid": "E7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "St John's Wood: N points top-right; Jubilee platforms 18.6m. northDeg migrated +270 for reading-pose raster."
+      "raw": "St John's Wood reading pose: rose N top-right (315). Parallel Jubilee platforms share bearingDeg 0. Depth 18.6m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.45,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2352,9 +5720,55 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO WATERLOO",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.78
+          ],
+          "b": [
+            0.78,
+            0.72
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO LONDON BRIDGE",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.86
+          ],
+          "b": [
+            0.78,
+            0.8
+          ],
+          "grid": "E9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Southwark: N points bottom-left; table prints Jubilee platforms 24m approx. northDeg migrated +270 for reading-pose raster."
+      "raw": "Southwark reading pose: rose N bottom-left (135). Parallel Jubilee platforms share bearingDeg 90. Depth 24m.",
+      "reference": {
+        "label": "Main Ticket Hall",
+        "at": [
+          0.06,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d jubilee stations Redacted.pdf",
@@ -2368,9 +5782,55 @@
           "lineId": "jubilee"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO FINCHLEY ROAD",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.5
+          ],
+          "b": [
+            0.5,
+            0.78
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO ST JOHNS WOOD",
+          "lineId": "jubilee",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.56
+          ],
+          "b": [
+            0.56,
+            0.84
+          ],
+          "grid": "E6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Swiss Cottage: N points top-left; Jubilee platforms 13.7m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Swiss Cottage reading pose: rose N top-left (225). Parallel Jubilee platforms share bearingDeg 0. Depth 13.7m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.5,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2446,9 +5906,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO HIGHGATE",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.83
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO TUFNELL PARK",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.83
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Archway axonometric: N about 60° on the portrait raster; Northern Line platforms 19.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Archway reading pose: rose N ~330°. Parallel Northern platforms share bearingDeg 0. Depth 19.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2462,9 +5968,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO CLAPHAM SOUTH",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.47,
+            0.72
+          ],
+          "b": [
+            0.66,
+            0.61
+          ],
+          "grid": "H7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO TOOTING BEC",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.83
+          ],
+          "b": [
+            0.59,
+            0.83
+          ],
+          "grid": "G8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Balham axonometric: N about 195° on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Balham reading pose: rose N ~105°. Parallel Northern platforms share bearingDeg 0. Depth 13.4m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.28,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2478,9 +6030,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO CHALK FARM",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.5
+          ],
+          "b": [
+            0.47,
+            0.61
+          ],
+          "grid": "C5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO HAMPSTEAD",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.61
+          ],
+          "b": [
+            0.59,
+            0.94
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Belsize Park axonometric: N about 45° on the portrait raster; Northern Line platforms 31.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Belsize Park reading pose: rose N ~315°. Parallel Northern platforms share bearingDeg 0. Depth 31.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2499,9 +6097,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO LONDON BRIDGE",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.41,
+            0.5
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO ELEPHANT AND CASTLE",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.47,
+            0.5
+          ],
+          "b": [
+            0.72,
+            0.17
+          ],
+          "grid": "H5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Borough axonometric: N about 110° on the portrait raster; SB 17.0m, NB 19.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Borough reading pose: rose N ~20°. Parallel Northern platforms share bearingDeg 0. Depths 17.0 / 19.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2520,9 +6164,93 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO CHALK FARM",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.28
+          ],
+          "b": [
+            0.47,
+            0.39
+          ],
+          "grid": "D3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO MORNINGTON CRESCENT",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.39
+          ],
+          "b": [
+            0.47,
+            0.5
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND TO KENTISH TOWN",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.61
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 SOUTHBOUND TO KINGS CROSS AND MORNINGTON CRESCENT",
+          "lineId": "northern",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.72
+          ],
+          "b": [
+            0.47,
+            0.83
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Camden Town axonometric: N about 230° on the portrait raster; NB 14.6m, SB 18.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Camden Town reading pose: rose N ~140°. Four parallel Northern platforms share bearingDeg 0. Depths 14.6 / 18.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.22,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2536,9 +6264,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO BELSIZE PARK",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.83
+          ],
+          "b": [
+            0.72,
+            0.94
+          ],
+          "grid": "G8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO CAMDEN TOWN",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.72
+          ],
+          "b": [
+            0.72,
+            0.83
+          ],
+          "grid": "G7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Chalk Farm axonometric: N points right (90°) on the portrait raster; Northern Line platforms 17.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Chalk Farm reading pose: rose N up (0). Parallel Northern platforms share bearingDeg 0. Depth 17.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.22,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2552,9 +6326,37 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORMS 1 & 2",
+          "lineId": "northern",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.59,
+            0.61
+          ],
+          "b": [
+            0.91,
+            0.83
+          ],
+          "grid": "J6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Clapham Common axonometric: N about 135° on the portrait raster; Northern Line platforms 20.1m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Clapham Common reading pose: rose N ~45°. Island Northern platforms share bearingDeg 0. Depth 20.1m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.22,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2568,9 +6370,37 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORMS 1 & 2",
+          "lineId": "northern",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.28
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "D3",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Clapham North axonometric: N about 340° on the portrait raster; Northern Line platforms 15.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Clapham North reading pose: rose N ~250°. Island Northern platforms share bearingDeg 0. Depth 15.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.66,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2584,9 +6414,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO CLAPHAM COMMON",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.66,
+            0.28
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO BALHAM",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.94
+          ],
+          "b": [
+            0.72,
+            0.39
+          ],
+          "grid": "G9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Clapham South axonometric: N about 110° on the portrait raster; Northern Line platforms 17.7m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Clapham South reading pose: rose N ~20°. Parallel Northern platforms share bearingDeg 0. Depth 17.7m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.09,
+          0.72
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2600,9 +6476,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO TOOTING BROADWAY",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.72
+          ],
+          "b": [
+            0.22,
+            0.94
+          ],
+          "grid": "G7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO SOUTH WIMBLEDON",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.61
+          ],
+          "b": [
+            0.16,
+            0.83
+          ],
+          "grid": "F6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Colliers Wood axonometric: N about 315° on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Colliers Wood reading pose: rose N ~225°. Parallel Northern platforms share bearingDeg 0. Depth 13.4m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2764,9 +6686,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO TOTTENHAM COURT ROAD",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.28
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "G3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO WARREN STREET",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.47,
+            0.39
+          ],
+          "b": [
+            0.59,
+            0.94
+          ],
+          "grid": "H4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Goodge Street axonometric: N points right (90°) on the portrait raster; Northern Line platforms 28.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Goodge Street reading pose: rose N up (0). Parallel Northern platforms share bearingDeg 0. Depth 28.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.28,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2780,9 +6748,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO GOLDERS GREEN",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.39
+          ],
+          "b": [
+            0.47,
+            0.94
+          ],
+          "grid": "E4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO BELSIZE PARK",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.5
+          ],
+          "b": [
+            0.53,
+            0.94
+          ],
+          "grid": "G5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Hampstead axonometric; north ~45° (top-right); Northern Line platforms 58.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Hampstead reading pose: rose N ~315°. Parallel Northern platforms share bearingDeg 0. Depth 58.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2796,9 +6810,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO EAST FINCHLEY",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.09,
+            0.72
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "B7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO ARCHWAY",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.03,
+            0.61
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "A6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Highgate axonometric; north ~315° (top-left); Northern Line platforms 42.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Highgate reading pose: rose N ~225°. Parallel Northern platforms share bearingDeg 0. Depth 42.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2817,9 +6877,93 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO WATERLOO",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.61
+          ],
+          "b": [
+            0.41,
+            0.5
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND TO ELEPHANT AND CASTLE",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.61
+          ],
+          "b": [
+            0.41,
+            0.61
+          ],
+          "grid": "C6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 SOUTHBOUND TO OVAL",
+          "lineId": "northern",
+          "platformNumbers": [
+            4
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.83
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO OVAL",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.94
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "E9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Kennington axonometric; north ~135° (bottom-right); NB 17.0m, SB 18.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Kennington reading pose: rose N ~45°. Four parallel Northern platforms share bearingDeg 0. Depths 17.0 / 18.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.28,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2838,9 +6982,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO TUFNELL PARK",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.83
+          ],
+          "b": [
+            0.47,
+            0.5
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO CAMDEN TOWN",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.72
+          ],
+          "b": [
+            0.41,
+            0.39
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Kentish Town axonometric; north ~225° (bottom-left); SB 23.8m, NB 20.4m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Kentish Town reading pose: rose N ~135°. Parallel Northern platforms share bearingDeg 0. Depths 23.8 / 20.4m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2859,9 +7049,93 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 4 NORTHBOUND TO TOTTENHAM COURT ROAD",
+          "lineId": "northern",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.47,
+            0.39
+          ],
+          "b": [
+            0.72,
+            0.17
+          ],
+          "grid": "H4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 SOUTHBOUND TO CHARING CROSS",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.39
+          ],
+          "b": [
+            0.66,
+            0.17
+          ],
+          "grid": "G4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO COVENT GARDEN",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO PICCADILLY CIRCUS",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.09,
+            0.72
+          ],
+          "b": [
+            0.47,
+            0.83
+          ],
+          "grid": "B7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Leicester Square axonometric; north ~215°; Northern 27.4m, Piccadilly 32.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Leicester Square reading pose: rose N ~125°. Northern bearingDeg 0; Piccadilly 90. Depths 27.4 / 32.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.09,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2875,9 +7149,57 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "NORTHERN LINE PLATFORMS 1 & 2",
+          "lineId": "northern",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.53,
+            0.61
+          ],
+          "b": [
+            0.72,
+            0.83
+          ],
+          "grid": "I6",
+          "confidence": "high"
+        },
+        {
+          "caption": "NETWORK RAIL PLATFORMS 3 & 4",
+          "lineId": "national-rail",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.09,
+            0.61
+          ],
+          "b": [
+            0.34,
+            0.83
+          ],
+          "grid": "B6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Old Street axonometric; north ~45° (top-right); Northern Line platform 15.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Old Street reading pose: rose N ~315°. Parallel Northern and Network Rail platforms share bearingDeg 0. Depth 15.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.41,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2896,9 +7218,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO KENNINGTON",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.47,
+            0.61
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO STOCKWELL",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.53,
+            0.83
+          ],
+          "b": [
+            0.78,
+            0.72
+          ],
+          "grid": "I8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Oval axonometric; north ~315° (top-left); NB 14.3m, SB 17.7m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Oval reading pose: rose N ~225°. Parallel Northern platforms share bearingDeg 0. Depths 14.3 / 17.7m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.34,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2912,9 +7280,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO COLLIERS WOOD",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.72,
+            0.83
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO MORDEN",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.47,
+            0.61
+          ],
+          "b": [
+            0.72,
+            0.72
+          ],
+          "grid": "H6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "South Wimbledon axonometric; north ~315° (top-left); Northern Line platforms 12.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "South Wimbledon reading pose: rose N ~225°. Parallel Northern platforms share bearingDeg 0. Depth 12.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.16,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2933,9 +7347,93 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "NORTHBOUND VICTORIA LINE PLATFORM 1",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.09,
+            0.94
+          ],
+          "b": [
+            0.28,
+            0.61
+          ],
+          "grid": "B9",
+          "confidence": "high"
+        },
+        {
+          "caption": "NORTHBOUND NORTHERN LINE PLATFORM 2",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.41,
+            0.5
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        },
+        {
+          "caption": "SOUTHBOUND NORTHERN LINE PLATFORM 3",
+          "lineId": "northern",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.94
+          ],
+          "b": [
+            0.34,
+            0.72
+          ],
+          "grid": "E9",
+          "confidence": "high"
+        },
+        {
+          "caption": "SOUTHBOUND VICTORIA LINE PLATFORM 4",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.94
+          ],
+          "b": [
+            0.53,
+            0.61
+          ],
+          "grid": "G9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Stockwell axonometric; north ~315° (top-left); Northern and Victoria both 14.6m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Stockwell reading pose: rose N ~225°. Parallel Northern and Victoria platforms share bearingDeg 0. Depths 14.6 / 14.6m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.28,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2949,9 +7447,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO BALHAM",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.39
+          ],
+          "b": [
+            0.59,
+            0.17
+          ],
+          "grid": "F4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO TOOTING BROADWAY",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.41,
+            0.61
+          ],
+          "b": [
+            0.66,
+            0.39
+          ],
+          "grid": "G6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Tooting Bec axonometric; north ~30° (top-right); Northern Line platforms 15.9m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Tooting Bec reading pose: rose N ~300°. Parallel Northern platforms share bearingDeg 0. Depth 15.9m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.09,
+          0.72
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2965,9 +7509,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.94
+          ],
+          "b": [
+            0.41,
+            0.61
+          ],
+          "grid": "D9",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO COLLIERS WOOD",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.34,
+            0.5
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Tooting Broadway axonometric; north ~225° (bottom-left); Northern Line platforms 12.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Tooting Broadway reading pose: rose N ~135°. Parallel Northern platforms share bearingDeg 0. Depth 12.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.16,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -2986,9 +7576,55 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO ARCHWAY",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.61
+          ],
+          "b": [
+            0.59,
+            0.39
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO KENTISH TOWN",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.53,
+            0.5
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Tufnell Park axonometric; north ~135° (bottom-right); NB 22.0m, SB 25.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Tufnell Park reading pose: rose N ~45°. Parallel Northern platforms share bearingDeg 0. Depths 22.0 / 25.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d northern line stations Redacted.pdf",
@@ -3007,9 +7643,93 @@
           "lineId": "northern"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO EUSTON",
+          "lineId": "northern",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.03,
+            0.61
+          ],
+          "b": [
+            0.16,
+            0.61
+          ],
+          "grid": "A6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO GOODGE STREET",
+          "lineId": "northern",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.28
+          ],
+          "b": [
+            0.41,
+            0.17
+          ],
+          "grid": "E3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND VICTORIA TO EUSTON",
+          "lineId": "victoria",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.72,
+            0.83
+          ],
+          "b": [
+            0.91,
+            0.72
+          ],
+          "grid": "L8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 SOUTHBOUND VICTORIA TO OXFORD CIRCUS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.72,
+            0.94
+          ],
+          "b": [
+            0.91,
+            0.83
+          ],
+          "grid": "L9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Warren Street axonometric; north ~315° (top-left); Victoria 22.2m, Northern 25.6m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Warren Street reading pose: rose N ~225°. Northern and Victoria platforms share bearingDeg 0. Depths 22.2 / 25.6m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.03,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3023,9 +7743,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO HOLLOWAY ROAD",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.61
+          ],
+          "b": [
+            0.66,
+            0.72
+          ],
+          "grid": "F6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO FINSBURY PARK",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.66,
+            0.83
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Arsenal: N at top; Piccadilly platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Arsenal reading pose: rose N ~270°. Parallel Piccadilly platforms share bearingDeg 0. Depth 18.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.34,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3039,9 +7805,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO HOLLOWAY ROAD",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.91,
+            0.39
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO KINGS CROSS",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.94
+          ],
+          "b": [
+            0.97,
+            0.5
+          ],
+          "grid": "D9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Caledonian Road: N bottom-right; Piccadilly platforms 20.7m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Caledonian Road reading pose: rose N ~45°. Parallel Piccadilly platforms share bearingDeg 0. Depth 20.7m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.47,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3055,9 +7867,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO WOOD GREEN",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.09,
+            0.83
+          ],
+          "b": [
+            0.41,
+            0.61
+          ],
+          "grid": "B8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO ARNOS GROVE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.09,
+            0.94
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "B9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Bounds Green: N about 30°; Piccadilly platforms 16.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Bounds Green reading pose: rose N ~300°. Parallel Piccadilly platforms share bearingDeg 0. Depth 16.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3133,9 +7991,93 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 4 VICTORIA SOUTHBOUND TO HIGHBURY AND ISLINGTON",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.28
+          ],
+          "b": [
+            0.41,
+            0.17
+          ],
+          "grid": "E3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 PICCADILLY SOUTHBOUND TO ARSENAL",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.28
+          ],
+          "b": [
+            0.41,
+            0.17
+          ],
+          "grid": "F3",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 VICTORIA NORTHBOUND TO SEVEN SISTERS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.39
+          ],
+          "b": [
+            0.34,
+            0.28
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 PICCADILLY NORTHBOUND TO MANOR HOUSE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.5
+          ],
+          "b": [
+            0.41,
+            0.39
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Finsbury Park: N at top; table lists only Piccadilly platforms 7.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Finsbury Park reading pose: rose N ~270°. Parallel Piccadilly and Victoria platforms share bearingDeg 0. Depth 7.3m.",
+      "reference": {
+        "label": "Ticket Hall A",
+        "at": [
+          0.09,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3149,9 +8091,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO HEATHROW TERMINAL 4",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.5
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "E5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO HOUNSLOW WEST",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.39
+          ],
+          "b": [
+            0.41,
+            0.61
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Hatton Cross reading pose: rose N ~45°. Parallel Piccadilly platforms share bearingDeg 90. Depth 4.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.61
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3165,9 +8153,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO HATTON CROSS",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.83
+          ],
+          "b": [
+            0.84,
+            0.72
+          ],
+          "grid": "H8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO HATTON CROSS",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.03,
+            0.94
+          ],
+          "b": [
+            0.34,
+            0.83
+          ],
+          "grid": "A9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Heathrow 1,2,3: N top-right; Piccadilly platforms 14m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Heathrow Terminals 1 2 3 reading pose: rose N ~315°. Parallel Piccadilly platforms share bearingDeg 90. Depth 14m.",
+      "reference": {
+        "label": "Ticket Hall (West End)",
+        "at": [
+          0.22,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3181,9 +8215,36 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO HEATHROW TERMINALS 1 2 3",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.28,
+            0.83
+          ],
+          "b": [
+            0.72,
+            0.28
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Heathrow Terminal 4: N top-right; table row Piccadilly Line 8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Heathrow Terminal 4 reading pose: rose N ~315°. Single Piccadilly platform bearingDeg 90. Depth 8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.16,
+          0.72
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3197,9 +8258,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.72,
+            0.39
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.83
+          ],
+          "b": [
+            0.78,
+            0.28
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Holloway Road: N about 20°; Piccadilly platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Holloway Road reading pose: rose N ~290°. Parallel Piccadilly platforms share bearingDeg 0. Depth 18.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.66,
+          0.61
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3213,9 +8320,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO HOUNSLOW CENTRAL",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.22,
+            0.39
+          ],
+          "b": [
+            0.91,
+            0.83
+          ],
+          "grid": "D4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO HATTON CROSS",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.16,
+            0.5
+          ],
+          "b": [
+            0.84,
+            0.94
+          ],
+          "grid": "C5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Hounslow West: N about 145°; Piccadilly platforms 4.9m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Hounslow West reading pose: rose N ~55°. Parallel Piccadilly platforms share bearingDeg 90. Depth 4.9m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.09,
+          0.61
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3229,9 +8382,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.03,
+            0.94
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "A9",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.03,
+            0.83
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "A8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Hyde Park Corner: N to the left; Piccadilly platforms 21.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Hyde Park Corner reading pose: rose N ~180°. Parallel Piccadilly platforms share bearingDeg 90. Depth 21.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3245,9 +8444,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO HYDE PARK CORNER",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.61
+          ],
+          "b": [
+            0.72,
+            0.61
+          ],
+          "grid": "H6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO SOUTH KENSINGTON",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.61
+          ],
+          "b": [
+            0.72,
+            0.72
+          ],
+          "grid": "H6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Knightsbridge: N to the right; Piccadilly platforms 22.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Knightsbridge reading pose: rose N up (0). Parallel Piccadilly platforms share bearingDeg 90. Depth 22.0m.",
+      "reference": {
+        "label": "Ticket Hall (Brompton Road)",
+        "at": [
+          0.09,
+          0.72
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3261,9 +8506,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO TURNPIKE LANE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.41,
+            0.61
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO FINSBURY PARK",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.41,
+            0.72
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Manor House: N to the right; Piccadilly platforms 7.3m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Manor House reading pose: rose N up (0). Parallel Piccadilly platforms share bearingDeg 0. Depth 7.3m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3277,9 +8568,37 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORMS 1 & 2",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1,
+            2
+          ],
+          "end": null,
+          "bearingDeg": 42,
+          "a": [
+            0.34,
+            0.39
+          ],
+          "b": [
+            0.53,
+            0.83
+          ],
+          "grid": "F4",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Russell Square: N at top; Piccadilly platforms 33.0m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Russell Square reading pose: rose N ~270°. Parallel Piccadilly platforms share bearingDeg 42. Depth 33.0m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.34,
+          0.61
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3293,9 +8612,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO OAKWOOD",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.83
+          ],
+          "b": [
+            0.34,
+            0.61
+          ],
+          "grid": "C8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO ARNOS GROVE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.34,
+            0.94
+          ],
+          "b": [
+            0.53,
+            0.72
+          ],
+          "grid": "F9",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Southgate: N about 60°; Piccadilly platforms 12.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Southgate reading pose: rose N ~330°. Parallel Piccadilly platforms share bearingDeg 0. Depth 12.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.17
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3309,9 +8674,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO WOOD GREEN",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.83
+          ],
+          "b": [
+            0.78,
+            0.94
+          ],
+          "grid": "D8",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO MANOR HOUSE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.53,
+            0.61
+          ],
+          "b": [
+            0.91,
+            0.83
+          ],
+          "grid": "I6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Turnpike Lane: N top-right; Piccadilly platforms 15.2m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Turnpike Lane reading pose: rose N ~315°. Parallel Piccadilly platforms share bearingDeg 0. Depth 15.2m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.59,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d piccadilly line stations Redacted.pdf",
@@ -3325,9 +8736,55 @@
           "lineId": "piccadilly"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 WESTBOUND TO TURNPIKE LANE",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.72
+          ],
+          "b": [
+            0.41,
+            0.61
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 EASTBOUND TO BOUNDS GREEN",
+          "lineId": "piccadilly",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.83
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Wood Green: N top-right; Piccadilly platforms 12.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Wood Green reading pose: rose N ~315°. Parallel Piccadilly platforms share bearingDeg 0. Depth 12.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.53,
+          0.39
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
@@ -3341,9 +8798,55 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO WALTHAMSTOW CENTRAL",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.12,
+            0.5
+          ],
+          "b": [
+            0.47,
+            0.61
+          ],
+          "grid": "B5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO TOTTENHAM HALE",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.12,
+            0.61
+          ],
+          "b": [
+            0.47,
+            0.72
+          ],
+          "grid": "B6",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Blackhorse Road: N points top-left; Victoria platforms 16.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Blackhorse Road reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 16.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.78,
+          0.5
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
@@ -3357,9 +8860,55 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO STOCKWELL",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": "west",
+          "bearingDeg": 0,
+          "a": [
+            0.12,
+            0.39
+          ],
+          "b": [
+            0.59,
+            0.83
+          ],
+          "grid": "B4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 NORTHBOUND TO STOCKWELL",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": "east",
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.45
+          ],
+          "b": [
+            0.63,
+            0.89
+          ],
+          "grid": "C5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Brixton: N points top-left; Victoria platforms 17.6m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Brixton reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 17.6m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.28,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
@@ -3373,9 +8922,95 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "VICTORIA & RAILTRACK PLATFORMS 5 & 6 SOUTHBOUND",
+          "lineId": "victoria",
+          "platformNumbers": [
+            5,
+            6
+          ],
+          "end": "south",
+          "bearingDeg": 0,
+          "a": [
+            0.12,
+            0.5
+          ],
+          "b": [
+            0.28,
+            0.78
+          ],
+          "grid": "B5",
+          "confidence": "high"
+        },
+        {
+          "caption": "VICTORIA & RAILTRACK PLATFORMS 3 & 4 NORTHBOUND",
+          "lineId": "victoria",
+          "platformNumbers": [
+            3,
+            4
+          ],
+          "end": "north",
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.5
+          ],
+          "b": [
+            0.38,
+            0.78
+          ],
+          "grid": "D5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 OVERGROUND EASTBOUND TO CANONBURY",
+          "lineId": "london-overground",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.72,
+            0.28
+          ],
+          "b": [
+            0.94,
+            0.5
+          ],
+          "grid": "L3",
+          "confidence": "low"
+        },
+        {
+          "caption": "PLATFORM 2 OVERGROUND WESTBOUND TO CALEDONIAN ROAD",
+          "lineId": "london-overground",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.72,
+            0.36
+          ],
+          "b": [
+            0.94,
+            0.58
+          ],
+          "grid": "L4",
+          "confidence": "low"
+        }
+      ],
       "confidence": "high",
-      "raw": "Highbury & Islington: N points top-left; Victoria & Railtrack platforms 17.7m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Highbury & Islington reading pose: rose N top-left (225). Victoria bearingDeg 0; Overground 90. Depth 17.7m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.88,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
@@ -3451,9 +9086,74 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 5 SOUTHBOUND TO FINSBURY PARK",
+          "lineId": "victoria",
+          "platformNumbers": [
+            5
+          ],
+          "end": "east",
+          "bearingDeg": 90,
+          "a": [
+            0.47,
+            0.5
+          ],
+          "b": [
+            0.56,
+            0.61
+          ],
+          "grid": "H5",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 3 NORTHBOUND TO TOTTENHAM HALE",
+          "lineId": "victoria",
+          "platformNumbers": [
+            3
+          ],
+          "end": null,
+          "bearingDeg": 90,
+          "a": [
+            0.41,
+            0.61
+          ],
+          "b": [
+            0.53,
+            0.72
+          ],
+          "grid": "G6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 4 NORTHBOUND TO TOTTENHAM HALE",
+          "lineId": "victoria",
+          "platformNumbers": [
+            4
+          ],
+          "end": "west",
+          "bearingDeg": 90,
+          "a": [
+            0.34,
+            0.72
+          ],
+          "b": [
+            0.47,
+            0.78
+          ],
+          "grid": "F7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Seven Sisters: N points up; Victoria platforms 18.6m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Seven Sisters reading pose: rose N up (270). Victoria platforms along the diagonal share bearingDeg 90. Depth 18.6m.",
+      "reference": {
+        "label": "Ticket Hall (High Road)",
+        "at": [
+          0.28,
+          0.22
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
@@ -3467,9 +9167,55 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO BLACKHORSE ROAD",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.61
+          ],
+          "b": [
+            0.66,
+            0.89
+          ],
+          "grid": "D6",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO SEVEN SISTERS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.22,
+            0.7
+          ],
+          "b": [
+            0.66,
+            0.94
+          ],
+          "grid": "D7",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Tottenham Hale: N points top-left; Victoria platforms 16.8m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Tottenham Hale reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 16.8m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.5,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
@@ -3483,9 +9229,55 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 2 SOUTHBOUND TO STOCKWELL",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": "west",
+          "bearingDeg": 0,
+          "a": [
+            0.16,
+            0.72
+          ],
+          "b": [
+            0.34,
+            0.83
+          ],
+          "grid": "C7",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 1 NORTHBOUND TO PIMLICO",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": "east",
+          "bearingDeg": 0,
+          "a": [
+            0.28,
+            0.83
+          ],
+          "b": [
+            0.47,
+            0.94
+          ],
+          "grid": "E8",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Vauxhall: N points top-left; Victoria platforms 17.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Vauxhall reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 17.5m.",
+      "reference": {
+        "label": "Ticket Hall",
+        "at": [
+          0.45,
+          0.28
+        ]
+      }
     },
     {
       "file": "3d victoria line stations Redacted.pdf",
@@ -3499,9 +9291,55 @@
           "lineId": "victoria"
         }
       ],
-      "platforms": [],
+      "platforms": [
+        {
+          "caption": "PLATFORM 1 WESTBOUND TO BLACKHORSE ROAD",
+          "lineId": "victoria",
+          "platformNumbers": [
+            1
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.12,
+            0.39
+          ],
+          "b": [
+            0.41,
+            0.78
+          ],
+          "grid": "B4",
+          "confidence": "high"
+        },
+        {
+          "caption": "PLATFORM 2 EASTBOUND TO SIDINGS",
+          "lineId": "victoria",
+          "platformNumbers": [
+            2
+          ],
+          "end": null,
+          "bearingDeg": 0,
+          "a": [
+            0.12,
+            0.5
+          ],
+          "b": [
+            0.41,
+            0.89
+          ],
+          "grid": "B5",
+          "confidence": "high"
+        }
+      ],
       "confidence": "high",
-      "raw": "Walthamstow Central: N points top-left; Victoria platforms 16.5m. northDeg migrated +270 for reading-pose raster."
+      "raw": "Walthamstow Central reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 16.5m.",
+      "reference": {
+        "label": "Concourse",
+        "at": [
+          0.72,
+          0.5
+        ]
+      }
     }
   ]
 }

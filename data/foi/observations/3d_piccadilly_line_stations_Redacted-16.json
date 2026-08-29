@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Turnpike Lane: N top-right; Piccadilly platforms 15.2m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Turnpike Lane reading pose: rose N ~315\u00b0. Parallel Piccadilly platforms share bearingDeg 0. Depth 15.2m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO WOOD GREEN",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.83
+      ],
+      "b": [
+        0.78,
+        0.94
+      ],
+      "grid": "D8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO MANOR HOUSE",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.53,
+        0.61
+      ],
+      "b": [
+        0.91,
+        0.83
+      ],
+      "grid": "I6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.59,
+      0.28
+    ]
+  }
 }

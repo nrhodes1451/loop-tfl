@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Sloane Square axonometric; N towards the right; District and Circle platforms 7.75m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Sloane Square reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 7.75m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO SOUTH KENSINGTON",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.28,
+        0.61
+      ],
+      "b": [
+        0.72,
+        0.83
+      ],
+      "grid": "E6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO VICTORIA",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.34,
+        0.5
+      ],
+      "b": [
+        0.97,
+        0.72
+      ],
+      "grid": "F5",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.09,
+      0.39
+    ]
+  }
 }

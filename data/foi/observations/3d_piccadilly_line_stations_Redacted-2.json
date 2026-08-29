@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Caledonian Road: N bottom-right; Piccadilly platforms 20.7m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Caledonian Road reading pose: rose N ~45\u00b0. Parallel Piccadilly platforms share bearingDeg 0. Depth 20.7m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO HOLLOWAY ROAD",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.83
+      ],
+      "b": [
+        0.91,
+        0.39
+      ],
+      "grid": "C8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO KINGS CROSS",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.94
+      ],
+      "b": [
+        0.97,
+        0.5
+      ],
+      "grid": "D9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.47,
+      0.28
+    ]
+  }
 }

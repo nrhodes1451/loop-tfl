@@ -1,19 +1,46 @@
 {
   "northDeg": 225,
   "depths": [
+    { "label": "DISTRICT AND CIRCLE LINE PLATFORMS", "metres": 8.8 },
+    { "label": "CENTRAL LINE WESTBOUND PLATFORM", "metres": 25.9 },
+    { "label": "CENTRAL LINE EASTBOUND PLATFORM", "metres": 31.1 }
+  ],
+  "platforms": [
     {
-      "label": "DISTRICT AND CIRCLE LINE PLATFORMS",
-      "metres": 8.8
+      "caption": "PLATFORMS 1 & 2 DISTRICT AND CIRCLE",
+      "lineId": "district",
+      "platformNumbers": [1, 2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.62, 0.68],
+      "b": [0.78, 0.78],
+      "grid": "K7",
+      "confidence": "high"
     },
     {
-      "label": "CENTRAL LINE WESTBOUND PLATFORM",
-      "metres": 25.9
+      "caption": "PLATFORM 4 CENTRAL WESTBOUND TO HOLLAND PARK",
+      "lineId": "central",
+      "platformNumbers": [4],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.34, 0.68],
+      "b": [0.50, 0.78],
+      "grid": "F7",
+      "confidence": "high"
     },
     {
-      "label": "CENTRAL LINE EASTBOUND PLATFORM",
-      "metres": 31.1
+      "caption": "PLATFORM 3 CENTRAL EASTBOUND TO QUEENSWAY",
+      "lineId": "central",
+      "platformNumbers": [3],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.16, 0.68],
+      "b": [0.32, 0.78],
+      "grid": "C7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.41, 0.39] },
   "confidence": "high",
-  "raw": "Notting Hill Gate axonometric; N towards top-left; District/Circle 8.8m, Central WB 25.9m, EB 31.1m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Notting Hill Gate reading pose: rose N top-left (225). All platforms bearingDeg 90. Depths 8.8 / WB 25.9 / EB 31.1m."
 }

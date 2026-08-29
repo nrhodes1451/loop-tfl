@@ -7,5 +7,71 @@
     }
   ],
   "confidence": "high",
-  "raw": "Tower Hill axonometric; N about 4 o'clock; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Tower Hill reading pose: rose N ~30\u00b0. Parallel District/Circle platforms share bearingDeg 90. Depth 5.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [
+        0.53,
+        0.72
+      ],
+      "b": [
+        0.78,
+        0.5
+      ],
+      "grid": "I7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.53,
+        0.61
+      ],
+      "b": [
+        0.72,
+        0.39
+      ],
+      "grid": "I6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3",
+      "lineId": "circle",
+      "platformNumbers": [
+        3
+      ],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [
+        0.34,
+        0.61
+      ],
+      "b": [
+        0.53,
+        0.5
+      ],
+      "grid": "F6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Entrance Ticket Hall",
+    "at": [
+      0.47,
+      0.83
+    ]
+  }
 }

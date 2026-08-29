@@ -1,15 +1,34 @@
 {
   "northDeg": 90,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORM 1", "metres": 17.5 },
+    { "label": "CENTRAL LINE PLATFORM 2", "metres": 22.2 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORM 1",
-      "metres": 17.5
+      "caption": "PLATFORM 1 WESTBOUND TO CHANCERY LANE",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.22, 0.42],
+      "b": [0.72, 0.62],
+      "grid": "D4",
+      "confidence": "high"
     },
     {
-      "label": "CENTRAL LINE PLATFORM 2",
-      "metres": 22.2
+      "caption": "PLATFORM 2 EASTBOUND TO BANK",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.22, 0.58],
+      "b": [0.72, 0.78],
+      "grid": "D6",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.84, 0.61] },
   "confidence": "high",
-  "raw": "St Paul's axonometric; N points down; Platform 1 17.5m, Platform 2 22.2m. northDeg migrated +270 for reading-pose raster."
+  "raw": "St Paul's reading pose: rose N down (90). Both Central platforms bearingDeg 90. Depths P1 17.5m / P2 22.2m."
 }

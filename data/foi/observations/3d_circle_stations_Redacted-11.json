@@ -23,5 +23,94 @@
     }
   ],
   "confidence": "high",
-  "raw": "King's Cross rose N at 135\u00b0; ticket hall 4.5m, Met/Circle 7.0m, Vic 15.7m, Picc 21.3m, Northern 27.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "King's Cross axonometric 1 reading pose: rose N ~45\u00b0. Met/Circle and Northern bearingDeg 90; Piccadilly and Victoria 0. Depths 7.0 / 15.7 / 21.3 / 27.0m.",
+  "platforms": [
+    {
+      "caption": "METROPOLITAN & CIRCLE LINE PLATFORMS 1 & 2",
+      "lineId": "circle",
+      "platformNumbers": [
+        1,
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.09,
+        0.72
+      ],
+      "b": [
+        0.28,
+        0.72
+      ],
+      "grid": "B7",
+      "confidence": "high"
+    },
+    {
+      "caption": "NORTHERN LINE PLATFORMS 7 & 8",
+      "lineId": "northern",
+      "platformNumbers": [
+        7,
+        8
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.34,
+        0.17
+      ],
+      "b": [
+        0.41,
+        0.39
+      ],
+      "grid": "F2",
+      "confidence": "high"
+    },
+    {
+      "caption": "PICCADILLY LINE PLATFORMS 5 & 6",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        5,
+        6
+      ],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [
+        0.59,
+        0.39
+      ],
+      "b": [
+        0.72,
+        0.61
+      ],
+      "grid": "J4",
+      "confidence": "high"
+    },
+    {
+      "caption": "VICTORIA LINE PLATFORMS 3 & 4",
+      "lineId": "victoria",
+      "platformNumbers": [
+        3,
+        4
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.53,
+        0.72
+      ],
+      "b": [
+        0.78,
+        0.61
+      ],
+      "grid": "I7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Western Ticket Hall",
+    "at": [
+      0.09,
+      0.5
+    ]
+  }
 }

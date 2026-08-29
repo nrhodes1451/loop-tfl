@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "DISTRICT & METROPOLITAN LINE PLATFORMS", "metres": 8.2 }],
+  "platforms": [
     {
-      "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
-      "metres": 8.2
+      "caption": "PLATFORM 2 EASTBOUND DISTRICT & H&C TO WHITECHAPEL",
+      "lineId": "district",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.16, 0.72],
+      "b": [0.53, 0.39],
+      "grid": "C7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND DISTRICT & H&C TO LIVERPOOL STREET",
+      "lineId": "district",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.22, 0.83],
+      "b": [0.59, 0.50],
+      "grid": "D8",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall B", "at": [0.62, 0.22] },
   "confidence": "high",
-  "raw": "Aldgate East: N points top-left; table lists District & Metropolitan platforms at 8.2m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Aldgate East reading pose: rose N top-left (225). Parallel District platforms share bearingDeg 90. Depth 8.2m."
 }

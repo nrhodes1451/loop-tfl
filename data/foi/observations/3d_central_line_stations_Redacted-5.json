@@ -1,11 +1,33 @@
 {
   "northDeg": 225,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 12.8 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 12.8
+      "caption": "PLATFORM 2 EASTBOUND TO NEWBURY PARK",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.12, 0.50],
+      "b": [0.41, 0.72],
+      "grid": "B5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO REDBRIDGE",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.12, 0.58],
+      "b": [0.41, 0.80],
+      "grid": "B6",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.69, 0.22] },
   "confidence": "high",
-  "raw": "Gants Hill axonometric; N towards top-left; Central platforms 12.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Gants Hill reading pose: rose N top-left (225). Parallel Central platforms share bearingDeg 90. Depth 12.8m."
 }

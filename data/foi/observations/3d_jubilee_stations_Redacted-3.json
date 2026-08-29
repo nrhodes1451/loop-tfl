@@ -1,11 +1,31 @@
 {
   "northDeg": 135,
-  "depths": [
+  "depths": [{ "label": "JUBILEE LINE PLATFORMS", "metres": 23 }],
+  "platforms": [
     {
-      "label": "JUBILEE LINE PLATFORMS",
-      "metres": 23
+      "caption": "JUBILEE LINE WESTBOUND TO CANADA WATER",
+      "lineId": "jubilee",
+      "platformNumbers": [],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.22, 0.72],
+      "b": [0.72, 0.78],
+      "grid": "D7",
+      "confidence": "high"
+    },
+    {
+      "caption": "JUBILEE LINE EASTBOUND TO NORTH GREENWICH",
+      "lineId": "jubilee",
+      "platformNumbers": [],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.22, 0.80],
+      "b": [0.72, 0.86],
+      "grid": "D8",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall Level", "at": [0.45, 0.28] },
   "confidence": "high",
-  "raw": "Canary Wharf: N points bottom-left; Jubilee platforms 23.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Canary Wharf reading pose: rose N bottom-left (135). Parallel Jubilee platforms share bearingDeg 90. Depth 23.0m."
 }

@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Goodge Street axonometric: N points right (90\u00b0) on the portrait raster; Northern Line platforms 28.5m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Goodge Street reading pose: rose N up (0). Parallel Northern platforms share bearingDeg 0. Depth 28.5m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO TOTTENHAM COURT ROAD",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.28
+      ],
+      "b": [
+        0.53,
+        0.83
+      ],
+      "grid": "G3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO WARREN STREET",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.47,
+        0.39
+      ],
+      "b": [
+        0.59,
+        0.94
+      ],
+      "grid": "H4",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.28,
+      0.28
+    ]
+  }
 }

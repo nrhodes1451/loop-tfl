@@ -7,5 +7,72 @@
     }
   ],
   "confidence": "high",
-  "raw": "Westminster axonometric; N towards the right; Jubilee platforms 33.0m only. northDeg migrated +270 for reading-pose raster."
+  "raw": "Westminster reading pose: rose N up (0). District/Circle and Jubilee share bearingDeg 90. Depth table lists Jubilee 33.0m.",
+  "platforms": [
+    {
+      "caption": "DISTRICT & CIRCLE LINES PLATFORMS 1 & 2",
+      "lineId": "circle",
+      "platformNumbers": [
+        1,
+        2
+      ],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [
+        0.53,
+        0.5
+      ],
+      "b": [
+        0.72,
+        0.5
+      ],
+      "grid": "I5",
+      "confidence": "high"
+    },
+    {
+      "caption": "JUBILEE LINE PLATFORM 3 EASTBOUND TO WATERLOO",
+      "lineId": "jubilee",
+      "platformNumbers": [
+        3
+      ],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [
+        0.41,
+        0.72
+      ],
+      "b": [
+        0.84,
+        0.83
+      ],
+      "grid": "G7",
+      "confidence": "high"
+    },
+    {
+      "caption": "JUBILEE LINE PLATFORM 4 WESTBOUND TO GREEN PARK",
+      "lineId": "jubilee",
+      "platformNumbers": [
+        4
+      ],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [
+        0.41,
+        0.83
+      ],
+      "b": [
+        0.84,
+        0.94
+      ],
+      "grid": "G8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Intermediate Level (West End)",
+    "at": [
+      0.34,
+      0.5
+    ]
+  }
 }

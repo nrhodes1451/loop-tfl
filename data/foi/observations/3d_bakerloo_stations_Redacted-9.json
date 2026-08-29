@@ -6,6 +6,34 @@
       "metres": 15.2
     }
   ],
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO KILBURN PARK",
+      "lineId": "bakerloo",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.28, 0.62],
+      "b": [0.55, 0.80],
+      "grid": "E6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO WARWICK AVENUE",
+      "lineId": "bakerloo",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.32, 0.68],
+      "b": [0.59, 0.86],
+      "grid": "F7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [0.38, 0.22]
+  },
   "confidence": "high",
-  "raw": "Maida Vale table lists Bakerloo platforms at 15.2m; compass N is about 15\u00b0 counter-clockwise of drawing-up (75\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
+  "raw": "Maida Vale reading pose: rose N about 345°. Parallel Bakerloo platforms share bearingDeg 0. Depth 15.2m."
 }

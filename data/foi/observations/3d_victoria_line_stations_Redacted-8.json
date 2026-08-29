@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "VICTORIA LINE PLATFORMS", "metres": 16.5 }],
+  "platforms": [
     {
-      "label": "VICTORIA LINE PLATFORMS",
-      "metres": 16.5
+      "caption": "PLATFORM 1 WESTBOUND TO BLACKHORSE ROAD",
+      "lineId": "victoria",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.12, 0.39],
+      "b": [0.41, 0.78],
+      "grid": "B4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO SIDINGS",
+      "lineId": "victoria",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.12, 0.50],
+      "b": [0.41, 0.89],
+      "grid": "B5",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Concourse", "at": [0.72, 0.50] },
   "confidence": "high",
-  "raw": "Walthamstow Central: N points top-left; Victoria platforms 16.5m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Walthamstow Central reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 16.5m."
 }

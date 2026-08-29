@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "METROPOLITAN & DISTRICT LINE PLATFORMS", "metres": 7 }],
+  "platforms": [
     {
-      "label": "METROPOLITAN & DISTRICT LINE PLATFORMS",
-      "metres": 7
+      "caption": "PLATFORM 2 EASTBOUND TO MILE END",
+      "lineId": "district",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.31, 0.83],
+      "b": [0.69, 0.44],
+      "grid": "E8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO WHITECHAPEL",
+      "lineId": "district",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.31, 0.91],
+      "b": [0.69, 0.52],
+      "grid": "E9",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.38, 0.17] },
   "confidence": "high",
-  "raw": "Stepney Green: N points top-left; Metropolitan & District platforms 7.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Stepney Green reading pose: rose N top-left (225). Parallel District platforms share bearingDeg 90. Depth 7.0m."
 }

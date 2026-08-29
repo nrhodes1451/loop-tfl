@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "CENTRAL LINE PLATFORMS", "metres": 24.4 }],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 24.4
+      "caption": "PLATFORM 2 EASTBOUND TO LANCASTER GATE",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.68],
+      "b": [0.38, 0.78],
+      "grid": "D7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO NOTTING HILL GATE",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.78],
+      "b": [0.38, 0.88],
+      "grid": "D8",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.38, 0.17] },
   "confidence": "high",
-  "raw": "Queensway axonometric; N towards top-left; Central platforms 24.4m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Queensway reading pose: rose N top-left (225). Parallel Central platforms share bearingDeg 90. Depth 24.4m."
 }

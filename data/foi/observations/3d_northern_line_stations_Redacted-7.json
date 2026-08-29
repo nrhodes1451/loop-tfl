@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Chalk Farm axonometric: N points right (90\u00b0) on the portrait raster; Northern Line platforms 17.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Chalk Farm reading pose: rose N up (0). Parallel Northern platforms share bearingDeg 0. Depth 17.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO BELSIZE PARK",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.83
+      ],
+      "b": [
+        0.72,
+        0.94
+      ],
+      "grid": "G8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO CAMDEN TOWN",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.72
+      ],
+      "b": [
+        0.72,
+        0.83
+      ],
+      "grid": "G7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.22,
+      0.28
+    ]
+  }
 }

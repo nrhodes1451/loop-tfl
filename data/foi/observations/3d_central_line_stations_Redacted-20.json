@@ -1,11 +1,31 @@
 {
   "northDeg": 135,
-  "depths": [
+  "depths": [{ "label": "CENTRAL LINE PLATFORMS", "metres": 18.8 }],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 18.8
+      "caption": "PLATFORM 1 WESTBOUND TO LEYTONSTONE",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.62],
+      "b": [0.62, 0.72],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO REDBRIDGE",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.70],
+      "b": [0.62, 0.80],
+      "grid": "D7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.45, 0.28] },
   "confidence": "high",
-  "raw": "Wanstead axonometric; N towards bottom-left; Central platforms 18.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Wanstead reading pose: rose N bottom-left (135). Parallel Central platforms share bearingDeg 90. Depth 18.8m."
 }

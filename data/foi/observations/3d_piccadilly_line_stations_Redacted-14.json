@@ -7,5 +7,34 @@
     }
   ],
   "confidence": "high",
-  "raw": "Russell Square: N at top; Piccadilly platforms 33.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Russell Square reading pose: rose N ~270\u00b0. Parallel Piccadilly platforms share bearingDeg 42. Depth 33.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORMS 1 & 2",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1,
+        2
+      ],
+      "end": null,
+      "bearingDeg": 42,
+      "a": [
+        0.34,
+        0.39
+      ],
+      "b": [
+        0.53,
+        0.83
+      ],
+      "grid": "F4",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.34,
+      0.61
+    ]
+  }
 }

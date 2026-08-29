@@ -11,5 +11,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Tufnell Park axonometric; north ~135\u00b0 (bottom-right); NB 22.0m, SB 25.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Tufnell Park reading pose: rose N ~45\u00b0. Parallel Northern platforms share bearingDeg 0. Depths 22.0 / 25.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO ARCHWAY",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.61
+      ],
+      "b": [
+        0.59,
+        0.39
+      ],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO KENTISH TOWN",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.72
+      ],
+      "b": [
+        0.53,
+        0.5
+      ],
+      "grid": "C7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.53,
+      0.28
+    ]
+  }
 }

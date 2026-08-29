@@ -75,6 +75,7 @@ export async function buildSchematics(): Promise<{
             grid: p.grid,
             residual: p.residual,
             flags: p.flags,
+            ...(p.depthM != null ? { depthM: p.depthM } : {}),
           })),
       ]),
     );

@@ -132,6 +132,7 @@ After a batch, `npm run foi:build` reports per-page review reasons:
 | `bearing-from-slope` | most marks have bearingDeg copied from the a→b pixel slope |
 | `bearing-conflict` | parallel a→b vectors were given different bearings |
 | `bearing-vs-geography` | merged bearing is more than 40° from every neighbour chord |
+| `depth-ambiguous` | several same-line depth rows and this mark could not pick one uniquely |
 
 A reason is a prompt to re-read the sheet. Where the drawing itself is wrong or
 unreadable and a human has decided the answer, record it in

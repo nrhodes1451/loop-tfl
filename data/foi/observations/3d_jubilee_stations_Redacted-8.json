@@ -1,11 +1,31 @@
 {
   "northDeg": 135,
-  "depths": [
+  "depths": [{ "label": "JUBILEE LINE PLATFORMS", "metres": 24 }],
+  "platforms": [
     {
-      "label": "JUBILEE LINE PLATFORMS",
-      "metres": 24
+      "caption": "PLATFORM 1 WESTBOUND TO WATERLOO",
+      "lineId": "jubilee",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.28, 0.78],
+      "b": [0.78, 0.72],
+      "grid": "E8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO LONDON BRIDGE",
+      "lineId": "jubilee",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.28, 0.86],
+      "b": [0.78, 0.80],
+      "grid": "E9",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Main Ticket Hall", "at": [0.06, 0.50] },
   "confidence": "high",
-  "raw": "Southwark: N points bottom-left; table prints Jubilee platforms 24m approx. northDeg migrated +270 for reading-pose raster."
+  "raw": "Southwark reading pose: rose N bottom-left (135). Parallel Jubilee platforms share bearingDeg 90. Depth 24m."
 }

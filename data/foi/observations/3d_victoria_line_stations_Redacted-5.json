@@ -1,11 +1,42 @@
 {
   "northDeg": 270,
-  "depths": [
+  "depths": [{ "label": "VICTORIA LINE PLATFORMS", "metres": 18.6 }],
+  "platforms": [
     {
-      "label": "VICTORIA LINE PLATFORMS",
-      "metres": 18.6
+      "caption": "PLATFORM 5 SOUTHBOUND TO FINSBURY PARK",
+      "lineId": "victoria",
+      "platformNumbers": [5],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.47, 0.50],
+      "b": [0.56, 0.61],
+      "grid": "H5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 NORTHBOUND TO TOTTENHAM HALE",
+      "lineId": "victoria",
+      "platformNumbers": [3],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.41, 0.61],
+      "b": [0.53, 0.72],
+      "grid": "G6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 NORTHBOUND TO TOTTENHAM HALE",
+      "lineId": "victoria",
+      "platformNumbers": [4],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.34, 0.72],
+      "b": [0.47, 0.78],
+      "grid": "F7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall (High Road)", "at": [0.28, 0.22] },
   "confidence": "high",
-  "raw": "Seven Sisters: N points up; Victoria platforms 18.6m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Seven Sisters reading pose: rose N up (270). Victoria platforms along the diagonal share bearingDeg 90. Depth 18.6m."
 }

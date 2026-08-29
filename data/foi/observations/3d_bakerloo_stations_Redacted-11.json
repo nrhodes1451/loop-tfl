@@ -10,6 +10,56 @@
       "metres": 9.7
     }
   ],
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO EDGWARE ROAD",
+      "lineId": "district",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.14, 0.62],
+      "b": [0.30, 0.78],
+      "grid": "B6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO BAYSWATER",
+      "lineId": "circle",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.18, 0.60],
+      "b": [0.34, 0.76],
+      "grid": "C6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 NORTHBOUND TO WARWICK AVENUE",
+      "lineId": "bakerloo",
+      "platformNumbers": [3],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.64, 0.42],
+      "b": [0.90, 0.48],
+      "grid": "K4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 SOUTHBOUND TO EDGWARE ROAD",
+      "lineId": "bakerloo",
+      "platformNumbers": [4],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.64, 0.50],
+      "b": [0.90, 0.56],
+      "grid": "K5",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall B (Lawn)",
+    "at": [0.44, 0.35]
+  },
   "confidence": "high",
-  "raw": "Paddington (City) table lists District and Circle 5.2m and Bakerloo 9.7m; compass N points down on this image (180\u00b0). northDeg migrated +270 for reading-pose raster."
+  "raw": "Paddington (City) reading pose: rose N right (90). District/Circle bearingDeg 90; Bakerloo 0. Depths 5.2 / 9.7m."
 }

@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Colliers Wood axonometric: N about 315\u00b0 on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Colliers Wood reading pose: rose N ~225\u00b0. Parallel Northern platforms share bearingDeg 0. Depth 13.4m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO TOOTING BROADWAY",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.72
+      ],
+      "b": [
+        0.22,
+        0.94
+      ],
+      "grid": "G7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO SOUTH WIMBLEDON",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.34,
+        0.61
+      ],
+      "b": [
+        0.16,
+        0.83
+      ],
+      "grid": "F6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.53,
+      0.17
+    ]
+  }
 }

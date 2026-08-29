@@ -2,5 +2,150 @@
   "northDeg": 315,
   "depths": [],
   "confidence": "high",
-  "raw": "Moorgate axonometric; N towards top-right; no printed depth table. northDeg migrated +270 for reading-pose raster."
+  "raw": "Moorgate reading pose: rose N ~315\u00b0. Northern bearingDeg 0; Met/Circle 90. No printed depth table.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 10 NORTHBOUND TO OLD STREET",
+      "lineId": "northern",
+      "platformNumbers": [
+        10
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.09,
+        0.28
+      ],
+      "b": [
+        0.28,
+        0.28
+      ],
+      "grid": "B3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 9 SOUTHBOUND TO BANK",
+      "lineId": "northern",
+      "platformNumbers": [
+        9
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.09,
+        0.28
+      ],
+      "b": [
+        0.28,
+        0.39
+      ],
+      "grid": "B3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 8 NORTHBOUND",
+      "lineId": "northern",
+      "platformNumbers": [
+        8
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.39
+      ],
+      "b": [
+        0.41,
+        0.39
+      ],
+      "grid": "D4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 7 SOUTHBOUND",
+      "lineId": "northern",
+      "platformNumbers": [
+        7
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.39
+      ],
+      "b": [
+        0.41,
+        0.5
+      ],
+      "grid": "D4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORMS 1 & 2 METROPOLITAN & CIRCLE",
+      "lineId": "circle",
+      "platformNumbers": [
+        1,
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.47,
+        0.72
+      ],
+      "b": [
+        0.66,
+        0.61
+      ],
+      "grid": "H7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORMS 3 & 4 METROPOLITAN & CIRCLE",
+      "lineId": "circle",
+      "platformNumbers": [
+        3,
+        4
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.47,
+        0.83
+      ],
+      "b": [
+        0.72,
+        0.61
+      ],
+      "grid": "H8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORMS 5 & 6 METROPOLITAN & CIRCLE",
+      "lineId": "circle",
+      "platformNumbers": [
+        5,
+        6
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.53,
+        0.94
+      ],
+      "b": [
+        0.78,
+        0.72
+      ],
+      "grid": "I9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall Metropolitan Circle & Railtrack",
+    "at": [
+      0.84,
+      0.39
+    ]
+  }
 }

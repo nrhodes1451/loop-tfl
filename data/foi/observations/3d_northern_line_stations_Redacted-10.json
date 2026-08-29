@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Clapham South axonometric: N about 110\u00b0 on the portrait raster; Northern Line platforms 17.7m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Clapham South reading pose: rose N ~20\u00b0. Parallel Northern platforms share bearingDeg 0. Depth 17.7m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO CLAPHAM COMMON",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.34,
+        0.72
+      ],
+      "b": [
+        0.66,
+        0.28
+      ],
+      "grid": "F7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO BALHAM",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.94
+      ],
+      "b": [
+        0.72,
+        0.39
+      ],
+      "grid": "G9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.09,
+      0.72
+    ]
+  }
 }

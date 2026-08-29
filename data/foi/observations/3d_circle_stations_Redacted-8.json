@@ -11,5 +11,109 @@
     }
   ],
   "confidence": "high",
-  "raw": "Gloucester Road rose N at 45\u00b0; District & Circle 7.0m, Piccadilly 20.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Gloucester Road reading pose: rose N ~315\u00b0. Parallel District/Circle and Piccadilly platforms share bearingDeg 90. Depths 7.0 / 20.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 3 EASTBOUND TO SOUTH KENSINGTON",
+      "lineId": "circle",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.61
+      ],
+      "b": [
+        0.41,
+        0.61
+      ],
+      "grid": "C6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO HIGH STREET KENSINGTON",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.61
+      ],
+      "b": [
+        0.41,
+        0.72
+      ],
+      "grid": "C6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO EARLS COURT",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.72
+      ],
+      "b": [
+        0.41,
+        0.72
+      ],
+      "grid": "D7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 5 EASTBOUND PICCADILLY TO SOUTH KENSINGTON",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        5
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.28,
+        0.83
+      ],
+      "b": [
+        0.47,
+        0.83
+      ],
+      "grid": "E8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 WESTBOUND PICCADILLY TO EARLS COURT",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.34,
+        0.83
+      ],
+      "b": [
+        0.47,
+        0.83
+      ],
+      "grid": "F8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.72,
+      0.28
+    ]
+  }
 }

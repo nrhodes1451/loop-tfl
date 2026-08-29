@@ -1,11 +1,31 @@
 {
   "northDeg": 240,
-  "depths": [
+  "depths": [{ "label": "CENTRAL LINE PLATFORMS", "metres": 18.3 }],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 18.3
+      "caption": "PLATFORM 2 EASTBOUND TO HOLLAND PARK",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.41, 0.61],
+      "b": [0.88, 0.39],
+      "grid": "G6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO WHITE CITY",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.59, 0.78],
+      "b": [0.84, 0.50],
+      "grid": "J8",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.22, 0.28] },
   "confidence": "high",
-  "raw": "Shepherd's Bush axonometric; N about 11 o'clock; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Shepherd's Bush reading pose: rose N about 240°. Parallel Central platforms share bearingDeg 90. Depth 18.3m."
 }

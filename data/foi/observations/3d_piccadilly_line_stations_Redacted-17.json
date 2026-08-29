@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Wood Green: N top-right; Piccadilly platforms 12.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Wood Green reading pose: rose N ~315\u00b0. Parallel Piccadilly platforms share bearingDeg 0. Depth 12.8m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO TURNPIKE LANE",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.72
+      ],
+      "b": [
+        0.41,
+        0.61
+      ],
+      "grid": "D7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO BOUNDS GREEN",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.28,
+        0.83
+      ],
+      "b": [
+        0.47,
+        0.72
+      ],
+      "grid": "E8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.53,
+      0.39
+    ]
+  }
 }

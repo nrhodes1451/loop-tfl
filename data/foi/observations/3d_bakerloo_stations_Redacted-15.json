@@ -6,6 +6,34 @@
       "metres": 16.2
     }
   ],
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO MAIDA VALE",
+      "lineId": "bakerloo",
+      "platformNumbers": [1],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [0.22, 0.80],
+      "b": [0.72, 0.58],
+      "grid": "D8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO PADDINGTON",
+      "lineId": "bakerloo",
+      "platformNumbers": [2],
+      "end": "south",
+      "bearingDeg": 0,
+      "a": [0.22, 0.86],
+      "b": [0.72, 0.64],
+      "grid": "D8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [0.72, 0.28]
+  },
   "confidence": "high",
-  "raw": "Warwick Avenue table lists Bakerloo platforms at 16.2m; compass N is about 60\u00b0 clockwise of drawing-up (150\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
+  "raw": "Warwick Avenue reading pose: rose N about 60°. Parallel Bakerloo platforms share bearingDeg 0. Depth 16.2m."
 }

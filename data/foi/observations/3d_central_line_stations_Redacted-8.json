@@ -1,11 +1,33 @@
 {
   "northDeg": 135,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 18.3 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 18.3
+      "caption": "PLATFORM 2 EASTBOUND TO MARBLE ARCH",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.38, 0.48],
+      "b": [0.68, 0.58],
+      "grid": "G5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO QUEENSWAY",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.38, 0.56],
+      "b": [0.68, 0.66],
+      "grid": "G6",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.34, 0.28] },
   "confidence": "high",
-  "raw": "Lancaster Gate axonometric; N towards bottom-left; Central platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Lancaster Gate reading pose: rose N bottom-left (135). Parallel Central platforms share bearingDeg 90. Depth 18.3m."
 }

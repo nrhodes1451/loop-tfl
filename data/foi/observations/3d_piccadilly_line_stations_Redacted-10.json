@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Hounslow West: N about 145\u00b0; Piccadilly platforms 4.9m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Hounslow West reading pose: rose N ~55\u00b0. Parallel Piccadilly platforms share bearingDeg 90. Depth 4.9m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO HOUNSLOW CENTRAL",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.39
+      ],
+      "b": [
+        0.91,
+        0.83
+      ],
+      "grid": "D4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO HATTON CROSS",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.5
+      ],
+      "b": [
+        0.84,
+        0.94
+      ],
+      "grid": "C5",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.09,
+      0.61
+    ]
+  }
 }

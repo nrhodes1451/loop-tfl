@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Balham axonometric: N about 195\u00b0 on the portrait raster; Northern Line platforms 13.4m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Balham reading pose: rose N ~105\u00b0. Parallel Northern platforms share bearingDeg 0. Depth 13.4m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO CLAPHAM SOUTH",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.47,
+        0.72
+      ],
+      "b": [
+        0.66,
+        0.61
+      ],
+      "grid": "H7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO TOOTING BEC",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.83
+      ],
+      "b": [
+        0.59,
+        0.83
+      ],
+      "grid": "G8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.28,
+      0.28
+    ]
+  }
 }

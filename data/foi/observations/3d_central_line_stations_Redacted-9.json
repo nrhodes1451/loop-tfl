@@ -1,15 +1,34 @@
 {
   "northDeg": 135,
   "depths": [
+    { "label": "CIRCLE & METROPOLITAN LINE PLATFORMS", "metres": 7.6 },
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 15.8 }
+  ],
+  "platforms": [
     {
-      "label": "CIRCLE & METROPOLITAN LINE PLATFORMS",
-      "metres": 7.6
+      "caption": "METROPOLITAN & CIRCLE LINE PLATFORMS 1 & 2",
+      "lineId": "circle",
+      "platformNumbers": [1, 2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.28],
+      "b": [0.50, 0.40],
+      "grid": "D3",
+      "confidence": "high"
     },
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 15.8
+      "caption": "CENTRAL LINE PLATFORMS 4 & 5",
+      "lineId": "central",
+      "platformNumbers": [4, 5],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.55, 0.62],
+      "b": [0.82, 0.78],
+      "grid": "I6",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall B", "at": [0.53, 0.39] },
   "confidence": "high",
-  "raw": "Liverpool Street axonometric; N towards bottom-left; Circle & Metropolitan 7.6m, Central 15.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Liverpool Street reading pose: rose N bottom-left (135). Circle/Met and Central both bearingDeg 90. Depths 7.6 / 15.8m."
 }

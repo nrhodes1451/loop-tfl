@@ -1,11 +1,33 @@
 {
   "northDeg": 135,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 15.9 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 15.9
+      "caption": "PLATFORM 1 WESTBOUND TO LIVERPOOL STREET",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.08, 0.72],
+      "b": [0.38, 0.52],
+      "grid": "A8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO MILE END",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.16, 0.78],
+      "b": [0.46, 0.58],
+      "grid": "C8",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.56, 0.17] },
   "confidence": "high",
-  "raw": "Bethnal Green axonometric; N towards bottom-left; Central platforms 15.9m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Bethnal Green reading pose: rose N bottom-left (135). Parallel Central platforms share bearingDeg 90. Depth 15.9m."
 }

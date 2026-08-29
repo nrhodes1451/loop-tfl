@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "JUBILEE LINE PLATFORMS", "metres": 13.7 }],
+  "platforms": [
     {
-      "label": "JUBILEE LINE PLATFORMS",
-      "metres": 13.7
+      "caption": "PLATFORM 1 NORTHBOUND TO FINCHLEY ROAD",
+      "lineId": "jubilee",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.22, 0.50],
+      "b": [0.50, 0.78],
+      "grid": "D5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO ST JOHNS WOOD",
+      "lineId": "jubilee",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.28, 0.56],
+      "b": [0.56, 0.84],
+      "grid": "E6",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.50, 0.39] },
   "confidence": "high",
-  "raw": "Swiss Cottage: N points top-left; Jubilee platforms 13.7m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Swiss Cottage reading pose: rose N top-left (225). Parallel Jubilee platforms share bearingDeg 0. Depth 13.7m."
 }

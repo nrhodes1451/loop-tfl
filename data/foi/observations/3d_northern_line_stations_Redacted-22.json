@@ -11,5 +11,90 @@
     }
   ],
   "confidence": "high",
-  "raw": "Stockwell axonometric; north ~315\u00b0 (top-left); Northern and Victoria both 14.6m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Stockwell reading pose: rose N ~225\u00b0. Parallel Northern and Victoria platforms share bearingDeg 0. Depths 14.6 / 14.6m.",
+  "platforms": [
+    {
+      "caption": "NORTHBOUND VICTORIA LINE PLATFORM 1",
+      "lineId": "victoria",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.09,
+        0.94
+      ],
+      "b": [
+        0.28,
+        0.61
+      ],
+      "grid": "B9",
+      "confidence": "high"
+    },
+    {
+      "caption": "NORTHBOUND NORTHERN LINE PLATFORM 2",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.34,
+        0.72
+      ],
+      "b": [
+        0.41,
+        0.5
+      ],
+      "grid": "F7",
+      "confidence": "high"
+    },
+    {
+      "caption": "SOUTHBOUND NORTHERN LINE PLATFORM 3",
+      "lineId": "northern",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.28,
+        0.94
+      ],
+      "b": [
+        0.34,
+        0.72
+      ],
+      "grid": "E9",
+      "confidence": "high"
+    },
+    {
+      "caption": "SOUTHBOUND VICTORIA LINE PLATFORM 4",
+      "lineId": "victoria",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.41,
+        0.94
+      ],
+      "b": [
+        0.53,
+        0.61
+      ],
+      "grid": "G9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.28,
+      0.17
+    ]
+  }
 }

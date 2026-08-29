@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Knightsbridge: N to the right; Piccadilly platforms 22.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Knightsbridge reading pose: rose N up (0). Parallel Piccadilly platforms share bearingDeg 90. Depth 22.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO HYDE PARK CORNER",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.47,
+        0.61
+      ],
+      "b": [
+        0.72,
+        0.61
+      ],
+      "grid": "H6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO SOUTH KENSINGTON",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.47,
+        0.61
+      ],
+      "b": [
+        0.72,
+        0.72
+      ],
+      "grid": "H6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall (Brompton Road)",
+    "at": [
+      0.09,
+      0.72
+    ]
+  }
 }

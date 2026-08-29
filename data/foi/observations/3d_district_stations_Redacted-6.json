@@ -1,15 +1,34 @@
 {
   "northDeg": 315,
   "depths": [
+    { "label": "DISTRICT & METROPOLITAN LINE PLATFORMS", "metres": 3.1 },
+    { "label": "EAST LONDON LINE PLATFORMS", "metres": 7.8 }
+  ],
+  "platforms": [
     {
-      "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
-      "metres": 3.1
+      "caption": "DISTRICT & H&C PLATFORMS 1 TO 4",
+      "lineId": "district",
+      "platformNumbers": [1, 2, 3, 4],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.16, 0.72],
+      "b": [0.50, 0.50],
+      "grid": "C7",
+      "confidence": "high"
     },
     {
-      "label": "EAST LONDON LINE PLATFORMS",
-      "metres": 7.8
+      "caption": "LONDON OVERGROUND PLATFORMS 5 & 6",
+      "lineId": "london-overground",
+      "platformNumbers": [5, 6],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.38, 0.28],
+      "b": [0.72, 0.39],
+      "grid": "G3",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.59, 0.50] },
   "confidence": "high",
-  "raw": "Whitechapel: N points top-right; District & Metropolitan 3.1m, East London Line 7.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Whitechapel reading pose: rose N top-right (315). District/H&C bearingDeg 90; Overground 0. Depths 3.1 / 7.8m."
 }

@@ -11,5 +11,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Oval axonometric; north ~315\u00b0 (top-left); NB 14.3m, SB 17.7m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Oval reading pose: rose N ~225\u00b0. Parallel Northern platforms share bearingDeg 0. Depths 14.3 / 17.7m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO KENNINGTON",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.72
+      ],
+      "b": [
+        0.47,
+        0.61
+      ],
+      "grid": "C7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO STOCKWELL",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.53,
+        0.83
+      ],
+      "b": [
+        0.78,
+        0.72
+      ],
+      "grid": "I8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.34,
+      0.17
+    ]
+  }
 }

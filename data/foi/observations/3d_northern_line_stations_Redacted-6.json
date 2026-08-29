@@ -11,5 +11,90 @@
     }
   ],
   "confidence": "high",
-  "raw": "Camden Town axonometric: N about 230\u00b0 on the portrait raster; NB 14.6m, SB 18.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Camden Town reading pose: rose N ~140\u00b0. Four parallel Northern platforms share bearingDeg 0. Depths 14.6 / 18.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO CHALK FARM",
+      "lineId": "northern",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.28
+      ],
+      "b": [
+        0.47,
+        0.39
+      ],
+      "grid": "D3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO MORNINGTON CRESCENT",
+      "lineId": "northern",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.39
+      ],
+      "b": [
+        0.47,
+        0.5
+      ],
+      "grid": "D4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 NORTHBOUND TO KENTISH TOWN",
+      "lineId": "northern",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.61
+      ],
+      "b": [
+        0.47,
+        0.72
+      ],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 SOUTHBOUND TO KINGS CROSS AND MORNINGTON CRESCENT",
+      "lineId": "northern",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.72
+      ],
+      "b": [
+        0.47,
+        0.83
+      ],
+      "grid": "D7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.22,
+      0.17
+    ]
+  }
 }

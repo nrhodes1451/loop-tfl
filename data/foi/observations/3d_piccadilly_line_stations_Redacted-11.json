@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Hyde Park Corner: N to the left; Piccadilly platforms 21.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Hyde Park Corner reading pose: rose N ~180\u00b0. Parallel Piccadilly platforms share bearingDeg 90. Depth 21.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.03,
+        0.94
+      ],
+      "b": [
+        0.41,
+        0.72
+      ],
+      "grid": "A9",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.03,
+        0.83
+      ],
+      "b": [
+        0.41,
+        0.72
+      ],
+      "grid": "A8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.53,
+      0.39
+    ]
+  }
 }

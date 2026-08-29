@@ -1,15 +1,56 @@
 {
   "northDeg": 225,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 22.2 },
+    { "label": "JUBILEE LINE PLATFORMS", "metres": 32.0 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 22.2
+      "caption": "PLATFORM 1 WESTBOUND TO MARBLE ARCH",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.38, 0.28],
+      "b": [0.62, 0.32],
+      "grid": "G3",
+      "confidence": "high"
     },
     {
-      "label": "JUBILEE LINE PLATFORMS",
-      "metres": 32.0
+      "caption": "PLATFORM 2 EASTBOUND TO OXFORD CIRCUS",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.38, 0.36],
+      "b": [0.62, 0.40],
+      "grid": "G4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 NORTHBOUND TO BAKER STREET",
+      "lineId": "jubilee",
+      "platformNumbers": [3],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.38, 0.68],
+      "b": [0.50, 0.82],
+      "grid": "G7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 SOUTHBOUND TO GREEN PARK",
+      "lineId": "jubilee",
+      "platformNumbers": [4],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.28, 0.68],
+      "b": [0.40, 0.82],
+      "grid": "E7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.66, 0.17] },
   "confidence": "high",
-  "raw": "Bond Street axonometric; N towards top-left; Central 22.2m and Jubilee 32.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Bond Street reading pose: rose N top-left (225). Central bearingDeg 90; Jubilee 0. Depths 22.2 / 32.0m."
 }

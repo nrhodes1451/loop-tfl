@@ -1,11 +1,31 @@
 {
   "northDeg": 135,
-  "depths": [
+  "depths": [{ "label": "CENTRAL LINE PLATFORMS", "metres": 4.3 }],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 4.3
+      "caption": "PLATFORM 2 EASTBOUND TO GANTS HILL",
+      "lineId": "central",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.16, 0.39],
+      "b": [0.88, 0.78],
+      "grid": "C4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO WANSTEAD",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.16, 0.47],
+      "b": [0.88, 0.86],
+      "grid": "C5",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.25, 0.17] },
   "confidence": "high",
-  "raw": "Redbridge axonometric; N towards bottom-left; Central platforms 4.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Redbridge reading pose: rose N top-left (135). Parallel Central platforms share bearingDeg 90. Depth 4.3m."
 }

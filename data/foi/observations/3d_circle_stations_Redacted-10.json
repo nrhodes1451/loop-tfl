@@ -7,5 +7,90 @@
     }
   ],
   "confidence": "high",
-  "raw": "High Street Kensington rose N at 45\u00b0; District and Circle platforms 4.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "High Street Kensington reading pose: rose N ~315\u00b0. Four parallel District/Circle platforms share bearingDeg 0. Depth 4.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO NOTTING HILL GATE",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.28
+      ],
+      "b": [
+        0.78,
+        0.83
+      ],
+      "grid": "C3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.39
+      ],
+      "b": [
+        0.72,
+        0.83
+      ],
+      "grid": "D4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 WESTBOUND TO EARLS COURT & GLOUCESTER ROAD",
+      "lineId": "circle",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.28,
+        0.5
+      ],
+      "b": [
+        0.84,
+        0.94
+      ],
+      "grid": "E5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 WESTBOUND TO EARLS COURT",
+      "lineId": "circle",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.28,
+        0.61
+      ],
+      "b": [
+        0.78,
+        0.94
+      ],
+      "grid": "E6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.53,
+      0.28
+    ]
+  }
 }

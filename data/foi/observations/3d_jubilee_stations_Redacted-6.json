@@ -1,6 +1,31 @@
 {
   "northDeg": 45,
   "depths": [],
+  "platforms": [
+    {
+      "caption": "EASTBOUND TO CANNING TOWN",
+      "lineId": "jubilee",
+      "platformNumbers": [],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.75, 0.72],
+      "b": [0.94, 0.83],
+      "grid": "M7",
+      "confidence": "low"
+    },
+    {
+      "caption": "WESTBOUND TO CANARY WHARF",
+      "lineId": "jubilee",
+      "platformNumbers": [],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.78, 0.83],
+      "b": [0.91, 0.94],
+      "grid": "O9",
+      "confidence": "low"
+    }
+  ],
+  "reference": { "label": "Ticket Hall (Level 4)", "at": [0.50, 0.22] },
   "confidence": "low",
-  "raw": "North Greenwich: N points down-right; depth table missing or redacted. northDeg migrated +270 for reading-pose raster."
+  "raw": "North Greenwich reading pose: rose N down-right (45). Parallel Jubilee platforms bearingDeg 90. Depth table missing."
 }

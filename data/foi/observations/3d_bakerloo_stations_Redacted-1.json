@@ -10,6 +10,34 @@
       "metres": 26.2
     }
   ],
+  "platforms": [
+    {
+      "caption": "NORTHERN LINE PLATFORMS 5 & 6",
+      "lineId": "northern",
+      "platformNumbers": [5, 6],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.38, 0.26],
+      "b": [0.62, 0.32],
+      "grid": "G3",
+      "confidence": "high"
+    },
+    {
+      "caption": "JUBILEE LINE PLATFORMS 3 & 4",
+      "lineId": "jubilee",
+      "platformNumbers": [3, 4],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.34, 0.58],
+      "b": [0.62, 0.72],
+      "grid": "F6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Northern Line Ticket Hall",
+    "at": [0.55, 0.22]
+  },
   "confidence": "high",
-  "raw": "Charing Cross table lists Northern 19.5m and Jubilee 26.2m; compass N points right on the page (90\u00b0). northDeg migrated +270 for reading-pose raster."
+  "raw": "Charing Cross reading pose: rose N up (0). Northern 5–6 and Jubilee 3–4 run east–west (bearingDeg 90). Depths 19.5 / 26.2m."
 }

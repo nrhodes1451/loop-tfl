@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Arsenal: N at top; Piccadilly platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Arsenal reading pose: rose N ~270\u00b0. Parallel Piccadilly platforms share bearingDeg 0. Depth 18.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO HOLLOWAY ROAD",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": "west",
+      "bearingDeg": 0,
+      "a": [
+        0.34,
+        0.61
+      ],
+      "b": [
+        0.66,
+        0.72
+      ],
+      "grid": "F6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO FINSBURY PARK",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": "east",
+      "bearingDeg": 0,
+      "a": [
+        0.34,
+        0.72
+      ],
+      "b": [
+        0.66,
+        0.83
+      ],
+      "grid": "F7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.34,
+      0.17
+    ]
+  }
 }

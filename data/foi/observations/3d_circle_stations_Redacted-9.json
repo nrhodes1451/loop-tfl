@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Great Portland Street rose N at 60\u00b0; Circle/H&C/Met platforms 6.5m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Great Portland Street reading pose: rose N ~330\u00b0. Parallel Circle/H&C/Met platforms share bearingDeg 90. Depth 6.5m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO BAKER STREET",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.03,
+        0.94
+      ],
+      "b": [
+        0.34,
+        0.72
+      ],
+      "grid": "A9",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO EUSTON SQUARE",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.41,
+        0.61
+      ],
+      "b": [
+        0.72,
+        0.28
+      ],
+      "grid": "G6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.34,
+      0.28
+    ]
+  }
 }

@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Bayswater rose N at 90\u00b0; District and Circle platforms 5.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Bayswater reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 5.0m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO NOTTING HILL GATE",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.83
+      ],
+      "b": [
+        0.53,
+        0.5
+      ],
+      "grid": "C8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO PADDINGTON",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.72
+      ],
+      "b": [
+        0.53,
+        0.39
+      ],
+      "grid": "C7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall & Overbridge",
+    "at": [
+      0.59,
+      0.39
+    ]
+  }
 }

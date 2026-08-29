@@ -7,5 +7,90 @@
     }
   ],
   "confidence": "high",
-  "raw": "Finsbury Park: N at top; table lists only Piccadilly platforms 7.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Finsbury Park reading pose: rose N ~270\u00b0. Parallel Piccadilly and Victoria platforms share bearingDeg 0. Depth 7.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 4 VICTORIA SOUTHBOUND TO HIGHBURY AND ISLINGTON",
+      "lineId": "victoria",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.28,
+        0.28
+      ],
+      "b": [
+        0.41,
+        0.17
+      ],
+      "grid": "E3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 PICCADILLY SOUTHBOUND TO ARSENAL",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.34,
+        0.28
+      ],
+      "b": [
+        0.41,
+        0.17
+      ],
+      "grid": "F3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 VICTORIA NORTHBOUND TO SEVEN SISTERS",
+      "lineId": "victoria",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.39
+      ],
+      "b": [
+        0.34,
+        0.28
+      ],
+      "grid": "D4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 PICCADILLY NORTHBOUND TO MANOR HOUSE",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.5
+      ],
+      "b": [
+        0.41,
+        0.39
+      ],
+      "grid": "D5",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall A",
+    "at": [
+      0.09,
+      0.28
+    ]
+  }
 }

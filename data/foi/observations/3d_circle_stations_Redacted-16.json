@@ -15,5 +15,72 @@
     }
   ],
   "confidence": "high",
-  "raw": "South Kensington axonometric; N about 4 o'clock; District/Circle 8.2m, Piccadilly EB 18.9m, WB 24.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "South Kensington reading pose: rose N ~20\u00b0. District/Circle and Piccadilly share bearingDeg 90. Depths 8.2 / 18.9 / 24.3m.",
+  "platforms": [
+    {
+      "caption": "DISTRICT AND CIRCLE PLATFORMS 1 & 2",
+      "lineId": "circle",
+      "platformNumbers": [
+        1,
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.34,
+        0.5
+      ],
+      "b": [
+        0.59,
+        0.5
+      ],
+      "grid": "F5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PICCADILLY LINE WESTBOUND PLATFORM 3",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.39
+      ],
+      "b": [
+        0.22,
+        0.72
+      ],
+      "grid": "C4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PICCADILLY LINE EASTBOUND PLATFORM 4",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.53,
+        0.83
+      ],
+      "b": [
+        0.66,
+        0.72
+      ],
+      "grid": "I8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.53,
+      0.39
+    ]
+  }
 }

@@ -10,6 +10,56 @@
       "metres": 23.5
     }
   ],
+  "platforms": [
+    {
+      "caption": "PLATFORM 4 NORTHBOUND TO LAMBETH NORTH",
+      "lineId": "bakerloo",
+      "platformNumbers": [4],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [0.12, 0.28],
+      "b": [0.30, 0.58],
+      "grid": "B3",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 NORTHBOUND TO LAMBETH NORTH",
+      "lineId": "bakerloo",
+      "platformNumbers": [3],
+      "end": "south",
+      "bearingDeg": 0,
+      "a": [0.16, 0.34],
+      "b": [0.34, 0.64],
+      "grid": "C4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO BOROUGH",
+      "lineId": "northern",
+      "platformNumbers": [1],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [0.40, 0.50],
+      "b": [0.58, 0.88],
+      "grid": "G5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO KENNINGTON",
+      "lineId": "northern",
+      "platformNumbers": [2],
+      "end": "south",
+      "bearingDeg": 0,
+      "a": [0.44, 0.56],
+      "b": [0.62, 0.94],
+      "grid": "H6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Bakerloo Line Ticket Hall",
+    "at": [0.34, 0.28]
+  },
   "confidence": "high",
-  "raw": "Elephant & Castle table lists Northern 18.9m and Bakerloo 23.5m; compass N points top-left on the drawing (45\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
+  "raw": "Elephant & Castle reading pose: rose N top-left (315). Bakerloo 3–4 and Northern 1–2 share bearingDeg 0. Depths 18.9 / 23.5m."
 }

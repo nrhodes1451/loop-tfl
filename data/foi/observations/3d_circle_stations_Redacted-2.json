@@ -11,5 +11,90 @@
     }
   ],
   "confidence": "high",
-  "raw": "Barbican rose N at 75\u00b0; Circle & Met and Railtrack Thameslink both 8.5m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Barbican reading pose: rose N ~345\u00b0. Parallel Circle/Met and Thameslink platforms share bearingDeg 90. Depths 8.5m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO MOORGATE",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.61
+      ],
+      "b": [
+        0.59,
+        0.61
+      ],
+      "grid": "C6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO FARRINGDON",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.72
+      ],
+      "b": [
+        0.59,
+        0.72
+      ],
+      "grid": "C7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 EASTBOUND THAMESLINK TO MOORGATE",
+      "lineId": "national-rail",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.83
+      ],
+      "b": [
+        0.66,
+        0.83
+      ],
+      "grid": "D8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 WESTBOUND THAMESLINK TO FARRINGDON",
+      "lineId": "national-rail",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.94
+      ],
+      "b": [
+        0.66,
+        0.94
+      ],
+      "grid": "D9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.59,
+      0.39
+    ]
+  }
 }

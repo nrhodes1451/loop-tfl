@@ -89,6 +89,8 @@ export type FoiStationPlatform = {
   b: [number, number];
   grid: string | null;
   residual: number;
+  /** Metres below street when a depth-table row uniquely matches this mark. */
+  depthM?: number;
   flags?: string[];
   sources: { file: string; page: number }[];
 };
@@ -286,7 +288,140 @@ export function mergeNorthDeg(pages: readonly FoiPageExtract[]): number | null {
 }
 
 function depthKey(d: FoiDepth): string {
-  return d.lineId ? `id:${d.lineId}` : `label:${d.label.trim().toLowerCase()}`;
+  const label = d.label.trim().toLowerCase();
+  const metres = String(d.metres);
+  return d.lineId ? `id:${d.lineId}:${label}:${metres}` : `label:${label}:${metres}`;
+}
+
+const DEPTH_TOKENS = [
+  "city",
+  "charing",
+  "northbound",
+  "southbound",
+  "eastbound",
+  "westbound",
+] as const;
+
+function normalizeDepthText(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/north\s+bound/g, "northbound")
+    .replace(/south\s+bound/g, "southbound")
+    .replace(/east\s+bound/g, "eastbound")
+    .replace(/west\s+bound/g, "westbound");
+}
+
+function depthTokens(s: string): Set<string> {
+  const n = normalizeDepthText(s);
+  return new Set(DEPTH_TOKENS.filter((t) => n.includes(t)));
+}
+
+function platformNumbersInLabel(label: string): number[] {
+  const out: number[] = [];
+  const re = /platform(?:s)?\s*(\d+)/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(label))) {
+    out.push(Number(m[1]));
+  }
+  return out;
+}
+
+export type PlatformDepthMatch = {
+  metres?: number;
+  ambiguous: boolean;
+};
+
+/**
+ * Pick a depth-table row for a placed platform. One row for the line always
+ * wins. Several rows need a unique number or token hit (city / charing /
+ * northbound / …). Unmatched marks keep `depthM` unset so `foiDepthM`
+ * first-wins remains the fallback.
+ */
+export function matchPlatformDepth(
+  mark: {
+    lineId: string | null;
+    caption: string;
+    platformNumbers: number[];
+  },
+  depths: readonly FoiDepth[],
+): PlatformDepthMatch {
+  if (!mark.lineId) return { ambiguous: false };
+  const id = normalizeSchematicLineId(mark.lineId);
+  const rows = depths.filter(
+    (d) => d.lineId != null && normalizeSchematicLineId(d.lineId) === id,
+  );
+  if (rows.length === 0) return { ambiguous: false };
+  const distinctM = new Set(rows.map((r) => r.metres));
+  if (distinctM.size === 1) return { metres: rows[0]!.metres, ambiguous: false };
+
+  const numberHits = rows.filter((d) => {
+    const nums = platformNumbersInLabel(d.label);
+    return mark.platformNumbers.some((n) => nums.includes(n));
+  });
+  if (numberHits.length === 1) {
+    return { metres: numberHits[0]!.metres, ambiguous: false };
+  }
+  if (numberHits.length > 1) {
+    const metres = new Set(numberHits.map((r) => r.metres));
+    if (metres.size === 1) return { metres: numberHits[0]!.metres, ambiguous: false };
+    return { ambiguous: true };
+  }
+
+  const markTok = depthTokens(mark.caption);
+  if (markTok.size > 0) {
+    const scored = rows
+      .map((d) => {
+        const dt = depthTokens(d.label);
+        let n = 0;
+        for (const t of markTok) if (dt.has(t)) n += 1;
+        return { d, n };
+      })
+      .filter((x) => x.n > 0);
+    if (scored.length > 0) {
+      const best = Math.max(...scored.map((s) => s.n));
+      const winners = scored.filter((s) => s.n === best);
+      const metres = new Set(winners.map((w) => w.d.metres));
+      if (metres.size === 1) return { metres: winners[0]!.d.metres, ambiguous: false };
+      return { ambiguous: true };
+    }
+  }
+
+  const labels = new Set(rows.map((r) => r.label.trim().toLowerCase()));
+  return { ambiguous: labels.size === 1 };
+}
+
+function attachPlatformDepths(
+  platforms: readonly FoiStationPlatform[],
+  depths: readonly FoiDepth[],
+  stationId: string,
+): { platforms: FoiStationPlatform[]; issues: FoiPlacementIssue[] } {
+  const issues: FoiPlacementIssue[] = [];
+  const next = platforms.map((p) => {
+    const hit = matchPlatformDepth(p, depths);
+    const plat =
+      hit.metres != null ? { ...p, depthM: hit.metres } : p;
+    if (hit.ambiguous) {
+      const src = p.sources[0];
+      if (
+        src &&
+        !issues.some(
+          (i) =>
+            i.file === src.file &&
+            i.page === src.page &&
+            i.reason === "depth-ambiguous",
+        )
+      ) {
+        issues.push({
+          file: src.file,
+          page: src.page,
+          stationId,
+          reason: "depth-ambiguous",
+        });
+      }
+    }
+    return plat;
+  });
+  return { platforms: next, issues };
 }
 
 export type FoiPlacementIssue = {
@@ -334,14 +469,16 @@ export function mergeStationLayouts(
       }
     }
 
+    const depths = [...byKey.values()];
     const { platforms, issues, marks } = mergeStationPlatforms(group);
-    placementIssues.push(...issues);
+    const attached = attachPlatformDepths(platforms, depths, stationId);
+    placementIssues.push(...issues, ...attached.issues);
 
     stations.push({
       stationId,
       northDeg,
-      depths: [...byKey.values()],
-      platforms,
+      depths,
+      platforms: attached.platforms,
       marks,
       sources: group.map((p) => ({ file: p.file, page: p.page })),
     });

@@ -6,6 +6,34 @@
       "metres": 10.0
     }
   ],
+  "platforms": [
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO MAIDA VALE",
+      "lineId": "bakerloo",
+      "platformNumbers": [2],
+      "end": "north",
+      "bearingDeg": 135,
+      "a": [0.28, 0.36],
+      "b": [0.72, 0.80],
+      "grid": "E4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO QUEENS PARK",
+      "lineId": "bakerloo",
+      "platformNumbers": [1],
+      "end": "south",
+      "bearingDeg": 135,
+      "a": [0.28, 0.42],
+      "b": [0.72, 0.86],
+      "grid": "E5",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [0.78, 0.42]
+  },
   "confidence": "high",
-  "raw": "Kilburn Park table lists Bakerloo platforms at 10.0m; compass N is about 15\u00b0 clockwise of drawing-up (105\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
+  "raw": "Kilburn Park reading pose: rose N about 15°. Parallel Bakerloo platforms share bearingDeg 135 (NW–SE). Depth 10.0m."
 }

@@ -7,5 +7,90 @@
     }
   ],
   "confidence": "high",
-  "raw": "Edgware Road rose N at 135\u00b0; Circle & Hammersmith platforms 5.1m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Edgware Road Circle reading pose: rose N ~45\u00b0. Four parallel Circle/H&C platforms share bearingDeg 90. Depth 5.1m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO PADDINGTON",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.09,
+        0.39
+      ],
+      "b": [
+        0.72,
+        0.39
+      ],
+      "grid": "B4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO PADDINGTON",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.16,
+        0.5
+      ],
+      "b": [
+        0.72,
+        0.61
+      ],
+      "grid": "C5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 EASTBOUND TO BAKER STREET",
+      "lineId": "circle",
+      "platformNumbers": [
+        3
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.28,
+        0.61
+      ],
+      "b": [
+        0.78,
+        0.72
+      ],
+      "grid": "E6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 4 EASTBOUND TO BAKER STREET",
+      "lineId": "circle",
+      "platformNumbers": [
+        4
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.34,
+        0.72
+      ],
+      "b": [
+        0.91,
+        0.94
+      ],
+      "grid": "F7",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.28,
+      0.17
+    ]
+  }
 }

@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "St James's Park axonometric; N towards the right; District and Circle platforms 5.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "St James's Park reading pose: rose N up (0). Parallel District/Circle platforms share bearingDeg 90. Depth 5.8m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO WESTMINSTER",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [
+        0.28,
+        0.72
+      ],
+      "b": [
+        0.59,
+        0.39
+      ],
+      "grid": "E7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO VICTORIA",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [
+        0.34,
+        0.61
+      ],
+      "b": [
+        0.66,
+        0.28
+      ],
+      "grid": "F6",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Broadway Ticket Hall",
+    "at": [
+      0.53,
+      0.28
+    ]
+  }
 }

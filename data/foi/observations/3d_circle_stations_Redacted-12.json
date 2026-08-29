@@ -2,5 +2,34 @@
   "northDeg": 45,
   "depths": [],
   "confidence": "high",
-  "raw": "King's Cross axonometric 2; N towards bottom-right; no printed depth table. northDeg migrated +270 for reading-pose raster."
+  "raw": "King's Cross axonometric 2: rose N ~45\u00b0. Only Northern 7&8 west-end box is drawn. No depth table.",
+  "platforms": [
+    {
+      "caption": "NORTHERN LINE PLATFORMS 7 & 8 (WEST END)",
+      "lineId": "northern",
+      "platformNumbers": [
+        7,
+        8
+      ],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.83
+      ],
+      "b": [
+        0.28,
+        0.94
+      ],
+      "grid": "D8",
+      "confidence": "low"
+    }
+  ],
+  "reference": {
+    "label": "Northern Ticket Hall",
+    "at": [
+      0.41,
+      0.17
+    ]
+  }
 }

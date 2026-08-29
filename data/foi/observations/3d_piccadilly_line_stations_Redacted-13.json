@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Manor House: N to the right; Piccadilly platforms 7.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Manor House reading pose: rose N up (0). Parallel Piccadilly platforms share bearingDeg 0. Depth 7.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO TURNPIKE LANE",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.72
+      ],
+      "b": [
+        0.41,
+        0.61
+      ],
+      "grid": "C7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO FINSBURY PARK",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.83
+      ],
+      "b": [
+        0.41,
+        0.72
+      ],
+      "grid": "C8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.53,
+      0.39
+    ]
+  }
 }

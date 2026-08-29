@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Holloway Road: N about 20\u00b0; Piccadilly platforms 18.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Holloway Road reading pose: rose N ~290\u00b0. Parallel Piccadilly platforms share bearingDeg 0. Depth 18.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.83
+      ],
+      "b": [
+        0.72,
+        0.39
+      ],
+      "grid": "C8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.22,
+        0.83
+      ],
+      "b": [
+        0.78,
+        0.28
+      ],
+      "grid": "D8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.66,
+      0.61
+    ]
+  }
 }

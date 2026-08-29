@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Hatton Cross: N bottom-right; Piccadilly platforms 4.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Hatton Cross reading pose: rose N ~45\u00b0. Parallel Piccadilly platforms share bearingDeg 90. Depth 4.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO HEATHROW TERMINAL 4",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.28,
+        0.5
+      ],
+      "b": [
+        0.47,
+        0.72
+      ],
+      "grid": "E5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO HOUNSLOW WEST",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.39
+      ],
+      "b": [
+        0.41,
+        0.61
+      ],
+      "grid": "D4",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.59,
+      0.61
+    ]
+  }
 }

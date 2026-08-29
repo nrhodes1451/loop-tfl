@@ -1,27 +1,48 @@
 {
   "northDeg": 315,
   "depths": [
+    { "label": "CENTRAL LINE PLATFORMS", "metres": 27.4 },
+    { "label": "PICCADILLY LINE PLATFORMS", "metres": 33.8 },
+    { "label": "PICCADILLY LINE PLATFORMS", "metres": 39.6 },
+    { "label": "PICCADILLY LINE PLATFORMS", "metres": 33.8 },
+    { "label": "DISUSED TUNNEL (HOSTELRY)", "metres": 33.8 }
+  ],
+  "platforms": [
     {
-      "label": "CENTRAL LINE PLATFORMS",
-      "metres": 27.4
+      "caption": "CENTRAL LINE PLATFORMS 1 & 2",
+      "lineId": "central",
+      "platformNumbers": [1, 2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.34, 0.28],
+      "b": [0.58, 0.34],
+      "grid": "F3",
+      "confidence": "high"
     },
     {
-      "label": "PICCADILLY LINE PLATFORMS",
-      "metres": 33.8
+      "caption": "PICCADILLY LINE PLATFORM 3",
+      "lineId": "piccadilly",
+      "platformNumbers": [3],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.16, 0.61],
+      "b": [0.50, 0.72],
+      "grid": "C6",
+      "confidence": "high"
     },
     {
-      "label": "PICCADILLY LINE PLATFORMS",
-      "metres": 39.6
-    },
-    {
-      "label": "PICCADILLY LINE PLATFORMS",
-      "metres": 33.8
-    },
-    {
-      "label": "DISUSED TUNNEL (HOSTELRY)",
-      "metres": 33.8
+      "caption": "PICCADILLY LINE PLATFORMS 4 & 5",
+      "lineId": "piccadilly",
+      "platformNumbers": [4, 5],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.16, 0.83],
+      "b": [0.41, 0.94],
+      "grid": "C8",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.22, 0.39] },
   "confidence": "high",
-  "raw": "Holborn axonometric; N towards top-right; Central 27.4m plus three Piccadilly rows and hostelry. northDeg migrated +270 for reading-pose raster."
+  "raw": "Holborn reading pose: rose N top-right (315). Central bearingDeg 90; Piccadilly 0. Omit hostelry. Depths 27.4 / 33.8 / 39.6m."
 }

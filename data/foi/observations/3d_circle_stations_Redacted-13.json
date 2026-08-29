@@ -7,5 +7,71 @@
     }
   ],
   "confidence": "high",
-  "raw": "Mansion House axonometric; N about 5 o'clock; District platforms 7.3m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Mansion House reading pose: rose N ~60\u00b0. Parallel District/Circle platforms share bearingDeg 90. Depth 7.3m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO BLACKFRIARS",
+      "lineId": "circle",
+      "platformNumbers": [
+        1
+      ],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.61
+      ],
+      "b": [
+        0.53,
+        0.83
+      ],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO CANNON STREET",
+      "lineId": "circle",
+      "platformNumbers": [
+        2
+      ],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [
+        0.22,
+        0.5
+      ],
+      "b": [
+        0.47,
+        0.72
+      ],
+      "grid": "D5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 EASTBOUND TO CANNON STREET",
+      "lineId": "circle",
+      "platformNumbers": [
+        3
+      ],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [
+        0.28,
+        0.39
+      ],
+      "b": [
+        0.41,
+        0.5
+      ],
+      "grid": "E4",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.72,
+      0.72
+    ]
+  }
 }

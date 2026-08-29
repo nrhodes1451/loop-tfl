@@ -6,6 +6,34 @@
       "metres": 17.7
     }
   ],
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 NORTHBOUND TO WATERLOO",
+      "lineId": "bakerloo",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.28, 0.68],
+      "b": [0.52, 0.84],
+      "grid": "E7",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO ELEPHANT & CASTLE",
+      "lineId": "bakerloo",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.32, 0.72],
+      "b": [0.56, 0.88],
+      "grid": "F8",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [0.48, 0.22]
+  },
   "confidence": "high",
-  "raw": "Lambeth North table lists Bakerloo platforms at 17.7m; compass N points top-left on the drawing (60\u00b0 on this image). northDeg migrated +270 for reading-pose raster."
+  "raw": "Lambeth North reading pose: rose N top-left (330). Parallel Bakerloo platforms share bearingDeg 0. Depth 17.7m."
 }

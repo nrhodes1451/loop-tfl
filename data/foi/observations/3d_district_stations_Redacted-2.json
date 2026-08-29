@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "DISTRICT & METROPOLITAN LINE PLATFORMS", "metres": 7 }],
+  "platforms": [
     {
-      "label": "DISTRICT & METROPOLITAN LINE PLATFORMS",
-      "metres": 7
+      "caption": "PLATFORM 1 WESTBOUND TO MILE END",
+      "lineId": "district",
+      "platformNumbers": [1],
+      "end": "west",
+      "bearingDeg": 90,
+      "a": [0.22, 0.62],
+      "b": [0.62, 0.42],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO BROMLEY-BY-BOW",
+      "lineId": "district",
+      "platformNumbers": [2],
+      "end": "east",
+      "bearingDeg": 90,
+      "a": [0.22, 0.70],
+      "b": [0.62, 0.50],
+      "grid": "D7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.72, 0.28] },
   "confidence": "low",
-  "raw": "Bow Road: N top-left; depth table present but metres poorly printed (read as 7.0m). northDeg migrated +270 for reading-pose raster."
+  "raw": "Bow Road reading pose: rose N top-left (225). Parallel District platforms share bearingDeg 90. Depth 7.0m (table poorly printed)."
 }

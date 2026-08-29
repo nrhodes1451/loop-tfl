@@ -7,5 +7,52 @@
     }
   ],
   "confidence": "high",
-  "raw": "Southgate: N about 60\u00b0; Piccadilly platforms 12.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Southgate reading pose: rose N ~330\u00b0. Parallel Piccadilly platforms share bearingDeg 0. Depth 12.8m.",
+  "platforms": [
+    {
+      "caption": "PLATFORM 1 EASTBOUND TO OAKWOOD",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        1
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.16,
+        0.83
+      ],
+      "b": [
+        0.34,
+        0.61
+      ],
+      "grid": "C8",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO ARNOS GROVE",
+      "lineId": "piccadilly",
+      "platformNumbers": [
+        2
+      ],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [
+        0.34,
+        0.94
+      ],
+      "b": [
+        0.53,
+        0.72
+      ],
+      "grid": "F9",
+      "confidence": "high"
+    }
+  ],
+  "reference": {
+    "label": "Ticket Hall",
+    "at": [
+      0.59,
+      0.17
+    ]
+  }
 }

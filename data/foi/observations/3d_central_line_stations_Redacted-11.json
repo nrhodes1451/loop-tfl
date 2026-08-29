@@ -1,11 +1,55 @@
 {
   "northDeg": 225,
   "depths": [
+    { "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS", "metres": 7.0 }
+  ],
+  "platforms": [
     {
-      "label": "METROPOLITAN, DISTRICT, CIRCLE LINE PLATFORMS",
-      "metres": 7.0
+      "caption": "PLATFORM 4 EASTBOUND TO STRATFORD",
+      "lineId": "central",
+      "platformNumbers": [4],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.42],
+      "b": [0.62, 0.48],
+      "grid": "D4",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 3 EASTBOUND TO BOW ROAD",
+      "lineId": "district",
+      "platformNumbers": [3],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.50],
+      "b": [0.62, 0.56],
+      "grid": "D5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 WESTBOUND TO STEPNEY GREEN",
+      "lineId": "district",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.58],
+      "b": [0.62, 0.64],
+      "grid": "D6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 WESTBOUND TO BETHNAL GREEN",
+      "lineId": "central",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.66],
+      "b": [0.62, 0.72],
+      "grid": "D7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.40, 0.70] },
   "confidence": "high",
-  "raw": "Mile End axonometric; N towards top-left; table lists only subsurface platforms at 7.0m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Mile End reading pose: rose N top-right (225). Four parallel island platforms share bearingDeg 90. Table only lists subsurface 7.0m."
 }

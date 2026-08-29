@@ -1,15 +1,34 @@
 {
   "northDeg": 225,
   "depths": [
+    { "label": "JUBILEE LINE PLATFORMS", "metres": 27.3 },
+    { "label": "NORTHERN LINE PLATFORMS", "metres": 24.1 }
+  ],
+  "platforms": [
     {
-      "label": "JUBILEE LINE PLATFORMS",
-      "metres": 27.3
+      "caption": "NORTHERN LINE PLATFORMS 1 & 2",
+      "lineId": "northern",
+      "platformNumbers": [1, 2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.28, 0.17],
+      "b": [0.34, 0.33],
+      "grid": "E2",
+      "confidence": "high"
     },
     {
-      "label": "NORTHERN LINE PLATFORMS",
-      "metres": 24.1
+      "caption": "JUBILEE LINE PLATFORMS 3 & 4",
+      "lineId": "jubilee",
+      "platformNumbers": [3, 4],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.22, 0.72],
+      "b": [0.50, 0.89],
+      "grid": "D7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Main Ticket Hall", "at": [0.66, 0.39] },
   "confidence": "high",
-  "raw": "London Bridge: N points top-left; Jubilee 27.3m, Northern 24.1m. northDeg migrated +270 for reading-pose raster."
+  "raw": "London Bridge reading pose: rose N top-left (225). Northern bearingDeg 0; Jubilee 90. Depths 27.3 / 24.1m."
 }

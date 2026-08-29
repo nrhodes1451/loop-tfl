@@ -1,11 +1,53 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "VICTORIA & RAILTRACK LINE PLATFORMS", "metres": 17.7 }],
+  "platforms": [
     {
-      "label": "VICTORIA & RAILTRACK LINE PLATFORMS",
-      "metres": 17.7
+      "caption": "VICTORIA & RAILTRACK PLATFORMS 5 & 6 SOUTHBOUND",
+      "lineId": "victoria",
+      "platformNumbers": [5, 6],
+      "end": "south",
+      "bearingDeg": 0,
+      "a": [0.12, 0.50],
+      "b": [0.28, 0.78],
+      "grid": "B5",
+      "confidence": "high"
+    },
+    {
+      "caption": "VICTORIA & RAILTRACK PLATFORMS 3 & 4 NORTHBOUND",
+      "lineId": "victoria",
+      "platformNumbers": [3, 4],
+      "end": "north",
+      "bearingDeg": 0,
+      "a": [0.22, 0.50],
+      "b": [0.38, 0.78],
+      "grid": "D5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 1 OVERGROUND EASTBOUND TO CANONBURY",
+      "lineId": "london-overground",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.72, 0.28],
+      "b": [0.94, 0.50],
+      "grid": "L3",
+      "confidence": "low"
+    },
+    {
+      "caption": "PLATFORM 2 OVERGROUND WESTBOUND TO CALEDONIAN ROAD",
+      "lineId": "london-overground",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 90,
+      "a": [0.72, 0.36],
+      "b": [0.94, 0.58],
+      "grid": "L4",
+      "confidence": "low"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.88, 0.22] },
   "confidence": "high",
-  "raw": "Highbury & Islington: N points top-left; Victoria & Railtrack platforms 17.7m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Highbury & Islington reading pose: rose N top-left (225). Victoria bearingDeg 0; Overground 90. Depth 17.7m."
 }

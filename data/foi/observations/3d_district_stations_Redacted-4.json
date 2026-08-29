@@ -1,11 +1,31 @@
 {
   "northDeg": 315,
-  "depths": [
+  "depths": [{ "label": "DISTRICT LINE PLATFORMS", "metres": 4 }],
+  "platforms": [
     {
-      "label": "DISTRICT LINE PLATFORMS",
-      "metres": 4
+      "caption": "PLATFORM 1 WESTBOUND TO WEST BROMPTON",
+      "lineId": "district",
+      "platformNumbers": [1],
+      "end": "north",
+      "bearingDeg": 90,
+      "a": [0.28, 0.61],
+      "b": [0.59, 0.50],
+      "grid": "E6",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 EASTBOUND TO PARSONS GREEN",
+      "lineId": "district",
+      "platformNumbers": [2],
+      "end": "south",
+      "bearingDeg": 90,
+      "a": [0.28, 0.72],
+      "b": [0.59, 0.61],
+      "grid": "E7",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.41, 0.61] },
   "confidence": "high",
-  "raw": "Fulham Broadway: N points top-right; District platforms 4.0m in the notes box. northDeg migrated +270 for reading-pose raster."
+  "raw": "Fulham Broadway reading pose: rose N top-right (315). Parallel District platforms share bearingDeg 90. Depth 4.0m."
 }

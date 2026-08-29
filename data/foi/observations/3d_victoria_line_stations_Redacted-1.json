@@ -1,11 +1,31 @@
 {
   "northDeg": 225,
-  "depths": [
+  "depths": [{ "label": "VICTORIA LINE PLATFORMS", "metres": 16.8 }],
+  "platforms": [
     {
-      "label": "VICTORIA LINE PLATFORMS",
-      "metres": 16.8
+      "caption": "PLATFORM 1 NORTHBOUND TO WALTHAMSTOW CENTRAL",
+      "lineId": "victoria",
+      "platformNumbers": [1],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.12, 0.50],
+      "b": [0.47, 0.61],
+      "grid": "B5",
+      "confidence": "high"
+    },
+    {
+      "caption": "PLATFORM 2 SOUTHBOUND TO TOTTENHAM HALE",
+      "lineId": "victoria",
+      "platformNumbers": [2],
+      "end": null,
+      "bearingDeg": 0,
+      "a": [0.12, 0.61],
+      "b": [0.47, 0.72],
+      "grid": "B6",
+      "confidence": "high"
     }
   ],
+  "reference": { "label": "Ticket Hall", "at": [0.78, 0.50] },
   "confidence": "high",
-  "raw": "Blackhorse Road: N points top-left; Victoria platforms 16.8m. northDeg migrated +270 for reading-pose raster."
+  "raw": "Blackhorse Road reading pose: rose N top-left (225). Parallel Victoria platforms share bearingDeg 0. Depth 16.8m."
 }
