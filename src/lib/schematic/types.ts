@@ -30,6 +30,8 @@ export type SchematicNode = {
   y: number;
   /** Platforms only. */
   lineId?: string;
+  /** Platforms only. TfL cardinal, e.g. North / South. */
+  direction?: string;
   /**
    * Platforms only. Undirected compass bearing in degrees clockwise from
    * north (0–180), from FOI sheets when present.

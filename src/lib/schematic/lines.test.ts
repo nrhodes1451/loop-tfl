@@ -13,6 +13,12 @@ import {
 import { generateSchematic, type GenerateStationInput } from "./generate";
 import { schematicLevelForLine } from "./levels";
 import {
+  DEEP_TUBE_DIAMETER_M,
+  PLATFORM_TUBE_OFFSET_M,
+  PLATFORM_WIDTH_M,
+  SCHEMATIC_UNIT_M,
+} from "./lu-scale";
+import {
   asTrackPair,
   buildLineNetwork,
   lineAnchor,
@@ -150,6 +156,112 @@ describe("platformAnchorOffset", () => {
     const stored = asTrackPair(network.anchors.HUBTEST?.victoria);
     expect(stored).toHaveLength(2);
     expect(network.foi.HUBTEST?.victoria).toBe(true);
+  });
+
+  it("offsets far twin-bore slabs toward each other by W/2+R", () => {
+    const schematic = generateSchematic({
+      ...sampleInput,
+      platforms: [
+        {
+          id: "HUBTEST-Plat01::victoria::North",
+          lineId: "victoria",
+          direction: "North",
+          label: "Platform 1",
+        },
+        {
+          id: "HUBTEST-Plat02::victoria::South",
+          lineId: "victoria",
+          direction: "South",
+          label: "Platform 2",
+        },
+      ],
+      placement: [
+        {
+          lineId: "victoria",
+          platformNumbers: [1],
+          eastM: 0,
+          northM: 0,
+          bearingDeg: 0,
+        },
+        {
+          lineId: "victoria",
+          platformNumbers: [2],
+          eastM: 40,
+          northM: 0,
+          bearingDeg: 0,
+        },
+      ],
+    });
+    const street = streetCentroid(schematic.nodes);
+    const plats = schematic.nodes.filter(
+      (n) => n.type === "platform" && n.lineId === "victoria",
+    );
+    const tracks = platformTrackAnchors(schematic.nodes, "victoria");
+    expect(tracks).toHaveLength(2);
+    const slabSpan = Math.hypot(
+      plats[0]!.x - plats[1]!.x,
+      plats[0]!.y - plats[1]!.y,
+    );
+    const trackSpan = Math.hypot(
+      tracks[1]!.dx - tracks[0]!.dx,
+      tracks[1]!.dz - tracks[0]!.dz,
+    );
+    expect(trackSpan).toBeLessThan(slabSpan);
+    const offsetU = PLATFORM_TUBE_OFFSET_M / SCHEMATIC_UNIT_M;
+    for (const p of plats) {
+      const dx = p.x - street.x;
+      const dz = p.y - street.y;
+      const d = Math.min(
+        ...tracks.map((t) => Math.hypot(t.dx - dx, t.dz - dz)),
+      );
+      expect(d).toBeCloseTo(offsetU, 5);
+    }
+  });
+
+  it("offsets a close fanned pair away from each other", () => {
+    const schematic = generateSchematic({
+      ...sampleInput,
+      platforms: [
+        {
+          id: "HUBTEST-Plat01::victoria::North",
+          lineId: "victoria",
+          direction: "North",
+          label: "Platform 1",
+        },
+        {
+          id: "HUBTEST-Plat02::victoria::South",
+          lineId: "victoria",
+          direction: "South",
+          label: "Platform 2",
+        },
+      ],
+      placement: [
+        {
+          lineId: "victoria",
+          platformNumbers: [1, 2],
+          eastM: 0,
+          northM: 0,
+          bearingDeg: 0,
+        },
+      ],
+    });
+    const plats = schematic.nodes.filter(
+      (n) => n.type === "platform" && n.lineId === "victoria",
+    );
+    const tracks = platformTrackAnchors(schematic.nodes, "victoria");
+    const slabSpan = Math.hypot(
+      plats[0]!.x - plats[1]!.x,
+      plats[0]!.y - plats[1]!.y,
+    );
+    const trackSpan = Math.hypot(
+      tracks[1]!.dx - tracks[0]!.dx,
+      tracks[1]!.dz - tracks[0]!.dz,
+    );
+    expect(slabSpan * SCHEMATIC_UNIT_M).toBeCloseTo(
+      PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M,
+      5,
+    );
+    expect(trackSpan).toBeGreaterThan(slabSpan);
   });
 });
 

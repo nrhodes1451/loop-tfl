@@ -8,7 +8,7 @@ import {
   SCHEMATIC_LINE_LEVEL,
   normalizeSchematicLineId,
 } from "./levels";
-import { undirectedBearingDeg } from "./foi-project";
+import { planDir, undirectedBearingDeg } from "./foi-project";
 import {
   DEEP_TUBE_DIAMETER_M,
   PLATFORM_WIDTH_M,
@@ -114,6 +114,59 @@ export function platformNumberFromLabel(
   return null;
 }
 
+/** Compass heading for a TfL cardinal, or null if unrecognised. */
+export function travelHeadingDeg(direction: string): number | null {
+  const d = direction.trim().toLowerCase();
+  if (d.startsWith("north")) return 0;
+  if (d.startsWith("east")) return 90;
+  if (d.startsWith("south")) return 180;
+  if (d.startsWith("west")) return 270;
+  return null;
+}
+
+function preferDirection(a: string, b: string): string {
+  const rank = (d: string) => {
+    const h = travelHeadingDeg(d);
+    if (h === 0 || h === 90) return 0;
+    if (h != null) return 1;
+    return 2;
+  };
+  return rank(a) <= rank(b) ? a : b;
+}
+
+function directedBearingDeg(headingDeg: number, undirectedDeg: number): number {
+  const b = undirectedBearingDeg(undirectedDeg);
+  const [e0, n0] = planDir(b);
+  const [e1, n1] = planDir(b + 180);
+  const [he, hn] = planDir(headingDeg);
+  return e1 * he + n1 * hn > e0 * he + n0 * hn ? b + 180 : b;
+}
+
+/** Dot of this travel direction's left vector with the undirected fan perp. */
+function leftHandFanKey(direction: string, bearingDeg: number): number {
+  const heading = travelHeadingDeg(direction);
+  if (heading == null) return 0;
+  const directed = directedBearingDeg(heading, bearingDeg);
+  const r = (directed * Math.PI) / 180;
+  const leftE = -Math.cos(r);
+  const leftN = Math.sin(r);
+  const b = undirectedBearingDeg(bearingDeg);
+  const br = (b * Math.PI) / 180;
+  return leftE * Math.cos(br) + leftN * Math.sin(br);
+}
+
+/** Left-hand running: northbound/eastbound on the left when facing travel. */
+export function sortPlatformsLeftHand<
+  T extends { physicalId: string; direction: string },
+>(group: readonly T[], bearingDeg: number): T[] {
+  return [...group].sort((a, b) => {
+    const ka = leftHandFanKey(a.direction, bearingDeg);
+    const kb = leftHandFanKey(b.direction, bearingDeg);
+    if (ka !== kb) return ka - kb;
+    return a.physicalId.localeCompare(b.physicalId);
+  });
+}
+
 function liftNodeId(tflId: string, index: number, used: Set<string>): string {
   const m = tflId.match(/Lift-(\d+)$/i);
   const candidate = m ? `lift-${m[1]}` : `lift-${index + 1}`;
@@ -175,6 +228,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     nodeId: string;
     lineId: string;
     label: string;
+    direction: string;
     serviceIds: string[];
   };
 
@@ -187,6 +241,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     const existing = physicals.get(physicalId);
     if (existing) {
       existing.serviceIds.push(p.id);
+      existing.direction = preferDirection(existing.direction, p.direction);
       continue;
     }
     physicals.set(physicalId, {
@@ -194,6 +249,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
       nodeId: platformNodeId(physicalId),
       lineId: p.lineId,
       label: p.label,
+      direction: p.direction,
       serviceIds: [p.id],
     });
   }
@@ -282,9 +338,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     hall: { x: number; y: number },
     recordFoiX: boolean,
   ) => {
-    const sorted = [...group].sort((a, b) =>
-      a.physicalId.localeCompare(b.physicalId),
-    );
+    const sorted = sortPlatformsLeftHand(group, entry.bearingDeg);
     const n = sorted.length;
     const bearing = undirectedBearingDeg(entry.bearingDeg);
     const br = (bearing * Math.PI) / 180;
@@ -310,6 +364,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
         lineId: phys.lineId,
         bearingDeg: bearing,
       };
+      if (phys.direction) node.direction = phys.direction;
       if (entry.depthM != null) node.depthM = entry.depthM;
       if (osmOrigin) {
         node.osm = {
@@ -375,6 +430,7 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
         x,
         y: yLine,
         lineId: phys.lineId,
+        ...(phys.direction ? { direction: phys.direction } : {}),
       });
     }
     const lastSpan =

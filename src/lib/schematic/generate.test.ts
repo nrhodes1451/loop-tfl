@@ -293,6 +293,47 @@ describe("generateSchematic FOI placement", () => {
     expect(circle.x).toBeCloseTo(7.5);
     expect(circle.y).toBeCloseTo(0);
     expect(circle.bearingDeg).toBe(90);
+    expect(n7.direction).toBe("North");
+    expect(n8.direction).toBe("South");
+  });
+
+  it("fans northbound to the west under left-hand running (bearing 0)", () => {
+    const out = generateSchematic({
+      id: "HUBTEST",
+      name: "Test",
+      lat: 51.5,
+      lon: -0.12,
+      platforms: [
+        {
+          id: "HUBTEST-Plat01::victoria::South",
+          lineId: "victoria",
+          direction: "South",
+          label: "Platform 1 southbound",
+        },
+        {
+          id: "HUBTEST-Plat02::victoria::North",
+          lineId: "victoria",
+          direction: "North",
+          label: "Platform 2 northbound",
+        },
+      ],
+      lifts: [],
+      platformLiftChains: [],
+      interchangeChains: [],
+      placement: [
+        {
+          lineId: "victoria",
+          platformNumbers: [1, 2],
+          eastM: 0,
+          northM: 0,
+          bearingDeg: 0,
+        },
+      ],
+    });
+    const south = out.nodes.find((n) => n.direction === "South")!;
+    const north = out.nodes.find((n) => n.direction === "North")!;
+    // schematic x = −east, so west is the larger x.
+    expect(north.x).toBeGreaterThan(south.x);
   });
 
   it("without placement stays byte-identical to the band layout", () => {

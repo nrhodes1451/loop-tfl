@@ -16,6 +16,7 @@ import {
 } from "./levels";
 import {
   DEEP_TUBE_DIAMETER_M,
+  PLATFORM_TUBE_OFFSET_M,
   PLATFORM_WIDTH_M,
   SCHEMATIC_UNIT_M,
   isSubsurfaceLine,
@@ -133,8 +134,14 @@ export function platformAnchorOffset(
   };
 }
 
+const FAN_GAP_M = PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M;
+/** Twin-bore FOI boxes sit farther apart than a generate-fan / island pair. */
+const FAR_PAIR_M = 1.25 * FAN_GAP_M;
+const TUBE_OFFSET_U = PLATFORM_TUBE_OFFSET_M / SCHEMATIC_UNIT_M;
+
 /**
- * Deep-level: two track offsets (left/right along the bearing perpendicular).
+ * Deep-level: two track offsets (left/right along the bearing perpendicular),
+ * each a platform-half-width plus tube radius off the slab.
  * Cut-and-cover: one shared offset (the platform centroid).
  */
 export function platformTrackAnchors(
@@ -165,7 +172,7 @@ export function platformTrackAnchors(
   });
   ranked.sort((a, b) => a.s - b.s || a.dx - b.dx || a.dz - b.dz);
   if (ranked.length === 1) {
-    const gap = (PLATFORM_WIDTH_M + DEEP_TUBE_DIAMETER_M) / SCHEMATIC_UNIT_M;
+    const gap = FAN_GAP_M / SCHEMATIC_UNIT_M;
     const a = ranked[0]!;
     return [
       { dx: a.dx - 0.5 * gap * perp.x, dz: a.dz - 0.5 * gap * perp.z },
@@ -174,10 +181,22 @@ export function platformTrackAnchors(
   }
   const lo = ranked[0]!;
   const hi = ranked[ranked.length - 1]!;
-  return [
-    { dx: lo.dx, dz: lo.dz },
-    { dx: hi.dx, dz: hi.dz },
-  ];
+  const spanU = Math.hypot(hi.dx - lo.dx, hi.dz - lo.dz);
+  const towardSibling = spanU * SCHEMATIC_UNIT_M > FAR_PAIR_M;
+  const mx = (lo.dx + hi.dx) / 2;
+  const mz = (lo.dz + hi.dz) / 2;
+  const offsetFromSlab = (p: { dx: number; dz: number }): LineAnchor => {
+    const vx = mx - p.dx;
+    const vz = mz - p.dz;
+    const len = Math.hypot(vx, vz);
+    if (len < 1e-9) return { dx: p.dx, dz: p.dz };
+    const sign = towardSibling ? 1 : -1;
+    return {
+      dx: p.dx + sign * TUBE_OFFSET_U * (vx / len),
+      dz: p.dz + sign * TUBE_OFFSET_U * (vz / len),
+    };
+  };
+  return [offsetFromSlab(lo), offsetFromSlab(hi)];
 }
 
 export function lineAnchor(

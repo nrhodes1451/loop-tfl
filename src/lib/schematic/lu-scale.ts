@@ -24,6 +24,9 @@ export const SUBSURFACE_TUBE_RADIUS_M = SUBSURFACE_TUBE_DIAMETER_M / 2;
 export const PLATFORM_LENGTH_M = 115;
 /** Side-platform width, sits beside the running tunnel. */
 export const PLATFORM_WIDTH_M = 3.5;
+/** Slab centre to running-tunnel centre (platform half-width + tube radius). */
+export const PLATFORM_TUBE_OFFSET_M =
+  PLATFORM_WIDTH_M / 2 + DEEP_TUBE_RADIUS_M;
 
 export const TYPICAL_SUBSURFACE_DEPTH_M = 8;
 export const TYPICAL_DEEP_DEPTH_M = 20;
