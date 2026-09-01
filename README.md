@@ -47,6 +47,8 @@ npm run dev
 
 Optional: set `TFL_APP_KEY` (see `.env.example`) for higher rate limits.
 
+On a new machine, clone `pdf-schematics` (this work is not on `main`), then `npm install`, `npm run build-schematics`, and `npm run fetch-london-pmtiles`. Dollhouses, tubes, and the city overlay are gitignored and rebuilt from committed `data/foi/` + `data/network.json`. Copy `data/pdf/` yourself if you will re-read sheets — the rasters are not in git.
+
 FOI axonometric sheets (local scans in `data/pdf/`, gitignored):
 
 ```bash
@@ -57,7 +59,14 @@ npm run foi:build         # merge data/foi/observations/ → extract.json + layo
 npm run foi:build -- --todo   # sheets still needing a read
 ```
 
-Reading a sheet sits between those last two steps and is the one part no script does: depths, compass north, and platform endpoints are read off the drawing and recorded in `data/foi/observations/<sheet>.json`, one committed file per sheet. See `.cursor/skills/foi-sheet-reading/SKILL.md` for the schema and the procedure. Those observations are source data, not a cache — `data/pdf/` is gitignored, but `data/foi/observations/` is committed because nothing can regenerate it. Both scripts are offline and deterministic; there is no external service or API key anywhere in this pipeline.
+Reading a sheet sits between those last two steps and is the one part no script does: depths, compass north, and platform endpoints are read off the drawing and recorded in `data/foi/observations/<sheet>.json`, one committed file per sheet. Schema, how to read a sheet, and `foi:build -- --todo` review reasons are in `.cursor/skills/foi-sheet-reading/SKILL.md`. Those observations are source data, not a cache — `data/pdf/` is gitignored, but `data/foi/observations/` is committed because nothing can regenerate it. Both scripts are offline and deterministic; there is no external service or API key anywhere in this pipeline.
+
+Corrections:
+
+- Agent misread the drawing — edit that sheet’s observation to match what the sheet shows, then `npm run foi:build` and `npm run build-schematics`.
+- Sheet is wrong or unreadable — leave the observation as the drawing; patch `data/foi/extract.overrides.json` (`file` + `page`; `"reviewed": true` drops it from `--todo`).
+- OCR attached the wrong station — `data/foi/pages.overrides.json`, then `npm run index-foi-pages`.
+- Hand-authored dollhouse — `data/schematic/{stationId}.json` wins over `generated/`.
 
 Plan offsets in `layout.json` are reconstructed from 2015 axonometric scans. They are approximate and are never used for routing or access decisions. `npm run build-schematics` bakes them into generated node `x`/`y`/`bearingDeg` when present; stations without a sheet keep the alphabetical line bands.
 

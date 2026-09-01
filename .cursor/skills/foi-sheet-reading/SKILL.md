@@ -138,7 +138,8 @@ A reason is a prompt to re-read the sheet. Where the drawing itself is wrong or
 unreadable and a human has decided the answer, record it in
 `data/foi/extract.overrides.json` (keyed by `file` and `page`, with
 `"reviewed": true` to drop the page from the review list) rather than editing an
-observation to something the sheet does not show.
+observation to something the sheet does not show. README Setup lists the four
+correction paths (misread vs sheet vs page match vs hand-authored dollhouse).
 
 ## Approximation
 
