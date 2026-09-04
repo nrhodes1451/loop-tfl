@@ -500,4 +500,195 @@ describe("generateSchematic OSM National Rail placement", () => {
       ),
     ).toBe(true);
   });
+
+  it("emits an escalator edge on the FOI a/b span, not the platform centroid", () => {
+    const out = generateSchematic({
+      ...sample,
+      placement: [
+        {
+          lineId: "victoria",
+          platformNumbers: [1, 2],
+          eastM: 0,
+          northM: 0,
+          bearingDeg: 90,
+        },
+      ],
+      escalators: [
+        {
+          id: "HUBTEST-Esc-1",
+          caption: "hall to Victoria",
+          from: "ticket hall",
+          to: "Victoria Line",
+          eastTopM: 12,
+          northTopM: 40,
+          eastBotM: 24,
+          northBotM: 8,
+          topDepthM: 0,
+          botDepthM: 16,
+          placed: true,
+        },
+      ],
+    });
+    const edge = out.edges.find((e) => e.mode === "escalator");
+    expect(edge).toEqual({
+      from: "HUBTEST-Esc-1-top",
+      to: "HUBTEST-Esc-1-bot",
+      mode: "escalator",
+    });
+    const top = out.nodes.find((n) => n.id === "HUBTEST-Esc-1-top")!;
+    const bot = out.nodes.find((n) => n.id === "HUBTEST-Esc-1-bot")!;
+    expect(top.x).toBeCloseTo(-12 / 4);
+    expect(top.y).toBeCloseTo(40 / 4);
+    expect(bot.x).toBeCloseTo(-24 / 4);
+    expect(bot.y).toBeCloseTo(8 / 4);
+    const plat = out.nodes.find((n) => n.type === "platform")!;
+    expect(top.x).not.toBeCloseTo(plat.x);
+    expect(top.y).not.toBeCloseTo(plat.y);
+  });
+});
+
+describe("generateSchematic Angel graph", () => {
+  const angelInput: GenerateStationInput = {
+    id: "940GZZLUAGL",
+    name: "Angel",
+    lat: 51.531788,
+    lon: -0.105919,
+    platforms: [
+      {
+        id: "940GZZLUAGL-Plat01-SB-northern::northern::South",
+        lineId: "northern",
+        direction: "South",
+        label: "Platform 1 southbound",
+      },
+      {
+        id: "940GZZLUAGL-Plat02-NB-northern::northern::North",
+        lineId: "northern",
+        direction: "North",
+        label: "Platform 2 northbound",
+      },
+    ],
+    lifts: [],
+    platformLiftChains: [],
+    interchangeChains: [],
+    placement: [
+      {
+        lineId: "northern",
+        platformNumbers: [1],
+        eastM: 152.797,
+        northM: -185.822,
+        bearingDeg: 100,
+        depthM: 27.4,
+      },
+      {
+        lineId: "northern",
+        platformNumbers: [2],
+        eastM: 149.67,
+        northM: -223.978,
+        bearingDeg: 100,
+        depthM: 27.4,
+      },
+    ],
+    escalators: [
+      {
+        id: "940GZZLUAGL-Esc-4",
+        caption: "surface ticket hall to link passage",
+        from: "Surface ticket hall",
+        to: "Link passage",
+        eastTopM: 5.838,
+        northTopM: -5.838,
+        eastBotM: 7.134,
+        northBotM: -97.955,
+        topDepthM: 0,
+        botDepthM: 27.39,
+        riseM: 27.39,
+        angleDeg: 30,
+        placed: true,
+      },
+      {
+        id: "940GZZLUAGL-Esc-1",
+        caption: "link passage to Northern",
+        from: "Link passage",
+        to: "Northern Line",
+        eastTopM: 54.548,
+        northTopM: -120.6,
+        eastBotM: 77.193,
+        northBotM: -168.014,
+        topDepthM: 19.4,
+        botDepthM: 27.4,
+        riseM: 8,
+        angleDeg: 30,
+        placed: true,
+      },
+    ],
+  };
+  const angel = generateSchematic(angelInput);
+
+  it("keeps the ticket hall at the FOI origin, not the platform centroid", () => {
+    const hall = angel.nodes.find((n) => n.id === "concourse")!;
+    expect(hall.x).toBeCloseTo(0);
+    expect(hall.y).toBeCloseTo(0);
+    const plats = angel.nodes.filter((n) => n.type === "platform");
+    const cx = plats.reduce((s, n) => s + n.x, 0) / plats.length;
+    expect(hall.x).not.toBeCloseTo(cx);
+  });
+
+  it("plants entrance on the OSM hall without shifting schematic XY", () => {
+    const hallLatLon = { lat: 51.532911, lon: -0.106401 };
+    const planted = generateSchematic({ ...angelInput, hallLatLon });
+    expect(planted.entrance.lat).toBe(hallLatLon.lat);
+    expect(planted.entrance.lon).toBe(hallLatLon.lon);
+    expect(planted.entrance.label).toMatch(/OSM ticket hall/);
+    const hall = planted.nodes.find((n) => n.id === "concourse")!;
+    expect(hall.x).toBeCloseTo(0);
+    expect(hall.y).toBeCloseTo(0);
+    const street = planted.nodes.find((n) => n.id === "street")!;
+    expect(street.x).toBeCloseTo(0);
+    expect(street.y).toBeCloseTo(0);
+  });
+
+  it("emits CULG-length cages, a 90° link corridor, and a walk", () => {
+    const esc = angel.edges.filter((e) => e.mode === "escalator");
+    expect(esc).toHaveLength(2);
+    const e4Bot = angel.nodes.find((n) => n.id.endsWith("-Esc-4-bot"))!;
+    const e1Top = angel.nodes.find((n) => n.id.endsWith("-Esc-1-top"))!;
+    const northern = angel.nodes.find((n) => n.id.includes("northern-line"))!;
+    const link = angel.nodes.find((n) => n.id.includes("link-corridor"))!;
+    const hall = angel.nodes.find((n) => n.id === "concourse")!;
+    expect(e4Bot.x).not.toBeCloseTo(e1Top.x);
+    expect(e4Bot.y).not.toBeCloseTo(e1Top.y);
+    expect(e4Bot.depthM).toBeCloseTo(27.39);
+    expect(e1Top.depthM).toBeCloseTo(27.39);
+    expect(northern.depthM).toBeCloseTo(35.39);
+    expect(hall.planWx).toBe(1);
+    expect(hall.planWy).toBeGreaterThan(1);
+    expect(link.planWx).toBe(1);
+    expect(link.planWy).toBeGreaterThan(1);
+    expect(northern.planWx).toBe(1);
+    expect(
+      angel.edges.some(
+        (e) =>
+          e.mode === "level" &&
+          ((e.from === e4Bot.id && e.to === e1Top.id) ||
+            (e.from === e1Top.id && e.to === e4Bot.id)),
+      ),
+    ).toBe(true);
+    expect(
+      angel.edges.some(
+        (e) =>
+          e.mode === "level" &&
+          (e.from === northern.id || e.to === northern.id) &&
+          angel.nodes.some(
+            (n) =>
+              n.type === "platform" && (n.id === e.from || n.id === e.to),
+          ),
+      ),
+    ).toBe(true);
+    expect(angel.notes).toContain("depth-culg-over-foi");
+  });
+
+  it("sets Northern platform depthM to the CULG stack", () => {
+    for (const n of angel.nodes.filter((p) => p.type === "platform")) {
+      expect(n.depthM).toBeCloseTo(35.39);
+    }
+  });
 });

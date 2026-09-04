@@ -11,6 +11,10 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
+  joinCulgEscalators,
+  type CulgEscalatorsFile,
+} from "../src/lib/schematic/escalators";
+import {
   FOI_EXTRACT_DISCLAIMER,
   annotatePlatformFlags,
   applyExtractOverrides,
@@ -40,6 +44,7 @@ const OBSERVATIONS_DIR = path.join(FOI_DIR, "observations");
 const PAGES_PATH = path.join(FOI_DIR, "pages.json");
 const EXTRACT_PATH = path.join(FOI_DIR, "extract.json");
 const LAYOUT_PATH = path.join(FOI_DIR, "layout.json");
+const CULG_PATH = path.join(FOI_DIR, "culg-escalators.json");
 const OVERRIDES_PATH = path.join(FOI_DIR, "extract.overrides.json");
 const NETWORK_PATH = path.join(ROOT, "data", "network.json");
 
@@ -225,6 +230,7 @@ export async function buildFoiLayout(): Promise<{
       confidence: parsed.confidence,
       raw: parsed.raw,
     };
+    if (placed.escalators !== undefined) row.escalators = placed.escalators;
     if (placed.reference) row.reference = placed.reference;
     pages.push(row);
   }
@@ -247,6 +253,19 @@ export async function buildFoiLayout(): Promise<{
     [...placementIssues, ...pageIssues, ...geoIssues],
     chords,
   );
+  let withEscalators = flagged;
+  try {
+    const culg = JSON.parse(
+      await readFile(CULG_PATH, "utf8"),
+    ) as CulgEscalatorsFile;
+    withEscalators = joinCulgEscalators(flagged, culg);
+  } catch (err) {
+    if (
+      !(err && typeof err === "object" && "code" in err && err.code === "ENOENT")
+    ) {
+      throw err;
+    }
+  }
   const generatedAt = new Date().toISOString();
   const extractFile: FoiPageExtractFile = {
     generatedAt,
@@ -258,7 +277,7 @@ export async function buildFoiLayout(): Promise<{
     generatedAt,
     source: "tfl-foi-2015-axonometric",
     disclaimer: FOI_EXTRACT_DISCLAIMER,
-    stations: flagged,
+    stations: withEscalators,
   };
   await writeFile(EXTRACT_PATH, `${JSON.stringify(extractFile, null, 2)}\n`);
   await writeFile(LAYOUT_PATH, `${JSON.stringify(layoutFile, null, 2)}\n`);

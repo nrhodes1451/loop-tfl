@@ -46,6 +46,24 @@
       "confidence": "high"
     }
   ],
+  "escalators": [
+    {
+      "caption": "surface ticket hall to link passage",
+      "a": [0.14, 0.4],
+      "b": [0.3, 0.62],
+      "grid": "B4",
+      "confidence": "high",
+      "machines": 3
+    },
+    {
+      "caption": "link passage to Northern",
+      "a": [0.42, 0.56],
+      "b": [0.54, 0.62],
+      "grid": "G6",
+      "confidence": "high",
+      "machines": 3
+    }
+  ],
   "reference": {
     "label": "Ticket Hall",
     "at": [

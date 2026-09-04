@@ -304,9 +304,7 @@ describe("buildLineNetwork", () => {
         {
           ...schematic,
           stationId: "NEXT",
-          nodes: schematic.nodes.map((n) =>
-            n.type === "street" ? n : n.type === "platform" ? n : n,
-          ),
+          entrance: { ...schematic.entrance, lat: 51.51, lon: -0.12 },
         },
       ],
     ]),
@@ -332,6 +330,26 @@ describe("buildLineNetwork", () => {
   it("stores a bearing at both stations", () => {
     expect(network.angles.HUBTEST?.victoria).toBeTypeOf("number");
     expect(network.angles.NEXT?.victoria).toBeTypeOf("number");
+  });
+
+  it("plants line stations on schematic.entrance, not the StopPoint", () => {
+    const hall = generateSchematic({
+      ...sampleInput,
+      hallLatLon: { lat: 51.5329, lon: -0.1064 },
+    });
+    const planted = buildLineNetwork({
+      generatedAt: "test",
+      stations: [
+        { id: "HUBTEST", lat: 51.5, lon: -0.12 },
+        { id: "NEXT", lat: 51.51, lon: -0.12 },
+      ],
+      edges: [{ from: "HUBTEST", to: "NEXT", lineId: "victoria" }],
+      schematics: new Map([["HUBTEST", hall]]),
+    });
+    expect(planted.stations.HUBTEST).toEqual({
+      lat: 51.5329,
+      lon: -0.1064,
+    });
   });
 });
 

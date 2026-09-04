@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-29T17:28:13.638Z",
+  "generatedAt": "2026-09-02T13:27:22.200Z",
   "source": "tfl-foi-2015-axonometric",
-  "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
+  "disclaimer": "Approximate platform depths, drawing north, plan offsets, and escalator banks reconstructed from TfL FOI ~2015 axonometrics and a transcribed CULG table. Not survey, not for routing or access decisions.",
   "stations": [
     {
       "stationId": "940GZZLUACY",
@@ -131,6 +131,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -271,6 +272,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -398,6 +400,62 @@
           "northM": -223.97828277158413,
           "residual": 0.07836877956524359,
           "placed": true
+        }
+      ],
+      "escalators": [
+        {
+          "id": "940GZZLUAGL-Esc-1",
+          "caption": "link passage to Northern",
+          "eNumbers": [
+            "E1",
+            "E2",
+            "E3"
+          ],
+          "from": "Link passage",
+          "to": "Northern Line",
+          "eastTopM": 54.548112067657904,
+          "northTopM": -120.59965806903728,
+          "eastBotM": 77.19300121973833,
+          "northBotM": -168.01387697163494,
+          "topDepthM": 19.4,
+          "botDepthM": 27.4,
+          "riseM": 8,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        },
+        {
+          "id": "940GZZLUAGL-Esc-4",
+          "caption": "surface ticket hall to link passage",
+          "eNumbers": [
+            "E4",
+            "E5",
+            "E6"
+          ],
+          "from": "Surface ticket hall",
+          "to": "Link passage",
+          "eastTopM": 5.838259004556511,
+          "northTopM": -5.838259004556512,
+          "eastBotM": 7.1338931650602575,
+          "northBotM": -97.95476891695682,
+          "topDepthM": 0,
+          "botDepthM": 27.39,
+          "riseM": 27.39,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 1
+            }
+          ]
         }
       ],
       "sources": [
@@ -654,6 +712,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -783,6 +842,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1030,6 +1090,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1165,6 +1226,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -1294,6 +1356,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -1429,6 +1492,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -1569,6 +1633,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -1709,6 +1774,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -1849,6 +1915,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -1984,6 +2051,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2119,6 +2187,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -2256,6 +2325,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2385,6 +2455,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -2519,6 +2590,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -2599,6 +2671,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2679,6 +2752,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2814,6 +2888,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -2943,6 +3018,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -3197,6 +3273,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -3391,6 +3468,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -3755,6 +3833,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -3892,6 +3971,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -4134,6 +4214,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -4268,6 +4349,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -4405,6 +4487,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -4534,6 +4617,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -4907,6 +4991,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -5046,6 +5131,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -5175,6 +5261,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -5476,6 +5563,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -5686,6 +5774,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -5821,6 +5910,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -5950,6 +6040,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -6079,6 +6170,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -6214,6 +6306,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -6456,6 +6549,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -6591,6 +6685,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -6726,6 +6821,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -6861,6 +6957,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -6990,6 +7087,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -7232,6 +7330,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -7367,6 +7466,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -7502,6 +7602,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -7637,6 +7738,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -7879,6 +7981,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -8008,6 +8111,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -8265,6 +8369,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -8400,6 +8505,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -8589,6 +8695,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -8724,6 +8831,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -8933,6 +9041,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -9073,6 +9182,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -9428,6 +9538,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -9674,6 +9785,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -9807,6 +9919,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -9942,6 +10055,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -10077,6 +10191,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -10206,6 +10321,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -10283,6 +10399,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -10423,6 +10540,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",
@@ -10558,6 +10676,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -10698,6 +10817,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -10827,6 +10947,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -11036,6 +11157,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -11290,6 +11412,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -11430,6 +11553,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -11564,6 +11688,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -11699,6 +11824,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -11834,6 +11960,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -11969,6 +12096,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -12104,6 +12232,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -12239,6 +12368,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -12379,6 +12509,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -12513,6 +12644,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -12642,6 +12774,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -12830,6 +12963,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -12959,6 +13093,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -13094,6 +13229,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -13336,6 +13472,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -13471,6 +13608,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -13606,6 +13744,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -13946,6 +14085,294 @@
           "placed": true
         }
       ],
+      "escalators": [
+        {
+          "id": "HUBBAN-Esc-1",
+          "caption": "Central Line ticket hall to Central Line",
+          "eNumbers": [
+            "E1",
+            "E2",
+            "E3"
+          ],
+          "from": "Underground ticket hall (main intersection)",
+          "to": "Central Line",
+          "eastTopM": 26.605897644523772,
+          "northTopM": 10.25750863376967,
+          "eastBotM": -21.969418238371667,
+          "northBotM": -28.665111468644646,
+          "topDepthM": 5,
+          "botDepthM": 20.7,
+          "riseM": 15.7,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d central line stations Redacted.pdf",
+              "page": 1
+            }
+          ]
+        },
+        {
+          "id": "HUBBAN-Esc-10",
+          "caption": "lower intermediate level to DLR west end",
+          "eNumbers": [
+            "E10",
+            "E11"
+          ],
+          "from": "lower intermediate level",
+          "to": "DLR west end",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 27.65,
+          "botDepthM": 41.4,
+          "riseM": 13.75,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-12",
+          "caption": "Link passage 1 to DLR east end",
+          "eNumbers": [
+            "E12",
+            "E13"
+          ],
+          "from": "Link passage 1",
+          "to": "DLR east end",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 25.43,
+          "botDepthM": 41.4,
+          "riseM": 15.97,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-14",
+          "caption": "Westbound District Line to Link passage 1",
+          "eNumbers": [
+            "E14",
+            "E15"
+          ],
+          "from": "Westbound District Line",
+          "to": "Link passage 1",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 8.2,
+          "botDepthM": 23.84,
+          "riseM": 15.64,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-16",
+          "caption": "west intermediate level to Waterloo & City Line",
+          "eNumbers": [
+            "E16",
+            "E17"
+          ],
+          "from": "west intermediate level",
+          "to": "Waterloo & City Line",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 10.23,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-18",
+          "caption": "Surface ticket hall (Walbrook) to west intermediate level",
+          "eNumbers": [
+            "E18",
+            "E19"
+          ],
+          "from": "Surface ticket hall (Walbrook)",
+          "to": "west intermediate level",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 0,
+          "botDepthM": 6.07,
+          "riseM": 6.07,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-20",
+          "caption": "Northern Line north end to DLR west end",
+          "eNumbers": [
+            "E20",
+            "E21",
+            "E22"
+          ],
+          "from": "Northern Line north end",
+          "to": "DLR west end",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 30.5,
+          "botDepthM": 41.4,
+          "riseM": 10.9,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-23",
+          "caption": "Central Line to Link passage 2",
+          "eNumbers": [
+            "E23",
+            "E24",
+            "E25"
+          ],
+          "from": "Central Line",
+          "to": "Link passage 2",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 20.7,
+          "botDepthM": null,
+          "riseM": null,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-26",
+          "caption": "Link passage 3 to Northern Line centre",
+          "eNumbers": [
+            "E26",
+            "E27",
+            "E28"
+          ],
+          "from": "Link passage 3",
+          "to": "Northern Line centre",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": null,
+          "botDepthM": 30.5,
+          "riseM": null,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-29",
+          "caption": "Surface ticket hall (Cannon Street) to Link passage 3",
+          "eNumbers": [
+            "E29",
+            "E30",
+            "E31"
+          ],
+          "from": "Surface ticket hall (Cannon Street)",
+          "to": "Link passage 3",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 0,
+          "botDepthM": null,
+          "riseM": null,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-4",
+          "caption": "Eastbound District Line to Northern Line south end",
+          "eNumbers": [
+            "E4",
+            "E5"
+          ],
+          "from": "Eastbound District Line",
+          "to": "Northern Line south end",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 8.2,
+          "botDepthM": 30.5,
+          "riseM": 22.3,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": [],
+          "flags": [
+            "rise-foi-over-culg"
+          ]
+        },
+        {
+          "id": "HUBBAN-Esc-6",
+          "caption": "Underground ticket hall (Lombard St.) to upper intermediate level (Central Line + and passage to Waterloo & City Line)",
+          "eNumbers": [
+            "E6",
+            "E7"
+          ],
+          "from": "Underground ticket hall (Lombard St.)",
+          "to": "upper intermediate level (Central Line + and passage to Waterloo & City Line)",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 5.73,
+          "botDepthM": 20.7,
+          "riseM": 14.97,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBBAN-Esc-8",
+          "caption": "upper intermediate level to lower intermediate level (Northern Line north end +)",
+          "eNumbers": [
+            "E8",
+            "E9"
+          ],
+          "from": "upper intermediate level",
+          "to": "lower intermediate level (Northern Line north end +)",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 23.75,
+          "botDepthM": 30.5,
+          "riseM": 6.75,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": false,
+          "sources": []
+        }
+      ],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -14188,6 +14615,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -14325,6 +14753,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -14460,6 +14889,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -14557,6 +14987,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -14695,6 +15126,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -14829,6 +15261,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -15083,6 +15516,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -15436,6 +15870,112 @@
           "placed": true
         }
       ],
+      "escalators": [
+        {
+          "id": "HUBEUS-Esc-1",
+          "caption": "escalators 1, 2 intermediate south to northbound City and Victoria",
+          "eNumbers": [
+            "E1",
+            "E2"
+          ],
+          "from": "Intermediate level south side",
+          "to": "Northbound Northern Line (City branch) and Victoria Line",
+          "eastTopM": 26.382904522774446,
+          "northTopM": 99.49493678257997,
+          "eastBotM": 70.3544120607318,
+          "northBotM": 74.62120258693496,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 15.18,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "id": "HUBEUS-Esc-3",
+          "caption": "escalators 3, 4 intermediate north to southbound City and Victoria",
+          "eNumbers": [
+            "E3",
+            "E4"
+          ],
+          "from": "Intermediate level north side",
+          "to": "Southbound Northern Line (City branch) and Victoria Line",
+          "eastTopM": 8.794301507591483,
+          "northTopM": 136.80553807604744,
+          "eastBotM": 35.17720603036588,
+          "northBotM": 105.7133703314912,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 15,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "id": "HUBEUS-Esc-5",
+          "caption": "escalators 5, 6 ticket hall to intermediate south",
+          "eNumbers": [
+            "E5",
+            "E6"
+          ],
+          "from": "Underground ticket hall",
+          "to": "Intermediate level south side",
+          "eastTopM": -8.794301507591483,
+          "northTopM": 6.2184335489112526,
+          "eastBotM": -17.58860301518294,
+          "northBotM": 55.96590194020124,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 8.38,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "id": "HUBEUS-Esc-7",
+          "caption": "escalators 7, 8 ticket hall to intermediate north",
+          "eNumbers": [
+            "E7",
+            "E8"
+          ],
+          "from": "Underground ticket hall",
+          "to": "Intermediate level north side",
+          "eastTopM": 17.588603015182965,
+          "northTopM": 6.2184335489112526,
+          "eastBotM": 8.794301507591483,
+          "northBotM": 55.96590194020124,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 8.38,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        }
+      ],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -15671,6 +16211,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -15806,6 +16347,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -16045,6 +16587,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -16120,6 +16663,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d piccadilly line stations Redacted.pdf",
@@ -16420,6 +16964,195 @@
           "placed": true
         }
       ],
+      "escalators": [
+        {
+          "id": "HUBKGX-Esc-1",
+          "caption": "Piccadilly Line to Northern Line",
+          "eNumbers": [
+            "E1",
+            "E2",
+            "E3"
+          ],
+          "from": "Piccadilly Line",
+          "to": "Northern Line",
+          "eastTopM": 370.63490839683317,
+          "northTopM": -575.4491859501477,
+          "eastBotM": 293.81209155087265,
+          "northBotM": -545.1492462170073,
+          "topDepthM": 21.3,
+          "botDepthM": 27,
+          "riseM": 5.64,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 11
+            }
+          ]
+        },
+        {
+          "id": "HUBKGX-Esc-10",
+          "caption": "lower intermediate level to Piccadilly Line",
+          "eNumbers": [
+            "E10",
+            "E11",
+            "E12"
+          ],
+          "from": "lower intermediate level",
+          "to": "Piccadilly Line",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": null,
+          "botDepthM": 21.3,
+          "riseM": null,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBKGX-Esc-13",
+          "caption": "lower intermediate to Northern Line",
+          "eNumbers": [
+            "E13",
+            "E14",
+            "E15"
+          ],
+          "from": "lower intermediate level",
+          "to": "Northern Line",
+          "eastTopM": 315.6627306549571,
+          "northTopM": -398.4421819642958,
+          "eastBotM": 291.41646890457355,
+          "northBotM": -539.7548228325896,
+          "topDepthM": null,
+          "botDepthM": 27,
+          "riseM": null,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "id": "HUBKGX-Esc-16",
+          "caption": "Northern ticket hall to lower intermediate",
+          "eNumbers": [
+            "E16",
+            "E17",
+            "E18",
+            "E19"
+          ],
+          "from": "Northern underground ticket hall",
+          "to": "lower intermediate level",
+          "eastTopM": 255.9543938111658,
+          "northTopM": -106.95138145435608,
+          "eastBotM": 313.65459744331946,
+          "northBotM": -330.2104877051872,
+          "topDepthM": 27,
+          "botDepthM": null,
+          "riseM": null,
+          "angleDeg": 30,
+          "machines": 4,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 12
+            }
+          ]
+        },
+        {
+          "id": "HUBKGX-Esc-20",
+          "caption": "street to Northern ticket hall",
+          "eNumbers": [
+            "E20",
+            "E21"
+          ],
+          "from": "Street level",
+          "to": "Northern underground ticket hall",
+          "eastTopM": 96.91071539616811,
+          "northTopM": 85.20407748437711,
+          "eastBotM": 122.33212443138777,
+          "northBotM": -6.4408925983135745,
+          "topDepthM": 0,
+          "botDepthM": 27,
+          "riseM": 27,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 12
+            }
+          ],
+          "flags": [
+            "installing"
+          ]
+        },
+        {
+          "id": "HUBKGX-Esc-4",
+          "caption": "eastern ticket hall to Piccadilly Line",
+          "eNumbers": [
+            "E4",
+            "E5",
+            "E6"
+          ],
+          "from": "Eastern underground ticket hall lower level",
+          "to": "Piccadilly Line",
+          "eastTopM": 377.45660661402906,
+          "northTopM": -555.6800702259823,
+          "eastBotM": 429.48931690227676,
+          "northBotM": -604.5725898774073,
+          "topDepthM": 4.08,
+          "botDepthM": 21.3,
+          "riseM": 17.22,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 11
+            }
+          ]
+        },
+        {
+          "id": "HUBKGX-Esc-7",
+          "caption": "eastern ticket hall to Victoria Line",
+          "eNumbers": [
+            "E7",
+            "E8",
+            "E9"
+          ],
+          "from": "Eastern underground ticket hall lower level",
+          "to": "Victoria Line",
+          "eastTopM": 433.190157230634,
+          "northTopM": -660.4083278762131,
+          "eastBotM": 479.6495124572212,
+          "northBotM": -698.8280217626151,
+          "topDepthM": 4.03,
+          "botDepthM": 15.7,
+          "riseM": 11.67,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d circle stations Redacted.pdf",
+              "page": 11
+            }
+          ]
+        }
+      ],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -16564,6 +17297,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d northern line stations Redacted.pdf",
@@ -16702,6 +17436,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -16851,6 +17586,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -16980,6 +17716,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -17070,6 +17807,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -17200,6 +17938,35 @@
           "northM": -58.39828259153105,
           "residual": 0.20271827326058273,
           "placed": true
+        }
+      ],
+      "escalators": [
+        {
+          "id": "HUBOLD-Esc-1",
+          "caption": "underground ticket hall to intermediate",
+          "eNumbers": [
+            "E1",
+            "E2",
+            "E3"
+          ],
+          "from": "Underground ticket hall",
+          "to": "Intermediate level",
+          "eastTopM": -1.612742645313478,
+          "northTopM": -19.683015308905823,
+          "eastBotM": -14.817743777901576,
+          "northBotM": -117.2159555382581,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 15.7,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d northern line stations Redacted.pdf",
+              "page": 19
+            }
+          ]
         }
       ],
       "sources": [
@@ -17449,6 +18216,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -17578,6 +18346,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -17761,6 +18530,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -17899,6 +18669,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d central line stations Redacted.pdf",
@@ -18036,6 +18807,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -18231,6 +19003,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -18366,6 +19139,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -18702,6 +19476,219 @@
           "placed": false
         }
       ],
+      "escalators": [
+        {
+          "id": "HUBWAT-Esc-1",
+          "caption": "main ticket hall to Northern and southbound Bakerloo",
+          "eNumbers": [
+            "E1",
+            "E2",
+            "E3"
+          ],
+          "from": "Main underground ticket hall",
+          "to": "west intermediate level (Northern Line + and southbound Bakerloo Line)",
+          "eastTopM": -32.68172354586195,
+          "northTopM": -19.253686924339497,
+          "eastBotM": -3.9681448167107902,
+          "northBotM": -81.57846590636106,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 17.16,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        },
+        {
+          "id": "HUBWAT-Esc-12",
+          "caption": "main line station to main underground ticket hall",
+          "eNumbers": [
+            "E12",
+            "E13",
+            "E14"
+          ],
+          "from": "Main line station",
+          "to": "Main underground ticket hall",
+          "eastTopM": -15.799252237479475,
+          "northTopM": 51.477921693576505,
+          "eastBotM": -60.907609680243,
+          "northBotM": -10.449729231950982,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 7.28,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 18
+            }
+          ]
+        },
+        {
+          "id": "HUBWAT-Esc-15",
+          "caption": "Waterloo Rd surface ticket hall to east intermediate level",
+          "eNumbers": [
+            "E15",
+            "E16",
+            "E17",
+            "E18"
+          ],
+          "from": "Waterloo Rd surface ticket hall",
+          "to": "east intermediate level",
+          "eastTopM": null,
+          "northTopM": null,
+          "eastBotM": null,
+          "northBotM": null,
+          "topDepthM": 0,
+          "botDepthM": 16.95,
+          "riseM": 16.95,
+          "angleDeg": 30,
+          "machines": 4,
+          "placed": false,
+          "sources": []
+        },
+        {
+          "id": "HUBWAT-Esc-19",
+          "caption": "east intermediate to Jubilee Line west end",
+          "eNumbers": [
+            "E19",
+            "E20",
+            "E21"
+          ],
+          "from": "east intermediate level",
+          "to": "Jubilee Line west end",
+          "eastTopM": 47.79241990134892,
+          "northTopM": -33.793927470152795,
+          "eastBotM": 43.013177911214036,
+          "northBotM": -57.449676699259754,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 10.83,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 16
+            }
+          ]
+        },
+        {
+          "id": "HUBWAT-Esc-22",
+          "caption": "east intermediate to Jubilee Line east end",
+          "eNumbers": [
+            "E22",
+            "E23",
+            "E24"
+          ],
+          "from": "east intermediate level",
+          "to": "Jubilee Line east end",
+          "eastTopM": 109.92256577310255,
+          "northTopM": -33.793927470152795,
+          "eastBotM": 124.26029174350721,
+          "northBotM": -54.07028395224447,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 10.83,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 16
+            }
+          ]
+        },
+        {
+          "id": "HUBWAT-Esc-4",
+          "caption": "Shell Centre ticket hall to west intermediate",
+          "eNumbers": [
+            "E4",
+            "E5",
+            "E6"
+          ],
+          "from": "Shell Building surface ticket hall",
+          "to": "west intermediate level",
+          "eastTopM": 3.3015043765921273,
+          "northTopM": 5.718373321668571,
+          "eastBotM": 20.626477897700514,
+          "northBotM": -57.6556891400199,
+          "topDepthM": 0,
+          "botDepthM": 17.65,
+          "riseM": 17.65,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        },
+        {
+          "id": "HUBWAT-Esc-7",
+          "caption": "auxiliary ticket hall to west intermediate",
+          "eNumbers": [
+            "E7",
+            "E8"
+          ],
+          "from": "Auxiliary underground ticket hall",
+          "to": "west intermediate level",
+          "eastTopM": -11.721925428102114,
+          "northTopM": -38.979329772013145,
+          "eastBotM": 4.118956014739872,
+          "northBotM": -86.24755574836276,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 15.48,
+          "angleDeg": 30,
+          "machines": 2,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        },
+        {
+          "id": "HUBWAT-Esc-9",
+          "caption": "main ticket hall to west intermediate",
+          "eNumbers": [
+            "E9",
+            "E10",
+            "E11"
+          ],
+          "from": "Main underground ticket hall",
+          "to": "west intermediate level",
+          "eastTopM": 187.15409098157215,
+          "northTopM": -161.42494914372392,
+          "eastBotM": 128.72697286309182,
+          "northBotM": -150.5655300567195,
+          "topDepthM": null,
+          "botDepthM": null,
+          "riseM": 16.95,
+          "angleDeg": 30,
+          "machines": 3,
+          "placed": true,
+          "sources": [
+            {
+              "file": "3d bakerloo stations Redacted.pdf",
+              "page": 17
+            }
+          ]
+        }
+      ],
       "sources": [
         {
           "file": "3d bakerloo stations Redacted.pdf",
@@ -18847,6 +19834,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d victoria line stations Redacted.pdf",
@@ -19040,6 +20028,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -19178,6 +20167,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d jubilee stations Redacted.pdf",
@@ -19334,6 +20324,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -19726,6 +20717,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d circle stations Redacted.pdf",
@@ -19873,6 +20865,7 @@
           "placed": true
         }
       ],
+      "escalators": [],
       "sources": [
         {
           "file": "3d district stations Redacted.pdf",

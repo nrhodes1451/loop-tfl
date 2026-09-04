@@ -50,6 +50,16 @@
       "confidence": "high"
     }
   ],
+  "escalators": [
+    {
+      "caption": "underground ticket hall to intermediate",
+      "a": [0.44, 0.22],
+      "b": [0.58, 0.48],
+      "grid": "G2",
+      "confidence": "high",
+      "machines": 3
+    }
+  ],
   "reference": {
     "label": "Ticket Hall",
     "at": [

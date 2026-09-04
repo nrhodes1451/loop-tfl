@@ -11,6 +11,7 @@ import type { FoiLayoutFile } from "../src/lib/schematic/foi-extract";
 import { platformDepthM } from "../src/lib/schematic/foi-layout";
 import {
   generateSchematic,
+  type GenerateEscalator,
   type GeneratePlacementPlatform,
 } from "../src/lib/schematic/generate";
 import { normalizeSchematicLineId } from "../src/lib/schematic/levels";
@@ -30,7 +31,9 @@ import {
   OVERPASS_ENDPOINTS,
   bakeEntrances,
   networkBbox,
+  overlayHallCentroid,
   overpassQuery,
+  type EntranceOverlayFile,
   type OverpassResponse,
 } from "../src/lib/schematic/entrances";
 
@@ -52,6 +55,7 @@ export async function buildSchematics(): Promise<{
 
   let placementByStation = new Map<string, GeneratePlacementPlatform[]>();
   let marksByStation = new Map<string, SchematicFoiMark[]>();
+  let escalatorsByStation = new Map<string, GenerateEscalator[]>();
   try {
     const layout = JSON.parse(
       await readFile(path.join(root, "data", "foi", "layout.json"), "utf8"),
@@ -81,6 +85,26 @@ export async function buildSchematics(): Promise<{
     );
     marksByStation = new Map(
       layout.stations.map((s) => [s.stationId, s.marks ?? []]),
+    );
+    escalatorsByStation = new Map(
+      layout.stations.map((s) => [
+        s.stationId,
+        (s.escalators ?? []).map((e) => ({
+          id: e.id,
+          caption: e.caption,
+          from: e.from,
+          to: e.to,
+          eastTopM: e.eastTopM,
+          northTopM: e.northTopM,
+          eastBotM: e.eastBotM,
+          northBotM: e.northBotM,
+          topDepthM: e.topDepthM,
+          botDepthM: e.botDepthM,
+          riseM: e.riseM,
+          angleDeg: e.angleDeg,
+          placed: e.placed,
+        })),
+      ]),
     );
   } catch {
     /* layout.json is optional — generated stations then use line bands */
@@ -155,6 +179,15 @@ export async function buildSchematics(): Promise<{
     }
   }
 
+  let overlay: EntranceOverlayFile | null = null;
+  try {
+    overlay = JSON.parse(
+      await readFile(path.join(schematicDir, "entrances.json"), "utf8"),
+    ) as EntranceOverlayFile;
+  } catch {
+    overlay = null;
+  }
+
   let generated = 0;
   let skipped = 0;
   const schematics = new Map<string, SchematicStation>();
@@ -179,6 +212,8 @@ export async function buildSchematics(): Promise<{
       platforms,
       platformDepthM(station.id, "national-rail"),
     );
+    const hallLatLon =
+      overlayHallCentroid(overlay?.stations[station.id]) ?? undefined;
     const schematic = generateSchematic({
       id: station.id,
       name: station.name,
@@ -193,6 +228,8 @@ export async function buildSchematics(): Promise<{
         ...osmPlacement,
       ],
       foiMarks: marksByStation.get(station.id),
+      escalators: escalatorsByStation.get(station.id),
+      ...(hallLatLon ? { hallLatLon } : {}),
     });
     await writeFile(
       path.join(generatedDir, `${station.id}.json`),

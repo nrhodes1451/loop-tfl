@@ -28,6 +28,16 @@
       "confidence": "high"
     }
   ],
+  "escalators": [
+    {
+      "caption": "main line station to main underground ticket hall",
+      "a": [0.2, 0.22],
+      "b": [0.22, 0.4],
+      "grid": "C3",
+      "confidence": "high",
+      "machines": 3
+    }
+  ],
   "reference": {
     "label": "LUL Main Ticket Hall",
     "at": [

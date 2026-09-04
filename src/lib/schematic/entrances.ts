@@ -1,5 +1,6 @@
 /**
- * OSM street-entrance overlay: shared-node building footprints and steps.
+ * OSM street-entrance overlay: shared-node building footprints and steps,
+ * plus nearby halls that do not share an entrance vertex (Angel island).
  * Isolated from routing — do not import plan/status/topology.
  */
 
@@ -8,6 +9,8 @@ import { distanceM, latLonToEnu, type LatLon } from "./geo";
 import { ringAabb } from "./osm";
 
 export const ENTRANCE_MATCH_M = 200;
+/** Fallback hall search when a building does not share the entrance node. */
+export const NEAR_HALL_M = 40;
 export const DEFAULT_HALL_HEIGHT_M = 7;
 export const MAX_HALL_HEIGHT_M = 16;
 export const STAIR_WIDTH_M = 2.5;
@@ -98,6 +101,10 @@ export function overpassQuery(bbox: {
 way(bn.ent)["building"];
 out geom;
 way(bn.ent)["highway"];
+out geom;
+way(around.ent:${NEAR_HALL_M})["building"];
+out geom;
+way(around.ent:${NEAR_HALL_M})["highway"="steps"];
 out geom;
 `;
 }
@@ -234,6 +241,35 @@ export function entranceRingToEnu(
   });
 }
 
+export function ringCentroidLatLon(
+  ring: LatLonPair[],
+): { lat: number; lon: number } | null {
+  if (ring.length === 0) return null;
+  let lat = 0;
+  let lon = 0;
+  let n = 0;
+  for (const [la, lo] of ring) {
+    if (!Number.isFinite(la) || !Number.isFinite(lo)) continue;
+    lat += la;
+    lon += lo;
+    n += 1;
+  }
+  if (n === 0) return null;
+  return { lat: lat / n, lon: lon / n };
+}
+
+/** Smallest overlay hall ring, same pick as the street pavilion. */
+export function overlayHallCentroid(
+  row: StationEntrances | undefined,
+): { lat: number; lon: number } | null {
+  if (!row?.buildings.length) return null;
+  const ranked = row.buildings
+    .map((b) => ({ b, area: ringAabbAreaM2(b.ring) }))
+    .filter((x) => x.area > 0)
+    .sort((a, b) => a.area - b.area || a.b.osmWayId - b.b.osmWayId);
+  return ranked[0] ? ringCentroidLatLon(ranked[0].b.ring) : null;
+}
+
 export function hidesStreetCuboid(row: StationEntrances | undefined): boolean {
   if (!row) return false;
   return row.buildings.length > 0 || row.stairs.length > 0;
@@ -246,8 +282,28 @@ export function pickBuildingForEntrance(
   nodeId: number,
   buildingsByNode: Map<number, EntranceBuilding[]>,
 ): EntranceBuilding | null {
+  return rankBuildings(buildingsByNode.get(nodeId) ?? []);
+}
+
+/** Smallest positive-area ring whose centroid is within `maxM` of the entrance. */
+export function pickNearbyBuilding(
+  entrance: { lat: number; lon: number },
+  buildings: readonly EntranceBuilding[],
+  maxM: number = NEAR_HALL_M,
+): EntranceBuilding | null {
+  const near: EntranceBuilding[] = [];
+  for (const b of buildings) {
+    const c = ringCentroidLatLon(b.ring);
+    if (!c) continue;
+    if (distanceM(entrance, c) > maxM) continue;
+    near.push(b);
+  }
+  return rankBuildings(near);
+}
+
+function rankBuildings(list: readonly EntranceBuilding[]): EntranceBuilding | null {
   const cands: BuildingCand[] = [];
-  for (const b of buildingsByNode.get(nodeId) ?? []) {
+  for (const b of list) {
     const area = ringAabbAreaM2(b.ring);
     if (area <= 0) continue;
     cands.push({ ...b, area });
@@ -261,10 +317,12 @@ export function pickBuildingForEntrance(
 
 function indexOsm(osm: OverpassResponse): {
   nodes: OverpassNode[];
+  buildings: EntranceBuilding[];
   buildingsByNode: Map<number, EntranceBuilding[]>;
   stairsByNode: Map<number, IndexedStairs[]>;
 } {
   const nodes: OverpassNode[] = [];
+  const buildingsById = new Map<number, EntranceBuilding>();
   const buildingsByNode = new Map<number, EntranceBuilding[]>();
   const stairsByNode = new Map<number, IndexedStairs[]>();
 
@@ -294,6 +352,7 @@ function indexOsm(osm: OverpassResponse): {
         height: parseHeight(tags),
         ring,
       };
+      buildingsById.set(way.id, row);
       for (const nid of nodeIds) push(buildingsByNode, nid, row);
       continue;
     }
@@ -319,7 +378,12 @@ function indexOsm(osm: OverpassResponse): {
     }
   }
 
-  return { nodes, buildingsByNode, stairsByNode };
+  return {
+    nodes,
+    buildings: [...buildingsById.values()],
+    buildingsByNode,
+    stairsByNode,
+  };
 }
 
 export const OSM_HALL_ID_PREFIX = "osm-hall::";
@@ -440,7 +504,8 @@ export function bakeEntrances(
   stations: EntranceStationRef[],
   generatedAt: string = new Date().toISOString(),
 ): EntranceOverlayFile {
-  const { nodes, buildingsByNode, stairsByNode } = indexOsm(osm);
+  const { nodes, buildings: allBuildings, buildingsByNode, stairsByNode } =
+    indexOsm(osm);
   const out: Record<string, StationEntrances> = {};
 
   for (const station of stations) {
@@ -449,7 +514,9 @@ export function bakeEntrances(
     const stairs = new Map<number, EntranceStairs>();
     for (const node of nodes) {
       if (distanceM(station, node) > ENTRANCE_MATCH_M) continue;
-      const building = pickBuildingForEntrance(node.id, buildingsByNode);
+      const building =
+        pickBuildingForEntrance(node.id, buildingsByNode) ??
+        pickNearbyBuilding(node, allBuildings);
       if (building) buildings.set(building.osmWayId, building);
       for (const step of stairsByNode.get(node.id) ?? []) {
         const path = orientStairPath(step.path, {

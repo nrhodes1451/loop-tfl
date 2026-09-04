@@ -82,6 +82,44 @@
       "confidence": "high"
     }
   ],
+  "escalators": [
+    {
+      "caption": "escalators 5, 6 ticket hall to intermediate south",
+      "a": [0.48, 0.78],
+      "b": [0.46, 0.62],
+      "grid": "H7",
+      "confidence": "high",
+      "machines": 2,
+      "eNumbers": ["E5", "E6"]
+    },
+    {
+      "caption": "escalators 7, 8 ticket hall to intermediate north",
+      "a": [0.54, 0.78],
+      "b": [0.52, 0.62],
+      "grid": "I7",
+      "confidence": "high",
+      "machines": 2,
+      "eNumbers": ["E7", "E8"]
+    },
+    {
+      "caption": "escalators 3, 4 intermediate north to southbound City and Victoria",
+      "a": [0.52, 0.36],
+      "b": [0.58, 0.46],
+      "grid": "I4",
+      "confidence": "high",
+      "machines": 2,
+      "eNumbers": ["E3", "E4"]
+    },
+    {
+      "caption": "escalators 1, 2 intermediate south to northbound City and Victoria",
+      "a": [0.56, 0.48],
+      "b": [0.66, 0.56],
+      "grid": "I6",
+      "confidence": "high",
+      "machines": 2,
+      "eNumbers": ["E1", "E2"]
+    }
+  ],
   "reference": {
     "label": "Ticket Hall",
     "at": [0.5, 0.8]

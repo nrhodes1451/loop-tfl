@@ -308,6 +308,36 @@ describe("parseObservedPlacement", () => {
     const hit = parseObservedPlacement({ northDeg: 90, depths: [] });
     expect(hit.platforms).toEqual([]);
     expect(hit.reference).toBeUndefined();
+    expect(hit.escalators).toBeUndefined();
+  });
+
+  it("treats escalators [] as none on the sheet, not unread", () => {
+    const hit = parseObservedPlacement({ platforms: [], escalators: [] });
+    expect(hit.escalators).toEqual([]);
+  });
+
+  it("reads an escalator bank and drops one without landings", () => {
+    const hit = parseObservedPlacement({
+      escalators: [
+        {
+          caption: "ticket hall to Northern",
+          a: [0.12, 0.4],
+          b: [0.5, 0.55],
+          grid: "B4",
+          machines: 3,
+          eNumbers: ["E4", "E5", "E6"],
+        },
+        { caption: "guess" },
+      ],
+    });
+    expect(hit.escalators).toHaveLength(1);
+    expect(hit.escalators![0]).toMatchObject({
+      caption: "ticket hall to Northern",
+      a: [0.12, 0.4],
+      b: [0.5, 0.55],
+      machines: 3,
+      eNumbers: ["E4", "E5", "E6"],
+    });
   });
 });
 
@@ -660,5 +690,58 @@ describe("bearing review reasons", () => {
     expect(issues.map((i) => i.reason)).toContain("bearing-vs-geography");
     const flagged = annotatePlatformFlags(stations, issues, chords);
     expect(flagged[0]!.platforms[0]!.flags).toContain("bearing-vs-geography");
+  });
+});
+
+describe("mergeStationLayouts escalators", () => {
+  it("projects a bank on the same sheet basis as platforms, not the centroid", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      platforms: [northernMark],
+      escalators: [
+        {
+          caption: "ticket hall to Northern",
+          a: [0.12, 0.4],
+          b: [0.55, 0.7],
+          grid: "B4",
+          confidence: "high",
+          machines: 3,
+        },
+      ],
+    };
+    const { stations } = mergeStationLayouts([page]);
+    expect(stations[0]!.escalators).toHaveLength(1);
+    const esc = stations[0]!.escalators[0]!;
+    const plat = stations[0]!.platforms[0]!;
+    expect(esc.placed).toBe(true);
+    expect(esc.eastTopM).not.toBeNull();
+    expect(esc.eastBotM).not.toBeNull();
+    expect(esc.eastTopM).not.toBeCloseTo(plat.eastM);
+    expect(esc.northTopM).not.toBeCloseTo(plat.northM);
+    expect(esc.eastTopM).not.toBeCloseTo(esc.eastBotM!);
+  });
+
+  it("keeps a ticket-hall reference on the merged station", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      platforms: [northernMark],
+      reference: { label: "Ticket Hall", at: [0.12, 0.4] },
+    };
+    const { stations } = mergeStationLayouts([page]);
+    expect(stations[0]!.reference).toEqual({
+      label: "Ticket Hall",
+      at: [0.12, 0.4],
+    });
+  });
+
+  it("does not treat missing escalators as a review reason", () => {
+    const page: FoiPageExtract = {
+      ...northern,
+      platforms: [northernMark],
+      confidence: "high",
+    };
+    expect(reviewExtract([page]).flatMap((r) => r.reasons)).not.toContain(
+      "no-escalators",
+    );
   });
 });

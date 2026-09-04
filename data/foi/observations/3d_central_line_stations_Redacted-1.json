@@ -63,6 +63,16 @@
       "confidence": "high"
     }
   ],
+  "escalators": [
+    {
+      "caption": "Central Line ticket hall to Central Line",
+      "a": [0.36, 0.25],
+      "b": [0.4, 0.34],
+      "grid": "F3",
+      "confidence": "high",
+      "machines": 3
+    }
+  ],
   "reference": { "label": "Central Line Ticket Hall", "at": [0.34, 0.28] },
   "confidence": "high",
   "raw": "Bank/Monument reading pose: rose N top-right (315). Central/District E–W (90); Northern/DLR N–S (0). Depths 20.7 / 8.2 / 41.4 / 30.5m."

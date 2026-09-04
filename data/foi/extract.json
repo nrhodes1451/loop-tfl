@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-29T17:28:13.638Z",
+  "generatedAt": "2026-09-02T13:27:22.200Z",
   "source": "tfl-foi-2015-axonometric",
-  "disclaimer": "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.",
+  "disclaimer": "Approximate platform depths, drawing north, plan offsets, and escalator banks reconstructed from TfL FOI ~2015 axonometrics and a transcribed CULG table. Not survey, not for routing or access decisions.",
   "pages": [
     {
       "file": "3d bakerloo stations Redacted.pdf",
@@ -1169,6 +1169,36 @@
       ],
       "confidence": "high",
       "raw": "Waterloo axonometric 1: rose N towards bottom-left (215). Parallel Jubilee boxes share bearingDeg 77 (Westminster–Southwark). Depth table left as previously read.",
+      "escalators": [
+        {
+          "caption": "east intermediate to Jubilee Line west end",
+          "a": [
+            0.42,
+            0.58
+          ],
+          "b": [
+            0.4,
+            0.72
+          ],
+          "grid": "G6",
+          "confidence": "high",
+          "machines": 3
+        },
+        {
+          "caption": "east intermediate to Jubilee Line east end",
+          "a": [
+            0.68,
+            0.58
+          ],
+          "b": [
+            0.74,
+            0.7
+          ],
+          "grid": "L6",
+          "confidence": "high",
+          "machines": 3
+        }
+      ],
       "reference": {
         "label": "Colonnade Ticket Hall",
         "at": [
@@ -1281,6 +1311,64 @@
       ],
       "confidence": "high",
       "raw": "Waterloo axonometric 2: rose N about 30° west of up (330). Bakerloo and Northern pairs share bearingDeg 145. Depths 19.5 / 16.4 / 21.3m.",
+      "escalators": [
+        {
+          "caption": "Shell Centre ticket hall to west intermediate",
+          "a": [
+            0.18,
+            0.2
+          ],
+          "b": [
+            0.28,
+            0.34
+          ],
+          "grid": "C2",
+          "confidence": "high",
+          "machines": 3
+        },
+        {
+          "caption": "main ticket hall to Northern and southbound Bakerloo",
+          "a": [
+            0.14,
+            0.32
+          ],
+          "b": [
+            0.26,
+            0.44
+          ],
+          "grid": "B3",
+          "confidence": "high",
+          "machines": 3
+        },
+        {
+          "caption": "auxiliary ticket hall to west intermediate",
+          "a": [
+            0.2,
+            0.34
+          ],
+          "b": [
+            0.28,
+            0.44
+          ],
+          "grid": "C3",
+          "confidence": "high",
+          "machines": 2
+        },
+        {
+          "caption": "main ticket hall to west intermediate",
+          "a": [
+            0.7,
+            0.36
+          ],
+          "b": [
+            0.58,
+            0.42
+          ],
+          "grid": "L4",
+          "confidence": "high",
+          "machines": 3
+        }
+      ],
       "reference": {
         "label": "Shell Centre Ticket Hall",
         "at": [
@@ -1326,6 +1414,22 @@
       ],
       "confidence": "high",
       "raw": "Waterloo axonometric 3: rose N towards top-left (315). W&C platforms bearingDeg 58 (towards Bank). Depth 12.2m.",
+      "escalators": [
+        {
+          "caption": "main line station to main underground ticket hall",
+          "a": [
+            0.2,
+            0.22
+          ],
+          "b": [
+            0.22,
+            0.4
+          ],
+          "grid": "C3",
+          "confidence": "high",
+          "machines": 3
+        }
+      ],
       "reference": {
         "label": "LUL Main Ticket Hall",
         "at": [
@@ -1465,6 +1569,22 @@
       ],
       "confidence": "high",
       "raw": "Bank/Monument reading pose: rose N top-right (315). Central/District E–W (90); Northern/DLR N–S (0). Depths 20.7 / 8.2 / 41.4 / 30.5m.",
+      "escalators": [
+        {
+          "caption": "Central Line ticket hall to Central Line",
+          "a": [
+            0.36,
+            0.25
+          ],
+          "b": [
+            0.4,
+            0.34
+          ],
+          "grid": "F3",
+          "confidence": "high",
+          "machines": 3
+        }
+      ],
       "reference": {
         "label": "Central Line Ticket Hall",
         "at": [
@@ -3913,6 +4033,50 @@
       ],
       "confidence": "high",
       "raw": "King's Cross axonometric 1 reading pose: rose N ~45°. Met/Circle and Northern bearingDeg 90; Piccadilly and Victoria 0. Depths 7.0 / 15.7 / 21.3 / 27.0m.",
+      "escalators": [
+        {
+          "caption": "Piccadilly Line to Northern Line",
+          "a": [
+            0.54,
+            0.4
+          ],
+          "b": [
+            0.4,
+            0.28
+          ],
+          "grid": "I4",
+          "confidence": "high",
+          "machines": 3
+        },
+        {
+          "caption": "eastern ticket hall to Piccadilly Line",
+          "a": [
+            0.58,
+            0.38
+          ],
+          "b": [
+            0.64,
+            0.5
+          ],
+          "grid": "I4",
+          "confidence": "high",
+          "machines": 3
+        },
+        {
+          "caption": "eastern ticket hall to Victoria Line",
+          "a": [
+            0.58,
+            0.58
+          ],
+          "b": [
+            0.64,
+            0.68
+          ],
+          "grid": "I6",
+          "confidence": "high",
+          "machines": 3
+        }
+      ],
       "reference": {
         "label": "Western Ticket Hall",
         "at": [
@@ -3952,6 +4116,50 @@
       ],
       "confidence": "high",
       "raw": "King's Cross axonometric 2: rose N ~45°. Only Northern 7&8 west-end box is drawn. No depth table.",
+      "escalators": [
+        {
+          "caption": "Northern ticket hall to lower intermediate",
+          "a": [
+            0.5,
+            0.48
+          ],
+          "b": [
+            0.4,
+            0.72
+          ],
+          "grid": "I5",
+          "confidence": "high",
+          "machines": 4
+        },
+        {
+          "caption": "lower intermediate to Northern Line",
+          "a": [
+            0.36,
+            0.78
+          ],
+          "b": [
+            0.26,
+            0.88
+          ],
+          "grid": "F8",
+          "confidence": "high",
+          "machines": 3
+        },
+        {
+          "caption": "street to Northern ticket hall",
+          "a": [
+            0.52,
+            0.18
+          ],
+          "b": [
+            0.48,
+            0.28
+          ],
+          "grid": "I2",
+          "confidence": "high",
+          "machines": 2
+        }
+      ],
       "reference": {
         "label": "Northern Ticket Hall",
         "at": [
@@ -5886,6 +6094,36 @@
       ],
       "confidence": "high",
       "raw": "Angel reading pose: rose N towards top-left (315). Parallel Northern boxes share bearingDeg 100. Depth 27.4m.",
+      "escalators": [
+        {
+          "caption": "surface ticket hall to link passage",
+          "a": [
+            0.14,
+            0.4
+          ],
+          "b": [
+            0.3,
+            0.62
+          ],
+          "grid": "B4",
+          "confidence": "high",
+          "machines": 3
+        },
+        {
+          "caption": "link passage to Northern",
+          "a": [
+            0.42,
+            0.56
+          ],
+          "b": [
+            0.54,
+            0.62
+          ],
+          "grid": "G6",
+          "confidence": "high",
+          "machines": 3
+        }
+      ],
       "reference": {
         "label": "Ticket Hall",
         "at": [
@@ -6666,6 +6904,80 @@
       ],
       "confidence": "high",
       "raw": "Euston reading pose: rose N up (0). CX 1–2 and City/Victoria 3–6 share bearingDeg 45 (NE–SW). Depths 20.4 / 29.8 / 29.8m.",
+      "escalators": [
+        {
+          "caption": "escalators 5, 6 ticket hall to intermediate south",
+          "a": [
+            0.48,
+            0.78
+          ],
+          "b": [
+            0.46,
+            0.62
+          ],
+          "grid": "H7",
+          "confidence": "high",
+          "machines": 2,
+          "eNumbers": [
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "caption": "escalators 7, 8 ticket hall to intermediate north",
+          "a": [
+            0.54,
+            0.78
+          ],
+          "b": [
+            0.52,
+            0.62
+          ],
+          "grid": "I7",
+          "confidence": "high",
+          "machines": 2,
+          "eNumbers": [
+            "E7",
+            "E8"
+          ]
+        },
+        {
+          "caption": "escalators 3, 4 intermediate north to southbound City and Victoria",
+          "a": [
+            0.52,
+            0.36
+          ],
+          "b": [
+            0.58,
+            0.46
+          ],
+          "grid": "I4",
+          "confidence": "high",
+          "machines": 2,
+          "eNumbers": [
+            "E3",
+            "E4"
+          ]
+        },
+        {
+          "caption": "escalators 1, 2 intermediate south to northbound City and Victoria",
+          "a": [
+            0.56,
+            0.48
+          ],
+          "b": [
+            0.66,
+            0.56
+          ],
+          "grid": "I6",
+          "confidence": "high",
+          "machines": 2,
+          "eNumbers": [
+            "E1",
+            "E2"
+          ]
+        }
+      ],
       "reference": {
         "label": "Ticket Hall",
         "at": [
@@ -7193,6 +7505,22 @@
       ],
       "confidence": "high",
       "raw": "Old Street reading pose: rose N ~315°. Parallel Northern and Network Rail platforms share bearingDeg 0. Depth 15.5m.",
+      "escalators": [
+        {
+          "caption": "underground ticket hall to intermediate",
+          "a": [
+            0.44,
+            0.22
+          ],
+          "b": [
+            0.58,
+            0.48
+          ],
+          "grid": "G2",
+          "confidence": "high",
+          "machines": 3
+        }
+      ],
       "reference": {
         "label": "Ticket Hall",
         "at": [

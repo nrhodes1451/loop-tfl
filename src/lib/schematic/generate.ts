@@ -14,6 +14,13 @@ import {
   PLATFORM_WIDTH_M,
   SCHEMATIC_UNIT_M,
 } from "./lu-scale";
+import { isSurfaceLanding } from "./escalators";
+import {
+  ANGEL_STATION_ID,
+  solveStationGraph,
+  type GraphLanding,
+  type StationGraph,
+} from "./station-graph";
 import type {
   SchematicEdge,
   SchematicEdgeMode,
@@ -86,6 +93,26 @@ export type GenerateStationInput = {
   placement?: GeneratePlacementPlatform[];
   /** All FOI marks (including unused); copied onto the schematic JSON. */
   foiMarks?: SchematicFoiMark[];
+  /** FOI+CULG escalator banks; only `placed` banks emit edges. */
+  escalators?: GenerateEscalator[];
+  /** OSM pavilion centroid; when set, the dollhouse plants here. */
+  hallLatLon?: { lat: number; lon: number };
+};
+
+export type GenerateEscalator = {
+  id: string;
+  caption: string;
+  from: string;
+  to: string;
+  eastTopM: number | null;
+  northTopM: number | null;
+  eastBotM: number | null;
+  northBotM: number | null;
+  topDepthM: number | null;
+  botDepthM: number | null;
+  riseM?: number | null;
+  angleDeg?: number;
+  placed: boolean;
 };
 
 const PLATFORM_DX = 2;
@@ -217,6 +244,85 @@ function osmMapUrl(lat: number, lon: number): string {
   const la = lat.toFixed(6);
   const lo = lon.toFixed(6);
   return `https://www.openstreetmap.org/?mlat=${la}&mlon=${lo}#map=18/${la}/${lo}`;
+}
+
+function metresToSchematic(eastM: number, northM: number): { x: number; y: number } {
+  return {
+    x: snap(-eastM / SCHEMATIC_UNIT_M),
+    y: snap(northM / SCHEMATIC_UNIT_M),
+  };
+}
+
+function landingNodeId(stationId: string, landing: GraphLanding): string {
+  if (isSurfaceLanding(landing.label)) return "concourse";
+  if (landing.key.startsWith(stationId) || landing.key.includes("-Esc-")) {
+    return landing.key;
+  }
+  const slug = landing.key.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `${stationId}-Esc-${slug || "landing"}`;
+}
+
+function slabFields(landing: GraphLanding): Pick<
+  SchematicNode,
+  "planWx" | "planWy" | "bearingDeg"
+> {
+  return {
+    ...(landing.planWx != null ? { planWx: landing.planWx } : {}),
+    ...(landing.planWy != null ? { planWy: landing.planWy } : {}),
+    ...(landing.bearingDeg != null ? { bearingDeg: landing.bearingDeg } : {}),
+  };
+}
+
+function angelStationGraph(input: GenerateStationInput): StationGraph | null {
+  if (input.id !== ANGEL_STATION_ID) return null;
+  const banks = (input.escalators ?? []).filter(
+    (e): e is GenerateEscalator & {
+      eastTopM: number;
+      northTopM: number;
+      eastBotM: number;
+      northBotM: number;
+      riseM: number;
+    } =>
+      e.placed &&
+      e.eastTopM != null &&
+      e.northTopM != null &&
+      e.eastBotM != null &&
+      e.northBotM != null &&
+      e.riseM != null &&
+      e.riseM > 0,
+  );
+  if (banks.length === 0) return null;
+  const platforms = (input.placement ?? [])
+    .filter((p) => p.source !== "osm")
+    .map((p) => ({
+      lineId: normalizeSchematicLineId(p.lineId),
+      eastM: p.eastM,
+      northM: p.northM,
+      bearingDeg: p.bearingDeg,
+      ...(p.depthM != null ? { depthM: p.depthM } : {}),
+    }));
+  const depths = platforms
+    .filter((p) => p.depthM != null)
+    .map((p) => ({
+      label: p.lineId,
+      metres: p.depthM!,
+      lineId: p.lineId,
+    }));
+  return solveStationGraph({
+    banks: banks.map((b) => ({
+      id: b.id,
+      from: b.from,
+      to: b.to,
+      riseM: b.riseM,
+      angleDeg: b.angleDeg ?? 30,
+      eastTopM: b.eastTopM,
+      northTopM: b.northTopM,
+      eastBotM: b.eastBotM,
+      northBotM: b.northBotM,
+    })),
+    platforms,
+    depths,
+  });
 }
 
 export function generateSchematic(input: GenerateStationInput): SchematicStation {
@@ -438,7 +544,10 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     xCursor = snap(x0 + Math.max(LINE_DX, lastSpan));
   }
 
-  const hallRaw = centroid([...platformPos.values()]);
+  const graph = angelStationGraph(input);
+  const hallRaw = graph
+    ? metresToSchematic(graph.hall.eastM, graph.hall.northM)
+    : centroid([...platformPos.values()]);
   const hall = { x: snap(hallRaw.x), y: snap(hallRaw.y) };
 
   for (const lineId of lineIds) {
@@ -467,6 +576,13 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
       level: -1,
       x: hall.x,
       y: hall.y,
+      ...(graph
+        ? {
+            planWx: graph.hall.planWx,
+            planWy: graph.hall.planWy,
+            bearingDeg: graph.hall.bearingDeg,
+          }
+        : {}),
     },
   );
 
@@ -506,6 +622,79 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
       y: pos.y,
       liftId: lift.id,
     });
+  }
+
+  if (graph) {
+    for (const node of nodes) {
+      if (node.type !== "platform" || !node.lineId) continue;
+      const lineId = normalizeSchematicLineId(node.lineId);
+      const depthM = graph.platformDepthM[lineId];
+      if (depthM == null) continue;
+      node.depthM = depthM;
+      if (graph.flags.length > 0 && node.foi) {
+        node.foi.flags = [...new Set([...(node.foi.flags ?? []), ...graph.flags])];
+      }
+    }
+  }
+
+  const placedEscalators = [...(input.escalators ?? [])]
+    .filter(
+      (e) =>
+        e.placed &&
+        e.eastTopM != null &&
+        e.northTopM != null &&
+        e.eastBotM != null &&
+        e.northBotM != null,
+    )
+    .sort((a, b) => a.id.localeCompare(b.id));
+  const escNodePairs: { from: string; to: string }[] = [];
+  const landingIds = new Map<string, string>();
+  if (graph) {
+    for (const landing of graph.landings) {
+      const id = landingNodeId(input.id, landing);
+      landingIds.set(landing.key, id);
+      if (id === "concourse") continue;
+      const pos = metresToSchematic(landing.eastM, landing.northM);
+      nodes.push({
+        id,
+        type: "concourse",
+        label: landing.label,
+        level: landing.depthM <= 2 ? 0 : -2,
+        x: pos.x,
+        y: pos.y,
+        depthM: landing.depthM,
+        ...slabFields(landing),
+      });
+    }
+    for (const bank of graph.banks) {
+      const from = landingIds.get(bank.fromKey);
+      const to = landingIds.get(bank.toKey);
+      if (from && to) escNodePairs.push({ from, to });
+    }
+  } else {
+    for (const bank of placedEscalators) {
+      const topId = `${bank.id}-top`;
+      const botId = `${bank.id}-bot`;
+      nodes.push({
+        id: topId,
+        type: "concourse",
+        label: bank.from || `${bank.caption} (top)`,
+        level: bank.topDepthM != null && bank.topDepthM <= 2 ? 0 : -1,
+        x: snap(-bank.eastTopM! / SCHEMATIC_UNIT_M),
+        y: snap(bank.northTopM! / SCHEMATIC_UNIT_M),
+        ...(bank.topDepthM != null ? { depthM: bank.topDepthM } : {}),
+      });
+      nodes.push({
+        id: botId,
+        type: "concourse",
+        label: bank.to || `${bank.caption} (bottom)`,
+        level: -2,
+        x: snap(-bank.eastBotM! / SCHEMATIC_UNIT_M),
+        y: snap(bank.northBotM! / SCHEMATIC_UNIT_M),
+        ...(bank.botDepthM != null ? { depthM: bank.botDepthM } : {}),
+      });
+      escNodePairs.push({ from: topId, to: botId });
+    }
   }
 
   const edges: SchematicEdge[] = [];
@@ -582,18 +771,56 @@ export function generateSchematic(input: GenerateStationInput): SchematicStation
     }
   }
 
+  for (const pair of escNodePairs) {
+    addEdge(pair.from, pair.to, "escalator");
+  }
+
+  if (graph) {
+    const concourse = nodes.find((n) => n.id === "concourse");
+    if (concourse) concourse.depthM = 0;
+    for (const walk of graph.walks) {
+      const from = landingIds.get(walk.fromKey);
+      if (!from) continue;
+      if (walk.toKey) {
+        const to = landingIds.get(walk.toKey);
+        if (to) addEdge(from, to, "level");
+        continue;
+      }
+      if (!walk.lineId) continue;
+      const end = metresToSchematic(walk.eastToM, walk.northToM);
+      let best: SchematicNode | null = null;
+      let bestD = Infinity;
+      for (const node of nodes) {
+        if (node.type !== "platform") continue;
+        if (normalizeSchematicLineId(node.lineId ?? "") !== walk.lineId) continue;
+        const d = Math.hypot(node.x - end.x, node.y - end.y);
+        if (d < bestD) {
+          bestD = d;
+          best = node;
+        }
+      }
+      if (best) addEdge(from, best.id, "level");
+    }
+  }
+
+  const plant = input.hallLatLon ?? { lat: input.lat, lon: input.lon };
   const out: SchematicStation = {
     stationId: input.id,
     name: input.name,
     disclaimer: GENERATED_DISCLAIMER,
     entrance: {
-      lat: input.lat,
-      lon: input.lon,
-      source: osmMapUrl(input.lat, input.lon),
-      label: "Station location (not a surveyed entrance)",
+      lat: plant.lat,
+      lon: plant.lon,
+      source: osmMapUrl(plant.lat, plant.lon),
+      label: input.hallLatLon
+        ? "OSM ticket hall (approximate)"
+        : "Station location (not a surveyed entrance)",
     },
     notes:
-      "Generated schematic. Depth tiers are line conventions, not survey. Connectivity from platformLiftChains and interchangeChains.",
+      "Generated schematic. Depth tiers are line conventions, not survey. Connectivity from platformLiftChains and interchangeChains. Escalator edges are visual only, not for routing." +
+      (graph?.flags.length
+        ? ` Flags: ${graph.flags.join(", ")}.`
+        : ""),
     nodes,
     edges,
   };

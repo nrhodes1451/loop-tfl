@@ -403,7 +403,11 @@ export function buildLineNetwork(input: LineNetworkInput): LineNetwork {
   const origin = input.origin ?? HUBKGX_ORIGIN;
   const stations: Record<string, LineStation> = {};
   for (const s of input.stations) {
-    stations[s.id] = { lat: s.lat, lon: s.lon };
+    const plant = input.schematics.get(s.id)?.entrance;
+    stations[s.id] = {
+      lat: plant?.lat ?? s.lat,
+      lon: plant?.lon ?? s.lon,
+    };
   }
 
   const rawChains = walkLineChains(input.edges);

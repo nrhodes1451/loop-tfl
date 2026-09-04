@@ -4,6 +4,7 @@
  */
 
 import { lineColorForSchematic } from "../tokens";
+import { inclinedFlightEdges } from "./building-geom";
 import { platformDepthM } from "./foi-layout";
 import { bearingToRotationY } from "./foi-project";
 import { normalizeSchematicLineId } from "./levels";
@@ -106,6 +107,11 @@ const TICKET_HALL_EDGE: Vec3 = [214, 168, 96];
 /** Cool lilac so mezzanines don’t collide with tube lines. */
 const MEZZANINE_EDGE: Vec3 = [168, 148, 214];
 const LIFT_EDGE: Vec3 = [186, 228, 242];
+/** Teal, distinct from lift ice, street green, hall sand, and NR-red stairs. */
+export const ESCALATOR_COLOR = "#3ec8d8";
+/** One schematic unit ≈ a 3-machine bank (SCHEMATIC_UNIT_M is 4 m). */
+export const ESCALATOR_WIDTH_U = 1;
+export const ESCALATOR_RISERS = 8;
 
 type Footprint = { wx: number; wy: number; h: number };
 
@@ -152,6 +158,9 @@ function footprint(node: SchematicNode, nodes: SchematicNode[]): Footprint {
     case "platform":
       return { ...platformPlanSize(node, nodes), h: PLATFORM_H };
     case "concourse":
+      if (node.planWx != null && node.planWy != null) {
+        return { wx: node.planWx, wy: node.planWy, h: 0.48 };
+      }
       return { wx: 2.05, wy: 1.55, h: 0.48 };
     case "street":
       return { wx: 1.95, wy: 1.45, h: STREET_H };
@@ -171,9 +180,12 @@ function nodeLocalY(
   stationId: string | undefined,
   nodes: SchematicNode[],
 ): number {
+  if (node.depthM != null) {
+    return schematicLocalYForDepthM(node.depthM, STREET_H);
+  }
   if (node.type === "platform" && node.lineId) {
     return schematicLocalYForDepthM(
-      node.depthM ?? platformDepthM(stationId, node.lineId),
+      platformDepthM(stationId, node.lineId),
       STREET_H,
     );
   }
@@ -636,6 +648,12 @@ function connectionWidth(mode: ScenePolyline["mode"], quality: SceneQuality): nu
   }
 }
 
+function isEscalatorLanding(node: SchematicNode): boolean {
+  if (node.type !== "concourse" || !node.id.includes("-Esc-")) return false;
+  if (node.planWx != null && node.planWy != null) return false;
+  return /-(top|bot)$/.test(node.id);
+}
+
 export function buildSceneGeometry(
   topology: StationTopology,
   opts: {
@@ -674,6 +692,7 @@ export function buildSceneGeometry(
   });
 
   for (const node of nodes) {
+    if (isEscalatorLanding(node)) continue;
     let fp = footprint(node, nodes);
     let rotationY: number | undefined;
     if (node.type === "platform") {
@@ -691,6 +710,8 @@ export function buildSceneGeometry(
         fp = { wx: PLATFORM_THIN, wy: PLATFORM_LONG, h: PLATFORM_H };
         rotationY = angle;
       }
+    } else if (node.type === "concourse" && node.bearingDeg != null) {
+      rotationY = bearingToRotationY(node.bearingDeg);
     }
     const position: Vec3 = [
       node.x,
@@ -825,11 +846,11 @@ export function buildSceneGeometry(
       continue;
     }
 
-    if (edge.mode === "stairs" || edge.mode === "escalator") {
+    if (edge.mode === "stairs") {
       polylines.push({
-        id: `${edge.mode}::${edge.from}::${edge.to}`,
+        id: `stairs::${edge.from}::${edge.to}`,
         role: "connection",
-        mode: edge.mode,
+        mode: "stairs",
         points: [
           [from.x, nodeLocalY(from, stationId, nodes), from.y],
           [to.x, nodeLocalY(to, stationId, nodes), to.y],
@@ -840,7 +861,28 @@ export function buildSceneGeometry(
           undefined,
           Math.min(from.level, to.level),
         ),
-        lineWidth: connectionWidth(edge.mode, quality),
+        lineWidth: connectionWidth("stairs", quality),
+      });
+      continue;
+    }
+
+    if (edge.mode === "escalator") {
+      const a: Vec3 = [
+        from.x,
+        nodeLocalY(from, stationId, nodes),
+        from.y,
+      ];
+      const b: Vec3 = [to.x, nodeLocalY(to, stationId, nodes), to.y];
+      const points = inclinedFlightEdges(a, b, ESCALATOR_WIDTH_U, ESCALATOR_RISERS);
+      if (points.length < 2) continue;
+      polylines.push({
+        id: `escalator::${edge.from}::${edge.to}`,
+        role: "connection",
+        mode: "escalator",
+        points,
+        segments: true,
+        color: ESCALATOR_COLOR,
+        lineWidth: connectionWidth("escalator", quality),
       });
       continue;
     }

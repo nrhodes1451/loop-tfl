@@ -46,6 +46,24 @@
       "confidence": "high"
     }
   ],
+  "escalators": [
+    {
+      "caption": "east intermediate to Jubilee Line west end",
+      "a": [0.42, 0.58],
+      "b": [0.4, 0.72],
+      "grid": "G6",
+      "confidence": "high",
+      "machines": 3
+    },
+    {
+      "caption": "east intermediate to Jubilee Line east end",
+      "a": [0.68, 0.58],
+      "b": [0.74, 0.7],
+      "grid": "L6",
+      "confidence": "high",
+      "machines": 3
+    }
+  ],
   "reference": {
     "label": "Colonnade Ticket Hall",
     "at": [

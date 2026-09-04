@@ -13,12 +13,14 @@ import {
   hidesStreetCuboid,
   orientStairPath,
   overlayGeometries,
+  overlayHallCentroid,
   overlayHallId,
   overlayHoverVolume,
   overlayStairId,
   overpassQuery,
   parseIncline,
   pickBuildingForEntrance,
+  pickNearbyBuilding,
   ringAabbAreaM2,
   type EntranceBuilding,
   type OverpassResponse,
@@ -152,6 +154,16 @@ describe("ringAabbAreaM2", () => {
     expect(area).toBeLessThan(500);
   });
 
+  it("picks the smallest hall centroid", () => {
+    const hit = overlayHallCentroid({
+      buildings: [hallAsBuilding()],
+      stairs: [],
+    });
+    expect(hit).not.toBeNull();
+    expect(hit!.lat).toBeCloseTo(51.530425, 4);
+    expect(hit!.lon).toBeCloseTo(-0.123735, 4);
+  });
+
   it("measures a Waterloo-scale concourse as many thousands of m²", () => {
     const ring = HUGE_HALL.slice(0, -1).map(
       (p) => [p.lat, p.lon] as [number, number],
@@ -221,6 +233,46 @@ describe("bakeEntrances", () => {
 
   it("does not attach geometry to a station more than 200 m away", () => {
     expect(file.stations["940GZZLUOAK"]).toBeUndefined();
+  });
+
+  it("attaches a hall near an entrance that does not share a vertex", () => {
+    const entrance = {
+      type: "node" as const,
+      id: 555001,
+      lat: 51.53222,
+      lon: -0.1058,
+      tags: { railway: "subway_entrance" },
+    };
+    const ring = [
+      { lat: 51.53202, lon: -0.10588 },
+      { lat: 51.53202, lon: -0.10572 },
+      { lat: 51.53212, lon: -0.10572 },
+      { lat: 51.53212, lon: -0.10588 },
+      { lat: 51.53202, lon: -0.10588 },
+    ];
+    const osm: OverpassResponse = {
+      elements: [
+        entrance,
+        {
+          type: "way",
+          id: 777001,
+          nodes: [555010, 555011, 555012, 555013],
+          geometry: ring,
+          tags: { building: "yes", name: "Angel ticket hall" },
+        },
+      ],
+    };
+    const angel = {
+      id: "940GZZLUAGL",
+      lat: 51.531788,
+      lon: -0.105919,
+    };
+    const baked = bakeEntrances(osm, [angel], "2026-01-01T00:00:00.000Z");
+    const row = baked.stations["940GZZLUAGL"];
+    expect(row).toBeTruthy();
+    expect(row!.buildings).toHaveLength(1);
+    expect(row!.buildings[0]!.osmWayId).toBe(777001);
+    expect(pickNearbyBuilding(entrance, row!.buildings)?.osmWayId).toBe(777001);
   });
 
   it("hides the cuboid when a hall or stairs exist", () => {
@@ -293,6 +345,8 @@ describe("overpass query", () => {
     expect(q).toMatch(/railway"="train_station_entrance/);
     expect(q).toMatch(/way\(bn\.ent\)\["building"\]/);
     expect(q).toMatch(/way\(bn\.ent\)\["highway"\]/);
+    expect(q).toMatch(/way\(around\.ent:40\)\["building"\]/);
+    expect(q).toMatch(/way\(around\.ent:40\)\["highway"="steps"\]/);
   });
 });
 
@@ -396,13 +450,16 @@ describe("overlay tokens", () => {
     expect(hallHeightM(40)).toBe(16);
   });
 
-  it("puts a Stairs swatch in the schematic depth key", () => {
+  it("puts Stairs and Escalators swatches in the schematic depth key", () => {
     const src = readFileSync(
       path.join(process.cwd(), "src/components/schematic/SchematicPage.tsx"),
       "utf8",
     );
     expect(src).toMatch(/label:\s*"Stairs"/);
     expect(src).toContain("NATIONAL_RAIL_RED");
+    expect(src).toMatch(/label:\s*"Escalators"/);
+    expect(src).toContain("ESCALATOR_COLOR");
+    expect(src).toContain('e.mode === "escalator"');
   });
 
   it("picks OSM cages through the same hover ids as ticket halls", () => {

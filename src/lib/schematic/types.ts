@@ -33,12 +33,16 @@ export type SchematicNode = {
   /** Platforms only. TfL cardinal, e.g. North / South. */
   direction?: string;
   /**
-   * Platforms only. Undirected compass bearing in degrees clockwise from
-   * north (0–180), from FOI sheets when present.
+   * Undirected compass bearing in degrees clockwise from north (0–180).
+   * Platforms from FOI; concourse slabs when set.
    */
   bearingDeg?: number;
-  /** Platforms only. Metres below street; overrides FOI/typical when set. */
+  /** Metres below street when set (platforms and escalator landings). */
   depthM?: number;
+  /** Concourse plan width in schematic units when set; else the default cube. */
+  planWx?: number;
+  /** Concourse plan length in schematic units when set; else the default cube. */
+  planWy?: number;
   /** Platforms only. FOI mark that produced x/y/bearingDeg, when present. */
   foi?: SchematicFoiPlacement;
   /** Platforms only. OSM way that produced x/y/bearingDeg, when present. */

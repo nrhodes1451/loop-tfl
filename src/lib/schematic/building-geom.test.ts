@@ -16,6 +16,7 @@ import {
   ribbonGeometry,
   stairFlightBottomGeometry,
   stairFlightEdges,
+  inclinedFlightEdges,
   stairFlightPickGeometry,
   wrapLambertFragment,
   type SurfaceTileGeom,
@@ -249,6 +250,17 @@ describe("stairFlightEdges", () => {
     expect(ys.has("0.0")).toBe(true);
     expect(ys.has("-0.4")).toBe(true);
     expect(ys.has("-3.2")).toBe(true);
+  });
+});
+
+describe("inclinedFlightEdges", () => {
+  it("builds a segmented cage that drops in Y along the run", () => {
+    const pts = inclinedFlightEdges([0, 0, 0], [4, -5, 2], 1, 8);
+    expect(pts.length).toBeGreaterThan(16);
+    expect(pts.length % 2).toBe(0);
+    const ys = pts.map((p) => p[1]);
+    expect(Math.max(...ys)).toBeCloseTo(0, 5);
+    expect(Math.min(...ys)).toBeCloseTo(-5, 5);
   });
 });
 

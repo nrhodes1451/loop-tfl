@@ -20,6 +20,7 @@ import {
   makeHoverId,
   platformPlanSize,
   polylineTouchesVolumeIds,
+  ESCALATOR_COLOR,
   schematicEdgeColor,
   splitHoverId,
   streetVolumeIds,
@@ -360,7 +361,7 @@ describe("buildSceneGeometry HUBKGX", () => {
     expect(lowVol.radialSegments).toBeLessThan(highVol.radialSegments);
   });
 
-  it("emits stairs and escalator diagonals when present", () => {
+  it("emits stairs diagonals and escalator cages when present", () => {
     const platform = station.nodes.find((n) => n.type === "platform")!;
     const extra: SchematicEdge[] = [
       { from: "concourse", to: platform.id, mode: "stairs" },
@@ -370,10 +371,136 @@ describe("buildSceneGeometry HUBKGX", () => {
       { nodes: station.nodes, edges: extra },
       { quality: "low" },
     );
-    expect(g.polylines.some((p) => p.mode === "stairs")).toBe(true);
-    expect(g.polylines.some((p) => p.mode === "escalator")).toBe(true);
     const stairs = g.polylines.find((p) => p.mode === "stairs")!;
+    const esc = g.polylines.find((p) => p.mode === "escalator")!;
+    expect(stairs.points).toHaveLength(2);
+    expect(stairs.segments).toBe(false);
     expect(stairs.points[0]![1]).not.toBe(stairs.points[1]![1]);
+    expect(esc.points.length).toBeGreaterThan(16);
+    expect(esc.points.length % 2).toBe(0);
+    expect(esc.segments).toBe(true);
+    expect(esc.color).toBe(ESCALATOR_COLOR);
+    expect(esc.color).not.toBe(schematicEdgeColor("concourse"));
+    expect(esc.color.toUpperCase()).not.toBe("#FF4200");
+  });
+
+  it("uses landing depthM for escalator height, not schematic level", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "esc-top",
+        type: "concourse",
+        label: "top",
+        level: 0,
+        x: 0,
+        y: 0,
+        depthM: 0,
+      },
+      {
+        id: "esc-bot",
+        type: "concourse",
+        label: "bottom",
+        level: 0,
+        x: 4,
+        y: 0,
+        depthM: 20,
+      },
+    ];
+    const g = buildSceneGeometry(
+      {
+        nodes,
+        edges: [{ from: "esc-top", to: "esc-bot", mode: "escalator" }],
+      },
+      { quality: "low" },
+    );
+    const line = g.polylines.find((p) => p.mode === "escalator")!;
+    expect(line.points.length).toBeGreaterThan(2);
+    const ys = line.points.map((p) => p[1]);
+    expect(Math.min(...ys)).toBeLessThan(Math.max(...ys));
+  });
+
+  it("skips concourse volumes for escalator landing nodes", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "hall",
+        type: "concourse",
+        label: "Ticket hall",
+        level: -1,
+        x: 0,
+        y: 0,
+      },
+      {
+        id: "STN-Esc-1-top",
+        type: "concourse",
+        label: "Esc 1 top",
+        level: -1,
+        x: 1,
+        y: 0,
+        depthM: 0,
+      },
+      {
+        id: "STN-Esc-1-bot",
+        type: "concourse",
+        label: "Esc 1 bot",
+        level: -1,
+        x: 5,
+        y: 0,
+        depthM: 20,
+      },
+    ];
+    const g = buildSceneGeometry(
+      {
+        nodes,
+        edges: [{ from: "STN-Esc-1-top", to: "STN-Esc-1-bot", mode: "escalator" }],
+      },
+      { quality: "low" },
+    );
+    expect(g.volumes.some((v) => v.id === "hall")).toBe(true);
+    expect(g.volumes.some((v) => v.id.includes("-Esc-"))).toBe(false);
+    expect(g.polylines.some((p) => p.mode === "escalator")).toBe(true);
+  });
+
+  it("emits concourse slabs that carry a plan footprint", () => {
+    const nodes: SchematicNode[] = [
+      {
+        id: "concourse",
+        type: "concourse",
+        label: "Ticket hall",
+        level: -1,
+        x: 0,
+        y: 0,
+        planWx: 1,
+        planWy: 2.5,
+        bearingDeg: 10,
+        depthM: 0,
+      },
+      {
+        id: "STN-Esc-link-corridor",
+        type: "concourse",
+        label: "Link passage",
+        level: -2,
+        x: 2,
+        y: -4,
+        planWx: 1,
+        planWy: 3,
+        bearingDeg: 100,
+        depthM: 27.39,
+      },
+      {
+        id: "STN-Esc-4-bot",
+        type: "concourse",
+        label: "Link passage",
+        level: -2,
+        x: 1,
+        y: -2,
+        depthM: 27.39,
+      },
+    ];
+    const g = buildSceneGeometry({ nodes, edges: [] }, { quality: "low" });
+    const hall = g.volumes.find((v) => v.id === "concourse")!;
+    const link = g.volumes.find((v) => v.id === "STN-Esc-link-corridor")!;
+    expect(hall.size).toEqual([1, 0.48, 2.5]);
+    expect(link.size).toEqual([1, 0.48, 3]);
+    expect(g.volumes.some((v) => v.id === "STN-Esc-4-bot")).toBe(false);
   });
 
   it("does not draw walks to National Rail platforms", () => {

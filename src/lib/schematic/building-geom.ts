@@ -377,24 +377,19 @@ function lrAt(
   };
 }
 
-/**
- * Outer cage of a staircase (treads, risers, stringers, floor).
- * `path[0]` is street (Y=0). Returns `[a, b, c, d, …]` for `<Line segments>`.
- */
-export function stairFlightEdges(
-  path: [number, number][],
-  widthM: number,
+function flightCageEdges(
+  pts: [number, number][],
+  yTop: number,
+  yBot: number,
   risers: number,
-  dropM: number,
+  half: number,
+  includeFloor: boolean,
 ): StairLinePoint[] {
-  if (path.length < 2 || widthM <= 0 || risers < 1 || dropM <= 0) return [];
-  const samples = resamplePolyline(path, risers + 1);
-  const pts = samples.map(([e, n]) => sceneXZ(e, n));
-  if (pts.length < 2) return [];
+  if (pts.length < 2 || risers < 1) return [];
   const n = risers;
-  const rise = dropM / n;
-  const half = widthM / 2;
-  const yAt = (i: number) => -i * rise;
+  const drop = yBot - yTop;
+  if (Math.abs(drop) < 1e-6) return [];
+  const yAt = (i: number) => yTop + (drop * i) / n;
   const corners = pts.map((_, i) => lrAt(pts, i, half));
   const out: StairLinePoint[] = [];
   const L = (i: number, y: number): StairLinePoint => [
@@ -413,25 +408,73 @@ export function stairFlightEdges(
     addSeg(out, L(i, y), L(i + 1, y));
     addSeg(out, R(i, y), R(i + 1, y));
   }
-  addSeg(out, L(0, 0), R(0, 0));
-  addSeg(out, L(0, -dropM), R(0, -dropM));
+  addSeg(out, L(0, yTop), R(0, yTop));
+  addSeg(out, L(0, yBot), R(0, yBot));
   for (let i = 1; i < n; i++) {
     addSeg(out, L(i, yAt(i - 1)), R(i, yAt(i - 1)));
     addSeg(out, L(i, yAt(i)), R(i, yAt(i)));
   }
   addSeg(out, L(n, yAt(n - 1)), R(n, yAt(n - 1)));
-  addSeg(out, L(n, -dropM), R(n, -dropM));
+  addSeg(out, L(n, yBot), R(n, yBot));
   for (let i = 1; i <= n; i++) {
     addSeg(out, L(i, yAt(i - 1)), L(i, yAt(i)));
     addSeg(out, R(i, yAt(i - 1)), R(i, yAt(i)));
   }
-  addSeg(out, L(0, 0), L(0, -dropM));
-  addSeg(out, R(0, 0), R(0, -dropM));
-  for (let i = 0; i < n; i++) {
-    addSeg(out, L(i, -dropM), L(i + 1, -dropM));
-    addSeg(out, R(i, -dropM), R(i + 1, -dropM));
+  addSeg(out, L(0, yTop), L(0, yBot));
+  addSeg(out, R(0, yTop), R(0, yBot));
+  if (includeFloor) {
+    for (let i = 0; i < n; i++) {
+      addSeg(out, L(i, yBot), L(i + 1, yBot));
+      addSeg(out, R(i, yBot), R(i + 1, yBot));
+    }
   }
   return out;
+}
+
+/**
+ * Outer cage of a staircase (treads, risers, stringers, floor).
+ * `path[0]` is street (Y=0). Returns `[a, b, c, d, …]` for `<Line segments>`.
+ */
+export function stairFlightEdges(
+  path: [number, number][],
+  widthM: number,
+  risers: number,
+  dropM: number,
+): StairLinePoint[] {
+  if (path.length < 2 || widthM <= 0 || risers < 1 || dropM <= 0) return [];
+  const samples = resamplePolyline(path, risers + 1);
+  const pts = samples.map(([e, n]) => sceneXZ(e, n));
+  if (pts.length < 2) return [];
+  return flightCageEdges(pts, 0, -dropM, risers, widthM / 2, true);
+}
+
+/**
+ * Stair-style cage between two schematic points `[x, localY, z]`.
+ * Treads are horizontal; no floor ribbon (long runs would slab the station).
+ */
+export function inclinedFlightEdges(
+  from: StairLinePoint,
+  to: StairLinePoint,
+  width: number,
+  risers: number,
+): StairLinePoint[] {
+  if (width <= 0 || risers < 1) return [];
+  const top = from[1] >= to[1] ? from : to;
+  const bot = from[1] >= to[1] ? to : from;
+  const path: [number, number][] = [
+    [top[0], top[2]],
+    [bot[0], bot[2]],
+  ];
+  const samples = resamplePolyline(path, risers + 1);
+  if (samples.length < 2) return [];
+  return flightCageEdges(
+    samples,
+    top[1],
+    bot[1],
+    risers,
+    width / 2,
+    false,
+  );
 }
 
 export function stairsToLineSegments(

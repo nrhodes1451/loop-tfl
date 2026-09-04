@@ -37,6 +37,17 @@ export type FoiPlatformMark = {
   confidence: FoiConfidence;
 };
 
+/** One escalator shaft/bank on a sheet. `a` = top landing, `b` = bottom. */
+export type FoiEscalatorMark = {
+  caption: string;
+  a: [number, number];
+  b: [number, number];
+  grid: string | null;
+  confidence: FoiConfidence;
+  machines?: number;
+  eNumbers?: string[];
+};
+
 export type FoiPageReference = {
   label: string;
   at: [number, number];
@@ -49,6 +60,8 @@ export type FoiPageExtract = {
   northDeg: number | null;
   depths: FoiDepth[];
   platforms: FoiPlatformMark[];
+  /** Absent when the sheet has not had an escalator pass. */
+  escalators?: FoiEscalatorMark[];
   reference?: FoiPageReference;
   confidence: FoiConfidence;
   raw: string;
@@ -62,6 +75,7 @@ export type FoiExtractOverride = {
   northDeg?: number | null;
   depths?: FoiDepth[];
   platforms?: FoiPlatformMark[];
+  escalators?: FoiEscalatorMark[];
   reference?: FoiPageReference | null;
   confidence?: FoiConfidence;
   raw?: string;
@@ -121,6 +135,29 @@ export type FoiStationLayout = {
   depths: FoiDepth[];
   platforms: FoiStationPlatform[];
   marks: FoiStationMark[];
+  escalators: FoiStationEscalator[];
+  reference?: FoiPageReference;
+  sources: { file: string; page: number }[];
+};
+
+/** Baked escalator bank: FOI plan when placed, CULG identity/rise always. */
+export type FoiStationEscalator = {
+  id: string;
+  caption: string;
+  eNumbers: string[];
+  from: string;
+  to: string;
+  eastTopM: number | null;
+  northTopM: number | null;
+  eastBotM: number | null;
+  northBotM: number | null;
+  topDepthM: number | null;
+  botDepthM: number | null;
+  riseM: number | null;
+  angleDeg: number;
+  machines: number;
+  placed: boolean;
+  flags?: string[];
   sources: { file: string; page: number }[];
 };
 
@@ -139,7 +176,7 @@ export type FoiExtractReview = {
 };
 
 export const FOI_EXTRACT_DISCLAIMER =
-  "Approximate platform depths, drawing north, and plan offsets reconstructed from TfL FOI ~2015 axonometrics. Not survey, not for routing or access decisions.";
+  "Approximate platform depths, drawing north, plan offsets, and escalator banks reconstructed from TfL FOI ~2015 axonometrics and a transcribed CULG table. Not survey, not for routing or access decisions.";
 
 export const NORTH_AGREE_DEG = 20;
 export const SLOPE_MATCH_DEG = 2;
@@ -244,6 +281,8 @@ export function applyExtractOverrides(
       confidence: hit.confidence ?? page.confidence,
       raw: hit.raw ?? page.raw,
     };
+    if (hit.escalators !== undefined) next.escalators = hit.escalators;
+    else if (page.escalators) next.escalators = page.escalators;
     if (hit.reference !== undefined) {
       if (hit.reference) next.reference = hit.reference;
       else delete next.reference;
@@ -474,16 +513,28 @@ export function mergeStationLayouts(
     const attached = attachPlatformDepths(platforms, depths, stationId);
     placementIssues.push(...issues, ...attached.issues);
 
+    const reference = mergeStationReference(group);
     stations.push({
       stationId,
       northDeg,
       depths,
       platforms: attached.platforms,
       marks,
+      escalators: mergeStationEscalators(group, attached.platforms),
+      ...(reference ? { reference } : {}),
       sources: group.map((p) => ({ file: p.file, page: p.page })),
     });
   }
   return { stations, northConflicts, placementIssues };
+}
+
+function mergeStationReference(
+  group: readonly FoiPageExtract[],
+): FoiPageReference | undefined {
+  const ordered = [...group].sort(
+    (a, b) => Number(b.confidence === "high") - Number(a.confidence === "high"),
+  );
+  return ordered.find((p) => p.reference)?.reference;
 }
 
 function platformKey(lineId: string, numbers: number[]): string {
@@ -499,6 +550,96 @@ function usableMarks(page: FoiPageExtract): FoiPlatformMark[] {
     const dv = m.b[1] - m.a[1];
     return Math.hypot(du, dv) > 1e-6;
   });
+}
+
+function fitPageBasis(page: FoiPageExtract) {
+  const marks = usableMarks(page);
+  if (marks.length === 0) return null;
+  const origin = page.reference?.at;
+  return fitSheetBasis(
+    marks.map((m) => ({
+      a: m.a,
+      b: m.b,
+      bearingDeg: m.bearingDeg!,
+    })),
+    page.northDeg,
+    origin,
+  );
+}
+
+function pagePlanOffset(
+  page: FoiPageExtract,
+  platforms: readonly FoiStationPlatform[],
+): { dx: number; dy: number } {
+  const basis = fitPageBasis(page);
+  if (!basis) return { dx: 0, dy: 0 };
+  const hits: { dx: number; dy: number }[] = [];
+  for (const m of usableMarks(page)) {
+    const placed = platforms.find(
+      (p) => platformKey(p.lineId, p.platformNumbers) ===
+        platformKey(m.lineId!, m.platformNumbers),
+    );
+    if (!placed) continue;
+    const [u, v] = markCentre(m);
+    const pr = imageToPlan(u, v, basis);
+    hits.push({ dx: placed.eastM - pr.eastM, dy: placed.northM - pr.northM });
+  }
+  if (hits.length === 0) return { dx: 0, dy: 0 };
+  return {
+    dx: hits.reduce((a, h) => a + h.dx, 0) / hits.length,
+    dy: hits.reduce((a, h) => a + h.dy, 0) / hits.length,
+  };
+}
+
+function mergeStationEscalators(
+  group: readonly FoiPageExtract[],
+  platforms: readonly FoiStationPlatform[],
+): FoiStationEscalator[] {
+  const out: FoiStationEscalator[] = [];
+  let n = 0;
+  const pages = [...group].sort(
+    (a, b) => a.file.localeCompare(b.file) || a.page - b.page,
+  );
+  for (const page of pages) {
+    const marks = page.escalators;
+    if (!marks) continue;
+    const basis = fitPageBasis(page);
+    const offset = pagePlanOffset(page, platforms);
+    const stationId = page.stationId ?? "unknown";
+    for (const m of marks) {
+      n += 1;
+      const du = m.b[0] - m.a[0];
+      const dv = m.b[1] - m.a[1];
+      const runnable = Math.hypot(du, dv) > 1e-6 && basis != null;
+      const top = runnable ? imageToPlan(m.a[0], m.a[1], basis) : null;
+      const bot = runnable ? imageToPlan(m.b[0], m.b[1], basis) : null;
+      const eNumbers = m.eNumbers?.map((e) => e.trim()).filter(Boolean) ?? [];
+      const machines =
+        m.machines != null && Number.isFinite(m.machines)
+          ? m.machines
+          : eNumbers.length || 1;
+      const placed = top != null && bot != null;
+      out.push({
+        id: `${stationId}-Esc-foi-${n}`,
+        caption: m.caption,
+        eNumbers,
+        from: m.caption,
+        to: "",
+        eastTopM: placed ? top.eastM + offset.dx : null,
+        northTopM: placed ? top.northM + offset.dy : null,
+        eastBotM: placed ? bot.eastM + offset.dx : null,
+        northBotM: placed ? bot.northM + offset.dy : null,
+        topDepthM: null,
+        botDepthM: null,
+        riseM: null,
+        angleDeg: 30,
+        machines,
+        placed,
+        sources: [{ file: page.file, page: page.page }],
+      });
+    }
+  }
+  return out;
 }
 
 type ProjectedMark = {
@@ -978,9 +1119,44 @@ function parseEnd(v: unknown): FoiPlatformEnd | null {
   return null;
 }
 
+function parseEscalatorMark(raw: unknown): FoiEscalatorMark | null {
+  if (!raw || typeof raw !== "object") return null;
+  const p = raw as Record<string, unknown>;
+  const caption =
+    typeof p.caption === "string"
+      ? p.caption.trim()
+      : typeof p.label === "string"
+        ? p.label.trim()
+        : "";
+  const a = asNormPoint(p.a);
+  const b = asNormPoint(p.b);
+  if (!a || !b) return null;
+  const grid =
+    typeof p.grid === "string" && p.grid.trim() ? p.grid.trim() : null;
+  const confidence = p.confidence === "low" ? "low" : "high";
+  const mark: FoiEscalatorMark = {
+    caption: caption || "escalator",
+    a,
+    b,
+    grid,
+    confidence,
+  };
+  const machines = asNumber(p.machines);
+  if (machines != null && machines > 0) mark.machines = Math.round(machines);
+  if (Array.isArray(p.eNumbers)) {
+    const eNumbers = p.eNumbers
+      .filter((e): e is string => typeof e === "string")
+      .map((e) => e.trim())
+      .filter(Boolean);
+    if (eNumbers.length > 0) mark.eNumbers = eNumbers;
+  }
+  return mark;
+}
+
 /** Read an observation body into platform endpoint marks. */
 export function parseObservedPlacement(raw: unknown): {
   platforms: FoiPlatformMark[];
+  escalators?: FoiEscalatorMark[];
   reference: FoiPageReference | undefined;
   confidence: FoiConfidence;
   raw: string;
@@ -1028,6 +1204,14 @@ export function parseObservedPlacement(raw: unknown): {
       ]),
     );
   }
+  let escalators: FoiEscalatorMark[] | undefined;
+  if (Array.isArray(obj.escalators)) {
+    escalators = [];
+    for (const item of obj.escalators) {
+      const mark = parseEscalatorMark(item);
+      if (mark) escalators.push(mark);
+    }
+  }
   let reference: FoiPageReference | undefined;
   const ref = obj.reference;
   if (ref && typeof ref === "object") {
@@ -1038,7 +1222,7 @@ export function parseObservedPlacement(raw: unknown): {
   }
   const confidence = obj.confidence === "low" ? "low" : "high";
   const note = typeof obj.raw === "string" ? obj.raw : "";
-  return { platforms, reference, confidence, raw: note };
+  return { platforms, escalators, reference, confidence, raw: note };
 }
 
 function observationBody(raw: unknown): ObservationBody {

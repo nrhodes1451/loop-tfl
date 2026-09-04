@@ -106,6 +106,32 @@
       "confidence": "high"
     }
   ],
+  "escalators": [
+    {
+      "caption": "Piccadilly Line to Northern Line",
+      "a": [0.54, 0.4],
+      "b": [0.4, 0.28],
+      "grid": "I4",
+      "confidence": "high",
+      "machines": 3
+    },
+    {
+      "caption": "eastern ticket hall to Piccadilly Line",
+      "a": [0.58, 0.38],
+      "b": [0.64, 0.5],
+      "grid": "I4",
+      "confidence": "high",
+      "machines": 3
+    },
+    {
+      "caption": "eastern ticket hall to Victoria Line",
+      "a": [0.58, 0.58],
+      "b": [0.64, 0.68],
+      "grid": "I6",
+      "confidence": "high",
+      "machines": 3
+    }
+  ],
   "reference": {
     "label": "Western Ticket Hall",
     "at": [

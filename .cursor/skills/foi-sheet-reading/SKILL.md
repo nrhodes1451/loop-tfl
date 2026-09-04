@@ -59,6 +59,8 @@ appended: `3d bakerloo stations Redacted.pdf` page 10 becomes
 `platforms` key means the placement pass has not been done on that sheet, which
 is what `--todo` reports; an empty array means the sheet was read and no usable
 platform box was found. Do not write `"platforms": []` to mean "not yet read".
+The same absent-vs-`[]` rule applies to optional `escalators`. Missing
+`escalators` is not a `--todo` or review blocker.
 
 `data/pdf/` is gitignored but `data/foi/observations/` is committed. These files
 are source data, not a cache: nothing can regenerate them.
@@ -106,6 +108,23 @@ Calibration (Pimlico, victoria line stations p4): `northDeg` is 0 (rose points
 up). Both platforms share `bearingDeg` about 80. Their `b − a` vectors are
 near-identical.
 
+## Escalator banks
+
+Optional `escalators` on the same observation (absent = not yet read; `[]` =
+sheet has no usable bank). One entry per **shaft/bank**, not per parallel
+machine.
+
+- `caption`: printed label, or a short landing pair if unlabelled (e.g. "ticket
+  hall to Northern").
+- `a` / `b`: top and bottom landings of the **run** in normalised page coords
+  (origin top-left). Not isometric box corners.
+- `grid` if readable, else null.
+- `machines`: parallel units in that shaft when the drawing shows them; omit if
+  unclear.
+- Optional `eNumbers` (e.g. `["E4","E5","E6"]`) only when the sheet or a CULG
+  join is unambiguous. Do not invent numbers from left-to-right pixel order.
+- Never invent endpoints. Omit a bank rather than fabricate `a` and `b`.
+
 ## Working through the queue
 
 `data/foi/pages.json` maps each sheet to a `stationId` and `stationName`. That
@@ -143,6 +162,7 @@ correction paths (misread vs sheet vs page match vs hand-authored dollhouse).
 
 ## Approximation
 
-Depths and plan offsets are reconstructed from 2015 scans. They are approximate,
-are never used for routing or access decisions, and `npm run build-schematics`
-bakes them into generated node `x`/`y`/`bearingDeg` only as drawing hints.
+Depths, plan offsets, and escalator diagonals are reconstructed from 2015 scans
+plus a transcribed CULG table. They are approximate, are never used for routing
+or access decisions, and `npm run build-schematics` bakes them into generated
+node `x`/`y`/`bearingDeg` and `escalator` edges only as drawing hints.

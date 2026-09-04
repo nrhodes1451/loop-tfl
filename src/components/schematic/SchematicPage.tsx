@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { StationPicker } from "@/components/schematic/StationPicker";
-import { SCENE_BACKGROUND } from "@/lib/schematic/scene";
+import { ESCALATOR_COLOR, SCENE_BACKGROUND } from "@/lib/schematic/scene";
 import type {
   SchematicStation,
   SchematicStationRef,
@@ -92,9 +92,19 @@ function depthLegend(
       color: NATIONAL_RAIL_RED,
     });
   }
+  if (station.edges.some((e) => e.mode === "escalator")) {
+    rows.push({
+      key: "escalators",
+      level: 0,
+      label: "Escalators",
+      color: ESCALATOR_COLOR,
+    });
+  }
   const concourseLevels = [
     ...new Set(
-      station.nodes.filter((n) => n.type === "concourse").map((n) => n.level),
+      station.nodes
+        .filter((n) => n.type === "concourse" && !n.id.includes("-Esc-"))
+        .map((n) => n.level),
     ),
   ].sort((a, b) => b - a);
   for (const level of concourseLevels) {
@@ -189,17 +199,13 @@ function ChromeCheck({
   );
 }
 
-function toSceneStation(
-  s: SchematicStation,
-  refs: SchematicStationRef[],
-): SceneStation {
-  const ref = refs.find((r) => r.id === s.stationId);
+function toSceneStation(s: SchematicStation): SceneStation {
   return {
     id: s.stationId,
     name: s.name,
     topology: { nodes: s.nodes, edges: s.edges },
-    lat: ref?.lat ?? s.entrance.lat,
-    lon: ref?.lon ?? s.entrance.lon,
+    lat: s.entrance.lat,
+    lon: s.entrance.lon,
   };
 }
 
@@ -257,8 +263,8 @@ export function SchematicPage({
     const byId = new Map<string, SchematicStation>();
     byId.set(station.stationId, station);
     for (const n of nearby) byId.set(n.stationId, n);
-    return [...byId.values()].map((s) => toSceneStation(s, stations));
-  }, [station, nearby, stations]);
+    return [...byId.values()].map((s) => toSceneStation(s));
+  }, [station, nearby]);
   const levels = depthLegend(station);
   const hasMap = usePmtiles;
   const chromeBtn =

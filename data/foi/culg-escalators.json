@@ -1,0 +1,302 @@
+{
+  "source": "https://www.davros.org/rail/culg/vertical.html",
+  "disclaimer": "Unofficial transcription of CULG Vertical transport escalator rows plus a TfL StopPoint Escalators additionalProperty snapshot. Not survey, not for routing or access. CULG is third-party; StopPoint counts are a point-in-time check only. Travelators are omitted.",
+  "tflSnapshotAt": "2026-09-02",
+  "stations": [
+    {
+      "stationId": "940GZZLUAGL",
+      "name": "Angel",
+      "tflEscalatorCount": 6,
+      "banks": [
+        {
+          "eNumbers": ["E1", "E2", "E3"],
+          "from": "Link passage",
+          "to": "Northern Line",
+          "riseM": 8.0,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E4", "E5", "E6"],
+          "from": "Surface ticket hall",
+          "to": "Link passage",
+          "riseM": 27.39,
+          "angleDeg": 30
+        }
+      ]
+    },
+    {
+      "stationId": "HUBBAN",
+      "name": "Bank",
+      "tflEscalatorCount": 15,
+      "banks": [
+        {
+          "eNumbers": ["E1", "E2", "E3"],
+          "from": "Underground ticket hall (main intersection)",
+          "to": "Central Line",
+          "riseM": 15.7,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E4", "E5"],
+          "from": "Eastbound District Line",
+          "to": "Northern Line south end",
+          "riseM": 17.22,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E6", "E7"],
+          "from": "Underground ticket hall (Lombard St.)",
+          "to": "upper intermediate level (Central Line + and passage to Waterloo & City Line)",
+          "riseM": 14.97,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E8", "E9"],
+          "from": "upper intermediate level",
+          "to": "lower intermediate level (Northern Line north end +)",
+          "riseM": 6.75,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E10", "E11"],
+          "from": "lower intermediate level",
+          "to": "DLR west end",
+          "riseM": 13.75,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E12", "E13"],
+          "from": "Link passage 1",
+          "to": "DLR east end",
+          "riseM": 15.97,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E14", "E15"],
+          "from": "Westbound District Line",
+          "to": "Link passage 1",
+          "riseM": 15.64,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E16", "E17"],
+          "from": "west intermediate level",
+          "to": "Waterloo & City Line",
+          "riseM": 10.23,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E18", "E19"],
+          "from": "Surface ticket hall (Walbrook)",
+          "to": "west intermediate level",
+          "riseM": 6.07,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E20", "E21", "E22"],
+          "from": "Northern Line north end",
+          "to": "DLR west end",
+          "riseM": null,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E23", "E24", "E25"],
+          "from": "Central Line",
+          "to": "Link passage 2",
+          "riseM": null,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E26", "E27", "E28"],
+          "from": "Link passage 3",
+          "to": "Northern Line centre",
+          "riseM": null,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E29", "E30", "E31"],
+          "from": "Surface ticket hall (Cannon Street)",
+          "to": "Link passage 3",
+          "riseM": null,
+          "angleDeg": 30
+        }
+      ]
+    },
+    {
+      "stationId": "HUBEUS",
+      "name": "Euston",
+      "tflEscalatorCount": 10,
+      "banks": [
+        {
+          "eNumbers": ["E1", "E2"],
+          "from": "Intermediate level south side",
+          "to": "Northbound Northern Line (City branch) and Victoria Line",
+          "riseM": 15.18,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E3", "E4"],
+          "from": "Intermediate level north side",
+          "to": "Southbound Northern Line (City branch) and Victoria Line",
+          "riseM": 15.0,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E5", "E6"],
+          "from": "Underground ticket hall",
+          "to": "Intermediate level south side",
+          "riseM": 8.38,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E7", "E8"],
+          "from": "Underground ticket hall",
+          "to": "Intermediate level north side",
+          "riseM": 8.38,
+          "angleDeg": 30
+        }
+      ]
+    },
+    {
+      "stationId": "HUBKGX",
+      "name": "King's Cross St. Pancras",
+      "tflEscalatorCount": 19,
+      "banks": [
+        {
+          "eNumbers": ["E1", "E2", "E3"],
+          "from": "Piccadilly Line",
+          "to": "Northern Line",
+          "riseM": 5.64,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E4", "E5", "E6"],
+          "from": "Eastern underground ticket hall lower level",
+          "to": "Piccadilly Line",
+          "riseM": 17.22,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E7", "E8", "E9"],
+          "from": "Eastern underground ticket hall lower level",
+          "to": "Victoria Line",
+          "riseM": 11.67,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E10", "E11", "E12"],
+          "from": "lower intermediate level",
+          "to": "Piccadilly Line",
+          "riseM": null,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E13", "E14", "E15"],
+          "from": "lower intermediate level",
+          "to": "Northern Line",
+          "riseM": null,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E16", "E17", "E18", "E19"],
+          "from": "Northern underground ticket hall",
+          "to": "lower intermediate level",
+          "riseM": null,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E20", "E21"],
+          "from": "Street level",
+          "to": "Northern underground ticket hall",
+          "riseM": null,
+          "angleDeg": 30,
+          "installing": true
+        }
+      ]
+    },
+    {
+      "stationId": "HUBOLD",
+      "name": "Old Street",
+      "tflEscalatorCount": 3,
+      "banks": [
+        {
+          "eNumbers": ["E1", "E2"],
+          "from": "Underground ticket hall",
+          "to": "Intermediate level",
+          "riseM": 15.7,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E3"],
+          "from": "Underground ticket hall",
+          "to": "Intermediate level",
+          "riseM": 15.7,
+          "angleDeg": 30
+        }
+      ]
+    },
+    {
+      "stationId": "HUBWAT",
+      "name": "Waterloo",
+      "tflEscalatorCount": 23,
+      "banks": [
+        {
+          "eNumbers": ["E1", "E2", "E3"],
+          "from": "Main underground ticket hall",
+          "to": "west intermediate level (Northern Line + and southbound Bakerloo Line)",
+          "riseM": 17.16,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E4", "E5", "E6"],
+          "from": "Shell Building surface ticket hall",
+          "to": "west intermediate level",
+          "riseM": 17.65,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E7", "E8"],
+          "from": "Auxiliary underground ticket hall",
+          "to": "west intermediate level",
+          "riseM": 15.48,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E9", "E10", "E11"],
+          "from": "Main underground ticket hall",
+          "to": "west intermediate level",
+          "riseM": 16.95,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E12", "E13", "E14"],
+          "from": "Main line station",
+          "to": "Main underground ticket hall",
+          "riseM": 7.28,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E15", "E16", "E17", "E18"],
+          "from": "Waterloo Rd surface ticket hall",
+          "to": "east intermediate level",
+          "riseM": 16.95,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E19", "E20", "E21"],
+          "from": "east intermediate level",
+          "to": "Jubilee Line west end",
+          "riseM": 10.83,
+          "angleDeg": 30
+        },
+        {
+          "eNumbers": ["E22", "E23", "E24"],
+          "from": "east intermediate level",
+          "to": "Jubilee Line east end",
+          "riseM": 10.83,
+          "angleDeg": 30
+        }
+      ]
+    }
+  ]
+}
